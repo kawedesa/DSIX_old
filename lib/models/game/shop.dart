@@ -1,4 +1,4 @@
-import 'item.dart';
+import '../../item.dart';
 import 'package:flutter/material.dart';
 
 class Shop {

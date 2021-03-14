@@ -1,9 +1,9 @@
-import 'package:dsixv02app/shop.dart';
+import 'package:dsixv02app/models/game/shop.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'item.dart';
 import 'dart:math';
-import 'shop.dart';
+import 'models/game/shop.dart';
 
 class LootPage extends StatefulWidget {
   LootPage({Key key}) : super(key: key);

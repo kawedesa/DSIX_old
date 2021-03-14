@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'player.dart';
+import 'package:dsixv02app/models/game/game.dart';
 import 'item.dart';
-import 'shop.dart';
+import 'models/game/shop.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'models/game/game.dart';
 
 class ShopPage extends StatefulWidget {
   final Function() refresh;
-  final Player player;
+  final Dsix dsix;
 
-  const ShopPage({Key key, this.player, this.refresh}) : super(key: key);
+  const ShopPage({Key key, this.dsix, this.refresh}) : super(key: key);
 
   @override
   _ShopPageState createState() => _ShopPageState();
@@ -112,7 +113,7 @@ class _ShopPageState extends State<ShopPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.player.playerColor,
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -123,7 +124,8 @@ class _ShopPageState extends State<ShopPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color: widget.player.playerColor,
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -185,7 +187,8 @@ class _ShopPageState extends State<ShopPage> {
 
                 Divider(
                   thickness: 2,
-                  color: widget.player.playerColor,
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
                 ),
 
                 SizedBox(
@@ -323,13 +326,14 @@ class _ShopPageState extends State<ShopPage> {
 
                 Divider(
                   thickness: 2,
-                  color: widget.player.playerColor,
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
                 ),
 
                 Container(
                   width: double.infinity,
                   // height: 165,
-                  //color: widget.player.playerSecondaryColor,
+                  //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
                     child: Text(
@@ -367,7 +371,10 @@ class _ShopPageState extends State<ShopPage> {
                                     const EdgeInsets.fromLTRB(0, 12, 12, 0),
                                 child: SvgPicture.asset(
                                   'assets/ui/money.svg',
-                                  color: widget.player.playerColor,
+                                  color: widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerColor
+                                      .primaryColor,
                                   width:
                                       MediaQuery.of(context).size.width * 0.055,
                                 ),
@@ -379,7 +386,10 @@ class _ShopPageState extends State<ShopPage> {
                           width: double.infinity,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: widget.player.playerColor,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
                               width:
                                   2.5, //                   <--- border width here
                             ),
@@ -421,21 +431,25 @@ class _ShopPageState extends State<ShopPage> {
   }
 
   void buy(int index) {
-    if (widget.player.gold < displayItems[index].value) {
+    if (widget.dsix.getCurrentPlayer().gold < displayItems[index].value) {
       showAlertDialogNoMoney(context, index);
       return;
     }
 
-    if (widget.player.maxWeight - widget.player.currentWeight <
+    if (widget.dsix.getCurrentPlayer().maxWeight -
+            widget.dsix.getCurrentPlayer().currentWeight <
         displayItems[index].weight) {
       showAlertDialogTooHeavy(context, index);
       return;
     }
 
-    widget.player.gold -= displayItems[index].value;
-    widget.player.currentWeight += displayItems[index].weight;
+    widget.dsix.getCurrentPlayer().gold -= displayItems[index].value;
+    widget.dsix.getCurrentPlayer().currentWeight += displayItems[index].weight;
 
-    widget.player.inventory.add(displayItems[index].copyItem());
+    widget.dsix
+        .getCurrentPlayer()
+        .inventory
+        .add(displayItems[index].copyItem());
 
     Navigator.of(context).pop(true);
     widget.refresh();
@@ -448,7 +462,7 @@ class _ShopPageState extends State<ShopPage> {
       content: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: widget.player.playerColor,
+            color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
             width: 2.5, //                   <--- border width here
           ),
         ),
@@ -459,7 +473,7 @@ class _ShopPageState extends State<ShopPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
-              color: widget.player.playerColor,
+              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -483,7 +497,7 @@ class _ShopPageState extends State<ShopPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(35, 25, 25, 15),
               child: Text(
-                'You are already carrying too much weight and can\'t carry this item. You can carry ${widget.player.maxWeight - widget.player.currentWeight} more weight, and this item has ${displayItems[index].weight} weight.',
+                'You are already carrying too much weight and can\'t carry this item. You can carry ${widget.dsix.getCurrentPlayer().maxWeight - widget.dsix.getCurrentPlayer().currentWeight} more weight, and this item has ${displayItems[index].weight} weight.',
                 style: TextStyle(
                   height: 1.25,
                   fontSize: 22,
@@ -512,7 +526,7 @@ class _ShopPageState extends State<ShopPage> {
       content: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: widget.player.playerColor,
+            color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
             width: 2.5, //                   <--- border width here
           ),
         ),
@@ -523,7 +537,7 @@ class _ShopPageState extends State<ShopPage> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             Container(
-              color: widget.player.playerColor,
+              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -547,7 +561,7 @@ class _ShopPageState extends State<ShopPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(35, 25, 25, 15),
               child: Text(
-                'You don\'t have enough gold to buy this item. It costs \$${displayItems[index].value}, and you only have \$${widget.player.gold}.',
+                'You don\'t have enough gold to buy this item. It costs \$${displayItems[index].value}, and you only have \$${widget.dsix.getCurrentPlayer().gold}.',
                 style: TextStyle(
                   height: 1.25,
                   fontSize: 22,
@@ -609,7 +623,10 @@ class _ShopPageState extends State<ShopPage> {
                         ),
                         child: SvgPicture.asset(
                           'assets/item/${selectedMenu[index]}.svg',
-                          color: widget.player.playerColor,
+                          color: widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .primaryColor,
                         ),
                       ),
                     );
@@ -622,7 +639,7 @@ class _ShopPageState extends State<ShopPage> {
         Divider(
           height: 0,
           thickness: 2,
-          color: widget.player.playerColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
         ),
         Expanded(
           flex: 13,
@@ -643,7 +660,10 @@ class _ShopPageState extends State<ShopPage> {
                           fontFamily: 'Headline',
                           height: 1.3,
                           fontSize: 50,
-                          color: widget.player.playerColor,
+                          color: widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .primaryColor,
                           letterSpacing: 2,
                         ),
                       ),
@@ -667,7 +687,7 @@ class _ShopPageState extends State<ShopPage> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 7, 0),
                     child: Container(
-                      //color: widget.player.playerSecondaryColor,
+                      //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
                       child: GridView.count(
                         crossAxisCount: 4,
                         mainAxisSpacing: 20,
@@ -682,7 +702,7 @@ class _ShopPageState extends State<ShopPage> {
                             child: Container(
                               width: double.infinity,
                               height: 80,
-                              //color: widget.player.playerSecondaryColor,
+                              //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
 
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
@@ -703,7 +723,10 @@ class _ShopPageState extends State<ShopPage> {
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: 2,
                                       fontFamily: 'Calibri',
-                                      color: widget.player.playerColor,
+                                      color: widget.dsix
+                                          .getCurrentPlayer()
+                                          .playerColor
+                                          .primaryColor,
                                     ),
                                   ),
                                 ],
