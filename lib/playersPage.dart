@@ -3,8 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'playerRacePage.dart';
 import 'gmPage.dart';
-import 'playerUI.dart';
-import 'package:dsixv02app/models/game/game.dart';
+// import 'playerUI.dart';
+import 'package:dsixv02app/models/game/dsix.dart';
 
 class PlayersPage extends StatefulWidget {
   final Dsix dsix;
@@ -76,14 +76,6 @@ class _PlayersPageState extends State<PlayersPage> {
   //   );
   // }
 
-  void navigation() {
-    if (widget.dsix.getCurrentPlayer().name != '') {
-      // Navigator.of(context).push(_createRouteUI());
-    } else {
-      Navigator.of(context).push(_createRouteRace());
-    }
-  }
-
   void initState() {
     super.initState();
   }
@@ -131,10 +123,10 @@ class _PlayersPageState extends State<PlayersPage> {
                             onPressed: () {
                               widget.dsix.setCurrentPlayer(index);
 
-                              navigation();
+                              Navigator.of(context).push(_createRouteRace());
                             },
                             style: TextButton.styleFrom(
-                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
                             ),
                             child: Stack(
                               children: <Widget>[
@@ -281,4 +273,3 @@ class _PlayersPageState extends State<PlayersPage> {
     );
   }
 }
-//Navigator.of(context).push(_createRoute());

@@ -2,7 +2,7 @@ import 'playerUI.dart';
 import 'option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'playerAction.dart';
 
@@ -28,12 +28,12 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
             'Some actions have more than one option or effect to choose from.',
             '',
             '',
-            '')
+            '',
+            '',
+            0)
       ],
       0,
       false);
-
-  String infoIcon = 'help';
 
   List<String> selectedAction = [
     'null',
@@ -44,10 +44,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
     'null',
   ];
 
-  List<int> displayActionValue = [];
-
-  int originalActionPoint;
-  List<int> originalActionValue = [];
+  int indexAction = 1;
 
   void actionSelection(index) {
     selectedAction = [
@@ -58,52 +55,12 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
       'null',
       'null',
     ];
-    selectedAction.replaceRange(index, index + 1,
-        [widget.dsix.getCurrentPlayer().playerAction[index].icon]);
-    displayedAction = widget.dsix.getCurrentPlayer().playerAction[index];
-  }
 
-  void increase() {
-    if (widget.dsix.getCurrentPlayer().actionPoint == 0) {
-      return;
-    }
+    indexAction = index + 1;
 
-    for (int check = 0;
-        check < widget.dsix.getCurrentPlayer().playerAction.length;
-        check++) {
-      if (displayedAction.name ==
-              widget.dsix.getCurrentPlayer().playerAction[check].name &&
-          widget.dsix.getCurrentPlayer().playerAction[check].value < 3) {
-        widget.dsix.getCurrentPlayer().playerAction[check].value++;
-        widget.dsix.getCurrentPlayer().actionPoint--;
-      }
-    }
-  }
+    displayedAction = widget.dsix.getCurrentPlayer().playerAction[indexAction];
 
-  void decrease() {
-    for (int check = 0;
-        check < widget.dsix.getCurrentPlayer().playerAction.length;
-        check++) {
-      if (displayedAction.name ==
-          widget.dsix.getCurrentPlayer().playerAction[check].name) {
-        if (widget.dsix.getCurrentPlayer().playerAction[check].value !=
-            originalActionValue[check]) {
-          widget.dsix.getCurrentPlayer().playerAction[check].value--;
-          widget.dsix.getCurrentPlayer().actionPoint++;
-        }
-      }
-    }
-  }
-
-  void reset() {
-    widget.dsix.getCurrentPlayer().actionPoint = originalActionPoint;
-
-    for (int check = 0;
-        check < widget.dsix.getCurrentPlayer().playerAction.length;
-        check++) {
-      widget.dsix.getCurrentPlayer().playerAction[check].value =
-          originalActionValue[check];
-    }
+    selectedAction.replaceRange(index, index + 1, [displayedAction.icon]);
   }
 
   showAlertDialog(BuildContext context, int index) {
@@ -178,7 +135,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
   double _size = 0;
 
   void _updateState() {
-    if (widget.dsix.getCurrentPlayer().actionPoint == 0) {
+    if (widget.dsix.getCurrentPlayer().playerAction[0].value == 0) {
       setState(() {
         _size = 50;
       });
@@ -192,7 +149,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
   final myController = TextEditingController();
 
   void confirm() {
-    widget.dsix.getCurrentPlayer().name = myController.text;
+    widget.dsix.getCurrentPlayer().playerColor.name = myController.text;
 
     Navigator.push(
       context,
@@ -252,7 +209,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                   textAlign: TextAlign.center,
                   onEditingComplete: confirm,
                   onSubmitted: (value) {
-                    widget.dsix.getCurrentPlayer().name = value;
+                    widget.dsix.getCurrentPlayer().playerColor.name = value;
                     Navigator.of(context).push(_createRouteUI());
                   },
                   style: TextStyle(
@@ -330,17 +287,15 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
   @override
   void initState() {
     super.initState();
-
-    for (int check = 0;
-        check < widget.dsix.getCurrentPlayer().playerAction.length;
-        check++) {
-      originalActionValue
-          .add(widget.dsix.getCurrentPlayer().playerAction[check].value);
+    if (widget.dsix.getCurrentPlayer().playerAction[0].value == 0) {
+      setState(() {
+        _size = 50;
+      });
+    } else {
+      setState(() {
+        _size = 0;
+      });
     }
-
-    originalActionPoint = widget.dsix.getCurrentPlayer().actionPoint;
-
-    _size = 0;
   }
 
   @override
@@ -356,7 +311,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                 size: 40,
               ),
               onPressed: () {
-                reset();
+                // reset();
 
                 Navigator.of(context).pop();
               }),
@@ -418,7 +373,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
                               child: SvgPicture.asset(
-                                'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index].icon}.svg',
+                                'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                                 color: Colors.white,
                                 width:
                                     MediaQuery.of(context).size.width * 0.055,
@@ -436,7 +391,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: SvgPicture.asset(
-                                'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index].value}.svg',
+                                'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                                 color: Colors.white,
                                 width:
                                     MediaQuery.of(context).size.width * 0.055,
@@ -505,7 +460,9 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    increase();
+                                    widget.dsix
+                                        .getCurrentPlayer()
+                                        .increaseActionPoint(indexAction);
                                     _updateState();
                                   });
                                 }),
@@ -520,7 +477,9 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    decrease();
+                                    widget.dsix
+                                        .getCurrentPlayer()
+                                        .decreaseActionPoint(indexAction);
                                     _updateState();
                                   });
                                 }),
@@ -554,7 +513,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 25),
                               child: Text(
-                                'Points left: ${widget.dsix.getCurrentPlayer().actionPoint}',
+                                'Points left: ${widget.dsix.getCurrentPlayer().playerAction[0].value}',
                                 textAlign: TextAlign.justify,
                                 style: TextStyle(
                                   letterSpacing: 3,
@@ -609,7 +568,11 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                                                       const EdgeInsets.fromLTRB(
                                                           0, 12, 12, 0),
                                                   child: SvgPicture.asset(
-                                                    'assets/ui/$infoIcon.svg',
+                                                    'assets/ui/help.svg',
+                                                    color: widget.dsix
+                                                        .getCurrentPlayer()
+                                                        .playerColor
+                                                        .primaryColor,
                                                     width:
                                                         MediaQuery.of(context)
                                                                 .size

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CharacterPage extends StatefulWidget {
@@ -15,7 +15,8 @@ class _CharacterPageState extends State<CharacterPage> {
   TextEditingController myController;
 
   void confirm() {
-    widget.dsix.getCurrentPlayer().background.description = myController.text;
+    widget.dsix.getCurrentPlayer().playerBackground.description =
+        myController.text;
     Navigator.of(context).pop(true);
   }
 
@@ -71,8 +72,10 @@ class _CharacterPageState extends State<CharacterPage> {
                     textAlign: TextAlign.center,
                     onEditingComplete: confirm,
                     onSubmitted: (value) {
-                      widget.dsix.getCurrentPlayer().background.description =
-                          value;
+                      widget.dsix
+                          .getCurrentPlayer()
+                          .playerBackground
+                          .description = value;
                     },
                     style: TextStyle(
                       height: 1.3,
@@ -186,7 +189,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Text(
-                      '${widget.dsix.getCurrentPlayer().playerAction[index].name}: ${widget.dsix.getCurrentPlayer().playerAction[index].value}',
+                      '${widget.dsix.getCurrentPlayer().playerAction[index + 1].name}: ${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}',
                       style: TextStyle(
                         fontFamily: 'Headline',
                         height: 1.3,
@@ -202,7 +205,10 @@ class _CharacterPageState extends State<CharacterPage> {
             Padding(
               padding: const EdgeInsets.fromLTRB(35, 25, 25, 15),
               child: Text(
-                widget.dsix.getCurrentPlayer().playerAction[index].description,
+                widget.dsix
+                    .getCurrentPlayer()
+                    .playerAction[index + 1]
+                    .description,
                 style: TextStyle(
                   height: 1.25,
                   fontSize: 22,
@@ -229,7 +235,7 @@ class _CharacterPageState extends State<CharacterPage> {
     super.initState();
 
     myController = new TextEditingController(
-        text: widget.dsix.getCurrentPlayer().background.description);
+        text: widget.dsix.getCurrentPlayer().playerBackground.description);
   }
 
   @override
@@ -253,7 +259,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index].icon}.svg',
+                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width * 0.055,
                         ),
@@ -269,7 +275,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index].value}.svg',
+                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width * 0.055,
                         ),
@@ -321,7 +327,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(
-                            widget.dsix.getCurrentPlayer().name,
+                            widget.dsix.getCurrentPlayer().playerColor.name,
                             style: TextStyle(
                               fontFamily: 'Headline',
                               height: 1.3,
@@ -333,13 +339,20 @@ class _CharacterPageState extends State<CharacterPage> {
                               letterSpacing: 2,
                             ),
                           ),
-                          // Padding(
-                          //  padding: const EdgeInsets.fromLTRB(20, 0, 0, 5),
-                          //  child: SizedBox(
-                          //     height: 45,
-                          //      child: Image.asset(
-                          //          'images/player/sex${widget.dsix.getCurrentPlayer().playerIndex}${widget.dsix.getCurrentPlayer().playerSex}.png')),
-                          //),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                            child: Container(
+                              height: 40,
+                              width: 40,
+                              child: SvgPicture.asset(
+                                'assets/player/${widget.dsix.getCurrentPlayer().playerSex}.svg',
+                                color: widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerColor
+                                    .primaryColor,
+                              ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -357,7 +370,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           child: Text(
                             widget.dsix
                                 .getCurrentPlayer()
-                                .background
+                                .playerBackground
                                 .description,
                             textAlign: TextAlign.justify,
                             style: TextStyle(

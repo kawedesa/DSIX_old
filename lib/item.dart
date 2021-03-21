@@ -1,7 +1,4 @@
-import 'package:flutter/cupertino.dart';
-
-class Item{
-
+class Item {
   String icon;
   String name;
   String itemClass;
@@ -15,12 +12,23 @@ class Item{
   int uses;
   int value;
 
-  Item(this.icon, this.name, this.itemClass, this.inventorySpace,  this.description, this.pDamage, this.pArmor, this.mDamage, this.mArmor,this.weight,this.uses,this.value,);
+  Item(
+    this.icon,
+    this.name,
+    this.itemClass,
+    this.inventorySpace,
+    this.description,
+    this.pDamage,
+    this.pArmor,
+    this.mDamage,
+    this.mArmor,
+    this.weight,
+    this.uses,
+    this.value,
+  );
 
-  Item copyItem(){
-
+  Item copyItem() {
     Item newItem = new Item(
-
         this.icon,
         this.name,
         this.itemClass,
@@ -36,5 +44,4 @@ class Item{
 
     return newItem;
   }
-
 }

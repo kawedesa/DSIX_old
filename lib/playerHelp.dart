@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/dsix.dart';
 
 class HelpPage extends StatefulWidget {
   final Dsix dsix;

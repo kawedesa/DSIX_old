@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'item.dart';
-import 'package:dsixv02app/models/game/game.dart';
 
 class InventoryPage extends StatefulWidget {
   final Function() refresh;
@@ -21,347 +20,45 @@ class _InventoryStatePage extends State<InventoryPage> {
   Color mainHandColor;
   Color offHandColor;
   Color bodyColor;
-  Widget button;
   List<String> ammoQuantity = [];
+  String equipOrUnequip;
 
-  void equip(Item item) {
-    widget.dsix.getCurrentPlayer().pDamage += item.pDamage;
-    widget.dsix.getCurrentPlayer().pArmor += item.pArmor;
-    widget.dsix.getCurrentPlayer().mDamage += item.mDamage;
-    widget.dsix.getCurrentPlayer().mArmor += item.mArmor;
-
-    //WEAPONS
-
-    if (item.inventorySpace == '1HAND') {
-      if (widget.dsix.getCurrentPlayer().mainHandEquip.icon == 'mainHand') {
-        mainHandColor = Colors.white;
-        widget.dsix.getCurrentPlayer().mainHandEquip = item;
-        widget.dsix.getCurrentPlayer().inventory.remove(item);
-      } else if (widget.dsix.getCurrentPlayer().offHandEquip.icon ==
-          'offHand') {
-        offHandColor = Colors.white;
-        widget.dsix.getCurrentPlayer().offHandEquip = item;
-        widget.dsix.getCurrentPlayer().inventory.remove(item);
-      } else if (widget.dsix.getCurrentPlayer().mainHandEquip.icon !=
-          'mainHand') {
-        unequip(widget.dsix.getCurrentPlayer().mainHandEquip, 'mainHand');
-        mainHandColor = Colors.white;
-        widget.dsix.getCurrentPlayer().mainHandEquip = item;
-        widget.dsix.getCurrentPlayer().inventory.remove(item);
-      }
-    } else if (item.inventorySpace == '2HAND') {
-      unequip(widget.dsix.getCurrentPlayer().mainHandEquip, 'mainHand');
-      unequip(widget.dsix.getCurrentPlayer().offHandEquip, 'offHand');
+  void checkColor() {
+    if (widget.dsix.getCurrentPlayer().mainHandEquip.name == '') {
+      mainHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    } else {
       mainHandColor = Colors.white;
+    }
+
+    if (widget.dsix.getCurrentPlayer().offHandEquip.name == '') {
+      offHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    } else {
       offHandColor = Colors.white;
-      widget.dsix.getCurrentPlayer().mainHandEquip = item;
-      widget.dsix.getCurrentPlayer().offHandEquip = item;
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
     }
 
-    //ARMOR
-
-    else if (item.inventorySpace == 'HEAD') {
-      unequip(widget.dsix.getCurrentPlayer().headEquip, 'head');
+    if (widget.dsix.getCurrentPlayer().headEquip.name == '') {
+      headColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    } else {
       headColor = Colors.white;
-      widget.dsix.getCurrentPlayer().headEquip = item;
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
-    } else if (item.inventorySpace == 'BODY') {
-      unequip(widget.dsix.getCurrentPlayer().bodyEquip, 'body');
+    }
+
+    if (widget.dsix.getCurrentPlayer().bodyEquip.name == '') {
+      bodyColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    } else {
       bodyColor = Colors.white;
-      widget.dsix.getCurrentPlayer().bodyEquip = item;
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
-    } else if (item.inventorySpace == 'FEET') {
-      unequip(widget.dsix.getCurrentPlayer().feetEquip, 'feet');
-      feetColor = Colors.white;
-      widget.dsix.getCurrentPlayer().feetEquip = item;
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
-    } else if (item.inventorySpace == 'HANDS') {
-      unequip(widget.dsix.getCurrentPlayer().handsEquip, 'hands');
+    }
+
+    if (widget.dsix.getCurrentPlayer().handsEquip.name == '') {
+      handsColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    } else {
       handsColor = Colors.white;
-      widget.dsix.getCurrentPlayer().handsEquip = item;
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
-    }
-  }
-
-  void unequip(Item item, String inventorySpace) {
-    widget.dsix.getCurrentPlayer().pDamage -= item.pDamage;
-    widget.dsix.getCurrentPlayer().pArmor -= item.pArmor;
-    widget.dsix.getCurrentPlayer().mDamage -= item.mDamage;
-    widget.dsix.getCurrentPlayer().mArmor -= item.mArmor;
-
-    //WEAPONS
-
-    if (item.icon == 'mainHand') {
-      widget.dsix.getCurrentPlayer().mainHandEquip = Item(
-        'mainHand',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      mainHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.icon == 'offHand') {
-      widget.dsix.getCurrentPlayer().offHandEquip = Item(
-        'offHand',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      offHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.inventorySpace == '1HAND') {
-      if (inventorySpace == 'mainHand') {
-        widget.dsix.getCurrentPlayer().inventory.add(item);
-        widget.dsix.getCurrentPlayer().mainHandEquip = Item(
-          'mainHand',
-          '',
-          '',
-          '',
-          '',
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-        );
-        mainHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-      } else if (inventorySpace == 'offHand') {
-        widget.dsix.getCurrentPlayer().inventory.add(item);
-        widget.dsix.getCurrentPlayer().offHandEquip = Item(
-          'offHand',
-          '',
-          '',
-          '',
-          '',
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-          0,
-        );
-        offHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-      }
-    } else if (item.inventorySpace == '2HAND') {
-      widget.dsix.getCurrentPlayer().inventory.add(item);
-      widget.dsix.getCurrentPlayer().mainHandEquip = Item(
-        'mainHand',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      widget.dsix.getCurrentPlayer().offHandEquip = Item(
-        'offHand',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      mainHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-      offHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
     }
 
-    //ARMOR
-
-    else if (item.icon == 'head') {
-      widget.dsix.getCurrentPlayer().headEquip = Item(
-        'head',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      headColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.icon == 'body') {
-      widget.dsix.getCurrentPlayer().bodyEquip = Item(
-        'body',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      bodyColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.icon == 'hands') {
-      widget.dsix.getCurrentPlayer().handsEquip = Item(
-        'hands',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      handsColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.icon == 'feet') {
-      widget.dsix.getCurrentPlayer().feetEquip = Item(
-        'feet',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
+    if (widget.dsix.getCurrentPlayer().feetEquip.name == '') {
       feetColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.inventorySpace == 'HEAD') {
-      widget.dsix.getCurrentPlayer().inventory.add(item);
-      widget.dsix.getCurrentPlayer().headEquip = Item(
-        'head',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      headColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.inventorySpace == 'BODY') {
-      widget.dsix.getCurrentPlayer().inventory.add(item);
-      widget.dsix.getCurrentPlayer().bodyEquip = Item(
-        'body',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      bodyColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.inventorySpace == 'FEET') {
-      widget.dsix.getCurrentPlayer().inventory.add(item);
-      widget.dsix.getCurrentPlayer().feetEquip = Item(
-        'feet',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      feetColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    } else if (item.inventorySpace == 'HANDS') {
-      widget.dsix.getCurrentPlayer().inventory.add(item);
-      widget.dsix.getCurrentPlayer().handsEquip = Item(
-        'hands',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-      );
-      handsColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-    }
-  }
-
-  void sell(Item item, String inventorySpace) {
-    widget.dsix.getCurrentPlayer().gold += item.value ~/ 2;
-    widget.dsix.getCurrentPlayer().currentWeight -= item.weight;
-
-    if (inventorySpace != 'INVENTORY') {
-      unequip(item, inventorySpace);
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
     } else {
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
+      feetColor = Colors.white;
     }
-    widget.refresh();
-
-    //Pop back to inventory
-
-    Navigator.of(context).pop(true);
-  }
-
-  void destroy(Item item, String inventorySpace) {
-    widget.dsix.getCurrentPlayer().currentWeight -= item.weight;
-
-    if (inventorySpace != '') {
-      unequip(item, inventorySpace);
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
-    } else {
-      widget.dsix.getCurrentPlayer().inventory.remove(item);
-    }
-    widget.refresh();
-
-    //Pop back to inventory
-
-    Navigator.of(context).pop(true);
   }
 
   void checkEquipped(Item item, String inventorySpace) {
@@ -378,137 +75,17 @@ class _InventoryStatePage extends State<InventoryPage> {
       }
     }
 
-    //EQUIP and UNEQUIP
-
-    if (inventorySpace != 'INVENTORY') {
-      button = Padding(
-        padding: const EdgeInsets.fromLTRB(30, 5, 30, 0),
-        child: TextButton(
-          onPressed: () {
-            unequip(item, inventorySpace);
-            widget.refresh();
-            Navigator.of(context).pop(true);
-          },
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-          ),
-          child: Stack(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                    child: SvgPicture.asset(
-                      'assets/ui/down.svg',
-                      color: widget.dsix
-                          .getCurrentPlayer()
-                          .playerColor
-                          .primaryColor,
-                      width: MediaQuery.of(context).size.width * 0.055,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-                    width: 2.5, //                   <--- border width here
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Center(
-                    child: Text(
-                      'UNEQUIP',
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-      showAlertDialogItemDetail(context, item, inventorySpace);
+    if (inventorySpace != 'inventory') {
+      equipOrUnequip = 'UNEQUIP';
     } else {
-      button = Padding(
-        padding: const EdgeInsets.fromLTRB(30, 5, 30, 0),
-        child: TextButton(
-          onPressed: () {
-            equip(item);
-            widget.refresh();
-            Navigator.of(context).pop(true);
-          },
-          style: TextButton.styleFrom(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-          ),
-          child: Stack(
-            children: <Widget>[
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                    child: SvgPicture.asset(
-                      'assets/ui/up.svg',
-                      color: widget.dsix
-                          .getCurrentPlayer()
-                          .playerColor
-                          .primaryColor,
-                      width: MediaQuery.of(context).size.width * 0.055,
-                    ),
-                  ),
-                ],
-              ),
-              Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-                    width: 2.5, //                   <--- border width here
-                  ),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                  child: Center(
-                    child: Text(
-                      'EQUIP',
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-      showAlertDialogItemDetail(context, item, inventorySpace);
+      equipOrUnequip = 'EQUIP';
     }
+
+    showAlertDialogItemDetail(context, item, equipOrUnequip);
   }
 
   showAlertDialogItemDetail(
-      BuildContext context, Item item, String inventorySpace) {
+      BuildContext context, Item item, String equipOrUnequip) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -523,7 +100,6 @@ class _InventoryStatePage extends State<InventoryPage> {
               ),
             ),
             width: 300,
-            // height: 630,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -561,8 +137,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                         padding: const EdgeInsets.fromLTRB(275, 0, 0, 0),
                         child: GestureDetector(
                           onTap: () {
+                            Navigator.of(context).pop(true);
                             showAlertDialogDestroyItem(
-                                context, item, inventorySpace);
+                                context, item, equipOrUnequip);
                           },
                           child: SvgPicture.asset(
                             'assets/ui/cancel.svg',
@@ -588,7 +165,6 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 child: SvgPicture.asset(
                                   'assets/item/${ammoQuantity[index]}.svg',
                                   color: Colors.white,
-                                  // width: MediaQuery.of(context).size.width * 0.001,
                                 ),
                               );
                             }),
@@ -600,7 +176,6 @@ class _InventoryStatePage extends State<InventoryPage> {
                         child: SvgPicture.asset(
                           'assets/item/${item.icon}.svg',
                           color: Colors.white,
-                          //width: MediaQuery.of(context).size.width * 0.125,
                         ),
                       ),
                     ]),
@@ -754,8 +329,6 @@ class _InventoryStatePage extends State<InventoryPage> {
 
                 Container(
                   width: double.infinity,
-                  // height: 165,
-                  //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
                     child: Text(
@@ -771,13 +344,82 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ),
 
-                button,
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 0),
+                  child: TextButton(
+                    onPressed: () {
+                      widget.dsix
+                          .getCurrentPlayer()
+                          .equip(item, equipOrUnequip);
+
+                      checkColor();
+
+                      widget.refresh();
+                      Navigator.of(context).pop(true);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                    ),
+                    child: Stack(
+                      children: <Widget>[
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
+                              child: SvgPicture.asset(
+                                'assets/ui/check.svg',
+                                color: widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerColor
+                                    .primaryColor,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.055,
+                              ),
+                            ),
+                          ],
+                        ),
+                        Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            border: Border.all(
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
+                              width:
+                                  2.5, //                   <--- border width here
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                            child: Center(
+                              child: Text(
+                                equipOrUnequip,
+                                style: TextStyle(
+                                  height: 1.5,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
 
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 15),
                   child: TextButton(
                     onPressed: () {
-                      showAlertDialogSellItem(context, item, inventorySpace);
+                      Navigator.of(context).pop(true);
+                      showAlertDialogSellItem(context, item, equipOrUnequip);
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -851,7 +493,7 @@ class _InventoryStatePage extends State<InventoryPage> {
   }
 
   showAlertDialogSellItem(
-      BuildContext context, Item item, String inventorySpace) {
+      BuildContext context, Item item, String equipOrUnequip) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -897,8 +539,6 @@ class _InventoryStatePage extends State<InventoryPage> {
 
                 Container(
                   width: double.infinity,
-                  // height: 145,
-                  //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(35, 10, 35, 15),
                     child: Text(
@@ -918,7 +558,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      sell(item, inventorySpace);
+                      widget.dsix
+                          .getCurrentPlayer()
+                          .sellItem(item, equipOrUnequip);
+                      checkColor();
+                      widget.refresh();
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
@@ -1055,7 +699,7 @@ class _InventoryStatePage extends State<InventoryPage> {
   }
 
   showAlertDialogDestroyItem(
-      BuildContext context, Item item, String inventorySpace) {
+      BuildContext context, Item item, String equipOrUnequip) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -1070,7 +714,6 @@ class _InventoryStatePage extends State<InventoryPage> {
               ),
             ),
             width: 300,
-            // height: 330,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1101,8 +744,6 @@ class _InventoryStatePage extends State<InventoryPage> {
 
                 Container(
                   width: double.infinity,
-                  // height: 145,
-                  //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(35, 10, 35, 15),
                     child: Text(
@@ -1122,7 +763,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      destroy(item, inventorySpace);
+                      widget.dsix
+                          .getCurrentPlayer()
+                          .destroyItem(item, equipOrUnequip);
+                      checkColor();
+                      widget.refresh();
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
@@ -1571,8 +1216,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                                widget.dsix.getCurrentPlayer().mainHandEquip,
-                                'mainHand');
+                              widget.dsix.getCurrentPlayer().mainHandEquip,
+                              'mainHand',
+                            );
                           },
                           child: SvgPicture.asset(
                             'assets/item/${widget.dsix.getCurrentPlayer().mainHandEquip.icon}.svg',
@@ -1599,8 +1245,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                                widget.dsix.getCurrentPlayer().handsEquip,
-                                'HANDS');
+                              widget.dsix.getCurrentPlayer().handsEquip,
+                              'hands',
+                            );
                           },
                           child: SvgPicture.asset(
                             'assets/item/${widget.dsix.getCurrentPlayer().handsEquip.icon}.svg',
@@ -1632,8 +1279,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                                widget.dsix.getCurrentPlayer().headEquip,
-                                'HEAD');
+                              widget.dsix.getCurrentPlayer().headEquip,
+                              'head',
+                            );
                           },
                           child: SvgPicture.asset(
                             'assets/item/${widget.dsix.getCurrentPlayer().headEquip.icon}.svg',
@@ -1661,7 +1309,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           onPressed: () {
                             checkEquipped(
                                 widget.dsix.getCurrentPlayer().bodyEquip,
-                                'BODY');
+                                'body');
                           },
                           child: SvgPicture.asset(
                             'assets/item/${widget.dsix.getCurrentPlayer().bodyEquip.icon}.svg',
@@ -1722,7 +1370,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           onPressed: () {
                             checkEquipped(
                                 widget.dsix.getCurrentPlayer().feetEquip,
-                                'FEET');
+                                'feet');
                           },
                           child: SvgPicture.asset(
                             'assets/item/${widget.dsix.getCurrentPlayer().feetEquip.icon}.svg',
@@ -1756,7 +1404,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     onPressed: () {
                       checkEquipped(
                           widget.dsix.getCurrentPlayer().inventory[index],
-                          'INVENTORY');
+                          'inventory');
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.all(0),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'playersPage.dart';
 import 'models/player/player.dart';
-import 'models/game/game.dart';
+import 'models/game/dsix.dart';
 
 void main() {
   runApp(DsixApp());

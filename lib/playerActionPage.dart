@@ -1,14 +1,14 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-
+import 'package:dsixv02app/models/game/dice.dart';
+import 'buff.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math';
+
 import 'playerAction.dart';
 import 'option.dart';
-import 'item.dart';
-import 'buff.dart';
-import 'package:dsixv02app/models/game/game.dart';
+
+import 'package:dsixv02app/models/game/dsix.dart';
 import 'models/player/exceptions.dart';
 
 class ActionPage extends StatefulWidget {
@@ -48,72 +48,114 @@ class _ActionPageState extends State<ActionPage> {
       'null',
       'null',
     ];
-    selectedAction.replaceRange(index, index + 1,
+    selectedAction.replaceRange(index - 1, index,
         [widget.dsix.getCurrentPlayer().playerAction[index].icon]);
     displayedAction = widget.dsix.getCurrentPlayer().playerAction[index];
   }
 
-  //DICE ANIMATION
-
-  int diceNumber;
-
-  List<String> diceAnimation = [
-    'Roll',
-    'Roll',
-  ];
-  List<double> hideLines = [
-    1.0,
-    1.0,
-  ];
-
-  //VARIABLES THAT CHANGE DEPENDING ON THE RESULT
-
-  List<int> randomNumbers;
-
-  String actionTitle = '';
-  String actionSubTitle = '';
-  Color resultColor;
-  int result;
-  String resultSum = '';
-  String resultText;
-  Widget resultAction;
-  String resultTitle;
-  String resultSubTitle;
-  String actionText;
-  String buttonText;
+  String displayText;
+  String displayTitle;
+  String displaySum = '';
+  Widget button;
+  List<Dice> diceList = [];
+  Dice die = Dice('Roll', 1);
   int bonus;
-  Item _localMainHandItem;
+  Color resultColor;
 
-  void resetAndRoll(int dice) {
-    //THIS RESETS EVERYTHING
+  double textSize;
 
-    diceAnimation = [
-      'Roll',
-      'Roll',
-    ];
-    hideLines = [
-      1.0,
-      1.0,
-    ];
-
-    diceNumber = dice;
-    randomNumbers = [];
-    while (dice > randomNumbers.length) {
-      randomNumbers.add(0);
+  void checkResult(List<Dice> dice, Option option) {
+    for (int check = 0; check < diceList.length; check++) {
+      if (diceList[check].dice == 'Roll') {
+        return;
+      }
     }
-    result = 0;
 
-    resultSum = '';
-    actionText = '';
-    resultText = '';
-    resultAction = Container();
-    resultColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    int result = 0;
+
+    for (int check = 0; check < diceList.length; check++) {
+      result += int.parse(diceList[check].dice);
+    }
+
+    if (option.name == displayTitle) {
+      result += displayedAction.value;
+
+      widget.dsix.getCurrentPlayer().mainHandEquip.uses--;
+      widget.dsix.getCurrentPlayer().offHandEquip.uses--;
+      widget.dsix.getCurrentPlayer().actionsTaken++;
+
+      displaySum =
+          '${result - displayedAction.value} + ${displayedAction.value} = $result';
+
+      bonus = result;
+
+      if (result < 7) {
+        textSize = 1.25;
+        displayText = option.fail;
+        displayTitle = 'FAIL';
+        resultColor = Colors.red;
+        widget.dsix
+            .getCurrentPlayer()
+            .concentration(displayedAction.concentration);
+
+        return;
+      } else if (result > 9) {
+        displayTitle = 'SUCCESS';
+        if (option.result != '') {
+          rollButton(2, option);
+          resultColor = Colors.green;
+          widget.dsix
+              .getCurrentPlayer()
+              .concentration(displayedAction.concentration);
+
+          return;
+        } else {
+          textSize = 1.25;
+          displayText = option.success;
+          resultColor = Colors.green;
+          widget.dsix
+              .getCurrentPlayer()
+              .concentration(displayedAction.concentration);
+
+          return;
+        }
+      } else {
+        displayTitle = 'HALF SUCCESS';
+        if (option.result != '') {
+          rollButton(1, option);
+          resultColor = Colors.green;
+          widget.dsix
+              .getCurrentPlayer()
+              .concentration(displayedAction.concentration);
+
+          return;
+        } else {
+          textSize = 1.25;
+          displayText = option.halfSuccess;
+          resultColor = Colors.green;
+          widget.dsix
+              .getCurrentPlayer()
+              .concentration(displayedAction.concentration);
+
+          return;
+        }
+      }
+    } else {
+      if (displayTitle == 'FAIL' ||
+          displayTitle == 'HALF SUCCESS' ||
+          displayTitle == 'SUCCESS') {
+        return;
+      }
+      result += option.value;
+      displaySum = '${result - option.value} + ${option.value} = $result';
+      textSize = 1.25;
+      displayText = '${option.success} $result';
+    }
   }
 
-  void checkOption(Option option) {
+  void roll(int diceNumber, String title, Option option) {
     try {
       bool withWeapon = false;
-
       switch (displayedAction.name) {
         case 'ATTACK':
           if (option.name == 'WEAPON') {
@@ -123,894 +165,92 @@ class _ActionPageState extends State<ActionPage> {
           break;
       }
 
-      resetAndRoll(2);
-
-      widget.dsix.getCurrentPlayer().attack(withWeapon, 0);
-      showAlertDialogActionRoll(context, option);
+      widget.dsix.getCurrentPlayer().checkWeapon(withWeapon);
     } on NoAmmoException catch (e) {
       alertTitle = e.title;
       alertDescription = e.message;
       showAlertDialogCheckWeapon(context);
+      return;
     } on NoWeaponException catch (e) {
       alertTitle = e.title;
       alertDescription = e.message;
       showAlertDialogCheckWeapon(context);
+      return;
     }
 
-    // alertTitle = '';
-    // alertDescription = '';
-    // actionTitle = displayedAction.name;
-    // actionSubTitle = ' +${displayedAction.value}';
-    // resetAndRoll(2);
+    bonus = displayedAction.value;
+    displayTitle = title;
+    displayText = '';
+    displaySum = '';
+    textSize = 0;
+    button = Container();
+    resultColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
 
-    // if (option.name == 'WEAPON') {
-    //   if (widget.dsix.getCurrentPlayer().offHandEquip.name == '' &&
-    //       widget.dsix.getCurrentPlayer().mainHandEquip.name == '') {
-    //     alertTitle = 'NO WEAPON';
-    //     alertDescription =
-    //         'Sorry, but you need to equip a weapon first. \nYou can buy weapons in the shop menu and equip them in the inventory.';
-    //     showAlertDialogCheckWeapon(context);
+    diceList = [];
 
-    //     //CHECK FOR AMMO
-    //   } else if (widget.dsix.getCurrentPlayer().mainHandEquip.itemClass ==
-    //           'rangedWeapon' &&
-    //       widget.dsix.getCurrentPlayer().offHandEquip.itemClass != 'ammo') {
-    //     alertTitle = 'NO AMMO';
-    //     alertDescription =
-    //         'You don\'t have enough ammo to use your ${widget.dsix.getCurrentPlayer().mainHandEquip.name}.';
-    //     showAlertDialogCheckWeapon(context);
-    //   } else if (widget.dsix.getCurrentPlayer().offHandEquip.itemClass ==
-    //           'rangedWeapon' &&
-    //       widget.dsix.getCurrentPlayer().mainHandEquip.itemClass != 'ammo') {
-    //     alertTitle = 'NO AMMO';
-    //     alertDescription =
-    //         'You don\'t have enough ammo to use your ${widget.dsix.getCurrentPlayer().offHandEquip.name}.';
-    //     showAlertDialogCheckWeapon(context);
-    //   } else {
-    //     widget.dsix.getCurrentPlayer().mainHandEquip.uses--;
-    //     widget.dsix.getCurrentPlayer().offHandEquip.uses--;
-    //     showAlertDialogActionRoll(context, option);
-    //   }
-    // } else {
-    //   showAlertDialogActionRoll(context, option);
-    // }
+    for (int check = 0; check < diceNumber; check++) {
+      diceList.add(die.newDice());
+    }
+
+    showAlertDialogActionRoll(context, option);
   }
 
-  //THIS ROLLS AND DECIDES THE OUTCOME OF THE ACTION
-
-  void rollDice(int index, Option option) {
-    if (randomNumbers[index] == 0) {
-      randomNumbers[index] = Random().nextInt(5) + 1;
-      diceAnimation[index] = '${randomNumbers[index]}';
-      hideLines[index] = 0;
-    }
-
-    if (randomNumbers.contains(0) == false && result == 0) {
-      widget.dsix.getCurrentPlayer().actionsTaken++;
-
-      int check = 0;
-
-      while (check < randomNumbers.length) {
-        result += randomNumbers[check];
-        check++;
-      }
-
-      result += displayedAction.value;
-      resultSum =
-          '${randomNumbers[0]} + ${randomNumbers[1]} + ${displayedAction.value} = $result';
-
-      if (result >= 10) {
-        actionTitle = 'SUCCESS';
-        actionSubTitle = '';
-        resultColor = Colors.green;
-        actionText = option.success;
-
-        if (displayedAction.name == 'ALTER SENSES' ||
-            displayedAction.name == 'ILLUSION') {
-          if (displayedAction.name == 'ILLUSION') {
-            resultTitle = 'ILLUSION';
-            resultSubTitle = '';
-            resultText = 'Choose two senses.';
-            buttonText = 'SENSES';
-          } else if (option.name == 'ENHANCE') {
-            resultTitle = 'ENHANCE';
-            resultSubTitle = '';
-            resultText = 'Choose two senses.';
-            buttonText = 'SENSES';
-          } else if (option.name == 'REMOVE') {
-            resultTitle = 'REMOVE';
-            resultSubTitle = '';
-            resultText = 'Choose two senses.';
-            buttonText = 'SENSES';
-          }
-          resultAction = TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(0),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              showAlertDialogChooseSenses(context, 2);
-            },
-            child: Stack(
+  void rollButton(int diceNumber, Option option) {
+    button = GestureDetector(
+      onTap: () {
+        setState(() {
+          Navigator.pop(context);
+          roll(diceNumber, option.result, option);
+          bonus = option.value;
+        });
+      },
+      child: Stack(
+        children: <Widget>[
+          Container(
+            width: double.infinity,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.end,
               children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                        child: SvgPicture.asset(
-                          'assets/ui/action.svg',
-                          color: resultColor,
-                          width: MediaQuery.of(context).size.width * 0.055,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: resultColor,
-                      width: 2.5, //                   <--- border width here
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Center(
-                      child: Text(
-                        buttonText,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
+                  child: SvgPicture.asset(
+                    'assets/ui/action.svg',
+                    color: Colors.green,
+                    width: MediaQuery.of(context).size.width * 0.055,
                   ),
                 ),
               ],
             ),
-          );
-        } else if (displayedAction.name == 'ATTACK' ||
-            displayedAction.name == 'DEFEND') {
-          if (displayedAction.name == 'ATTACK' && option.name == 'PUNCH') {
-            resultTitle = 'DAMAGE';
-            resultSubTitle = '';
-            bonus = 0;
-            buttonText = 'DAMAGE';
-          } else if (displayedAction.name == 'ATTACK' &&
-              option.name == 'WEAPON') {
-            resultTitle = 'DAMAGE';
-            bonus = widget.dsix.getCurrentPlayer().pDamage +
-                widget.dsix.getCurrentPlayer().mDamage;
-            resultSubTitle = '+ $bonus';
-            buttonText = 'DAMAGE';
-          } else if (displayedAction.name == 'DEFEND' &&
-              option.name == 'PHYSICAL DEFENSE') {
-            resultTitle = 'DEFEND';
-            bonus = widget.dsix.getCurrentPlayer().pArmor;
-            resultSubTitle = '+ $bonus';
-            buttonText = 'DEFEND';
-          } else if (displayedAction.name == 'DEFEND' &&
-              option.name == 'MAGIC DEFENSE') {
-            resultTitle = 'DEFEND';
-            bonus = widget.dsix.getCurrentPlayer().mArmor;
-            resultSubTitle = '+ $bonus';
-            buttonText = 'DEFEND';
-          }
-          resultAction = TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(0),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              resetAndRoll(2);
-              showAlertDialogActionResultRoll(context, bonus);
-            },
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                        child: SvgPicture.asset(
-                          'assets/ui/action.svg',
-                          color: resultColor,
-                          width: MediaQuery.of(context).size.width * 0.055,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: resultColor,
-                      width: 2.5, //                   <--- border width here
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Center(
-                      child: Text(
-                        buttonText,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else if (displayedAction.name == 'CALL OF NATURE') {
-          if (option.name == 'DEFEND') {
-            resultTitle = 'DEFEND';
-            bonus = 0;
-            resultSubTitle = '';
-            buttonText = 'DEFEND';
-            resultAction = TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(0),
+          ),
+          Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.green,
+                width: 2.5, //                   <--- border width here
               ),
-              onPressed: () {
-                Navigator.pop(context);
-                resetAndRoll(2);
-                showAlertDialogActionResultRoll(context, bonus);
-              },
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                          child: SvgPicture.asset(
-                            'assets/ui/action.svg',
-                            color: resultColor,
-                            width: MediaQuery.of(context).size.width * 0.055,
-                          ),
-                        ),
-                      ],
-                    ),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+              child: Center(
+                child: Text(
+                  option.result,
+                  style: TextStyle(
+                    height: 1.5,
+                    fontSize: 17,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                    fontFamily: 'Calibri',
+                    color: Colors.white,
                   ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: resultColor,
-                        width: 2.5, //                   <--- border width here
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Center(
-                        child: Text(
-                          buttonText,
-                          style: TextStyle(
-                            height: 1.5,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontFamily: 'Calibri',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
+                ),
               ),
-            );
-          } else if (option.name == 'ATTACK') {
-            resultTitle = 'DAMAGE';
-            bonus = 0;
-            resultSubTitle = '';
-            buttonText = 'DAMAGE';
-            resultAction = TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(0),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                resetAndRoll(2);
-                showAlertDialogActionResultRoll(context, bonus);
-              },
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                          child: SvgPicture.asset(
-                            'assets/ui/action.svg',
-                            color: resultColor,
-                            width: MediaQuery.of(context).size.width * 0.055,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: resultColor,
-                        width: 2.5, //                   <--- border width here
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Center(
-                        child: Text(
-                          buttonText,
-                          style: TextStyle(
-                            height: 1.5,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontFamily: 'Calibri',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        } else if (displayedAction.name == 'ALCHEMY' && option.name == 'FIRE') {
-          resultTitle = 'DAMAGE';
-          bonus = 0;
-          resultSubTitle = '';
-          buttonText = 'DAMAGE';
-          resultAction = TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(0),
             ),
-            onPressed: () {
-              Navigator.pop(context);
-              resetAndRoll(2);
-              showAlertDialogActionResultRoll(context, bonus);
-            },
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                        child: SvgPicture.asset(
-                          'assets/ui/action.svg',
-                          color: resultColor,
-                          width: MediaQuery.of(context).size.width * 0.055,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: resultColor,
-                      width: 2.5, //                   <--- border width here
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Center(
-                      child: Text(
-                        buttonText,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-      } else if (result <= 9 && result >= 7) {
-        actionTitle = 'HALF SUCCESS';
-        actionSubTitle = '';
-        resultColor = Colors.green;
-        actionText = option.halfSuccess;
-
-        if (displayedAction.name == 'ALTER SENSES' ||
-            displayedAction.name == 'ILLUSION') {
-          if (displayedAction.name == 'ILLUSION') {
-            resultTitle = 'ILLUSION';
-            resultSubTitle = '';
-            resultText = 'Choose one sense.';
-            buttonText = 'SENSES';
-          } else if (option.name == 'ENHANCE') {
-            resultTitle = 'ENHANCE';
-            resultSubTitle = '';
-            resultText = 'Choose one sense.';
-            buttonText = 'SENSES';
-          } else if (option.name == 'REMOVE') {
-            resultTitle = 'REMOVE';
-            resultSubTitle = '';
-            resultText = 'Choose one sense.';
-            buttonText = 'SENSES';
-          }
-          resultAction = TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(0),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              showAlertDialogChooseSenses(context, 1);
-            },
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                        child: SvgPicture.asset(
-                          'assets/ui/action.svg',
-                          color: resultColor,
-                          width: MediaQuery.of(context).size.width * 0.055,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: resultColor,
-                      width: 2.5, //                   <--- border width here
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Center(
-                      child: Text(
-                        buttonText,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else if (displayedAction.name == 'ATTACK' ||
-            displayedAction.name == 'DEFEND') {
-          if (displayedAction.name == 'ATTACK' && option.name == 'PUNCH') {
-            resultTitle = 'DAMAGE';
-            resultSubTitle = '';
-            bonus = 0;
-            buttonText = 'DAMAGE';
-          } else if (displayedAction.name == 'ATTACK' &&
-              option.name == 'WEAPON') {
-            resultTitle = 'DAMAGE';
-            bonus = widget.dsix.getCurrentPlayer().pDamage +
-                widget.dsix.getCurrentPlayer().mDamage;
-            resultSubTitle = '+ $bonus';
-            buttonText = 'DAMAGE';
-          } else if (displayedAction.name == 'DEFEND' &&
-              option.name == 'PHYSICAL DEFENSE') {
-            resultTitle = 'DEFEND';
-            bonus = widget.dsix.getCurrentPlayer().pArmor;
-            resultSubTitle = '+ $bonus';
-            buttonText = 'DEFEND';
-          } else if (displayedAction.name == 'DEFEND' &&
-              option.name == 'MAGIC DEFENSE') {
-            resultTitle = 'DEFEND';
-            bonus = widget.dsix.getCurrentPlayer().mArmor;
-            resultSubTitle = '+ $bonus';
-            buttonText = 'DEFEND';
-          }
-          resultAction = TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(0),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              resetAndRoll(1);
-              showAlertDialogActionResultRoll(context, bonus);
-            },
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                        child: SvgPicture.asset(
-                          'assets/ui/action.svg',
-                          color: resultColor,
-                          width: MediaQuery.of(context).size.width * 0.055,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: resultColor,
-                      width: 2.5, //                   <--- border width here
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Center(
-                      child: Text(
-                        buttonText,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        } else if (displayedAction.name == 'CALL OF NATURE') {
-          if (option.name == 'DEFEND') {
-            resultTitle = 'DEFEND';
-            bonus = 0;
-            resultSubTitle = '';
-            buttonText = 'DEFEND';
-            resultAction = TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(0),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                resetAndRoll(1);
-                showAlertDialogActionResultRoll(context, bonus);
-              },
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                          child: SvgPicture.asset(
-                            'assets/ui/action.svg',
-                            color: resultColor,
-                            width: MediaQuery.of(context).size.width * 0.055,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: resultColor,
-                        width: 2.5, //                   <--- border width here
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Center(
-                        child: Text(
-                          buttonText,
-                          style: TextStyle(
-                            height: 1.5,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontFamily: 'Calibri',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          } else if (option.name == 'ATTACK') {
-            resultTitle = 'DAMAGE';
-            bonus = 0;
-            resultSubTitle = '';
-            buttonText = 'DAMAGE';
-            resultAction = TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.all(0),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-                resetAndRoll(1);
-                showAlertDialogActionResultRoll(context, bonus);
-              },
-              child: Stack(
-                children: <Widget>[
-                  Container(
-                    width: double.infinity,
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                          child: SvgPicture.asset(
-                            'assets/ui/action.svg',
-                            color: resultColor,
-                            width: MediaQuery.of(context).size.width * 0.055,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: resultColor,
-                        width: 2.5, //                   <--- border width here
-                      ),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Center(
-                        child: Text(
-                          buttonText,
-                          style: TextStyle(
-                            height: 1.5,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontFamily: 'Calibri',
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            );
-          }
-        } else if (displayedAction.name == 'ALCHEMY' && option.name == 'FIRE') {
-          resultTitle = 'DAMAGE';
-          bonus = 0;
-          resultSubTitle = '';
-          buttonText = 'DAMAGE';
-          resultAction = TextButton(
-            style: TextButton.styleFrom(
-              padding: const EdgeInsets.all(0),
-            ),
-            onPressed: () {
-              Navigator.pop(context);
-              resetAndRoll(1);
-              showAlertDialogActionResultRoll(context, bonus);
-            },
-            child: Stack(
-              children: <Widget>[
-                Container(
-                  width: double.infinity,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
-                        child: SvgPicture.asset(
-                          'assets/ui/action.svg',
-                          color: resultColor,
-                          width: MediaQuery.of(context).size.width * 0.055,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                Container(
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: resultColor,
-                      width: 2.5, //                   <--- border width here
-                    ),
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    child: Center(
-                      child: Text(
-                        buttonText,
-                        style: TextStyle(
-                          height: 1.5,
-                          fontSize: 17,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 1.5,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        }
-      } else {
-        actionTitle = 'FAIL';
-        actionSubTitle = '';
-        resultColor = Colors.red;
-        actionText = option.fail;
-      }
-
-      if (widget.dsix.getCurrentPlayer().buffList.length != 0) {
-        for (int check = 0;
-            check < widget.dsix.getCurrentPlayer().buffList.length;
-            check++) {
-          widget.dsix.getCurrentPlayer().buffList[check].duration--;
-        }
-        for (int check = 0;
-            check < widget.dsix.getCurrentPlayer().buffList.length;
-            check++) {
-          if (widget.dsix.getCurrentPlayer().buffList[check].duration == 0) {
-            widget.dsix.getCurrentPlayer().buffList.removeAt(check);
-            widget.dsix.getCurrentPlayer().playerAction[5].value++;
-          }
-        }
-      }
-
-      if (displayedAction.concentration == true) {
-        widget.dsix.getCurrentPlayer().buffList.add(Buff(
-            displayedAction.icon,
-            'CONCENTRATION',
-            'This action requires concentration. Each time this action is taken consecutively, it will decrease the chance of success.',
-            -1,
-            2));
-        widget.dsix.getCurrentPlayer().playerAction[5].value--;
-      }
-    }
-  }
-
-  //THIS DECIDES THE OUTCOME OF THE RESULT
-
-  void resultRoll(int index, int bonus) {
-    int diceResult = 0;
-
-    if (randomNumbers[index] == 0) {
-      randomNumbers[index] = Random().nextInt(5) + 1;
-      diceAnimation[index] = '${randomNumbers[index]}';
-      hideLines[index] = 0;
-    }
-
-    if (randomNumbers.contains(0) == false) {
-      for (int check = 0; check < randomNumbers.length; check++) {
-        diceResult += randomNumbers[check];
-      }
-
-      result = bonus + diceResult;
-      resultSum = '$diceResult + $bonus = $result';
-
-      if (resultTitle == 'DAMAGE') {
-        resultText = 'You deal $result points of damage.';
-      } else if (resultTitle == 'DEFEND') {
-        resultText = 'You defend $result points of damage.';
-      }
-
-      if (widget.dsix.getCurrentPlayer().mainHandEquip.itemClass ==
-              'thrownWeapon' ||
-          widget.dsix.getCurrentPlayer().mainHandEquip.itemClass == 'ammo') {
-        if (widget.dsix.getCurrentPlayer().mainHandEquip.uses <= 0) {
-          widget.dsix.getCurrentPlayer().pDamage -=
-              widget.dsix.getCurrentPlayer().mainHandEquip.pDamage;
-          widget.dsix.getCurrentPlayer().pArmor -=
-              widget.dsix.getCurrentPlayer().mainHandEquip.pArmor;
-          widget.dsix.getCurrentPlayer().mDamage -=
-              widget.dsix.getCurrentPlayer().mainHandEquip.mDamage;
-          widget.dsix.getCurrentPlayer().mArmor -=
-              widget.dsix.getCurrentPlayer().mainHandEquip.mArmor;
-          widget.dsix.getCurrentPlayer().mainHandEquip = Item(
-            'mainHand',
-            '',
-            '',
-            '',
-            '',
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-          );
-        }
-      } else if (widget.dsix.getCurrentPlayer().offHandEquip.itemClass ==
-              'thrownWeapon' ||
-          widget.dsix.getCurrentPlayer().offHandEquip.itemClass == 'ammo') {
-        if (widget.dsix.getCurrentPlayer().offHandEquip.uses <= 0) {
-          widget.dsix.getCurrentPlayer().pDamage -=
-              widget.dsix.getCurrentPlayer().offHandEquip.pDamage;
-          widget.dsix.getCurrentPlayer().pArmor -=
-              widget.dsix.getCurrentPlayer().offHandEquip.pArmor;
-          widget.dsix.getCurrentPlayer().mDamage -=
-              widget.dsix.getCurrentPlayer().offHandEquip.mDamage;
-          widget.dsix.getCurrentPlayer().mArmor -=
-              widget.dsix.getCurrentPlayer().offHandEquip.mArmor;
-          widget.dsix.getCurrentPlayer().offHandEquip = Item(
-            'offHand',
-            '',
-            '',
-            '',
-            '',
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-          );
-        }
-      }
-    }
+          ),
+        ],
+      ),
+    );
   }
 
   //THIS IS THE POP MENU THAT SHOWS THE DICE AND THE RESULT OF THE ACTION
@@ -1051,7 +291,7 @@ class _ActionPageState extends State<ActionPage> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Text(
-                                    actionTitle,
+                                    '$displayTitle',
                                     style: TextStyle(
                                       fontFamily: 'Headline',
                                       height: 1.3,
@@ -1061,15 +301,12 @@ class _ActionPageState extends State<ActionPage> {
                                     ),
                                   ),
                                   Text(
-                                    actionSubTitle,
+                                    ': $bonus',
                                     style: TextStyle(
                                       fontFamily: 'Headline',
                                       height: 1.3,
                                       fontSize: 30.0,
-                                      color: widget.dsix
-                                          .getCurrentPlayer()
-                                          .playerColor
-                                          .secondaryColor,
+                                      color: Colors.white,
                                       letterSpacing: 2,
                                     ),
                                   ),
@@ -1082,65 +319,75 @@ class _ActionPageState extends State<ActionPage> {
                           padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
                           child: Stack(
                             children: <Widget>[
-                              Container(
-                                width: 125 * (diceNumber).toDouble(),
-                                height: 200,
-                                child: ListView.builder(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: diceNumber,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return TextButton(
-                                        style: TextButton.styleFrom(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 0, 0, 0),
-                                        ),
-                                        onPressed: () {
-                                          setState(() {
-                                            rollDice(index, option);
-                                          });
-                                          widget.refresh();
-                                        },
-                                        child: SizedBox(
-                                          width: 125,
-                                          height: 200,
-                                          child: Stack(
-                                            children: <Widget>[
-                                              AnimatedOpacity(
-                                                curve: Curves.easeInOutExpo,
-                                                opacity: hideLines[index],
-                                                duration:
-                                                    Duration(milliseconds: 300),
-                                                child: FlareActor(
-                                                  'assets/animation/line.flr',
-                                                  fit: BoxFit.fitHeight,
-                                                  animation: 'Lines',
-                                                  color: widget.dsix
-                                                      .getCurrentPlayer()
-                                                      .playerColor
-                                                      .primaryColor,
-                                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Container(
+                                    width: 125 * (diceList.length).toDouble(),
+                                    height: 200,
+                                    child: ListView.builder(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 0, 0),
+                                        scrollDirection: Axis.horizontal,
+                                        itemCount: diceList.length,
+                                        itemBuilder:
+                                            (BuildContext context, int index) {
+                                          return TextButton(
+                                            style: TextButton.styleFrom(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 0, 0),
+                                            ),
+                                            onPressed: () {
+                                              setState(() {
+                                                diceList[index].rollDice();
+
+                                                checkResult(diceList, option);
+                                              });
+                                              widget.refresh();
+                                            },
+                                            child: SizedBox(
+                                              width: 125,
+                                              height: 200,
+                                              child: Stack(
+                                                children: <Widget>[
+                                                  AnimatedOpacity(
+                                                    curve: Curves.easeInOutExpo,
+                                                    opacity: diceList[index]
+                                                        .animationLines,
+                                                    duration: Duration(
+                                                        milliseconds: 300),
+                                                    child: FlareActor(
+                                                      'assets/animation/line.flr',
+                                                      fit: BoxFit.fitHeight,
+                                                      animation: 'Lines',
+                                                      color: widget.dsix
+                                                          .getCurrentPlayer()
+                                                          .playerColor
+                                                          .primaryColor,
+                                                    ),
+                                                  ),
+                                                  FlareActor(
+                                                    'assets/animation/dice.flr',
+                                                    fit: BoxFit.fitHeight,
+                                                    animation:
+                                                        diceList[index].dice,
+                                                    color: Colors.white,
+                                                  ),
+                                                ],
                                               ),
-                                              FlareActor(
-                                                'assets/animation/dice.flr',
-                                                fit: BoxFit.fitHeight,
-                                                animation: diceAnimation[index],
-                                                color: Colors.white,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      );
-                                    }),
+                                            ),
+                                          );
+                                        }),
+                                  ),
+                                ],
                               ),
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(30, 5, 30, 0),
                                 child: Center(
                                   child: Text(
-                                    resultSum,
+                                    displaySum,
                                     textAlign: TextAlign.justify,
                                     style: TextStyle(
                                       fontFamily: 'Headline',
@@ -1158,12 +405,11 @@ class _ActionPageState extends State<ActionPage> {
                                   children: [
                                     Container(
                                       width: double.infinity,
-                                      // color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
                                       child: Text(
-                                        actionText,
+                                        displayText,
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
-                                          height: 1.25,
+                                          height: textSize,
                                           fontSize: 23,
                                           fontFamily: 'Calibri',
                                           color: Colors.white,
@@ -1173,346 +419,9 @@ class _ActionPageState extends State<ActionPage> {
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
                                           0, 10, 0, 0),
-                                      child: resultAction,
+                                      child: button,
                                     ),
                                   ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  //THIS IS THE POP MENU THAT SHOWS THE DICE AND THE DAMAGE/PROTECTION RESULT
-  showAlertDialogActionResultRoll(BuildContext context, int bonus) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: Colors.black,
-              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: widget.dsix
-                            .getCurrentPlayer()
-                            .playerColor
-                            .primaryColor,
-                        width: 2.5, //                   <--- border width here
-                      ),
-                    ),
-                    width: 300,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          color: widget.dsix
-                              .getCurrentPlayer()
-                              .playerColor
-                              .primaryColor,
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                            child: Container(
-                              height: 40,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    resultTitle,
-                                    style: TextStyle(
-                                      fontFamily: 'Headline',
-                                      height: 1.3,
-                                      fontSize: 30.0,
-                                      color: Colors.white,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                  Text(
-                                    resultSubTitle,
-                                    style: TextStyle(
-                                      fontFamily: 'Headline',
-                                      height: 1.3,
-                                      fontSize: 30.0,
-                                      color: widget.dsix
-                                          .getCurrentPlayer()
-                                          .playerColor
-                                          .secondaryColor,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
-                          child: Stack(
-                            children: <Widget>[
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Container(
-                                    width: 125 * (diceNumber).toDouble(),
-                                    height: 200,
-                                    child: ListView.builder(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 0, 0),
-                                        scrollDirection: Axis.horizontal,
-                                        itemCount: diceNumber,
-                                        itemBuilder:
-                                            (BuildContext context, int index) {
-                                          return TextButton(
-                                            style: TextButton.styleFrom(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 0, 0, 0),
-                                            ),
-                                            onPressed: () {
-                                              setState(() {
-                                                resultRoll(index, bonus);
-                                              });
-                                              widget.refresh();
-                                            },
-                                            child: SizedBox(
-                                              width: 125,
-                                              height: 200,
-                                              child: Stack(
-                                                children: <Widget>[
-                                                  AnimatedOpacity(
-                                                    curve: Curves.easeInOutExpo,
-                                                    opacity: hideLines[index],
-                                                    duration: Duration(
-                                                        milliseconds: 300),
-                                                    child: FlareActor(
-                                                      'assets/animation/line.flr',
-                                                      fit: BoxFit.fitHeight,
-                                                      animation: 'Lines',
-                                                      color: widget.dsix
-                                                          .getCurrentPlayer()
-                                                          .playerColor
-                                                          .secondaryColor,
-                                                    ),
-                                                  ),
-                                                  FlareActor(
-                                                    'assets/animation/dice.flr',
-                                                    fit: BoxFit.fitHeight,
-                                                    animation:
-                                                        diceAnimation[index],
-                                                    color: Colors.white,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        }),
-                                  ),
-                                ],
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30, 5, 30, 0),
-                                child: Center(
-                                  child: Text(
-                                    resultSum,
-                                    textAlign: TextAlign.justify,
-                                    style: TextStyle(
-                                      fontFamily: 'Headline',
-                                      fontSize: 27.0,
-                                      color: Colors.white,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(13, 170, 13, 20),
-                                child: Column(
-                                  children: [
-                                    Container(
-                                      width: double.infinity,
-                                      // color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
-                                      child: Text(
-                                        resultText,
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(
-                                          height: 1.25,
-                                          fontSize: 23,
-                                          fontFamily: 'Calibri',
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
-                                      child: resultAction,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
-  //THIS IS THE POP MENU THAT LETS YOU CHOOSE THE SENSES
-
-  List<String> sense = ['Sound', 'Smell', 'Sight', 'Taste', 'Touch'];
-
-  showAlertDialogChooseSenses(BuildContext context, int numberOfSenses) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: Colors.black,
-              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: widget.dsix
-                            .getCurrentPlayer()
-                            .playerColor
-                            .primaryColor,
-                        width: 2.5, //                   <--- border width here
-                      ),
-                    ),
-                    width: 300,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          color: widget.dsix
-                              .getCurrentPlayer()
-                              .playerColor
-                              .primaryColor,
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
-                            child: Container(
-                              height: 40,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    actionTitle,
-                                    style: TextStyle(
-                                      fontFamily: 'Headline',
-                                      height: 1.3,
-                                      fontSize: 30.0,
-                                      color: Colors.white,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                  Text(
-                                    actionSubTitle,
-                                    style: TextStyle(
-                                      fontFamily: 'Headline',
-                                      height: 1.3,
-                                      fontSize: 30.0,
-                                      color: widget.dsix
-                                          .getCurrentPlayer()
-                                          .playerColor
-                                          .secondaryColor,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(22, 20, 22, 0),
-                          child: Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(13, 0, 13, 25),
-                                child: Text(
-                                  resultText,
-                                  textAlign: TextAlign.justify,
-                                  style: TextStyle(
-                                    height: 1.25,
-                                    fontSize: 23,
-                                    fontFamily: 'Calibri',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                              Container(
-                                height: 190,
-                                child: GridView.count(
-                                  crossAxisCount: 3,
-                                  children:
-                                      List.generate(sense.length, (index) {
-                                    return Padding(
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 0),
-                                      child: Container(
-                                        height: 25,
-                                        child: Column(
-                                          children: [
-                                            SvgPicture.asset(
-                                              'assets/action/${sense[index]}.svg',
-                                              color: Colors.white,
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.1,
-                                            ),
-                                            Text(
-                                              '${sense[index]}',
-                                              style: TextStyle(
-                                                height: 1.7,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                letterSpacing: 2,
-                                                fontFamily: 'Calibri',
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    );
-                                  }),
                                 ),
                               ),
                             ],
@@ -1627,7 +536,7 @@ class _ActionPageState extends State<ActionPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 15),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index].icon}.svg',
+                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width * 0.055,
                         ),
@@ -1643,7 +552,7 @@ class _ActionPageState extends State<ActionPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index].value}.svg',
+                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                           color: Colors.white,
                           width: MediaQuery.of(context).size.width * 0.055,
                         ),
@@ -1659,7 +568,7 @@ class _ActionPageState extends State<ActionPage> {
                         child: TextButton(
                           onPressed: () {
                             setState(() {
-                              actionSelection(index);
+                              actionSelection(index + 1);
                             });
                           },
                           style: TextButton.styleFrom(
@@ -1745,7 +654,10 @@ class _ActionPageState extends State<ActionPage> {
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                           ),
                           onPressed: () {
-                            checkOption(displayedAction.option[index]);
+                            roll(2, displayedAction.option[index].name,
+                                displayedAction.option[index]);
+
+                            // checkOption(displayedAction.option[index]);
                           },
                           child: Stack(
                             children: <Widget>[

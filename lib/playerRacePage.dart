@@ -1,11 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'playerRace.dart';
-import 'dart:math';
 import 'playerBackgroundPage.dart';
-import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'bonus.dart';
 
 class PlayerRacePage extends StatefulWidget {
   static const String routeName = "/playerRacePage";
@@ -19,124 +16,6 @@ class PlayerRacePage extends StatefulWidget {
 }
 
 class _PlayerRacePageState extends State<PlayerRacePage> {
-  static List<PlayerRace> races = [
-    PlayerRace(
-        'human',
-        'HUMAN',
-        'Humans are everywhere. They are flexible and adapt to most circumstances, so you get an extra action point to spend anyway you want.',
-        [
-          Bonus(
-              '+ ACTION POINT  ',
-              'actionPoint',
-              'Each action point allows you to permanently improve the chance of success of an action.',
-              1)
-        ]),
-    PlayerRace(
-        'orc',
-        'ORC',
-        'Orcs are tall and strong, making them good fighters but easy targets. They can carry more weight, but have a harder time moving around.',
-        [
-          Bonus('+ ATTACK  ', 'attack',
-              'You use this action when you attack a target.', 1),
-          Bonus(
-              '- MOVE  ',
-              'move',
-              'You use this action when you jump, climb, hide, dodge or escape.',
-              -1),
-          Bonus(
-              '+ WEIGHT  ',
-              'maxWeight',
-              'This represents the total amount of weight you can carry. Because of your strength, you can carry +6 weight.',
-              6)
-        ]),
-    PlayerRace(
-        'goblin',
-        'GOBLIN',
-        'Goblins are small, vicious creatures with sharp teeth and quick feet. They are not really strong, but are still very dangerous.',
-        [
-          Bonus('+ ATTACK  ', 'attack',
-              'You use this action when you attack a target.', 1),
-          Bonus(
-              '+ MOVE  ',
-              'move',
-              'You use this action when you jump, climb, hide, dodge or escape.',
-              1),
-          Bonus(
-              '- WEIGHT  ',
-              'maxWeight',
-              'This represents the total amount of weight you can carry. Because you are weak, you carry -6 weight.',
-              -6)
-        ]),
-    PlayerRace(
-        'dwarf',
-        'DWARF',
-        'Dwarfs are sturdy, allowing them to take more blows before going down. \nHowever, their small size and stubborn personality limits their perception.',
-        [
-          Bonus('+ DEFENSE  ', 'defense',
-              'You use this action when you protect yourself or others.', 1),
-          Bonus('- PERCEIVE  ', 'perceive',
-              'You use this action when you search for something.', -1),
-          Bonus(
-              '+ Health  ',
-              'maxHealth',
-              'This represents your total health and you die when it reaches zero. Because of your sturdy nature you have +6 HP.',
-              6)
-        ]),
-    PlayerRace(
-        'halfling',
-        'HALFLING',
-        'Halflings are small curious creatures, always looking for something new to learn. They are not really good at fighting and try to solve most problems without violence.',
-        [
-          Bonus('- ATTACK  ', 'attack',
-              'You use this action when you attack a target.', -1),
-          Bonus('+ PERCEIVE  ', 'perceive',
-              'You use this action when you search for something.', 1),
-          Bonus(
-              '+ TALK  ',
-              'talk',
-              'You use this action when you talk to someone that can understand you.',
-              1)
-        ]),
-    PlayerRace(
-        'elf',
-        'ELF',
-        'Elves have slim bodies and sharp senses, making them very perceptive and agile. Because of their frail constitution, they rely on their reflexes to avoid danger.',
-        [
-          Bonus('- DEFENSE  ', 'defense',
-              'You use this action when you protect yourself or others.', -1),
-          Bonus('+ PERCEIVE  ', 'perceive',
-              'You use this action when you search for something.', 1),
-          Bonus(
-              '+ MOVE  ',
-              'move',
-              'You use this action when you jump, climb, hide, dodge or escape.',
-              1)
-        ]),
-    PlayerRace(
-      '',
-      'RACES',
-      'There are many races that live in this world. They vary in size, culture and color. Click on the icons above to choose your race.',
-      [
-        Bonus(
-            'BONUS',
-            'bonus',
-            'Each race is unique and has different bonuses. Some are good, while others are bad. They affect how the game plays and the outcome of your actions.',
-            0)
-      ],
-    ),
-
-    //PlayerRace('gnome','GNOME','Gnomes are small and curious creatures, that are always working on a crazy project.',Bonus(0,'INVENTION', 'Choose your invention:',[Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),])),
-    //PlayerRace('darkElf','DARK ELF','Dark elfs are smarter than most people, making them quite arrogant.',Bonus(1,'INTELLIGENCE', 'Intelligence represents how much you know about the world.',[])),
-    //PlayerRace('machine','MACHINE','Machines are created with the ability to perform a task. They are everywhere, but only a few of them are conscious.',Bonus(0,'ABILITY', 'Choose your ability:',[Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),])),
-    //PlayerRace('elemental','ELEMENTAL','Elementals are powerful magical beings, that live in nature and protect their habitat.',Bonus(2,'MAGIC ARMOR', 'You have a defensive layer that protects against magic attacks.',[])),
-    //PlayerRace('lizard','LIZARD','Lizards are covered with beautiful scales that offer protection.',Bonus(2,'ARMOR', 'Your scales protect against physical attacks.',[])),
-    //PlayerRace('beast','BEAST','Beasts vary in size and power. Each one has a different ability that helps them survive in nature.',Bonus(0,'ABILITY', 'Choose your ability:',[Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),])),
-  ];
-
-  String infoIcon = 'help';
-
-  PlayerRace displayRace = races[6];
-
   int displaySex = 0;
 
   List<String> selectedRace = [
@@ -148,8 +27,6 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
     'null',
   ];
 
-  List<IconData> sex = [];
-
   void raceSelection(index) {
     selectedRace = [
       'null',
@@ -160,76 +37,10 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
       'null',
     ];
 
-    selectedRace.replaceRange(index, index + 1, [races[index].icon]);
-    widget.dsix.getCurrentPlayer().race = races[index];
-    displayRace = widget.dsix.getCurrentPlayer().race;
-  }
+    widget.dsix.getCurrentPlayer().chooseRace(index);
 
-  void confirm() {
-    // ASSIGN RACES BONUSES TO PLAYER
-
-    // RESET MAX life, MAX Weight and Action Points
-
-    widget.dsix.getCurrentPlayer().maxHealth = 12;
-    widget.dsix.getCurrentPlayer().maxWeight = 12;
-    widget.dsix.getCurrentPlayer().actionPoint = 3;
-
-    // RESET Actions value.
-
-    int check = 0;
-
-    while (check < widget.dsix.getCurrentPlayer().playerAction.length) {
-      widget.dsix.getCurrentPlayer().playerAction[check].value = 0;
-      check++;
-    }
-
-    // ASSIGN BONUSES
-
-    if (widget.dsix.getCurrentPlayer().race.race == 'HUMAN') {
-      widget.dsix.getCurrentPlayer().actionPoint = 4; //ACTION POINT
-    } else if (widget.dsix.getCurrentPlayer().race.race == 'ORC') {
-      widget.dsix.getCurrentPlayer().playerAction[0].value = 1; //ATTACK
-      widget.dsix.getCurrentPlayer().playerAction[4].value = -1; //MOVE
-      widget.dsix.getCurrentPlayer().maxWeight = 18; //WEIGHT
-    } else if (widget.dsix.getCurrentPlayer().race.race == 'GOBLIN') {
-      widget.dsix.getCurrentPlayer().playerAction[0].value = 1; //ATTACK
-      widget.dsix.getCurrentPlayer().playerAction[4].value = 1; //MOVE
-      widget.dsix.getCurrentPlayer().maxWeight = 6; //WEIGHT
-    } else if (widget.dsix.getCurrentPlayer().race.race == 'DWARF') {
-      widget.dsix.getCurrentPlayer().playerAction[1].value = 1; //DEFENSE
-      widget.dsix.getCurrentPlayer().playerAction[2].value = -1; //PERCEIVE
-      widget.dsix.getCurrentPlayer().maxHealth = 18; //HEALTH
-    } else if (widget.dsix.getCurrentPlayer().race.race == 'HALFLING') {
-      widget.dsix.getCurrentPlayer().playerAction[0].value = -1; //ATTACK
-      widget.dsix.getCurrentPlayer().playerAction[2].value = 1; //PERCEIVE
-      widget.dsix.getCurrentPlayer().playerAction[3].value = 1; //TALK
-    } else if (widget.dsix.getCurrentPlayer().race.race == 'ELF') {
-      widget.dsix.getCurrentPlayer().playerAction[1].value = -1; //DEFENCE
-      widget.dsix.getCurrentPlayer().playerAction[2].value = 1; //PERCEIVE
-      widget.dsix.getCurrentPlayer().playerAction[4].value = 1; //MOVE
-    }
-
-    //ASSIGN CURRENT WEIGHT AND HEALTH
-
-    widget.dsix.getCurrentPlayer().currentHealth =
-        widget.dsix.getCurrentPlayer().maxHealth;
-    widget.dsix.getCurrentPlayer().currentWeight = 0;
-
-    //MOVE TO NEXT PAGE
-
-    Navigator.of(context).push(_createRouteBackground());
-  }
-
-  void chooseSex() {
-    if (widget.dsix.getCurrentPlayer().playerSex == 1) {
-      widget.dsix.getCurrentPlayer().playerSex = 2;
-    } else if (widget.dsix.getCurrentPlayer().playerSex == 2) {
-      widget.dsix.getCurrentPlayer().playerSex = 1;
-    } else {
-      widget.dsix.getCurrentPlayer().playerSex = Random().nextInt(2) + 1;
-    }
-
-    displaySex = widget.dsix.getCurrentPlayer().playerSex;
+    selectedRace.replaceRange(
+        index, index + 1, [widget.dsix.getCurrentPlayer().races[index].icon]);
   }
 
   showAlertDialog(BuildContext context, int index) {
@@ -261,7 +72,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          displayRace.bonus[index].name,
+                          widget.dsix.getCurrentPlayer().race.bonus[index].name,
                           style: TextStyle(
                             fontFamily: 'Headline',
                             height: 1.3,
@@ -277,7 +88,11 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
                   child: Text(
-                    displayRace.bonus[index].description,
+                    widget.dsix
+                        .getCurrentPlayer()
+                        .race
+                        .bonus[index]
+                        .description,
                     style: TextStyle(
                       height: 1.25,
                       fontSize: 22,
@@ -373,7 +188,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                     size: 40,
                   ),
                   onPressed: () {
-                    confirm();
+                    Navigator.of(context).push(_createRouteBackground());
                   },
                 ),
               ),
@@ -399,7 +214,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
                               child: SvgPicture.asset(
-                                'assets/race/${races[index].icon}.svg',
+                                'assets/race/${widget.dsix.getCurrentPlayer().races[index].icon}.svg',
                                 color: Colors.white,
                                 width:
                                     MediaQuery.of(context).size.width * 0.055,
@@ -418,7 +233,6 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                   setState(() {
                                     _updateState();
                                     raceSelection(index);
-                                    chooseSex();
                                   });
                                 },
                                 style: TextButton.styleFrom(
@@ -457,10 +271,11 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: Row(
+                            mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
                               Text(
-                                displayRace.race,
+                                widget.dsix.getCurrentPlayer().race.race,
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1.3,
@@ -472,28 +287,36 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                   letterSpacing: 2,
                                 ),
                               ),
-                              // Padding(
-                              //   padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                              //   child: SizedBox(
-                              //       height: 45,
-                              //       child: TextButton(
-                              //           onPressed: () {
-                              //             setState(() {
-                              //               chooseSex();
-                              //             });
-                              //           },
-                              //           child: Image.asset(
-                              //               // 'images/player/sex${widget.dsix.getCurrentPlayer().playerIndex}$displaySex.png')
-                              //               )
-                              //               ),
-                              // ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                                child: Container(
+                                  height: 40,
+                                  width: 40,
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        widget.dsix
+                                            .getCurrentPlayer()
+                                            .chooseSex();
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      'assets/player/${widget.dsix.getCurrentPlayer().playerSex}.svg',
+                                      color: widget.dsix
+                                          .getCurrentPlayer()
+                                          .playerColor
+                                          .primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
                           child: Text(
-                            displayRace.description,
+                            widget.dsix.getCurrentPlayer().race.description,
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               height: 1.3,
@@ -506,11 +329,15 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                         ),
                         Container(
                           height: MediaQuery.of(context).size.height *
-                              displayRace.bonus.length *
+                              widget.dsix.getCurrentPlayer().race.bonus.length *
                               0.08,
                           child: ListView.builder(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              itemCount: displayRace.bonus.length,
+                              itemCount: widget.dsix
+                                  .getCurrentPlayer()
+                                  .race
+                                  .bonus
+                                  .length,
                               itemBuilder: (BuildContext context, int index) {
                                 return TextButton(
                                   style: TextButton.styleFrom(
@@ -535,7 +362,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                                   const EdgeInsets.fromLTRB(
                                                       0, 12, 12, 0),
                                               child: SvgPicture.asset(
-                                                'assets/ui/$infoIcon.svg',
+                                                'assets/ui/help.svg',
                                                 color: widget.dsix
                                                     .getCurrentPlayer()
                                                     .playerColor
@@ -566,7 +393,11 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                               0, 8, 0, 8),
                                           child: Center(
                                             child: Text(
-                                              displayRace.bonus[index].name,
+                                              widget.dsix
+                                                  .getCurrentPlayer()
+                                                  .race
+                                                  .bonus[index]
+                                                  .name,
                                               style: TextStyle(
                                                 height: 1.5,
                                                 fontSize: 17,

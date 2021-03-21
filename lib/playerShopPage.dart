@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/dsix.dart';
 import 'item.dart';
 import 'models/game/shop.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'models/game/game.dart';
+import 'models/game/dsix.dart';
+import 'models/player/exceptions.dart';
 
 class ShopPage extends StatefulWidget {
   final Function() refresh;
@@ -43,6 +44,9 @@ class _ShopPageState extends State<ShopPage> {
   var textPadding = const EdgeInsets.fromLTRB(40, 15, 40, 0);
   double fontTextAdjust = 22;
 
+  String exceptionTitle;
+  String exceptionDescription;
+
   List<String> selectedMenu = [
     'null',
     'null',
@@ -67,19 +71,9 @@ class _ShopPageState extends State<ShopPage> {
     ];
     selectedMenu.replaceRange(index, index + 1, [shopMenu[index]]);
 
-    if (selectedMenu[index] == 'lightWeapon') {
-      displayItems = shop.lightWeapons;
-    } else if (selectedMenu[index] == 'heavyWeapon') {
-      displayItems = shop.heavyWeapons;
-    } else if (selectedMenu[index] == 'rangedWeapon') {
-      displayItems = shop.rangedWeapons;
-    } else if (selectedMenu[index] == 'magicWeapon') {
-      displayItems = shop.magicWeapons;
-    } else if (selectedMenu[index] == 'armor') {
-      displayItems = shop.armor;
-    } else if (selectedMenu[index] == 'resources') {
-      displayItems = shop.resources;
-    }
+//SHOW MENU
+
+    displayItems = shop.menuSelection(shopMenu[index]);
 
     title = shopMenuTitle[index];
 
@@ -88,15 +82,13 @@ class _ShopPageState extends State<ShopPage> {
     fontTextAdjust = 0;
   }
 
-  void showAmmo(int index) {
+  void showItem(int index) {
     ammoQuantity.clear();
 
     if (displayItems[index].itemClass == 'thrownWeapon' ||
         displayItems[index].itemClass == 'ammo') {
-      int check = 0;
-      while (check < displayItems[index].uses) {
+      for (int check = 0; check < displayItems[index].uses; check++) {
         ammoQuantity.add('ammo');
-        check++;
       }
     }
 
@@ -353,6 +345,7 @@ class _ShopPageState extends State<ShopPage> {
                   padding: const EdgeInsets.fromLTRB(30, 5, 30, 15),
                   child: TextButton(
                     onPressed: () {
+                      Navigator.of(context).pop(true);
                       buy(index);
                     },
                     style: TextButton.styleFrom(
@@ -431,147 +424,84 @@ class _ShopPageState extends State<ShopPage> {
   }
 
   void buy(int index) {
-    if (widget.dsix.getCurrentPlayer().gold < displayItems[index].value) {
-      showAlertDialogNoMoney(context, index);
-      return;
+    try {
+      widget.dsix.getCurrentPlayer().buyItem(displayItems[index]);
+    } on NoGoldException catch (e) {
+      exceptionTitle = e.title;
+      exceptionDescription = e.message;
+
+      showAlertDialogExceptions(context);
+    } on TooHeavyException catch (e) {
+      exceptionTitle = e.title;
+      exceptionDescription = e.message;
+
+      showAlertDialogExceptions(context);
     }
 
-    if (widget.dsix.getCurrentPlayer().maxWeight -
-            widget.dsix.getCurrentPlayer().currentWeight <
-        displayItems[index].weight) {
-      showAlertDialogTooHeavy(context, index);
-      return;
-    }
-
-    widget.dsix.getCurrentPlayer().gold -= displayItems[index].value;
-    widget.dsix.getCurrentPlayer().currentWeight += displayItems[index].weight;
-
-    widget.dsix
-        .getCurrentPlayer()
-        .inventory
-        .add(displayItems[index].copyItem());
-
-    Navigator.of(context).pop(true);
     widget.refresh();
   }
 
-  showAlertDialogTooHeavy(BuildContext context, int index) {
+  showAlertDialogExceptions(
+    BuildContext context,
+  ) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      content: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-            width: 2.5, //                   <--- border width here
-          ),
-        ),
-        width: 300,
-        height: 275,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'TOO HEAVY!',
-                      style: TextStyle(
-                        fontFamily: 'Headline',
-                        height: 1.3,
-                        fontSize: 30.0,
-                        color: Colors.white,
-                        letterSpacing: 3,
-                      ),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                width: 2.5, //                   <--- border width here
+              ),
+            ),
+            width: 300,
+            // height: 275,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          exceptionTitle,
+                          style: TextStyle(
+                            fontFamily: 'Headline',
+                            height: 1.3,
+                            fontSize: 30.0,
+                            color: Colors.white,
+                            letterSpacing: 3,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(35, 25, 25, 15),
-              child: Text(
-                'You are already carrying too much weight and can\'t carry this item. You can carry ${widget.dsix.getCurrentPlayer().maxWeight - widget.dsix.getCurrentPlayer().currentWeight} more weight, and this item has ${displayItems[index].weight} weight.',
-                style: TextStyle(
-                  height: 1.25,
-                  fontSize: 22,
-                  fontFamily: 'Calibri',
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alerta;
-      },
-    );
-  }
-
-  showAlertDialogNoMoney(BuildContext context, int index) {
-    AlertDialog alerta = AlertDialog(
-      backgroundColor: Colors.black,
-      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      content: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-            width: 2.5, //                   <--- border width here
-          ),
-        ),
-        width: 300,
-        height: 225,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      'NOT ENOUGH GOLD!',
-                      style: TextStyle(
-                        fontFamily: 'Headline',
-                        height: 1.3,
-                        fontSize: 30.0,
-                        color: Colors.white,
-                        letterSpacing: 3,
-                      ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
+                  child: Text(
+                    exceptionDescription,
+                    style: TextStyle(
+                      height: 1.25,
+                      fontSize: 22,
+                      fontFamily: 'Calibri',
+                      color: Colors.white,
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(35, 25, 25, 15),
-              child: Text(
-                'You don\'t have enough gold to buy this item. It costs \$${displayItems[index].value}, and you only have \$${widget.dsix.getCurrentPlayer().gold}.',
-                style: TextStyle(
-                  height: 1.25,
-                  fontSize: 22,
-                  fontFamily: 'Calibri',
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
 
@@ -694,7 +624,7 @@ class _ShopPageState extends State<ShopPage> {
                         children: List.generate(displayItems.length, (index) {
                           return TextButton(
                             onPressed: () {
-                              showAmmo(index);
+                              showItem(index);
                             },
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),

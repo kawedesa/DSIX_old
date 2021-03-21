@@ -1,4 +1,5 @@
 import '../player/player.dart';
+import 'shop.dart';
 
 class Dsix {
   int currentPlayerIndex;
@@ -6,6 +7,8 @@ class Dsix {
   List<Player> players = [];
 
   // Gm gm;
+
+  static Shop shop;
 
   Dsix();
 
