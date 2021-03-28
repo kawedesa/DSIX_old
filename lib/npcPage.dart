@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:math';
 
-
 class NpcPage extends StatefulWidget {
   NpcPage({Key key}) : super(key: key);
 
@@ -13,7 +12,6 @@ class NpcPage extends StatefulWidget {
 }
 
 class _NpcPageState extends State<NpcPage> {
-
   int objectiveIMG = 0;
   int targetIMG = 0;
   int raceIMG = 10;
@@ -98,7 +96,6 @@ class _NpcPageState extends State<NpcPage> {
     'Fight',
   ];
 
-
   List<String> descriptionList = [
     'Smelly',
     'Old',
@@ -125,34 +122,33 @@ class _NpcPageState extends State<NpcPage> {
   ];
 
   List<String> personalityList = [
-  'Brave',
-  'Clever',
-  'Coward',
-  'Friendly',
-  'Generous',
-  'Grumpy',
-  'Honest',
-  'Kind',
-  'Lazy',
-  'Nervous',
-  'Popular',
-  'Selfish',
-  'Serious',
-  'Shy',
-  'Stupid',
-  'Vain',
-  'Religious',
-  'Proud',
-  'Flamboyant',
-  'Stubborn',
-  'Obsessed',
-  'Greedy',
-  'Calm',
-  'Slow',
+    'Brave',
+    'Clever',
+    'Coward',
+    'Friendly',
+    'Generous',
+    'Grumpy',
+    'Honest',
+    'Kind',
+    'Lazy',
+    'Nervous',
+    'Popular',
+    'Selfish',
+    'Serious',
+    'Shy',
+    'Stupid',
+    'Vain',
+    'Religious',
+    'Proud',
+    'Flamboyant',
+    'Stubborn',
+    'Obsessed',
+    'Greedy',
+    'Calm',
+    'Slow',
   ];
 
-
-  void racePress(){
+  void racePress() {
     Random random = new Random();
     int randomNumber = random.nextInt(raceList.length);
 
@@ -161,26 +157,26 @@ class _NpcPageState extends State<NpcPage> {
       sexIMG = Random().nextInt(2) + 1;
     });
   }
-  void occupationPress(){
 
+  void occupationPress() {
     Random random = new Random();
     int randomNumber = random.nextInt(occupationList.length);
 
     setState(() {
       occupation = occupationList[randomNumber];
     });
-
   }
-  void descriptionPress(){
+
+  void descriptionPress() {
     Random random = new Random();
     int randomNumber = random.nextInt(descriptionList.length);
 
     setState(() {
       description = descriptionList[randomNumber];
     });
-
   }
-  void personalityPress(){
+
+  void personalityPress() {
     Random random = new Random();
     int randomNumber = random.nextInt(personalityList.length);
 
@@ -189,16 +185,14 @@ class _NpcPageState extends State<NpcPage> {
     });
   }
 
-  void objectivePress(){
+  void objectivePress() {
     Random random = new Random();
     int randomNumber = random.nextInt(objectiveList.length);
 
     setState(() {
       objective = objectiveList[randomNumber];
     });
-
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -206,12 +200,17 @@ class _NpcPageState extends State<NpcPage> {
       backgroundColor: Colors.black,
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 40,),
+          icon: Icon(
+            Icons.keyboard_arrow_left,
+            color: Colors.white,
+            size: 40,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         titleSpacing: 0,
         backgroundColor: Colors.black,
-        title: new Text('Click on the  \' - \'  to roll your NPC.',
+        title: new Text(
+          'Click on the  \' - \'  to roll your NPC.',
           textAlign: TextAlign.left,
           style: TextStyle(
             fontFamily: 'Calibri',
@@ -219,11 +218,11 @@ class _NpcPageState extends State<NpcPage> {
             fontSize: 20.0,
             color: Colors.white,
             letterSpacing: 1,
-          ),),
+          ),
+        ),
       ),
-
       body: new SafeArea(
-        child:Column(
+        child: Column(
           children: <Widget>[
             Divider(
               height: 2.5,
@@ -235,7 +234,7 @@ class _NpcPageState extends State<NpcPage> {
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(20,20,20,20),
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 20),
                     child: Text(
                       'SEX AND RACE',
                       style: TextStyle(
@@ -252,17 +251,16 @@ class _NpcPageState extends State<NpcPage> {
                       children: <Widget>[
                         Expanded(
                           child: TextButton(
-                            child: SizedBox(child: Image.asset('images/race/sex$sexIMG.png'),
-                            height: 30,
-                            width: 30,),
-                            style: TextButton.styleFrom(
-
-                            padding: EdgeInsets.fromLTRB(0,45,0,40),
+                            child: SizedBox(
+                              child: Image.asset('images/race/sex$sexIMG.png'),
+                              height: 30,
+                              width: 30,
                             ),
-                            onPressed: (){
-
+                            style: TextButton.styleFrom(
+                              padding: EdgeInsets.fromLTRB(0, 45, 0, 40),
+                            ),
+                            onPressed: () {
                               racePress();
-
                             },
                           ),
                         ),
@@ -270,27 +268,28 @@ class _NpcPageState extends State<NpcPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(0,20,20,20.0),
+                    padding: const EdgeInsets.fromLTRB(0, 20, 20, 20.0),
                     child: TextButton(
                       style: TextButton.styleFrom(
-                      padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         racePress();
                       },
-                      child: Text(race,
+                      child: Text(
+                        race,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: 30,
                           fontFamily: 'Calibri',
                           color: Colors.white,
-                        ),),
+                        ),
+                      ),
                     ),
                   ),
-
                 ],
               ),
-            ),  //   RACE AND SEX
+            ), //   RACE AND SEX
 
             Divider(
               height: 0,
@@ -303,7 +302,6 @@ class _NpcPageState extends State<NpcPage> {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.center,
-
                   children: <Widget>[
                     Text(
                       'OCCUPATION',
@@ -317,18 +315,20 @@ class _NpcPageState extends State<NpcPage> {
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
-                      padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         occupationPress();
                       },
-                      child: Text(occupation,
+                      child: Text(
+                        occupation,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: 30,
                           fontFamily: 'Calibri',
                           color: Colors.white,
-                        ),),
+                        ),
+                      ),
                     ),
                   ],
                 ),
@@ -357,23 +357,25 @@ class _NpcPageState extends State<NpcPage> {
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
-                      padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         descriptionPress();
                       },
-                      child: Text(description,
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: 30,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),),
+                      child: Text(
+                        description,
+                        style: TextStyle(
+                          height: 1.5,
+                          fontSize: 30,
+                          fontFamily: 'Calibri',
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),  //  DESCRIPTION
+            ), //  DESCRIPTION
             Divider(
               height: 0,
               thickness: 2,
@@ -397,23 +399,25 @@ class _NpcPageState extends State<NpcPage> {
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
-                      padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         personalityPress();
                       },
-                      child: Text(personality,
+                      child: Text(
+                        personality,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: 30,
                           fontFamily: 'Calibri',
                           color: Colors.white,
-                        ),),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),  // PERSONALITY
+            ), // PERSONALITY
             Divider(
               height: 0,
               thickness: 2,
@@ -437,23 +441,25 @@ class _NpcPageState extends State<NpcPage> {
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
-                      padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
+                        padding: EdgeInsets.fromLTRB(0, 0, 25, 0),
                       ),
-                      onPressed: (){
+                      onPressed: () {
                         objectivePress();
                       },
-                      child: Text(objective,
+                      child: Text(
+                        objective,
                         style: TextStyle(
                           height: 1.5,
                           fontSize: 30,
                           fontFamily: 'Calibri',
                           color: Colors.white,
-                        ),),
+                        ),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),  //  OBJECTIVE
+            ), //  OBJECTIVE
             Divider(
               height: 0,
               thickness: 2,
@@ -462,7 +468,6 @@ class _NpcPageState extends State<NpcPage> {
           ],
         ),
       ),
-
     );
   }
 }

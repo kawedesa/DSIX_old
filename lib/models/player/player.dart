@@ -1,10 +1,12 @@
+import 'dart:math';
+
 import 'package:dsixv02app/item.dart';
 import 'package:dsixv02app/playerBackground.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/playerRace.dart';
 import 'package:dsixv02app/option.dart';
 import 'package:dsixv02app/playerAction.dart';
-import 'package:dsixv02app/buff.dart';
+import 'package:dsixv02app/effect.dart';
 import 'exceptions.dart';
 import 'package:dsixv02app/bonus.dart';
 import 'package:dsixv02app/models/game/shop.dart';
@@ -26,6 +28,8 @@ class Player {
 
   PlayerColor playerColor;
 
+  bool characterFinished = false;
+
   int actionsTaken = 0;
 
 //CHOOSE RACE AND SEX // DEFINE HP, ACTION POINTS, WEIGHT, ACTIONS
@@ -39,7 +43,7 @@ class Player {
           Bonus(
               '+ ACTION POINT  ',
               'actionPoint',
-              'Each action point allows you to permanently improve the chance of success of an action.',
+              'Each action point allows you to improve the chance of success of an action for ever.',
               1)
         ]),
     PlayerRace(
@@ -81,14 +85,14 @@ class Player {
     PlayerRace(
         'dwarf',
         'DWARF',
-        'Dwarfs are sturdy, allowing them to take more blows before going down. \nHowever, their small size and stubborn personality limits their perception.',
+        'Dwarfs are sturdy, allowing them to take more blows before going down. However, their small size and stubborn personality limits their perception.',
         [
           Bonus('+ DEFENSE  ', 'defense',
               'You use this action when you protect yourself or others.', 1),
           Bonus('- PERCEIVE  ', 'perceive',
               'You use this action when you search for something.', -1),
           Bonus(
-              '+ Health  ',
+              '+ HEALTH  ',
               'maxHealth',
               'This represents your total health and you die when it reaches zero. Because of your sturdy nature you have +6 HP.',
               6)
@@ -276,11 +280,11 @@ class Player {
               'This represents how much damage you deal with your attacks.', 1),
           Bonus('+1 ARMOR   ', 'pArmor',
               'This represents how much damage you mitigate from attacks.', 1),
-          Bonus('2x KEYS   ', 'item', '', 0)
+          Bonus('2x KEYS   ', 'item', '${shop.resources[6].description}', 0)
         ],
         [
-          shop.resources[0],
-          shop.resources[0],
+          shop.resources[6],
+          shop.resources[6],
         ]),
     PlayerBackground(
         'mage',
@@ -304,10 +308,11 @@ class Player {
         [
           Bonus('+2 DAMAGE   ', 'pDamage',
               'This represents how much damage you deal with your attacks.', 1),
-          Bonus('AMMO  ', 'item', '${shop.resources[1].description}', 0)
+          Bonus('AMMO  ', 'item', '${shop.resources[4].description}', 0),
+          Bonus('HERBS  ', 'item', '${shop.resources[1].description}', 0)
         ],
         [
-          shop.resources[1],
+          shop.resources[4],
           shop.resources[1],
         ]),
     PlayerBackground(
@@ -320,7 +325,7 @@ class Player {
               'mArmor',
               'This represents how much damage you mitigate from magic attacks.',
               1),
-          Bonus('2x BANDAGES   ', 'item', '', 0)
+          Bonus('2x BANDAGES   ', 'item', '${shop.resources[0].description}', 0)
         ],
         [
           shop.resources[0],
@@ -542,14 +547,14 @@ class Player {
   List<PlayerAction> skills = [
     PlayerAction(
         'matterMorph',
-        'MATTER MORPH',
-        'You affect the environment around you, changing it\'s physical properties. It requires concentration.',
+        'MATTERMORPH',
+        'You affect the environment around you, changing it\'s physical properties.',
         [
           Option(
               'BRIGHTNESS',
               'You control the brightness of the environment around you, making it bright or dark.',
-              'You make a large area bright or dark.',
-              'You make a medium area bright or dark.',
+              'You control the brightness of a large area around you.',
+              'You control the brightness of a medium area around you.',
               'You fail and something bad happens.',
               '',
               0),
@@ -575,14 +580,14 @@ class Player {
     PlayerAction(
         'illusion',
         'ILLUSION',
-        'You create an illusion that tricks people\'s senses. Making them see, hear, smell, taste or feel things that are not there. It requires concentration.',
+        'You create an illusion that tricks people\'s senses. Making them see, hear, smell, taste or feel things that are not there.',
         [
           Option(
               'ILLUSION',
               'You create smells, tastes, sounds, images, or pretty much anything that affect people\'s senses.',
-              'You create a powerful illusion that affects everyone in a large area around you. Tricking their senses.',
-              'You create an illusion that affects everyone in a medium area around you. Tricking one of their senses.',
-              'You fail to create the illusion and something bad happens.',
+              'You You trick people\'s senses in a large area around you. Choose two senses.',
+              'You You trick people\'s senses in a medium area around you. Choose one sense.',
+              'You fail and something bad happens.',
               '',
               0),
         ],
@@ -598,15 +603,15 @@ class Player {
               'It creates a cloud of thick smoke around the impact area.',
               'It creates a large cloud of thick smoke.',
               'It creates a medium cloud of thick smoke.',
-              'You miss and something bad happens.',
+              'You fail and something bad happens.',
               '',
               0),
           Option(
               'ICE',
               'It splashes around the impact point and freezes anything that it touches.',
-              'It splashes on impact and freezes everything in a medium area.',
-              'It splashes on impact, freezing a small area.',
-              'You miss and something bad happens.',
+              'It freezes everything in a medium area.',
+              'It freezes everything in a small area.',
+              'You fail and something bad happens.',
               '',
               0),
           Option(
@@ -614,7 +619,7 @@ class Player {
               'It explodes on impact and sets fire to anything that it touches.',
               'It explodes and sets fire to a medium area.',
               'It explodes and sets fire to a small area.',
-              'You miss and something bad happens.',
+              'You fail and something bad happens.',
               'DAMAGE',
               0)
         ],
@@ -622,23 +627,23 @@ class Player {
         false),
     PlayerAction(
         'callOfNature',
-        'CALL OF NATURE',
+        'NATURE\'S CALL',
         'You call for help and nature comes to your aid. It follows your command, but may ask for something in return.',
         [
           Option(
               'ATTACK',
               'You mark a target and nature strikes it.',
-              'Nature strikes them on a weak spot. Roll the damage.',
-              'Nature strikes them. Roll the damage.',
-              'Nature misses the target and something bad happens.',
+              'Nature strikes them.',
+              '',
+              'It fails and something bad happens.',
               'DAMAGE',
               0),
           Option(
               'DEFEND',
               'You mark a target and nature defends it.',
-              'Nature defends the target in time. Roll the defense.',
-              'Nature blocks part of the damage. Roll the defense.',
-              'Nature fails to defend the target and it takes full damage.',
+              'Nature protects the target in time.',
+              '',
+              'Nature fails and it takes damage.',
               'PROTECT',
               0),
           Option(
@@ -659,33 +664,33 @@ class Player {
         [
           Option(
               'TRANSFORM',
-              'The transformation varies in strength depending on your luck. An incomplete transformation gives you the appearance, but not the voice.',
-              'The transformation is a success. You look and sound exactly like the person of your choice.',
-              'The transformation is incomplete. You look like the person of your choice, but your voice remains the same.',
+              'The transformation varies in strength depending on your luck.',
+              'The transformation is a success.',
+              'The transformation is incomplete and your voice remains the same.',
               'The transformation fails and something bad happens.',
               '',
               0)
         ],
         0,
-        false),
+        true),
     PlayerAction(
         'alterSenses',
         'ALTER SENSES',
-        'You can bless or curse anyone you touch. Enhancing or taking away their senses. It requires concentration.',
+        'You can bless or curse anyone you touch. Enhancing or taking away their senses.',
         [
           Option(
               'ENHANCE',
-              'You enhance someone, allowing them to perform incredible feats. \nLike seeing through walls, hearing whispers from far away or tracking a scent.',
-              'You bless a person you touch, enhancing two of their senses.',
-              'You bless a person you touch, enhancing one of their senses.',
+              'You enhance someone, allowing them to perform incredible feats. Like seeing through walls, hearing whispers from far away or tracking a scent.',
+              'You enhance two of their senses.',
+              'You enhance one of their senses.',
               'You fail and something bad happens.',
               '',
               0),
           Option(
               'REMOVE',
               'You curse someone and remove some of their senses. Making them blind, deaf, or numb. ',
-              'You curse a person you touch, removing two of their senses.',
-              'You curse a person you touch, removing one of their senses.',
+              'You remove two of their senses.',
+              'You remove one of their senses.',
               'You fail and something bad happens.',
               '',
               0)
@@ -698,7 +703,7 @@ class Player {
     //PlayerAction('callOfNature', 'CALL OF NATURE', 'You call for help and nature comes to your aid. It follows your command, but may ask for something in return.',[Option('ATTACK','You mark a target and nature strikes anyway it can.','Nature strikes your target with full force.', 'Nature strikes the target.', 'Nature fails and something bad happens.'), Option('DEFEND','You call for help and nature protects you any way it can.a wind to blow your enemies away, vines to hold them down, branches to block their attacks, etc.','Nature protects the target from the attack. Roll to see how much it protects.','Nature gets just in time to block part of the attack. Roll to see how much it protects.','It doesn\'t protect the target in time and something bad happens.' ), Option('SCOUT','You call birds to scout an area, mice to find an exit, snakes to scene a threat, etc.','You get meaningful information.','You get meaningful information, but nature asks for retribution.', 'You uncover an ugly truth.'),],0),
     //PlayerAction('alchemy', 'ALCHEMY', 'You throw a mixture that splashes on contact and causes different effects.',[Option('OIL','It makes the surface slippery and flammable.','You splash a medium area with a flammable fluid, making it slippery.', 'You splash a small area with a flammable fluid, making it slippery.','You miss the target and something bad happens.'), Option('SMOKE','It creates a cloud of thick smoke that blocks vision.','It makes a large cloud of thick smoke around the impact area.', 'It makes a medium cloud of thick smoke around the impact area.', 'You miss the target and something bad happens.'), Option('ICE','It freezes anything it touches.','You freeze a medium area around the impact point.', 'You freeze a small area around the impact point.', 'You miss and something bad happens.'), Option('FIRE','It explodes on impact and sets fire to anything near by.','It explodes on impact, setting fire to a medium area. Roll your damage.', 'It explodes on impact, setting fire to a small area. Roll your damage.', 'You miss and something bad happens.')],0),
     //PlayerAction('controlOverMatter', 'CONTROL OVER MATTER', 'You change the environment around you, changing it\'s physical properties.',[Option(0,'BRIGHTNESS','You make the environment around you bright or dark.',), Option(1,'HARDNESS','You make the things around you soft, hard or liquid.',), Option(2,'FRICTION','You make things around you slippery or sticky.',), Option(3,'VISIBILITY','You make things around you appear or disappear.',)],0),
-    //PlayerAction('illusion', 'ILLUSION', 'You create an illusion that tricks people\'s senses. It requires concentration.',[Option(0,'SOUND','You create sounds, noises, voices and music.',), Option(1,'SMELL','You create smells, scents, perfumes, etc.',), Option(2,'VISION','You create figures, shadows, animals, objects, etc.',), Option(3,'TASTE','You make them taste what you want.',), Option(4,'TOUCH','You make them feel any physical sensation, like warmth, cold, pain, pressure, etc.',)],0),
+    //PlayerAction('illusion', 'ILLUSION', 'You create an illusion that tricks people\'s senses. It requires focus.',[Option(0,'SOUND','You create sounds, noises, voices and music.',), Option(1,'SMELL','You create smells, scents, perfumes, etc.',), Option(2,'VISION','You create figures, shadows, animals, objects, etc.',), Option(3,'TASTE','You make them taste what you want.',), Option(4,'TOUCH','You make them feel any physical sensation, like warmth, cold, pain, pressure, etc.',)],0),
     //PlayerAction('alterSenses', 'ALTER SENSES', 'You can bless or curse anyone you touch. Enhancing or taking away their senses.',[Option(0,'SOUND','ENHANCE - They can hear things from further away, through walls, etc.\nREMOVE - You make them deaf.',), Option(1,'SMELL','ENHANCE - They can smell things from further away, track a scent, detect poisons, etc. \nREMOVE - You remove their sense of smell.',), Option(2,'VISION','ENHANCE - They can see things that are further away, in the dark, through walls, etc. \nREMOVE - You make them blind.',), Option(3,'TASTE','ENHANCE - They can distinguish the smallest variations in the things they taste. Like age, ingredients, where it\'s been, etc. \nREMOVE - You change or remove their sense of taste.',), Option(4,'TOUCH','ENHANCE - They feel the slightest changes in their environment, like vibrations, temperature, wind, etc. \nREMOVE - You make them numb and take away their pain.',)],0),
 
     //PlayerSkill(1,'skill','MATTER CONTROL', 'INT', 'You control the environment around you, changing it’s physical properties.',[Option(0,'BRIGHTNESS','Making it shiny bright or complete darkness.','INT'),Option(1,'HARDNESS','Making it soft, hard, or liquid.','INT',),Option(2,'FRICTION','Making it adherent of frictionless.','INT',),Option(3,'VISIBILITY','Making it visible or invisible.','INT'),], true,),
@@ -757,17 +762,17 @@ class Player {
           Option(
               'PUNCH',
               'You punch the target with your bare fists, trying to knock them out.',
-              'You hit them on a weak spot. Roll your damage.',
-              'You hit them. Roll your damage.',
-              'You miss the target and open your guard.',
+              'You hit them.',
+              '',
+              'You miss and open your guard.',
               'DAMAGE',
               0),
           Option(
               'WEAPON',
               'You attack the target with your weapon, trying to bring them down.',
-              'You hit them on a weak spot. Roll your damage.',
-              'You hit them. Roll your damage.',
-              'You miss the target and open your guard.',
+              'You hit them.',
+              '',
+              'You miss and open your guard.',
               'DAMAGE',
               0)
         ],
@@ -781,16 +786,16 @@ class Player {
           Option(
               'PHYSICAL DEFENSE',
               'You face the danger, raise your shield and brace for impact. ',
-              'You raise your guard in time. Roll to see how much you defend.',
-              'You brace for impact and take the blow. Roll to see how much you defend.',
+              'You raise your guard in time.',
+              '',
               'You can\'t raise your guard in time and take full damage.',
               'PROTECT',
               0),
           Option(
               'MAGIC DEFENSE',
               'You cast an enchantment that defends yourself and others around you.',
-              'Your defense is ready in time. Roll to see how much you defend.',
-              'Your defense is not fully ready. Roll to see how much you defend.',
+              'Your defense is ready in time.',
+              '',
               'You can\'t defend in time and take full damage.',
               'PROTECT',
               0)
@@ -812,10 +817,10 @@ class Player {
               0),
           Option(
               'INFORMATION',
-              'You look around and try to gather information for this questions: \n\nWhat happened here? \nWhat\'s about to happen? \nWho is in control?',
+              'You look around and try to gather information for this questions: \n\n - What happened here? \n - What\'s about to happen? \n - Who is in control?',
               'You gather meaningful information.',
               'You gather information, but it costs you.',
-              'You find something really bad.',
+              'You find something bad.',
               '',
               0),
           Option(
@@ -828,9 +833,9 @@ class Player {
               0),
           Option(
               'PLACE',
-              'You look for hidden doors, passages or rooms.',
-              'You find a hidden room, shortcut or passage.',
-              'You find a hidden room, shortcut or passage, but the entrance is blocked.',
+              'You look for secrete doors, passages or rooms.',
+              'You find a secrete.',
+              'You find a secrete, but it\'s blocked.',
               'You find something bad',
               '',
               0)
@@ -845,9 +850,9 @@ class Player {
           Option(
               'BARGAIN',
               'You bargain with them, trying to strike a deal on your favor.',
-              'They agree to the terms and accept your offer.',
-              'They accept, but ask for more in return.',
-              'You uncover an ugly truth.',
+              'They accept your offer.',
+              'They accept, but ask for something in return.',
+              'The deal is off and they dislike you.',
               '',
               0),
           Option(
@@ -861,9 +866,9 @@ class Player {
           Option(
               'PERSUADE',
               'You persuade people to follow your lead or see things your way.',
-              'You convince them and they follow your lead.',
+              'You change their minds.',
               'They see your point, but ask for something in return.',
-              'They are offended and see you as an enemy.',
+              'They are offended and dislike you.',
               '',
               0),
         ],
@@ -876,42 +881,42 @@ class Player {
         [
           Option(
               'DODGE',
-              'You move out of the way of an attack, avoid a trap or dodge an arrow.',
-              'You dodge and receive no damage.',
-              'You are not that quick and receive half of the damage.',
-              'You can\'t dodge in time and take full damage.',
+              'You dodge and take no damage.',
+              'You dodge and take no damage.',
+              'You dodge partially and take half damage.',
+              'You can\'t dodge in time and take damage.',
               '',
               0),
           Option(
               'ESCAPE',
               'You release your shackles, run away from danger or free yourself from a tough situation.',
-              'You escape without any trouble.',
+              'You escape without trouble.',
               'You escape, but call unwanted attention.',
-              'You can\'t escape in time',
+              'You can\'t escape.',
               '',
               0),
           Option(
               'HIDE',
               'You avoid being seen by someone or sneak pass some guards.',
-              'You are concealed and nobody notices you.',
-              'You are hidden, but someone notice your presence.',
-              'You are exposed and people find you.',
+              'You are hidden.',
+              'You are noticed.',
+              'You are exposed.',
               '',
               0),
           Option(
               'JUMP',
               'You jump over a gap, try to reach for something or pass over an obstacle.',
-              'You reach your goal and land exactly where you wanted.',
-              'You reach your goal, but land in a different place near by.',
-              'You stumble, hesitate and fail. Something bad happens.',
+              'You land where you wanted.',
+              'You land somewhere close.',
+              'You stumble and fail.',
               '',
               0),
           Option(
               'CLIMB',
               'You climb a wall, a rope or the back of a giant.',
-              'You reach your goal without any trouble.',
-              'You face some difficulty and make to halfway.',
-              'You slide, fall and fail.',
+              'You have no trouble.',
+              'You face some difficulty.',
+              'You slide and fall.',
               '',
               0)
         ],
@@ -983,78 +988,175 @@ class Player {
     this.inventory.add(item.copyItem());
   }
 
-  void equip(Item item, String check) {
-    if (check == 'EQUIP') {
-      this.mArmor += item.mArmor;
-      this.pArmor += item.pArmor;
-      this.mDamage += item.mDamage;
-      this.pDamage += item.pDamage;
+  void use(Item item) {
+    switch (item.name) {
+      case 'BANDAGES':
+        if (this.currentHealth == this.maxHealth) {
+          throw new MaxHpException();
+        }
+        this.currentHealth += Random().nextInt(2) + 1;
+        if (this.currentHealth > this.maxHealth) {
+          this.currentHealth = this.maxHealth;
+        }
+        this.inventory.remove(item);
 
-      this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
-      this.playerAction[2].option[0].value = this.pArmor;
-      this.playerAction[2].option[1].value = this.mArmor;
-      this.playerAction[6].option.forEach((element) {
-        element.value = this.mDamage;
-      });
+        break;
 
-      switch (item.inventorySpace) {
-        case 'head':
-          {
-            this.unequip(headEquip);
-            this.headEquip = item;
-            this.inventory.remove(item);
-          }
-          break;
-        case 'body':
-          {
-            this.unequip(bodyEquip);
-            this.bodyEquip = item;
-            this.inventory.remove(item);
-          }
-          break;
-        case 'hands':
-          {
-            this.unequip(handsEquip);
-            this.handsEquip = item;
-            this.inventory.remove(item);
-          }
-          break;
-        case 'feet':
-          {
-            this.unequip(feetEquip);
-            this.feetEquip = item;
-            this.inventory.remove(item);
-          }
-          break;
+      case 'FOOD':
+        if (this.currentHealth == this.maxHealth) {
+          throw new MaxHpException();
+        }
+        this.currentHealth += Random().nextInt(5) + 1;
+        if (this.currentHealth > this.maxHealth) {
+          this.currentHealth = this.maxHealth;
+        }
+        this.inventory.remove(item);
 
-        case '1hand':
-          {
-            if (this.mainHandEquip.name == '') {
-              this.mainHandEquip = item;
-              this.inventory.remove(item);
-            } else if (this.offHandEquip.name == '') {
-              this.offHandEquip = item;
-              this.inventory.remove(item);
-            } else if (this.mainHandEquip.name != '') {
-              unequip(this.mainHandEquip);
-              this.mainHandEquip = item;
-              this.inventory.remove(item);
-            }
-          }
-          break;
+        break;
 
-        case '2hand':
-          {
-            this.unequip(mainHandEquip);
-            this.unequip(offHandEquip);
-            this.mainHandEquip = item;
-            this.offHandEquip = item;
-            this.inventory.remove(item);
-          }
-          break;
-      }
+      case 'HEALING POTION':
+        if (this.currentHealth == this.maxHealth) {
+          throw new MaxHpException();
+        }
+        this.currentHealth += Random().nextInt(10) + 2;
+        if (this.currentHealth > this.maxHealth) {
+          this.currentHealth = this.maxHealth;
+        }
+        this.inventory.remove(item);
+
+        break;
+      case 'RESISTANCE POTION':
+        print('here');
+        this
+            .effectList
+            .add(Effect('resistancePotion', 'RESISTANCE POTION', '', 3, 3));
+        this.mArmor += 3;
+
+        this.inventory.remove(item);
+
+        break;
+      case 'KEY':
+        this.inventory.remove(item);
+
+        break;
+      case 'BOOK':
+        this.inventory.remove(item);
+
+        break;
+      case 'HERBS':
+        this.inventory.remove(item);
+
+        break;
+      case 'TOOL':
+        this.inventory.remove(item);
+
+        break;
+      case 'WARD':
+        this.inventory.remove(item);
+
+        break;
+      case 'ANTIDOTE':
+        this.effectList.forEach((element) {
+          element.duration = 0;
+        });
+        this.effects();
+
+        this.inventory.remove(item);
+
+        break;
+      case 'AMMO':
+        if (item.uses > 4) {
+          throw new MaxAmmoException();
+        }
+        if (this.gold < 50) {
+          throw new NoGoldException('You don\'t have enough gold for a refil.');
+        } else {
+          item.uses = 5;
+          this.gold -= 50;
+        }
+
+        break;
+    }
+  }
+
+  void useOrEquip(Item item, String buttonText) {
+    if (item.inventorySpace == 'consumable') {
+      use(item);
+    } else if (buttonText == 'EQUIP') {
+      equip(item, buttonText);
     } else {
       unequip(item);
+    }
+  }
+
+  void equip(Item item, String check) {
+    this.mArmor += item.mArmor;
+    this.pArmor += item.pArmor;
+    this.mDamage += item.mDamage;
+    this.pDamage += item.pDamage;
+
+    this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
+    this.playerAction[2].option[0].value = this.pArmor;
+    this.playerAction[2].option[1].value = this.mArmor;
+    this.playerAction[6].option.forEach((element) {
+      element.value = this.mDamage;
+    });
+
+    switch (item.inventorySpace) {
+      case 'head':
+        {
+          this.unequip(headEquip);
+          this.headEquip = item;
+          this.inventory.remove(item);
+        }
+        break;
+      case 'body':
+        {
+          this.unequip(bodyEquip);
+          this.bodyEquip = item;
+          this.inventory.remove(item);
+        }
+        break;
+      case 'hands':
+        {
+          this.unequip(handsEquip);
+          this.handsEquip = item;
+          this.inventory.remove(item);
+        }
+        break;
+      case 'feet':
+        {
+          this.unequip(feetEquip);
+          this.feetEquip = item;
+          this.inventory.remove(item);
+        }
+        break;
+
+      case '1hand':
+        {
+          if (this.mainHandEquip.name == '') {
+            this.mainHandEquip = item;
+            this.inventory.remove(item);
+          } else if (this.offHandEquip.name == '') {
+            this.offHandEquip = item;
+            this.inventory.remove(item);
+          } else if (this.mainHandEquip.name != '') {
+            unequip(this.mainHandEquip);
+            this.mainHandEquip = item;
+            this.inventory.remove(item);
+          }
+        }
+        break;
+
+      case '2hand':
+        {
+          this.unequip(mainHandEquip);
+          this.unequip(offHandEquip);
+          this.mainHandEquip = item;
+          this.offHandEquip = item;
+          this.inventory.remove(item);
+        }
+        break;
     }
   }
 
@@ -1261,41 +1363,93 @@ class Player {
 
 //ACTION
 
+  void reduceAmmo() {
+    if (this.mainHandEquip.itemClass == 'thrownWeapon') {
+      this.mainHandEquip.uses--;
+      if (this.mainHandEquip.uses < 1) {
+        destroyItem(this.mainHandEquip, 'UNEQUIP');
+      }
+    }
+
+    if (this.offHandEquip.itemClass == 'thrownWeapon') {
+      this.offHandEquip.uses--;
+      if (this.offHandEquip.uses < 1) {
+        destroyItem(this.mainHandEquip, 'UNEQUIP');
+      }
+    }
+
+    if (this.mainHandEquip.itemClass != 'rangedWeapon' &&
+        this.offHandEquip.itemClass != 'rangedWeapon') {
+      return;
+    }
+
+    for (int check = 0; check < this.inventory.length; check++) {
+      if (this.inventory[check].icon == 'ammo') {
+        this.inventory[check].uses--;
+
+        if (this.inventory[check].uses < 1) {
+          this.inventory.removeAt(check);
+        }
+        return;
+      }
+    }
+  }
+
   void checkWeapon(bool withWeapon) {
     if (withWeapon) {
       if (this.mainHandEquip.name == '' && this.offHandEquip.name == '') {
         throw new NoWeaponException();
       }
 
-      if (this.mainHandEquip.itemClass == 'rangedWeapon' &&
-          this.offHandEquip.itemClass != 'ammo') {
-        throw new NoAmmoException(
-            'You don\'t have enough ammo to use your ${this.mainHandEquip.name}.');
-      }
-
-      if (this.offHandEquip.itemClass == 'rangedWeapon' &&
-          this.mainHandEquip.itemClass != 'ammo') {
-        throw new NoAmmoException(
-            'You don\'t have enough ammo to use your ${this.mainHandEquip.name}.');
+      if (this.mainHandEquip.itemClass == 'rangedWeapon' ||
+          this.offHandEquip.itemClass == 'rangedWeapon') {
+        for (int check = 0; check < this.inventory.length; check++) {
+          if (this.inventory[check].icon == 'ammo') {
+            return;
+          }
+        }
+        throw new NoAmmoException('Not enough ammo.');
       }
     }
   }
 
-  void concentration(bool concentration) {
-    if (this.buffList.length != 0) {
-      this.buffList.forEach((element) {
-        element.duration--;
-        if (element.duration == 0) {
-          this.buffList.remove(element);
-          this.playerAction[6].value++;
-        }
-      });
+  void effects() {
+    if (this.effectList.isEmpty == true) {
+      return;
     }
-    if (concentration == true) {
-      this.buffList.add(Buff(
+
+    this.effectList.forEach((element) {
+      element.duration--;
+    });
+
+    this.effectList.forEach((element) {
+      if (element.duration > 0) {
+        return;
+      }
+      switch (element.name) {
+        case 'focus':
+          {
+            this.playerAction[6].value++;
+          }
+          break;
+
+        case 'RESISTANCE POTION':
+          {
+            this.mArmor -= 3;
+          }
+          break;
+      }
+    });
+
+    this.effectList.removeWhere((element) => element.duration < 1);
+  }
+
+  void focus(bool focus) {
+    if (focus == true) {
+      this.effectList.add(Effect(
           playerAction[6].icon,
-          'CONCENTRATION',
-          'This action requires concentration. Each time this action is taken consecutively, it will decrease the chance of success.',
+          'focus',
+          'This action requires focus. Each time this action is taken consecutively, it will decrease the chance of success.',
           -1,
           2));
       this.playerAction[6].value--;
@@ -1304,7 +1458,7 @@ class Player {
 
   List<Item> inventory = [];
 
-  List<Buff> buffList = [];
+  List<Effect> effectList = [];
 
   Player(this.playerColor);
 

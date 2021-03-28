@@ -402,12 +402,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         icon: new SvgPicture.asset(
           'assets/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         label: '',
@@ -415,12 +415,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/shop.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.060,
         ),
         icon: new SvgPicture.asset(
           'assets/player/shop.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.060,
         ),
         label: 'SHOP',
@@ -428,12 +428,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/inventory.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.070,
         ),
         icon: new SvgPicture.asset(
           'assets/player/inventory.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.070,
         ),
         label: 'INVENTORY',
@@ -441,12 +441,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/action.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.075,
         ),
         icon: new SvgPicture.asset(
           'assets/player/action.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.065,
         ),
         label: '',
@@ -454,12 +454,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/map.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         icon: new SvgPicture.asset(
           'assets/player/map.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         label: '',
@@ -467,12 +467,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/help.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.085,
         ),
         icon: new SvgPicture.asset(
           'assets/player/help.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.075,
         ),
         label: '',
@@ -516,9 +516,8 @@ class _PlayerUIState extends State<PlayerUI> {
 
   Route _createRouteHome() {
     return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => PlayersPage(
-          //dsix: widget.dsix,
-          ),
+      pageBuilder: (context, animation, secondaryAnimation) =>
+          PlayersPage(dsix: widget.dsix),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         var begin = Offset(-1, 0);
         var end = Offset(0.0, 0.0);
@@ -566,7 +565,7 @@ class _PlayerUIState extends State<PlayerUI> {
             fontFamily: 'Headline',
             height: 1.3,
             fontSize: 24.0,
-            color: Colors.white,
+            color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
             letterSpacing: 2,
           ),
         ),
@@ -595,7 +594,10 @@ class _PlayerUIState extends State<PlayerUI> {
                             fontFamily: 'Headline',
                             height: 1.1,
                             fontSize: 25,
-                            color: Colors.white,
+                            color: widget.dsix
+                                .getCurrentPlayer()
+                                .playerColor
+                                .secondaryColor,
                             letterSpacing: 2,
                           ),
                         ),
@@ -621,7 +623,10 @@ class _PlayerUIState extends State<PlayerUI> {
                           fontFamily: 'Headline',
                           height: 1.1,
                           fontSize: 25,
-                          color: Colors.white,
+                          color: widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .secondaryColor,
                           letterSpacing: 2,
                         ),
                       ),
@@ -648,7 +653,10 @@ class _PlayerUIState extends State<PlayerUI> {
                             fontFamily: 'Headline',
                             height: 1.1,
                             fontSize: 25,
-                            color: Colors.white,
+                            color: widget.dsix
+                                .getCurrentPlayer()
+                                .playerColor
+                                .secondaryColor,
                             letterSpacing: 2,
                           ),
                         ),

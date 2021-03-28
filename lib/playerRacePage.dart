@@ -59,29 +59,24 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
             ),
             width: 300,
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
                   color:
                       widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-                  width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          widget.dsix.getCurrentPlayer().race.bonus[index].name,
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 30.0,
-                            color: Colors.white,
-                            letterSpacing: 2,
-                          ),
+                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                    child: Center(
+                      child: Text(
+                        widget.dsix.getCurrentPlayer().race.bonus[index].name,
+                        style: TextStyle(
+                          fontFamily: 'Headline',
+                          height: 1.3,
+                          fontSize: 25.0,
+                          color: Colors.white,
+                          letterSpacing: 2,
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -93,9 +88,10 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                         .race
                         .bonus[index]
                         .description,
+                    textAlign: TextAlign.justify,
                     style: TextStyle(
                       height: 1.25,
-                      fontSize: 22,
+                      fontSize: 19,
                       fontFamily: 'Calibri',
                       color: Colors.white,
                     ),
@@ -153,7 +149,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
-              color: Colors.white,
+              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
               size: 40,
             ),
             onPressed: () => Navigator.of(context).pop(),
@@ -169,7 +165,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
               fontFamily: 'Headline',
               height: 1.1,
               fontSize: 25.0,
-              color: Colors.white,
+              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
               letterSpacing: 2,
             ),
           ),
@@ -261,137 +257,137 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
               ),
               Expanded(
                 flex: 13,
-                child: Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(65, 15, 65, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: <Widget>[
-                              Text(
-                                widget.dsix.getCurrentPlayer().race.race,
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1.3,
-                                  fontSize: 50,
-                                  color: widget.dsix
-                                      .getCurrentPlayer()
-                                      .playerColor
-                                      .primaryColor,
-                                  letterSpacing: 2,
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
-                                child: Container(
-                                  height: 40,
-                                  width: 40,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      setState(() {
-                                        widget.dsix
-                                            .getCurrentPlayer()
-                                            .chooseSex();
-                                      });
-                                    },
-                                    child: SvgPicture.asset(
-                                      'assets/player/${widget.dsix.getCurrentPlayer().playerSex}.svg',
+                child: ListView(
+                  scrollDirection: Axis.vertical,
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(65, 15, 65, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.end,
+                                children: <Widget>[
+                                  Text(
+                                    widget.dsix.getCurrentPlayer().race.race,
+                                    style: TextStyle(
+                                      fontFamily: 'Headline',
+                                      height: 1.3,
+                                      fontSize: 45,
                                       color: widget.dsix
                                           .getCurrentPlayer()
                                           .playerColor
                                           .primaryColor,
+                                      letterSpacing: 2,
                                     ),
                                   ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-                          child: Text(
-                            widget.dsix.getCurrentPlayer().race.description,
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              height: 1.3,
-                              letterSpacing: 1.1,
-                              fontSize: 22,
-                              fontFamily: 'Calibri',
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height *
-                              widget.dsix.getCurrentPlayer().race.bonus.length *
-                              0.08,
-                          child: ListView.builder(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              itemCount: widget.dsix
-                                  .getCurrentPlayer()
-                                  .race
-                                  .bonus
-                                  .length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return TextButton(
-                                  style: TextButton.styleFrom(
+                                  Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                  ),
-                                  onPressed: () {
-                                    showAlertDialog(context, index);
-                                  },
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        width: double.infinity,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 12, 12, 0),
-                                              child: SvgPicture.asset(
-                                                'assets/ui/help.svg',
-                                                color: widget.dsix
-                                                    .getCurrentPlayer()
-                                                    .playerColor
-                                                    .primaryColor,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.055,
-                                              ),
-                                            ),
-                                          ],
+                                        const EdgeInsets.fromLTRB(5, 0, 0, 5),
+                                    child: Container(
+                                      height: 30,
+                                      width: 30,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            widget.dsix
+                                                .getCurrentPlayer()
+                                                .chooseSex();
+                                          });
+                                        },
+                                        child: SvgPicture.asset(
+                                          'assets/player/${widget.dsix.getCurrentPlayer().playerSex}.svg',
+                                          color: widget.dsix
+                                              .getCurrentPlayer()
+                                              .playerColor
+                                              .primaryColor,
                                         ),
                                       ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: widget.dsix
-                                                .getCurrentPlayer()
-                                                .playerColor
-                                                .primaryColor,
-                                            width:
-                                                2.5, //                   <--- border width here
-                                          ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
+                              child: Text(
+                                widget.dsix.getCurrentPlayer().race.description,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  height: 1.3,
+                                  letterSpacing: 1.1,
+                                  fontSize: 18,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            ListView.builder(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                itemCount: widget.dsix
+                                    .getCurrentPlayer()
+                                    .race
+                                    .bonus
+                                    .length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return TextButton(
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 0, 10),
+                                    ),
+                                    onPressed: () {
+                                      showAlertDialog(context, index);
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.058,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: widget.dsix
+                                              .getCurrentPlayer()
+                                              .playerColor
+                                              .primaryColor,
+                                          width:
+                                              2, //                   <--- border width here
                                         ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 8, 0, 8),
-                                          child: Center(
+                                      ),
+                                      child: Stack(
+                                        alignment:
+                                            AlignmentDirectional.centerEnd,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 0, 10, 0),
+                                                child: SvgPicture.asset(
+                                                  'assets/ui/help.svg',
+                                                  color: widget.dsix
+                                                      .getCurrentPlayer()
+                                                      .playerColor
+                                                      .primaryColor,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.04,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Center(
                                             child: Text(
                                               widget.dsix
                                                   .getCurrentPlayer()
@@ -399,8 +395,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                                   .bonus[index]
                                                   .name,
                                               style: TextStyle(
-                                                height: 1.5,
-                                                fontSize: 17,
+                                                fontSize: 14,
                                                 fontWeight: FontWeight.bold,
                                                 letterSpacing: 1.5,
                                                 fontFamily: 'Calibri',
@@ -408,16 +403,16 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }),
+                                    ),
+                                  );
+                                }),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],

@@ -2,7 +2,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dice.dart';
-import 'buff.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'playerAction.dart';
@@ -34,7 +34,7 @@ class _ActionPageState extends State<ActionPage> {
   PlayerAction displayedAction = PlayerAction(
       'action',
       'ACTION',
-      'These are the actions your character can take throughout the game. Each one will have a different outcome depending on your luck.',
+      'These are the actions your character can make in the game. Each one will have a different outcome depending on your luck.',
       [],
       0,
       false);
@@ -64,6 +64,15 @@ class _ActionPageState extends State<ActionPage> {
 
   double textSize;
 
+  void playerAction(bool focus, Option option) {
+    widget.dsix.getCurrentPlayer().effects();
+    widget.dsix.getCurrentPlayer().actionsTaken++;
+    widget.dsix.getCurrentPlayer().focus(displayedAction.focus);
+    if (option.name == 'WEAPON') {
+      widget.dsix.getCurrentPlayer().reduceAmmo();
+    }
+  }
+
   void checkResult(List<Dice> dice, Option option) {
     for (int check = 0; check < diceList.length; check++) {
       if (diceList[check].dice == 'Roll') {
@@ -80,10 +89,6 @@ class _ActionPageState extends State<ActionPage> {
     if (option.name == displayTitle) {
       result += displayedAction.value;
 
-      widget.dsix.getCurrentPlayer().mainHandEquip.uses--;
-      widget.dsix.getCurrentPlayer().offHandEquip.uses--;
-      widget.dsix.getCurrentPlayer().actionsTaken++;
-
       displaySum =
           '${result - displayedAction.value} + ${displayedAction.value} = $result';
 
@@ -94,9 +99,7 @@ class _ActionPageState extends State<ActionPage> {
         displayText = option.fail;
         displayTitle = 'FAIL';
         resultColor = Colors.red;
-        widget.dsix
-            .getCurrentPlayer()
-            .concentration(displayedAction.concentration);
+        playerAction(displayedAction.focus, option);
 
         return;
       } else if (result > 9) {
@@ -104,19 +107,13 @@ class _ActionPageState extends State<ActionPage> {
         if (option.result != '') {
           rollButton(2, option);
           resultColor = Colors.green;
-          widget.dsix
-              .getCurrentPlayer()
-              .concentration(displayedAction.concentration);
-
+          playerAction(displayedAction.focus, option);
           return;
         } else {
           textSize = 1.25;
           displayText = option.success;
           resultColor = Colors.green;
-          widget.dsix
-              .getCurrentPlayer()
-              .concentration(displayedAction.concentration);
-
+          playerAction(displayedAction.focus, option);
           return;
         }
       } else {
@@ -124,18 +121,14 @@ class _ActionPageState extends State<ActionPage> {
         if (option.result != '') {
           rollButton(1, option);
           resultColor = Colors.green;
-          widget.dsix
-              .getCurrentPlayer()
-              .concentration(displayedAction.concentration);
+          playerAction(displayedAction.focus, option);
 
           return;
         } else {
           textSize = 1.25;
           displayText = option.halfSuccess;
           resultColor = Colors.green;
-          widget.dsix
-              .getCurrentPlayer()
-              .concentration(displayedAction.concentration);
+          playerAction(displayedAction.focus, option);
 
           return;
         }
@@ -149,7 +142,7 @@ class _ActionPageState extends State<ActionPage> {
       result += option.value;
       displaySum = '${result - option.value} + ${option.value} = $result';
       textSize = 1.25;
-      displayText = '${option.success} $result';
+      displayText = '${option.success}';
     }
   }
 
@@ -204,51 +197,46 @@ class _ActionPageState extends State<ActionPage> {
           bonus = option.value;
         });
       },
-      child: Stack(
-        children: <Widget>[
-          Container(
-            width: double.infinity,
-            child: Column(
+      child: Container(
+        height: MediaQuery.of(context).size.height * 0.058,
+        width: double.infinity,
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.green,
+            width: 2, //                   <--- border width here
+          ),
+        ),
+        child: Stack(
+          alignment: AlignmentDirectional.centerEnd,
+          children: [
+            Column(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 12, 12, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                   child: SvgPicture.asset(
                     'assets/ui/action.svg',
                     color: Colors.green,
-                    width: MediaQuery.of(context).size.width * 0.055,
+                    width: MediaQuery.of(context).size.width * 0.04,
                   ),
                 ),
               ],
             ),
-          ),
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: Colors.green,
-                width: 2.5, //                   <--- border width here
-              ),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: Center(
-                child: Text(
-                  option.result,
-                  style: TextStyle(
-                    height: 1.5,
-                    fontSize: 17,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                    fontFamily: 'Calibri',
-                    color: Colors.white,
-                  ),
+            Center(
+              child: Text(
+                option.result,
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  letterSpacing: 1.5,
+                  fontFamily: 'Calibri',
+                  color: Colors.white,
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -274,49 +262,33 @@ class _ActionPageState extends State<ActionPage> {
                         width: 2.5, //                   <--- border width here
                       ),
                     ),
-                    width: 300,
+                    width: 200 + 50 * (diceList.length).toDouble(),
                     child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Container(
                           color: resultColor,
-                          width: double.infinity,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            child: Container(
-                              height: 40,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Text(
-                                    '$displayTitle',
-                                    style: TextStyle(
-                                      fontFamily: 'Headline',
-                                      height: 1.3,
-                                      fontSize: 30.0,
-                                      color: Colors.white,
-                                      letterSpacing: 2,
-                                    ),
+                          child: Container(
+                            child: Center(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                                child: Text(
+                                  '$displayTitle',
+                                  style: TextStyle(
+                                    fontFamily: 'Headline',
+                                    height: 1.3,
+                                    fontSize: 25.0,
+                                    color: Colors.white,
+                                    letterSpacing: 2,
                                   ),
-                                  Text(
-                                    ': $bonus',
-                                    style: TextStyle(
-                                      fontFamily: 'Headline',
-                                      height: 1.3,
-                                      fontSize: 30.0,
-                                      color: Colors.white,
-                                      letterSpacing: 2,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
                             ),
                           ),
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(22, 10, 22, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                           child: Stack(
                             children: <Widget>[
                               Row(
@@ -324,8 +296,9 @@ class _ActionPageState extends State<ActionPage> {
                                 children: [
                                   Container(
                                     width: 125 * (diceList.length).toDouble(),
-                                    height: 200,
+                                    height: 180,
                                     child: ListView.builder(
+                                        shrinkWrap: true,
                                         padding: const EdgeInsets.fromLTRB(
                                             0, 0, 0, 0),
                                         scrollDirection: Axis.horizontal,
@@ -348,7 +321,6 @@ class _ActionPageState extends State<ActionPage> {
                                             },
                                             child: SizedBox(
                                               width: 125,
-                                              height: 200,
                                               child: Stack(
                                                 children: <Widget>[
                                                   AnimatedOpacity(
@@ -391,34 +363,34 @@ class _ActionPageState extends State<ActionPage> {
                                     textAlign: TextAlign.justify,
                                     style: TextStyle(
                                       fontFamily: 'Headline',
-                                      fontSize: 27.0,
+                                      fontSize: 25.0,
                                       color: Colors.white,
-                                      letterSpacing: 2,
+                                      letterSpacing: 4,
                                     ),
                                   ),
                                 ),
                               ),
                               Padding(
                                 padding:
-                                    const EdgeInsets.fromLTRB(13, 160, 13, 20),
+                                    const EdgeInsets.fromLTRB(35, 150, 35, 10),
                                 child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Container(
-                                      width: double.infinity,
+                                    Center(
                                       child: Text(
                                         displayText,
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
                                           height: textSize,
-                                          fontSize: 23,
+                                          fontSize: 19,
                                           fontFamily: 'Calibri',
                                           color: Colors.white,
                                         ),
                                       ),
                                     ),
                                     Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(5, 0, 5, 0),
                                       child: button,
                                     ),
                                   ],
@@ -470,7 +442,7 @@ class _ActionPageState extends State<ActionPage> {
                       widget.dsix.getCurrentPlayer().playerColor.primaryColor,
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -479,7 +451,7 @@ class _ActionPageState extends State<ActionPage> {
                           style: TextStyle(
                             fontFamily: 'Headline',
                             height: 1.3,
-                            fontSize: 30.0,
+                            fontSize: 25.0,
                             color: Colors.white,
                             letterSpacing: 2,
                           ),
@@ -492,6 +464,7 @@ class _ActionPageState extends State<ActionPage> {
                   padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
                   child: Text(
                     alertDescription,
+                    textAlign: TextAlign.center,
                     style: TextStyle(
                       height: 1.25,
                       fontSize: 22,
@@ -534,7 +507,7 @@ class _ActionPageState extends State<ActionPage> {
                     crossAxisCount: 6,
                     children: List.generate(6, (index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: SvgPicture.asset(
                           'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                           color: Colors.white,
@@ -564,7 +537,7 @@ class _ActionPageState extends State<ActionPage> {
                     crossAxisCount: 6,
                     children: List.generate(6, (index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: TextButton(
                           onPressed: () {
                             setState(() {
@@ -609,7 +582,7 @@ class _ActionPageState extends State<ActionPage> {
                     style: TextStyle(
                       fontFamily: 'Headline',
                       height: 1.3,
-                      fontSize: 50,
+                      fontSize: 45,
                       color: widget.dsix
                           .getCurrentPlayer()
                           .playerColor
@@ -618,17 +591,6 @@ class _ActionPageState extends State<ActionPage> {
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.fromLTRB(0,10,0,0),
-                //   child: Text('Actions taken: ${widget.dsix.getCurrentPlayer().actionsTaken}',
-                //     textAlign: TextAlign.justify,
-                //     style: TextStyle(
-                //       letterSpacing: 3,
-                //       fontSize: 20,
-                //       fontFamily: 'Headline',
-                //       color: Colors.white,
-                //     ),),
-                // ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
                   child: Text(
@@ -636,7 +598,7 @@ class _ActionPageState extends State<ActionPage> {
                     textAlign: TextAlign.justify,
                     style: TextStyle(
                       height: 1.3,
-                      fontSize: 22,
+                      fontSize: 19,
                       fontFamily: 'Calibri',
                       color: Colors.white,
                     ),
@@ -656,20 +618,30 @@ class _ActionPageState extends State<ActionPage> {
                           onPressed: () {
                             roll(2, displayedAction.option[index].name,
                                 displayedAction.option[index]);
-
-                            // checkOption(displayedAction.option[index]);
                           },
-                          child: Stack(
-                            children: <Widget>[
-                              Container(
-                                width: double.infinity,
-                                child: Column(
+                          child: Container(
+                            height: MediaQuery.of(context).size.height * 0.058,
+                            width: double.infinity,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerColor
+                                    .primaryColor,
+                                width:
+                                    2, //                   <--- border width here
+                              ),
+                            ),
+                            child: Stack(
+                              alignment: AlignmentDirectional.centerEnd,
+                              children: [
+                                Column(
                                   mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
                                   children: <Widget>[
                                     Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          0, 12, 12, 0),
+                                          0, 0, 10, 0),
                                       child: SvgPicture.asset(
                                         'assets/ui/action.svg',
                                         color: widget.dsix
@@ -678,43 +650,25 @@ class _ActionPageState extends State<ActionPage> {
                                             .primaryColor,
                                         width:
                                             MediaQuery.of(context).size.width *
-                                                0.055,
+                                                0.04,
                                       ),
                                     ),
                                   ],
                                 ),
-                              ),
-                              Container(
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: widget.dsix
-                                        .getCurrentPlayer()
-                                        .playerColor
-                                        .primaryColor,
-                                    width:
-                                        2.5, //                   <--- border width here
-                                  ),
-                                ),
-                                child: Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                  child: Center(
-                                    child: Text(
-                                      displayedAction.option[index].name,
-                                      style: TextStyle(
-                                        height: 1.5,
-                                        fontSize: 17,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.5,
-                                        fontFamily: 'Calibri',
-                                        color: Colors.white,
-                                      ),
+                                Center(
+                                  child: Text(
+                                    displayedAction.option[index].name,
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      fontWeight: FontWeight.bold,
+                                      letterSpacing: 1.5,
+                                      fontFamily: 'Calibri',
+                                      color: Colors.white,
                                     ),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         );
                       }),

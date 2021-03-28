@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'playerRacePage.dart';
 import 'gmPage.dart';
-// import 'playerUI.dart';
+import 'playerUI.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 
 class PlayersPage extends StatefulWidget {
@@ -36,6 +36,14 @@ class _PlayersPageState extends State<PlayersPage> {
     );
   }
 
+  void checkPlayer() {
+    if (widget.dsix.getCurrentPlayer().characterFinished == false) {
+      Navigator.of(context).push(_createRouteRace());
+    } else {
+      Navigator.of(context).push(_createRouteUI());
+    }
+  }
+
   Route _createRouteRace() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => PlayerRacePage(
@@ -56,25 +64,25 @@ class _PlayersPageState extends State<PlayersPage> {
     );
   }
 
-  // Route _createRouteUI() {
-  //   return PageRouteBuilder(
-  //     pageBuilder: (context, animation, secondaryAnimation) => PlayerUI(
-  //       dsix: widget.dsix,
-  //     ),
-  //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-  //       var begin = Offset(1, 0);
-  //       var end = Offset(0.0, 0.0);
-  //       var curve = Curves.ease;
-  //       var tween =
-  //           Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+  Route _createRouteUI() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => PlayerUI(
+        dsix: widget.dsix,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1, 0);
+        var end = Offset(0.0, 0.0);
+        var curve = Curves.ease;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
 
-  //       return SlideTransition(
-  //         position: animation.drive(tween),
-  //         child: child,
-  //       );
-  //     },
-  //   );
-  // }
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
 
   void initState() {
     super.initState();
@@ -84,187 +92,170 @@ class _PlayersPageState extends State<PlayersPage> {
     return new Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.keyboard_arrow_left,
+            color: Colors.grey[500],
+            size: 40,
+          ),
+          onPressed: () => Navigator.of(context).pop(),
+        ),
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         backgroundColor: Colors.grey[800],
         centerTitle: true,
         title: new Text(
-          'Choose your player',
+          'Players',
           textAlign: TextAlign.left,
           style: TextStyle(
             fontFamily: 'Headline',
             height: 1.1,
             fontSize: 25.0,
-            color: Colors.black,
+            color: Colors.grey[500],
             letterSpacing: 2,
           ),
         ),
       ),
       body: new SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(0, 55, 0, 0),
+        child: Center(
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              Container(
-                width: MediaQuery.of(context).size.width * 1,
-                height: MediaQuery.of(context).size.height * 0.7,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                      height: 400,
-                      child: ListView.builder(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        itemCount: widget.dsix.players.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return TextButton(
-                            onPressed: () {
-                              widget.dsix.setCurrentPlayer(index);
-
-                              Navigator.of(context).push(_createRouteRace());
-                            },
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                            ),
-                            child: Stack(
-                              children: <Widget>[
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.62,
-                                  child: Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 20, 0),
-                                        child: Icon(
-                                          Icons.keyboard_arrow_right,
-                                          color: widget.dsix.players[index]
-                                              .playerColor.primaryColor,
-                                          size: 40,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  height:
-                                      MediaQuery.of(context).size.height * 0.1,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.62,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: widget.dsix.players[index]
-                                          .playerColor.primaryColor,
-                                      width:
-                                          2.5, //                   <--- border width here
-                                    ),
-                                  ),
-                                  child: Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                    child: Center(
-                                      child: Text(
-                                        '${widget.dsix.players[index].playerColor.name}',
-                                        style: TextStyle(
-                                          fontSize: 17,
-                                          fontWeight: FontWeight.bold,
-                                          letterSpacing: 1.5,
-                                          fontFamily: 'Calibri',
-                                          color: widget.dsix.players[index]
-                                              .playerColor.primaryColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          );
-                        },
-                      ),
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 35),
+                child: Text(
+                  'Choose your player:',
+                  textAlign: TextAlign.justify,
+                  style: TextStyle(
+                    height: 1.3,
+                    fontSize: 18,
+                    fontFamily: 'Calibri',
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                itemCount: widget.dsix.players.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return TextButton(
+                    onPressed: () {
+                      widget.dsix.setCurrentPlayer(index);
+                      checkPlayer();
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
                     ),
 
-                    TextButton(
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          new MaterialPageRoute(
-                            builder: (context) => new GmPage(),
-                          ),
-                        );
-                      },
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.62,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: widget
+                              .dsix.players[index].playerColor.primaryColor,
+                          width:
+                              2.5, //                   <--- border width here
+                        ),
                       ),
                       child: Stack(
-                        children: <Widget>[
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            width: MediaQuery.of(context).size.width * 0.62,
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                                  child: Icon(
-                                    Icons.keyboard_arrow_right,
-                                    color: Colors.grey[800],
-                                    size: 40,
-                                  ),
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                child: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: widget.dsix.players[index].playerColor
+                                      .primaryColor,
+                                  size: 30,
                                 ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.1,
-                            width: MediaQuery.of(context).size.width * 0.62,
-                            decoration: BoxDecoration(
-                              border: Border.all(
-                                color: Colors.grey[800],
-                                width:
-                                    2.5, //                   <--- border width here
                               ),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                              child: Center(
-                                child: Text(
-                                  'GM',
-                                  style: TextStyle(
-                                    fontSize: 17,
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 1.5,
-                                    fontFamily: 'Calibri',
-                                    color: Colors.grey[800],
-                                  ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                            child: Center(
+                              child: Text(
+                                '${widget.dsix.players[index].playerColor.name}',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: widget.dsix.players[index].playerColor
+                                      .primaryColor,
                                 ),
                               ),
                             ),
                           ),
                         ],
                       ),
-                    ), //   GM GREY
-                  ],
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.of(context).push(_createRouteMain());
+                    ),
+
+                    // child: Stack(
+                    //   children: <Widget>[
+                    //     Container(
+                    //       height:
+                    //           MediaQuery.of(context).size.height * 0.1,
+                    //       width:
+                    //           MediaQuery.of(context).size.width * 0.62,
+                    //       child: Column(
+                    //         mainAxisAlignment: MainAxisAlignment.center,
+                    //         crossAxisAlignment: CrossAxisAlignment.end,
+                    //         children: <Widget>[
+                    //           Padding(
+                    //             padding: const EdgeInsets.fromLTRB(
+                    //                 0, 0, 20, 0),
+                    //             child: Icon(
+                    //               Icons.keyboard_arrow_right,
+                    //               color: widget.dsix.players[index]
+                    //                   .playerColor.primaryColor,
+                    //               size: 40,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ),
+                    //     Container(
+                    //       height:
+                    //           MediaQuery.of(context).size.height * 0.1,
+                    //       width:
+                    //           MediaQuery.of(context).size.width * 0.62,
+                    //       decoration: BoxDecoration(
+                    //         border: Border.all(
+                    //           color: widget.dsix.players[index]
+                    //               .playerColor.primaryColor,
+                    //           width:
+                    //               2.5, //                   <--- border width here
+                    //         ),
+                    //       ),
+                    //       child: Padding(
+                    //         padding:
+                    //             const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    //         child: Center(
+                    //           child: Text(
+                    //             '${widget.dsix.players[index].playerColor.name}',
+                    //             style: TextStyle(
+                    //               fontSize: 17,
+                    //               fontWeight: FontWeight.bold,
+                    //               letterSpacing: 1.5,
+                    //               fontFamily: 'Calibri',
+                    //               color: widget.dsix.players[index]
+                    //                   .playerColor.primaryColor,
+                    //             ),
+                    //           ),
+                    //         ),
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                  );
                 },
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                icon: Icon(
-                  Icons.keyboard_arrow_down,
-                  color: Colors.white,
-                  size: 40,
-                ),
               ),
             ],
           ),

@@ -66,6 +66,8 @@ flutter:
   - assets/animation/
   - assets/action/
   - assets/item/
+  - assets/logo/
+  - assets/effect/
 
   fonts:
   - family: Headline

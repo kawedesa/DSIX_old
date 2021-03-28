@@ -32,40 +32,34 @@ class _CharacterPageState extends State<CharacterPage> {
           ),
         ),
         width: 300,
-        height: 325,
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
           mainAxisAlignment: MainAxisAlignment.start,
+          mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
               color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-              width: double.infinity,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Write your story',
-                      style: TextStyle(
-                        fontFamily: 'Headline',
-                        height: 1.3,
-                        fontSize: 30.0,
-                        color: Colors.white,
-                        letterSpacing: 2,
-                      ),
+                padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                child: Center(
+                  child: Text(
+                    'Write your story',
+                    style: TextStyle(
+                      fontFamily: 'Headline',
+                      height: 1.3,
+                      fontSize: 25.0,
+                      color: Colors.white,
+                      letterSpacing: 2,
                     ),
-                  ],
+                  ),
                 ),
               ),
             ),
             Container(
-              height: 150,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(35, 15, 25, 5),
+                padding: const EdgeInsets.fromLTRB(25, 10, 25, 5),
                 child: TextField(
                     keyboardType: TextInputType.multiline,
-                    maxLines: 5,
+                    maxLines: 4,
                     autofocus: true,
                     cursorColor:
                         widget.dsix.getCurrentPlayer().playerColor.primaryColor,
@@ -79,7 +73,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     },
                     style: TextStyle(
                       height: 1.3,
-                      fontSize: 20,
+                      fontSize: 16,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.5,
                       fontFamily: 'Calibri',
@@ -118,34 +112,56 @@ class _CharacterPageState extends State<CharacterPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(30, 30, 30, 0),
-              child: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-                    width: 1.5, //                   <--- border width here
-                  ),
-                ),
-                child: TextButton(
-                  onPressed: () {
-                    confirm();
-                  },
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                  ),
-                  child: Center(
-                    child: Text(
-                      'CONFIRM',
-                      style: TextStyle(
-                        height: 1.5,
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 1.5,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
+              padding: const EdgeInsets.fromLTRB(25, 5, 25, 15),
+              child: GestureDetector(
+                onTap: () {
+                  confirm();
+                },
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.058,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: widget.dsix
+                          .getCurrentPlayer()
+                          .playerColor
+                          .primaryColor,
+                      width: 2, //                   <--- border width here
                     ),
+                  ),
+                  child: Stack(
+                    alignment: AlignmentDirectional.centerEnd,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                            child: SvgPicture.asset(
+                              'assets/ui/check.svg',
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
+                              width: MediaQuery.of(context).size.width * 0.04,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Center(
+                        child: Text(
+                          'CONFIRM',
+                          style: TextStyle(
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 1.5,
+                            fontFamily: 'Calibri',
+                            color: Colors.white,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
@@ -159,73 +175,6 @@ class _CharacterPageState extends State<CharacterPage> {
       context: context,
       builder: (BuildContext context) {
         return alert;
-      },
-    );
-  }
-
-  showAlertDialogDetail(BuildContext context, int index) {
-    AlertDialog alerta = AlertDialog(
-      backgroundColor: Colors.black,
-      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      content: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-            width: 1.5, //                   <--- border width here
-          ),
-        ),
-        width: 300,
-        height: 200,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Text(
-                      '${widget.dsix.getCurrentPlayer().playerAction[index + 1].name}: ${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}',
-                      style: TextStyle(
-                        fontFamily: 'Headline',
-                        height: 1.3,
-                        fontSize: 30.0,
-                        color: Colors.white,
-                        letterSpacing: 3,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(35, 25, 25, 15),
-              child: Text(
-                widget.dsix
-                    .getCurrentPlayer()
-                    .playerAction[index + 1]
-                    .description,
-                style: TextStyle(
-                  height: 1.25,
-                  fontSize: 22,
-                  fontFamily: 'Calibri',
-                  color: Colors.white,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alerta;
       },
     );
   }
@@ -257,11 +206,13 @@ class _CharacterPageState extends State<CharacterPage> {
                     crossAxisCount: 6,
                     children: List.generate(6, (index) {
                       return Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 15),
+                        padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: SvgPicture.asset(
                           'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.055,
+                          color: widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .primaryColor,
                         ),
                       );
                     }),
@@ -277,7 +228,6 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: SvgPicture.asset(
                           'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                           color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.055,
                         ),
                       );
                     }),
@@ -297,19 +247,25 @@ class _CharacterPageState extends State<CharacterPage> {
           child: Stack(
             children: [
               Padding(
-                padding: const EdgeInsets.fromLTRB(13, 25, 0, 0),
+                padding: const EdgeInsets.fromLTRB(13, 20, 0, 0),
                 child: Container(
                   width: 30,
                   child: GridView.count(
                     crossAxisCount: 1,
                     children: List.generate(
-                        widget.dsix.getCurrentPlayer().buffList.length,
+                        widget.dsix.getCurrentPlayer().effectList.length,
                         (index) {
-                      return GestureDetector(
-                        onTap: () {},
-                        child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().buffList[index].icon}.svg',
-                          color: Colors.deepOrange,
+                      return Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: GestureDetector(
+                          onTap: () {},
+                          child: SvgPicture.asset(
+                            'assets/effect/${widget.dsix.getCurrentPlayer().effectList[index].icon}.svg',
+                            color: widget.dsix
+                                .getCurrentPlayer()
+                                .playerColor
+                                .primaryColor,
+                          ),
                         ),
                       );
                     }),
@@ -331,7 +287,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             style: TextStyle(
                               fontFamily: 'Headline',
                               height: 1.3,
-                              fontSize: 50,
+                              fontSize: 45,
                               color: widget.dsix
                                   .getCurrentPlayer()
                                   .playerColor
@@ -342,8 +298,8 @@ class _CharacterPageState extends State<CharacterPage> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
                             child: Container(
-                              height: 40,
-                              width: 40,
+                              height: 30,
+                              width: 30,
                               child: SvgPicture.asset(
                                 'assets/player/${widget.dsix.getCurrentPlayer().playerSex}.svg',
                                 color: widget.dsix
@@ -364,7 +320,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         minHeight: 0,
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                        padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Text(
@@ -375,7 +331,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               height: 1.3,
-                              fontSize: 22,
+                              fontSize: 18,
                               fontFamily: 'Calibri',
                               color: Colors.white,
                             ),
@@ -383,108 +339,134 @@ class _CharacterPageState extends State<CharacterPage> {
                         ),
                       ),
                     ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.0 + 1 * 55,
-                      child: ListView.builder(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          itemCount: 1,
-                          itemBuilder: (BuildContext context, int index) {
-                            return TextButton(
-                              style: TextButton.styleFrom(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                              ),
-                              onPressed: () {
-                                showAlertDialogDescription(context);
-                              },
+                    ListView.builder(
+                        shrinkWrap: true,
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        itemCount: 1,
+                        itemBuilder: (BuildContext context, int index) {
+                          return TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                            ),
+                            onPressed: () {
+                              showAlertDialogDescription(context);
+                            },
 
+                            child: Container(
+                              height:
+                                  MediaQuery.of(context).size.height * 0.058,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerColor
+                                      .primaryColor,
+                                  width:
+                                      2, //                   <--- border width here
+                                ),
+                              ),
                               child: Stack(
-                                children: <Widget>[
-                                  Container(
-                                    width: double.infinity,
-                                    child: Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: <Widget>[
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 12, 12, 0),
-                                          child: SvgPicture.asset(
-                                            'assets/ui/text.svg',
-                                            color: widget.dsix
-                                                .getCurrentPlayer()
-                                                .playerColor
-                                                .primaryColor,
-                                            width: MediaQuery.of(context)
-                                                    .size
-                                                    .width *
-                                                0.055,
-                                          ),
+                                alignment: AlignmentDirectional.centerEnd,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 10, 0),
+                                        child: SvgPicture.asset(
+                                          'assets/ui/text.svg',
+                                          color: widget.dsix
+                                              .getCurrentPlayer()
+                                              .playerColor
+                                              .primaryColor,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.04,
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: widget.dsix
-                                            .getCurrentPlayer()
-                                            .playerColor
-                                            .primaryColor,
-                                        width:
-                                            2.5, //                   <--- border width here
                                       ),
-                                    ),
-                                    child: Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                                      child: Center(
-                                        child: Text(
-                                          'EDIT',
-                                          style: TextStyle(
-                                            height: 1.5,
-                                            fontSize: 17,
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 1.5,
-                                            fontFamily: 'Calibri',
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                    ],
+                                  ),
+                                  Center(
+                                    child: Text(
+                                      'EDIT',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.5,
+                                        fontFamily: 'Calibri',
+                                        color: Colors.white,
                                       ),
                                     ),
                                   ),
                                 ],
                               ),
+                            ),
 
-//                          Container(
-//                            width: double.infinity,
-//                            decoration: BoxDecoration(
-//                              border: Border.all(
-//                                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-//                                width: 2.5, //                   <--- border width here
-//                              ),
-//                            ),
-//                            child: Padding(
-//                              padding: const EdgeInsets.fromLTRB(0,8,0,8),
-//                              child: Center(
-//                                child: Text('EDIT',
-//                                  style: TextStyle(
-//                                    height: 1.5,
-//                                    fontSize: 17,
-//                                    fontWeight: FontWeight.bold,
-//                                    letterSpacing: 1.5,
-//                                    fontFamily: 'Calibri',
-//                                    color: Colors.white,
-//                                  ),
-//                                ),
-//                              ),
-//                            ),
-//                          ),
-                            );
-                          }),
-                    ),
+                            // child: Stack(
+                            //   children: <Widget>[
+                            //     Container(
+                            //       width: double.infinity,
+                            //       child: Column(
+                            //         mainAxisAlignment: MainAxisAlignment.center,
+                            //         crossAxisAlignment: CrossAxisAlignment.end,
+                            //         children: <Widget>[
+                            //           Padding(
+                            //             padding: const EdgeInsets.fromLTRB(
+                            //                 0, 12, 12, 0),
+                            //             child: SvgPicture.asset(
+                            //               'assets/ui/text.svg',
+                            //               color: widget.dsix
+                            //                   .getCurrentPlayer()
+                            //                   .playerColor
+                            //                   .primaryColor,
+                            //               width: MediaQuery.of(context)
+                            //                       .size
+                            //                       .width *
+                            //                   0.055,
+                            //             ),
+                            //           ),
+                            //         ],
+                            //       ),
+                            //     ),
+                            //     Container(
+                            //       width: double.infinity,
+                            //       decoration: BoxDecoration(
+                            //         border: Border.all(
+                            //           color: widget.dsix
+                            //               .getCurrentPlayer()
+                            //               .playerColor
+                            //               .primaryColor,
+                            //           width:
+                            //               2.5, //                   <--- border width here
+                            //         ),
+                            //       ),
+                            //       child: Padding(
+                            //         padding:
+                            //             const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                            //         child: Center(
+                            //           child: Text(
+                            //             'EDIT',
+                            //             style: TextStyle(
+                            //               height: 1.5,
+                            //               fontSize: 17,
+                            //               fontWeight: FontWeight.bold,
+                            //               letterSpacing: 1.5,
+                            //               fontFamily: 'Calibri',
+                            //               color: Colors.white,
+                            //             ),
+                            //           ),
+                            //         ),
+                            //       ),
+                            //     ),
+                            //   ],
+                            // ),
+                          );
+                        }),
                   ],
                 ),
               ),

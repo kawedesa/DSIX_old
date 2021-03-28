@@ -42,7 +42,7 @@ class _ShopPageState extends State<ShopPage> {
   String shopDescription =
       'Don\'t forget to buy stuff! The world is a dangerous place. Select the category above and click on the item to see it.';
   var textPadding = const EdgeInsets.fromLTRB(40, 15, 40, 0);
-  double fontTextAdjust = 22;
+  double fontTextAdjust = 19;
 
   String exceptionTitle;
   String exceptionDescription;
@@ -110,7 +110,6 @@ class _ShopPageState extends State<ShopPage> {
               ),
             ),
             width: 300,
-            // height: 555,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -120,21 +119,18 @@ class _ShopPageState extends State<ShopPage> {
                       widget.dsix.getCurrentPlayer().playerColor.primaryColor,
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          '${displayItems[index].name}',
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 30.0,
-                            color: Colors.white,
-                            letterSpacing: 2,
-                          ),
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
+                    child: Center(
+                      child: Text(
+                        '${displayItems[index].name}',
+                        style: TextStyle(
+                          fontFamily: 'Headline',
+                          height: 1.3,
+                          fontSize: 25.0,
+                          color: Colors.white,
+                          letterSpacing: 2,
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ), //ITEM NAME
@@ -157,8 +153,10 @@ class _ShopPageState extends State<ShopPage> {
                                     const EdgeInsets.symmetric(horizontal: 0),
                                 child: SvgPicture.asset(
                                   'assets/item/${ammoQuantity[index]}.svg',
-                                  color: Colors.white,
-                                  // width: MediaQuery.of(context).size.width * 0.001,
+                                  color: widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerColor
+                                      .primaryColor,
                                 ),
                               );
                             }),
@@ -170,7 +168,6 @@ class _ShopPageState extends State<ShopPage> {
                         child: SvgPicture.asset(
                           'assets/item/${displayItems[index].icon}.svg',
                           color: Colors.white,
-                          //width: MediaQuery.of(context).size.width * 0.125,
                         ),
                       ),
                     ]),
@@ -197,8 +194,11 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/pDamage.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.060,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
+                              width: MediaQuery.of(context).size.width * 0.055,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
@@ -221,8 +221,11 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/pArmor.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.060,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
+                              width: MediaQuery.of(context).size.width * 0.055,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
@@ -245,8 +248,11 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/mDamage.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.070,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
+                              width: MediaQuery.of(context).size.width * 0.065,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
@@ -269,8 +275,11 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/mArmor.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.060,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
+                              width: MediaQuery.of(context).size.width * 0.055,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
@@ -293,8 +302,11 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/weight.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.050,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor,
+                              width: MediaQuery.of(context).size.width * 0.045,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
@@ -333,7 +345,7 @@ class _ShopPageState extends State<ShopPage> {
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                         height: 1.25,
-                        fontSize: 23,
+                        fontSize: 19,
                         fontFamily: 'Calibri',
                         color: Colors.white,
                       ),
@@ -342,26 +354,36 @@ class _ShopPageState extends State<ShopPage> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 15),
+                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 10),
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
                       buy(index);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
-                    child: Stack(
-                      children: <Widget>[
-                        Container(
-                          width: double.infinity,
-                          child: Column(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.058,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .primaryColor,
+                          width: 2, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
                             mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.end,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 12, 12, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: SvgPicture.asset(
                                   'assets/ui/money.svg',
                                   color: widget.dsix
@@ -369,42 +391,25 @@ class _ShopPageState extends State<ShopPage> {
                                       .playerColor
                                       .primaryColor,
                                   width:
-                                      MediaQuery.of(context).size.width * 0.055,
+                                      MediaQuery.of(context).size.width * 0.04,
                                 ),
                               ),
                             ],
                           ),
-                        ),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              color: widget.dsix
-                                  .getCurrentPlayer()
-                                  .playerColor
-                                  .primaryColor,
-                              width:
-                                  2.5, //                   <--- border width here
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            child: Center(
-                              child: Text(
-                                '${displayItems[index].value}',
-                                style: TextStyle(
-                                  height: 1.5,
-                                  fontSize: 17,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.5,
-                                  fontFamily: 'Calibri',
-                                  color: Colors.white,
-                                ),
+                          Center(
+                            child: Text(
+                              '${displayItems[index].value}',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -589,7 +594,7 @@ class _ShopPageState extends State<ShopPage> {
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1.3,
-                          fontSize: 50,
+                          fontSize: 45,
                           color: widget.dsix
                               .getCurrentPlayer()
                               .playerColor
@@ -617,7 +622,6 @@ class _ShopPageState extends State<ShopPage> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 10, 7, 0),
                     child: Container(
-                      //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
                       child: GridView.count(
                         crossAxisCount: 4,
                         mainAxisSpacing: 20,
@@ -632,8 +636,6 @@ class _ShopPageState extends State<ShopPage> {
                             child: Container(
                               width: double.infinity,
                               height: 80,
-                              //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
-
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment:

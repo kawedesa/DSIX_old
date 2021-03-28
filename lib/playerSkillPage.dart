@@ -27,14 +27,68 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
     'null',
   ];
 
-  var displayedOptions = List<Widget>.empty(growable: true);
+  Widget focusButton = Container();
 
-  var alertOptions = List<Widget>.empty(growable: true);
+  void focus() {
+    if (widget.dsix.getCurrentPlayer().playerSkill.focus == false) {
+      focusButton = Container();
+    } else {
+      focusButton = TextButton(
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        ),
+        onPressed: () {
+          showAlertDialogfocus(context);
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.058,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+              width: 2, //                   <--- border width here
+            ),
+          ),
+          child: Stack(
+            alignment: AlignmentDirectional.centerEnd,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: SvgPicture.asset(
+                      'assets/ui/help.svg',
+                      color: widget.dsix
+                          .getCurrentPlayer()
+                          .playerColor
+                          .primaryColor,
+                      width: MediaQuery.of(context).size.width * 0.04,
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: Text(
+                  'FOCUS',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                    fontFamily: 'Calibri',
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
 
   void skillSelection(index) {
-    displayedOptions.clear();
-    alertOptions.clear();
-
     selectedSkill = [
       'null',
       'null',
@@ -45,6 +99,74 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
     ];
     selectedSkill.replaceRange(
         index, index + 1, [widget.dsix.getCurrentPlayer().skills[index].icon]);
+    focus();
+  }
+
+  showAlertDialogfocus(BuildContext context) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                width: 2.5, //                   <--- border width here
+              ),
+            ),
+            width: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                    child: Center(
+                      child: Text(
+                        'focus',
+                        style: TextStyle(
+                          fontFamily: 'Headline',
+                          height: 1.3,
+                          fontSize: 25.0,
+                          color: Colors.white,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
+                  child: Text(
+                    'You need focus to use this skill and the chance of success will decrease if you use it consecutively.',
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      height: 1.25,
+                      fontSize: 19,
+                      fontFamily: 'Calibri',
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
   }
 
   showAlertDialogDescription(BuildContext context, int index) {
@@ -71,25 +193,22 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                       widget.dsix.getCurrentPlayer().playerColor.primaryColor,
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          widget.dsix
-                              .getCurrentPlayer()
-                              .playerSkill
-                              .option[index]
-                              .name,
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 30.0,
-                            color: Colors.white,
-                            letterSpacing: 2,
-                          ),
+                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                    child: Center(
+                      child: Text(
+                        widget.dsix
+                            .getCurrentPlayer()
+                            .playerSkill
+                            .option[index]
+                            .name,
+                        style: TextStyle(
+                          fontFamily: 'Headline',
+                          height: 1.3,
+                          fontSize: 25.0,
+                          color: Colors.white,
+                          letterSpacing: 2,
                         ),
-                      ],
+                      ),
                     ),
                   ),
                 ),
@@ -101,9 +220,10 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                         .playerSkill
                         .option[index]
                         .description,
+                    textAlign: TextAlign.justify,
                     style: TextStyle(
                       height: 1.25,
-                      fontSize: 22,
+                      fontSize: 19,
                       fontFamily: 'Calibri',
                       color: Colors.white,
                     ),
@@ -162,7 +282,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
-              color: Colors.white,
+              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
               size: 40,
             ),
             onPressed: () => Navigator.of(context).pop(),
@@ -178,7 +298,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
               fontFamily: 'Headline',
               height: 1.1,
               fontSize: 25.0,
-              color: Colors.white,
+              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
               letterSpacing: 2,
             ),
           ),
@@ -275,111 +395,107 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
               ),
               Expanded(
                 flex: 13,
-                child: Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(65, 15, 65, 0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Text(
-                          '${widget.dsix.getCurrentPlayer().playerSkill.name}',
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 50,
-                            color: widget.dsix
-                                .getCurrentPlayer()
-                                .playerColor
-                                .primaryColor,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-                          child: Text(
-                            widget.dsix
-                                .getCurrentPlayer()
-                                .playerSkill
-                                .description,
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              height: 1.3,
-                              fontSize: 22,
-                              fontFamily: 'Calibri',
-                              color: Colors.white,
+                child: ListView(
+                  children: [
+                    Container(
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(65, 15, 65, 0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text(
+                              '${widget.dsix.getCurrentPlayer().playerSkill.name}',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.3,
+                                fontSize: 45,
+                                color: widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerColor
+                                    .primaryColor,
+                                letterSpacing: 2,
+                              ),
                             ),
-                          ),
-                        ),
-                        Container(
-                          height: MediaQuery.of(context).size.height * 0.0 +
-                              widget.dsix
-                                      .getCurrentPlayer()
-                                      .playerSkill
-                                      .option
-                                      .length *
-                                  56,
-                          child: ListView.builder(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                              itemCount: widget.dsix
-                                  .getCurrentPlayer()
-                                  .playerSkill
-                                  .option
-                                  .length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return TextButton(
-                                  style: TextButton.styleFrom(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 10),
-                                  ),
-                                  onPressed: () {
-                                    showAlertDialogDescription(context, index);
-                                  },
-                                  child: Stack(
-                                    children: <Widget>[
-                                      Container(
-                                        width: double.infinity,
-                                        child: Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.end,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 12, 12, 0),
-                                              child: SvgPicture.asset(
-                                                'assets/ui/help.svg',
-                                                color: widget.dsix
-                                                    .getCurrentPlayer()
-                                                    .playerColor
-                                                    .primaryColor,
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.055,
-                                              ),
-                                            ),
-                                          ],
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
+                              child: Text(
+                                widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerSkill
+                                    .description,
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  height: 1.3,
+                                  fontSize: 18,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                            focusButton,
+                            ListView.builder(
+                                shrinkWrap: true,
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                itemCount: widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerSkill
+                                    .option
+                                    .length,
+                                itemBuilder: (BuildContext context, int index) {
+                                  return TextButton(
+                                    style: TextButton.styleFrom(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          0, 0, 0, 10),
+                                    ),
+                                    onPressed: () {
+                                      showAlertDialogDescription(
+                                          context, index);
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.058,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: widget.dsix
+                                              .getCurrentPlayer()
+                                              .playerColor
+                                              .primaryColor,
+                                          width:
+                                              2, //                   <--- border width here
                                         ),
                                       ),
-                                      Container(
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: widget.dsix
-                                                .getCurrentPlayer()
-                                                .playerColor
-                                                .primaryColor,
-                                            width:
-                                                2.5, //                   <--- border width here
+                                      child: Stack(
+                                        alignment:
+                                            AlignmentDirectional.centerEnd,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 0, 10, 0),
+                                                child: SvgPicture.asset(
+                                                  'assets/ui/help.svg',
+                                                  color: widget.dsix
+                                                      .getCurrentPlayer()
+                                                      .playerColor
+                                                      .primaryColor,
+                                                  width: MediaQuery.of(context)
+                                                          .size
+                                                          .width *
+                                                      0.04,
+                                                ),
+                                              ),
+                                            ],
                                           ),
-                                        ),
-                                        child: Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              0, 8, 0, 8),
-                                          child: Center(
+                                          Center(
                                             child: Text(
                                               widget.dsix
                                                   .getCurrentPlayer()
@@ -387,8 +503,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                                                   .option[index]
                                                   .name,
                                               style: TextStyle(
-                                                height: 1.5,
-                                                fontSize: 17,
+                                                fontSize: 14,
                                                 fontWeight: FontWeight.bold,
                                                 letterSpacing: 1.5,
                                                 fontFamily: 'Calibri',
@@ -396,16 +511,16 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                                               ),
                                             ),
                                           ),
-                                        ),
+                                        ],
                                       ),
-                                    ],
-                                  ),
-                                );
-                              }),
+                                    ),
+                                  );
+                                }),
+                          ],
                         ),
-                      ],
+                      ),
                     ),
-                  ),
+                  ],
                 ),
               ),
             ],
