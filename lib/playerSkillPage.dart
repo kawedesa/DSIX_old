@@ -28,11 +28,17 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
   ];
 
   Widget focusButton = Container();
+  String focusText1 = '';
+  String focusText2 = '';
 
   void focus() {
     if (widget.dsix.getCurrentPlayer().playerSkill.focus == false) {
       focusButton = Container();
+      focusText1 = '';
+      focusText2 = '';
     } else {
+      focusText1 = ' You need to';
+      focusText2 = '  focus.';
       focusButton = TextButton(
         style: TextButton.styleFrom(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -144,7 +150,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
                   child: Text(
-                    'You need focus to use this skill and the chance of success will decrease if you use it consecutively.',
+                    'You need to focus when using this skill and the chance of success will decrease if you use it consecutively.',
                     textAlign: TextAlign.justify,
                     style: TextStyle(
                       height: 1.25,
@@ -341,7 +347,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                           children: List.generate(6, (index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 13),
                               child: SvgPicture.asset(
                                 'assets/action/${widget.dsix.getCurrentPlayer().skills[index].icon}.svg',
                                 color: Colors.white,
@@ -356,7 +362,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                           children: List.generate(6, (index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 13),
                               child: TextButton(
                                 onPressed: () {
                                   setState(() {
@@ -419,17 +425,31 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 15, 0, 20),
-                              child: Text(
-                                widget.dsix
-                                    .getCurrentPlayer()
-                                    .playerSkill
-                                    .description,
+                              child: RichText(
                                 textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                  height: 1.3,
-                                  fontSize: 18,
-                                  fontFamily: 'Calibri',
-                                  color: Colors.white,
+                                text: new TextSpan(
+                                  style: TextStyle(
+                                    height: 1.3,
+                                    fontSize: 19,
+                                    fontFamily: 'Calibri',
+                                    color: Colors.white,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: widget.dsix
+                                            .getCurrentPlayer()
+                                            .playerSkill
+                                            .description),
+                                    TextSpan(text: focusText1),
+                                    TextSpan(
+                                        text: focusText2,
+                                        style: new TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: widget.dsix
+                                                .getCurrentPlayer()
+                                                .playerColor
+                                                .primaryColor)),
+                                  ],
                                 ),
                               ),
                             ),

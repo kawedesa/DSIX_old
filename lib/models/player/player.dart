@@ -5,7 +5,7 @@ import 'package:dsixv02app/playerBackground.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/playerRace.dart';
 import 'package:dsixv02app/option.dart';
-import 'package:dsixv02app/playerAction.dart';
+import 'package:dsixv02app/models/player/playerAction.dart';
 import 'package:dsixv02app/effect.dart';
 import 'exceptions.dart';
 import 'package:dsixv02app/bonus.dart';
@@ -548,7 +548,7 @@ class Player {
     PlayerAction(
         'matterMorph',
         'MATTERMORPH',
-        'You affect the environment around you, changing it\'s physical properties.',
+        'You affect the environment around you and change it\'s physical properties.',
         [
           Option(
               'BRIGHTNESS',
@@ -617,8 +617,8 @@ class Player {
           Option(
               'FIRE',
               'It explodes on impact and sets fire to anything that it touches.',
-              'It explodes and sets fire to a medium area.',
-              'It explodes and sets fire to a small area.',
+              'It deals',
+              '',
               'You fail and something bad happens.',
               'DAMAGE',
               0)
@@ -633,7 +633,7 @@ class Player {
           Option(
               'ATTACK',
               'You mark a target and nature strikes it.',
-              'Nature strikes them.',
+              'It deals',
               '',
               'It fails and something bad happens.',
               'DAMAGE',
@@ -641,7 +641,7 @@ class Player {
           Option(
               'DEFEND',
               'You mark a target and nature defends it.',
-              'Nature protects the target in time.',
+              'It protects',
               '',
               'Nature fails and it takes damage.',
               'PROTECT',
@@ -762,7 +762,7 @@ class Player {
           Option(
               'PUNCH',
               'You punch the target with your bare fists, trying to knock them out.',
-              'You hit them.',
+              'You deal',
               '',
               'You miss and open your guard.',
               'DAMAGE',
@@ -770,7 +770,7 @@ class Player {
           Option(
               'WEAPON',
               'You attack the target with your weapon, trying to bring them down.',
-              'You hit them.',
+              'You deal',
               '',
               'You miss and open your guard.',
               'DAMAGE',
@@ -786,7 +786,7 @@ class Player {
           Option(
               'PHYSICAL DEFENSE',
               'You face the danger, raise your shield and brace for impact. ',
-              'You raise your guard in time.',
+              'You protect',
               '',
               'You can\'t raise your guard in time and take full damage.',
               'PROTECT',
@@ -794,7 +794,7 @@ class Player {
           Option(
               'MAGIC DEFENSE',
               'You cast an enchantment that defends yourself and others around you.',
-              'Your defense is ready in time.',
+              'You protect',
               '',
               'You can\'t defend in time and take full damage.',
               'PROTECT',
@@ -810,10 +810,10 @@ class Player {
           Option(
               'RESOURCES',
               'You search for something useful, like potions, items, and resources.',
-              'You find something very useful near by.',
-              'You find something very useful, but it\'s out of reach.',
-              'You find something bad',
+              'You find something useful.',
               '',
+              'You find something bad',
+              'LOOT',
               0),
           Option(
               'INFORMATION',
@@ -1027,9 +1027,8 @@ class Player {
         break;
       case 'RESISTANCE POTION':
         print('here');
-        this
-            .effectList
-            .add(Effect('resistancePotion', 'RESISTANCE POTION', '', 3, 3));
+        this.effectList.add(Effect('mArmor', 'MAGIC ARMOR',
+            'Increase your magic armor by tree.', 3, 3));
         this.mArmor += 3;
 
         this.inventory.remove(item);
@@ -1363,6 +1362,15 @@ class Player {
 
 //ACTION
 
+  void action(bool focus, Option option) {
+    this.effects();
+    this.actionsTaken++;
+    this.focus(focus);
+    if (option.name == 'WEAPON') {
+      this.reduceAmmo();
+    }
+  }
+
   void reduceAmmo() {
     if (this.mainHandEquip.itemClass == 'thrownWeapon') {
       this.mainHandEquip.uses--;
@@ -1395,21 +1403,19 @@ class Player {
     }
   }
 
-  void checkWeapon(bool withWeapon) {
-    if (withWeapon) {
-      if (this.mainHandEquip.name == '' && this.offHandEquip.name == '') {
-        throw new NoWeaponException();
-      }
+  void checkWeapon() {
+    if (this.mainHandEquip.name == '' && this.offHandEquip.name == '') {
+      throw new NoWeaponException();
+    }
 
-      if (this.mainHandEquip.itemClass == 'rangedWeapon' ||
-          this.offHandEquip.itemClass == 'rangedWeapon') {
-        for (int check = 0; check < this.inventory.length; check++) {
-          if (this.inventory[check].icon == 'ammo') {
-            return;
-          }
+    if (this.mainHandEquip.itemClass == 'rangedWeapon' ||
+        this.offHandEquip.itemClass == 'rangedWeapon') {
+      for (int check = 0; check < this.inventory.length; check++) {
+        if (this.inventory[check].icon == 'ammo') {
+          return;
         }
-        throw new NoAmmoException('Not enough ammo.');
       }
+      throw new NoAmmoException('Not enough ammo.');
     }
   }
 
@@ -1449,11 +1455,31 @@ class Player {
       this.effectList.add(Effect(
           playerAction[6].icon,
           'focus',
-          'This action requires focus. Each time this action is taken consecutively, it will decrease the chance of success.',
+          'This action requires you to focus and it will have a lower chance of success if taken consecutively.',
           -1,
           2));
       this.playerAction[6].value--;
     }
+  }
+
+  List<String> lootResources(int value) {
+    List<String> itemList = [];
+
+    while (value > 0) {
+      Random randomDrop = new Random();
+      int randomLoot = randomDrop.nextInt(shop.resources.length);
+
+      if (shop.resources[randomLoot].value <= value &&
+          shop.resources[randomLoot].weight <=
+              this.maxWeight - this.currentWeight) {
+        this.inventory.add(shop.resources[randomLoot].copyItem());
+
+        itemList.add(shop.resources[randomLoot].name);
+        value -= shop.resources[randomLoot].value;
+        this.currentWeight += shop.resources[randomLoot].weight;
+      }
+    }
+    return itemList;
   }
 
   List<Item> inventory = [];

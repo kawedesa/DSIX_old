@@ -5,7 +5,7 @@ import 'package:dsixv02app/models/game/dice.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'playerAction.dart';
+import 'models/player/playerAction.dart';
 import 'option.dart';
 
 import 'package:dsixv02app/models/game/dsix.dart';
@@ -39,6 +39,18 @@ class _ActionPageState extends State<ActionPage> {
       0,
       false);
 
+  // String displayText;
+  // String displayTitle;
+  String displaySum = '';
+  Widget button;
+  List<Dice> diceList = [];
+  Dice die = Dice('Roll', 1);
+  int bonus;
+  Color resultColor;
+  String focusText1 = '';
+  String focusText2 = '';
+  double textSize;
+
   void actionSelection(index) {
     selectedAction = [
       'null',
@@ -51,25 +63,12 @@ class _ActionPageState extends State<ActionPage> {
     selectedAction.replaceRange(index - 1, index,
         [widget.dsix.getCurrentPlayer().playerAction[index].icon]);
     displayedAction = widget.dsix.getCurrentPlayer().playerAction[index];
-  }
-
-  String displayText;
-  String displayTitle;
-  String displaySum = '';
-  Widget button;
-  List<Dice> diceList = [];
-  Dice die = Dice('Roll', 1);
-  int bonus;
-  Color resultColor;
-
-  double textSize;
-
-  void playerAction(bool focus, Option option) {
-    widget.dsix.getCurrentPlayer().effects();
-    widget.dsix.getCurrentPlayer().actionsTaken++;
-    widget.dsix.getCurrentPlayer().focus(displayedAction.focus);
-    if (option.name == 'WEAPON') {
-      widget.dsix.getCurrentPlayer().reduceAmmo();
+    if (displayedAction.focus == true) {
+      focusText1 = ' You need to';
+      focusText2 = ' focus.';
+    } else {
+      focusText1 = '';
+      focusText2 = '';
     }
   }
 
@@ -86,94 +85,77 @@ class _ActionPageState extends State<ActionPage> {
       result += int.parse(diceList[check].dice);
     }
 
-    if (option.name == displayTitle) {
-      result += displayedAction.value;
-
-      displaySum =
-          '${result - displayedAction.value} + ${displayedAction.value} = $result';
-
-      bonus = result;
-
-      if (result < 7) {
-        textSize = 1.25;
-        displayText = option.fail;
-        displayTitle = 'FAIL';
-        resultColor = Colors.red;
-        playerAction(displayedAction.focus, option);
-
-        return;
-      } else if (result > 9) {
-        displayTitle = 'SUCCESS';
-        if (option.result != '') {
-          rollButton(2, option);
-          resultColor = Colors.green;
-          playerAction(displayedAction.focus, option);
-          return;
-        } else {
-          textSize = 1.25;
-          displayText = option.success;
-          resultColor = Colors.green;
-          playerAction(displayedAction.focus, option);
-          return;
-        }
-      } else {
-        displayTitle = 'HALF SUCCESS';
-        if (option.result != '') {
-          rollButton(1, option);
-          resultColor = Colors.green;
-          playerAction(displayedAction.focus, option);
-
-          return;
-        } else {
-          textSize = 1.25;
-          displayText = option.halfSuccess;
-          resultColor = Colors.green;
-          playerAction(displayedAction.focus, option);
-
-          return;
-        }
-      }
-    } else {
-      if (displayTitle == 'FAIL' ||
-          displayTitle == 'HALF SUCCESS' ||
-          displayTitle == 'SUCCESS') {
-        return;
-      }
-      result += option.value;
-      displaySum = '${result - option.value} + ${option.value} = $result';
+    if (option.name == 'DAMAGE' || option.name == 'PROTECT') {
+      bonus = option.value;
+      result += bonus;
+      displaySum = '${result - bonus} + $bonus = $result';
+      option.resultText = '${option.success} $result damage.';
       textSize = 1.25;
-      displayText = '${option.success}';
-    }
-  }
-
-  void roll(int diceNumber, String title, Option option) {
-    try {
-      bool withWeapon = false;
-      switch (displayedAction.name) {
-        case 'ATTACK':
-          if (option.name == 'WEAPON') {
-            withWeapon = true;
-          }
-
-          break;
-      }
-
-      widget.dsix.getCurrentPlayer().checkWeapon(withWeapon);
-    } on NoAmmoException catch (e) {
-      alertTitle = e.title;
-      alertDescription = e.message;
-      showAlertDialogCheckWeapon(context);
-      return;
-    } on NoWeaponException catch (e) {
-      alertTitle = e.title;
-      alertDescription = e.message;
-      showAlertDialogCheckWeapon(context);
       return;
     }
 
     bonus = displayedAction.value;
-    displayTitle = title;
-    displayText = '';
+
+    result += bonus;
+    displaySum = '${result - bonus} + $bonus = $result';
+
+    widget.dsix.getCurrentPlayer().action(displayedAction.focus, option);
+
+    option.useOption(result);
+
+    if (option.name == 'FAIL') {
+      resultColor = Colors.red;
+      textSize = 1.25;
+    } else if (option.name == 'SUCCESS') {
+      if (option.result != '') {
+        resultColor = Colors.green;
+        rollButton(2, option);
+      } else {
+        resultColor = Colors.green;
+        textSize = 1.25;
+      }
+    } else if (option.name == 'HALF SUCCESS') {
+      if (option.result != '') {
+        resultColor = Colors.green;
+        rollButton(1, option);
+      } else {
+        resultColor = Colors.green;
+        textSize = 1.25;
+      }
+    }
+  }
+
+  Option newOption;
+  List<String> itemList = [];
+
+  void roll(int diceNumber, Option option) {
+    // SEE IF ITS FIRST ROLL
+    if (option.resultText == '') {
+      try {
+        if (option.name == 'WEAPON') {
+          widget.dsix.getCurrentPlayer().checkWeapon();
+        }
+      } on NoAmmoException catch (e) {
+        alertTitle = e.title;
+        alertDescription = e.message;
+        showAlertDialogCheckWeapon(context);
+        return;
+      } on NoWeaponException catch (e) {
+        alertTitle = e.title;
+        alertDescription = e.message;
+        showAlertDialogCheckWeapon(context);
+        return;
+      }
+    }
+
+    //SEE if its LOOT
+
+    if (option.name == 'LOOT') {
+      itemList = widget.dsix.getCurrentPlayer().lootResources(diceNumber * 100);
+      showAlertDialogLoot(context);
+      return;
+    }
+
     displaySum = '';
     textSize = 0;
     button = Container();
@@ -193,8 +175,9 @@ class _ActionPageState extends State<ActionPage> {
       onTap: () {
         setState(() {
           Navigator.pop(context);
-          roll(diceNumber, option.result, option);
-          bonus = option.value;
+
+          option.name = option.result;
+          roll(diceNumber, option);
         });
       },
       child: Container(
@@ -274,7 +257,7 @@ class _ActionPageState extends State<ActionPage> {
                                 padding:
                                     const EdgeInsets.fromLTRB(30, 5, 30, 7),
                                 child: Text(
-                                  '$displayTitle',
+                                  '${option.name}',
                                   style: TextStyle(
                                     fontFamily: 'Headline',
                                     height: 1.3,
@@ -378,7 +361,7 @@ class _ActionPageState extends State<ActionPage> {
                                   children: [
                                     Center(
                                       child: Text(
-                                        displayText,
+                                        option.resultText,
                                         textAlign: TextAlign.justify,
                                         style: TextStyle(
                                           height: textSize,
@@ -407,6 +390,137 @@ class _ActionPageState extends State<ActionPage> {
             );
           },
         );
+      },
+    );
+  }
+
+//THIS SHOWS THE LOOT
+  showAlertDialogLoot(
+    BuildContext context,
+  ) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                width: 1.5, //                   <--- border width here
+              ),
+            ),
+            width: 300,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'LOOT',
+                          style: TextStyle(
+                            fontFamily: 'Headline',
+                            height: 1.3,
+                            fontSize: 25.0,
+                            color: Colors.white,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  child: Text(
+                    '$itemList',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      height: 1.25,
+                      fontSize: 19,
+                      fontFamily: 'Calibri',
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 0, 35, 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      setState(() {
+                        Navigator.pop(context);
+                      });
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.058,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .primaryColor,
+                          width: 2, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: SvgPicture.asset(
+                                  'assets/ui/check.svg',
+                                  color: widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerColor
+                                      .primaryColor,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.04,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'CONFIRM',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
       },
     );
   }
@@ -467,7 +581,7 @@ class _ActionPageState extends State<ActionPage> {
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       height: 1.25,
-                      fontSize: 22,
+                      fontSize: 19,
                       fontFamily: 'Calibri',
                       color: Colors.white,
                     ),
@@ -511,7 +625,6 @@ class _ActionPageState extends State<ActionPage> {
                         child: SvgPicture.asset(
                           'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                           color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.055,
                         ),
                       );
                     }),
@@ -527,7 +640,6 @@ class _ActionPageState extends State<ActionPage> {
                         child: SvgPicture.asset(
                           'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                           color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.055,
                         ),
                       );
                     }),
@@ -593,14 +705,27 @@ class _ActionPageState extends State<ActionPage> {
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-                  child: Text(
-                    displayedAction.description,
+                  child: RichText(
                     textAlign: TextAlign.justify,
-                    style: TextStyle(
-                      height: 1.3,
-                      fontSize: 19,
-                      fontFamily: 'Calibri',
-                      color: Colors.white,
+                    text: new TextSpan(
+                      style: TextStyle(
+                        height: 1.3,
+                        fontSize: 19,
+                        fontFamily: 'Calibri',
+                        color: Colors.white,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(text: displayedAction.description),
+                        TextSpan(text: focusText1),
+                        TextSpan(
+                            text: focusText2,
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerColor
+                                    .primaryColor)),
+                      ],
                     ),
                   ),
                 ),
@@ -616,8 +741,9 @@ class _ActionPageState extends State<ActionPage> {
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                           ),
                           onPressed: () {
-                            roll(2, displayedAction.option[index].name,
-                                displayedAction.option[index]);
+                            newOption =
+                                displayedAction.option[index].copyOption();
+                            roll(2, newOption);
                           },
                           child: Container(
                             height: MediaQuery.of(context).size.height * 0.058,

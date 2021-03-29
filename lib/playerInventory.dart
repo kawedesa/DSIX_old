@@ -196,7 +196,10 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     const EdgeInsets.symmetric(horizontal: 0),
                                 child: SvgPicture.asset(
                                   'assets/item/${ammoQuantity[index]}.svg',
-                                  color: Colors.white,
+                                  color: widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerColor
+                                      .primaryColor,
                                 ),
                               );
                             }),

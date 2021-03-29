@@ -208,7 +208,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                           children: List.generate(6, (index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 13),
                               child: SvgPicture.asset(
                                 'assets/background/${widget.dsix.getCurrentPlayer().backgrounds[index].icon}.svg',
                                 color: Colors.white,
@@ -223,7 +223,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                           children: List.generate(6, (index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 13),
                               child: TextButton(
                                 onPressed: () {
                                   setState(() {

@@ -208,12 +208,10 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                           children: List.generate(6, (index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 11),
                               child: SvgPicture.asset(
                                 'assets/race/${widget.dsix.getCurrentPlayer().races[index].icon}.svg',
                                 color: Colors.white,
-                                width:
-                                    MediaQuery.of(context).size.width * 0.055,
                               ),
                             );
                           }),
@@ -223,7 +221,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                           children: List.generate(6, (index) {
                             return Padding(
                               padding:
-                                  const EdgeInsets.symmetric(horizontal: 15),
+                                  const EdgeInsets.symmetric(horizontal: 11),
                               child: TextButton(
                                 onPressed: () {
                                   setState(() {

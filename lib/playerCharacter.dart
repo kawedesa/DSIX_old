@@ -20,6 +20,105 @@ class _CharacterPageState extends State<CharacterPage> {
     Navigator.of(context).pop(true);
   }
 
+  String alertTitle;
+  String alertDuration;
+  String alertDescription;
+
+  void showEffect(int index) {
+    alertTitle =
+        '${widget.dsix.getCurrentPlayer().effectList[index].name}: ${widget.dsix.getCurrentPlayer().effectList[index].value}';
+    alertDescription =
+        widget.dsix.getCurrentPlayer().effectList[index].description;
+    alertDuration =
+        '${widget.dsix.getCurrentPlayer().effectList[index].duration}';
+    showAlertDialogAlert(context);
+  }
+
+  showAlertDialogAlert(
+    BuildContext context,
+  ) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                width: 1.5, //                   <--- border width here
+              ),
+            ),
+            width: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          alertTitle,
+                          style: TextStyle(
+                            fontFamily: 'Headline',
+                            height: 1.3,
+                            fontSize: 25.0,
+                            color: Colors.white,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
+                  child: RichText(
+                    textAlign: TextAlign.justify,
+                    text: new TextSpan(
+                      style: TextStyle(
+                        height: 1.3,
+                        fontSize: 19,
+                        fontFamily: 'Calibri',
+                        color: Colors.white,
+                      ),
+                      children: <TextSpan>[
+                        TextSpan(text: '$alertDescription Turns left: '),
+                        TextSpan(
+                            text: alertDuration,
+                            style: new TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: widget.dsix
+                                    .getCurrentPlayer()
+                                    .playerColor
+                                    .primaryColor)),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
   showAlertDialogDescription(BuildContext context) {
     AlertDialog alert = AlertDialog(
       backgroundColor: Colors.black,
@@ -258,7 +357,9 @@ class _CharacterPageState extends State<CharacterPage> {
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: GestureDetector(
-                          onTap: () {},
+                          onTap: () {
+                            showEffect(index);
+                          },
                           child: SvgPicture.asset(
                             'assets/effect/${widget.dsix.getCurrentPlayer().effectList[index].icon}.svg',
                             color: widget.dsix
@@ -351,7 +452,6 @@ class _CharacterPageState extends State<CharacterPage> {
                             onPressed: () {
                               showAlertDialogDescription(context);
                             },
-
                             child: Container(
                               height:
                                   MediaQuery.of(context).size.height * 0.058,
@@ -406,65 +506,6 @@ class _CharacterPageState extends State<CharacterPage> {
                                 ],
                               ),
                             ),
-
-                            // child: Stack(
-                            //   children: <Widget>[
-                            //     Container(
-                            //       width: double.infinity,
-                            //       child: Column(
-                            //         mainAxisAlignment: MainAxisAlignment.center,
-                            //         crossAxisAlignment: CrossAxisAlignment.end,
-                            //         children: <Widget>[
-                            //           Padding(
-                            //             padding: const EdgeInsets.fromLTRB(
-                            //                 0, 12, 12, 0),
-                            //             child: SvgPicture.asset(
-                            //               'assets/ui/text.svg',
-                            //               color: widget.dsix
-                            //                   .getCurrentPlayer()
-                            //                   .playerColor
-                            //                   .primaryColor,
-                            //               width: MediaQuery.of(context)
-                            //                       .size
-                            //                       .width *
-                            //                   0.055,
-                            //             ),
-                            //           ),
-                            //         ],
-                            //       ),
-                            //     ),
-                            //     Container(
-                            //       width: double.infinity,
-                            //       decoration: BoxDecoration(
-                            //         border: Border.all(
-                            //           color: widget.dsix
-                            //               .getCurrentPlayer()
-                            //               .playerColor
-                            //               .primaryColor,
-                            //           width:
-                            //               2.5, //                   <--- border width here
-                            //         ),
-                            //       ),
-                            //       child: Padding(
-                            //         padding:
-                            //             const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                            //         child: Center(
-                            //           child: Text(
-                            //             'EDIT',
-                            //             style: TextStyle(
-                            //               height: 1.5,
-                            //               fontSize: 17,
-                            //               fontWeight: FontWeight.bold,
-                            //               letterSpacing: 1.5,
-                            //               fontFamily: 'Calibri',
-                            //               color: Colors.white,
-                            //             ),
-                            //           ),
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
                           );
                         }),
                   ],

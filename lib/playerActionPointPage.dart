@@ -4,7 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'playerAction.dart';
+import 'models/player/playerAction.dart';
 
 class PlayerAttributePage extends StatefulWidget {
   final Dsix dsix;
@@ -61,6 +61,141 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
     displayedAction = widget.dsix.getCurrentPlayer().playerAction[indexAction];
 
     selectedAction.replaceRange(index, index + 1, [displayedAction.icon]);
+    focus();
+  }
+
+  Widget focusButton = Container();
+  String focusText1 = '';
+  String focusText2 = '';
+
+  void focus() {
+    if (displayedAction.focus == false) {
+      focusText1 = '';
+      focusText2 = '';
+      focusButton = Container();
+    } else {
+      focusText1 = ' You need to';
+      focusText2 = '  focus.';
+      focusButton = TextButton(
+        style: TextButton.styleFrom(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+        ),
+        onPressed: () {
+          showAlertDialogfocus(context);
+        },
+        child: Container(
+          height: MediaQuery.of(context).size.height * 0.058,
+          width: double.infinity,
+          decoration: BoxDecoration(
+            border: Border.all(
+              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+              width: 2, //                   <--- border width here
+            ),
+          ),
+          child: Stack(
+            alignment: AlignmentDirectional.centerEnd,
+            children: [
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                    child: SvgPicture.asset(
+                      'assets/ui/help.svg',
+                      color: widget.dsix
+                          .getCurrentPlayer()
+                          .playerColor
+                          .primaryColor,
+                      width: MediaQuery.of(context).size.width * 0.04,
+                    ),
+                  ),
+                ],
+              ),
+              Center(
+                child: Text(
+                  'FOCUS',
+                  style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 1.5,
+                    fontFamily: 'Calibri',
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
+  }
+
+  showAlertDialogfocus(BuildContext context) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                width: 2.5, //                   <--- border width here
+              ),
+            ),
+            width: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                    child: Center(
+                      child: Text(
+                        'focus',
+                        style: TextStyle(
+                          fontFamily: 'Headline',
+                          height: 1.3,
+                          fontSize: 25.0,
+                          color: Colors.white,
+                          letterSpacing: 2,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
+                  child: Text(
+                    'You need to focus when using this skill and the chance of success will decrease if you use it consecutively.',
+                    textAlign: TextAlign.justify,
+                    style: TextStyle(
+                      height: 1.25,
+                      fontSize: 19,
+                      fontFamily: 'Calibri',
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
   }
 
   showAlertDialog(BuildContext context, int index) {
@@ -578,17 +713,35 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-                              child: Text(
-                                displayedAction.description,
+                              child: RichText(
                                 textAlign: TextAlign.justify,
-                                style: TextStyle(
-                                  height: 1.3,
-                                  fontSize: 18,
-                                  fontFamily: 'Calibri',
-                                  color: Colors.white,
+                                text: new TextSpan(
+                                  style: TextStyle(
+                                    height: 1.3,
+                                    fontSize: 19,
+                                    fontFamily: 'Calibri',
+                                    color: Colors.white,
+                                  ),
+                                  children: <TextSpan>[
+                                    TextSpan(
+                                        text: widget.dsix
+                                            .getCurrentPlayer()
+                                            .playerSkill
+                                            .description),
+                                    TextSpan(text: focusText1),
+                                    TextSpan(
+                                        text: focusText2,
+                                        style: new TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: widget.dsix
+                                                .getCurrentPlayer()
+                                                .playerColor
+                                                .primaryColor)),
+                                  ],
                                 ),
                               ),
                             ),
+                            focusButton,
                             ListView.builder(
                                 shrinkWrap: true,
                                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
