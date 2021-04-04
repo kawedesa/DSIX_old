@@ -1,14 +1,14 @@
 import 'dart:math';
 
-import 'package:dsixv02app/item.dart';
-import 'package:dsixv02app/playerBackground.dart';
+import 'package:dsixv02app/models/game/item.dart';
+import 'package:dsixv02app/models/player/playerBackground.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/playerRace.dart';
-import 'package:dsixv02app/option.dart';
+import 'package:dsixv02app/models/player/playerRace.dart';
+import 'package:dsixv02app/models/player/option.dart';
 import 'package:dsixv02app/models/player/playerAction.dart';
 import 'package:dsixv02app/effect.dart';
 import 'exceptions.dart';
-import 'package:dsixv02app/bonus.dart';
+import 'package:dsixv02app/models/player/bonus.dart';
 import 'package:dsixv02app/models/game/shop.dart';
 
 class PlayerColor {

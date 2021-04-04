@@ -1,5 +1,5 @@
 import 'playerUI.dart';
-import 'option.dart';
+import 'models/player/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
@@ -410,13 +410,13 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: SvgPicture.asset(
-                              'assets/ui/check.svg',
+                            child: Icon(
+                              Icons.done,
                               color: widget.dsix
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.04,
+                              size: 20,
                             ),
                           ),
                         ],
@@ -499,8 +499,6 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                 size: 40,
               ),
               onPressed: () {
-                // reset();
-
                 Navigator.of(context).pop();
               }),
           titleSpacing: 0,
@@ -561,7 +559,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 15),
                               child: SvgPicture.asset(
-                                'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+                                'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                                 color: Colors.white,
                                 width:
                                     MediaQuery.of(context).size.width * 0.055,
@@ -579,7 +577,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 5),
                               child: SvgPicture.asset(
-                                'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
+                                'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                                 color: Colors.white,
                                 width:
                                     MediaQuery.of(context).size.width * 0.055,
@@ -604,7 +602,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                                   padding: EdgeInsets.all(0),
                                 ),
                                 child: SvgPicture.asset(
-                                  'assets/action/${selectedAction[index]}.svg',
+                                  'assets/player/action/${selectedAction[index]}.svg',
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor

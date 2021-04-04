@@ -99,7 +99,7 @@ class _MainPageState extends State<MainPage> {
                   width: MediaQuery.of(context).size.width * 0.62,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: Colors.grey[400],
+                      color: Colors.grey[600],
                       width: 2.5, //                   <--- border width here
                     ),
                   ),
@@ -114,7 +114,7 @@ class _MainPageState extends State<MainPage> {
                             padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                             child: Icon(
                               Icons.keyboard_arrow_right,
-                              color: Colors.grey[300],
+                              color: Colors.grey[600],
                               size: 30,
                             ),
                           ),
@@ -130,7 +130,7 @@ class _MainPageState extends State<MainPage> {
                               fontWeight: FontWeight.bold,
                               letterSpacing: 1.5,
                               fontFamily: 'Calibri',
-                              color: Colors.grey[300],
+                              color: Colors.grey[600],
                             ),
                           ),
                         ),

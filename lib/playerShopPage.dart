@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
-import 'item.dart';
+import 'models/game/item.dart';
 import 'models/game/shop.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'models/game/dsix.dart';
@@ -164,7 +164,7 @@ class _ShopPageState extends State<ShopPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 15),
                         child: SvgPicture.asset(
                           'assets/item/${displayItems[index].icon}.svg',
                           color: Colors.white,
@@ -336,8 +336,6 @@ class _ShopPageState extends State<ShopPage> {
 
                 Container(
                   width: double.infinity,
-                  // height: 165,
-                  //color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
                     child: Text(
@@ -383,15 +381,14 @@ class _ShopPageState extends State<ShopPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SvgPicture.asset(
-                                  'assets/ui/money.svg',
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                child: Icon(
+                                  Icons.attach_money,
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.04,
+                                  size: 20,
                                 ),
                               ),
                             ],

@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 // import 'item.dart';
 // import 'dart:math';
-import 'models/game/shop.dart';
+import '../lib/models/game/shop.dart';
 
 class LootPage extends StatefulWidget {
   LootPage({Key key}) : super(key: key);
@@ -15,7 +15,7 @@ class LootPage extends StatefulWidget {
 }
 
 class _LootPageState extends State<LootPage> {
-  static Shop loot = Shop();
+  // static Shop loot = Shop();
 // Item selectedLoot = loot.shopList[0];
 
 // Item rollLoot (){

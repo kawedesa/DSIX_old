@@ -349,7 +349,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 13),
                               child: SvgPicture.asset(
-                                'assets/action/${widget.dsix.getCurrentPlayer().skills[index].icon}.svg',
+                                'assets/player/action/${widget.dsix.getCurrentPlayer().skills[index].icon}.svg',
                                 color: Colors.white,
                                 width:
                                     MediaQuery.of(context).size.width * 0.055,
@@ -379,7 +379,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                                   padding: EdgeInsets.all(0),
                                 ),
                                 child: SvgPicture.asset(
-                                  'assets/action/${selectedSkill[index]}.svg',
+                                  'assets/player/action/${selectedSkill[index]}.svg',
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor

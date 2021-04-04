@@ -1,5 +1,6 @@
 import '../player/player.dart';
 import 'shop.dart';
+import 'package:dsixv02app/models/gm/gm.dart';
 
 class Dsix {
   int currentPlayerIndex;
@@ -7,6 +8,8 @@ class Dsix {
   List<Player> players = [];
 
   // Gm gm;
+
+  Gm gm = new Gm();
 
   static Shop shop;
 

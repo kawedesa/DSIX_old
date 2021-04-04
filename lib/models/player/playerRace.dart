@@ -6,7 +6,10 @@ class PlayerRace {
   String description;
   List<Bonus> bonus;
 
-  PlayerRace (this.icon, this.race, this.description, this.bonus,);
+  PlayerRace(
+    this.icon,
+    this.race,
+    this.description,
+    this.bonus,
+  );
 }
-
-

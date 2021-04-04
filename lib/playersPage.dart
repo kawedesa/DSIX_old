@@ -2,7 +2,8 @@ import 'package:dsixv02app/main.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'playerRacePage.dart';
-import 'gmPage.dart';
+import 'gmUI.dart';
+import 'npcPage.dart';
 import 'playerUI.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 
@@ -18,29 +19,11 @@ class PlayersPage extends StatefulWidget {
 }
 
 class _PlayersPageState extends State<PlayersPage> {
-  Route _createRouteMain() {
-    return PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => MainPage(),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(0.0, -1.0);
-        var end = Offset(0.0, 0.0);
-        var curve = Curves.ease;
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-  }
-
   void checkPlayer() {
     if (widget.dsix.getCurrentPlayer().characterFinished == false) {
       Navigator.of(context).push(_createRouteRace());
     } else {
-      Navigator.of(context).push(_createRouteUI());
+      Navigator.of(context).push(_createRoutePlayerUI());
     }
   }
 
@@ -64,9 +47,29 @@ class _PlayersPageState extends State<PlayersPage> {
     );
   }
 
-  Route _createRouteUI() {
+  Route _createRoutePlayerUI() {
     return PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => PlayerUI(
+        dsix: widget.dsix,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1, 0);
+        var end = Offset(0.0, 0.0);
+        var curve = Curves.ease;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+  }
+
+  Route _createRouteGmUI() {
+    return PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => GmUI(
         dsix: widget.dsix,
       ),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
@@ -92,26 +95,26 @@ class _PlayersPageState extends State<PlayersPage> {
     return new Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(
-            Icons.keyboard_arrow_left,
-            color: Colors.grey[500],
-            size: 40,
-          ),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        // leading: IconButton(
+        //   icon: Icon(
+        //     Icons.keyboard_arrow_left,
+        //     color: Colors.grey[600],
+        //     size: 40,
+        //   ),
+        //   onPressed: () => Navigator.of(context).pop(),
+        // ),
         automaticallyImplyLeading: false,
         titleSpacing: 0,
-        backgroundColor: Colors.grey[800],
+        backgroundColor: Colors.grey[900],
         centerTitle: true,
         title: new Text(
-          'Players',
+          'Choose your Player',
           textAlign: TextAlign.left,
           style: TextStyle(
             fontFamily: 'Headline',
             height: 1.1,
             fontSize: 25.0,
-            color: Colors.grey[500],
+            color: Colors.grey[600],
             letterSpacing: 2,
           ),
         ),
@@ -121,19 +124,19 @@ class _PlayersPageState extends State<PlayersPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 35),
-                child: Text(
-                  'Choose your player:',
-                  textAlign: TextAlign.justify,
-                  style: TextStyle(
-                    height: 1.3,
-                    fontSize: 18,
-                    fontFamily: 'Calibri',
-                    color: Colors.white,
-                  ),
-                ),
-              ),
+              // Padding(
+              //   padding: const EdgeInsets.fromLTRB(0, 0, 0, 35),
+              //   child: Text(
+              //     'Choose your player:',
+              //     textAlign: TextAlign.justify,
+              //     style: TextStyle(
+              //       height: 1.3,
+              //       fontSize: 18,
+              //       fontFamily: 'Calibri',
+              //       color: Colors.white,
+              //     ),
+              //   ),
+              // ),
               ListView.builder(
                 shrinkWrap: true,
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -147,7 +150,6 @@ class _PlayersPageState extends State<PlayersPage> {
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
                     ),
-
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.08,
                       width: MediaQuery.of(context).size.width * 0.62,
@@ -196,66 +198,57 @@ class _PlayersPageState extends State<PlayersPage> {
                         ],
                       ),
                     ),
-
-                    // child: Stack(
-                    //   children: <Widget>[
-                    //     Container(
-                    //       height:
-                    //           MediaQuery.of(context).size.height * 0.1,
-                    //       width:
-                    //           MediaQuery.of(context).size.width * 0.62,
-                    //       child: Column(
-                    //         mainAxisAlignment: MainAxisAlignment.center,
-                    //         crossAxisAlignment: CrossAxisAlignment.end,
-                    //         children: <Widget>[
-                    //           Padding(
-                    //             padding: const EdgeInsets.fromLTRB(
-                    //                 0, 0, 20, 0),
-                    //             child: Icon(
-                    //               Icons.keyboard_arrow_right,
-                    //               color: widget.dsix.players[index]
-                    //                   .playerColor.primaryColor,
-                    //               size: 40,
-                    //             ),
-                    //           ),
-                    //         ],
-                    //       ),
-                    //     ),
-                    //     Container(
-                    //       height:
-                    //           MediaQuery.of(context).size.height * 0.1,
-                    //       width:
-                    //           MediaQuery.of(context).size.width * 0.62,
-                    //       decoration: BoxDecoration(
-                    //         border: Border.all(
-                    //           color: widget.dsix.players[index]
-                    //               .playerColor.primaryColor,
-                    //           width:
-                    //               2.5, //                   <--- border width here
-                    //         ),
-                    //       ),
-                    //       child: Padding(
-                    //         padding:
-                    //             const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                    //         child: Center(
-                    //           child: Text(
-                    //             '${widget.dsix.players[index].playerColor.name}',
-                    //             style: TextStyle(
-                    //               fontSize: 17,
-                    //               fontWeight: FontWeight.bold,
-                    //               letterSpacing: 1.5,
-                    //               fontFamily: 'Calibri',
-                    //               color: widget.dsix.players[index]
-                    //                   .playerColor.primaryColor,
-                    //             ),
-                    //           ),
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                   );
                 },
+              ),
+              GestureDetector(
+                onTap: () {
+                  Navigator.of(context).push(_createRouteGmUI());
+                },
+                child: Container(
+                  height: MediaQuery.of(context).size.height * 0.08,
+                  width: MediaQuery.of(context).size.width * 0.62,
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.grey[600],
+                      width: 2.5, //                   <--- border width here
+                    ),
+                  ),
+                  child: Stack(
+                    alignment: AlignmentDirectional.centerEnd,
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                            child: Icon(
+                              Icons.keyboard_arrow_right,
+                              color: Colors.grey[600],
+                              size: 30,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                        child: Center(
+                          child: Text(
+                            'GM',
+                            style: TextStyle(
+                              fontSize: 15,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                              fontFamily: 'Calibri',
+                              color: Colors.grey[600],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

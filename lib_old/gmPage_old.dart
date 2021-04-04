@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
 
-import 'storyPage.dart';
-import 'threatPage.dart';
-import 'lootPage.dart';
+// import 'storyPage.dart';
+// import 'threatPage.dart';
+// import 'lootPage.dart';
 import 'npcPage.dart';
 
 class GmPage extends StatefulWidget {
   GmPage({Key key}) : super(key: key);
-
 
   static const String routeName = "/gmPage";
 
@@ -16,22 +15,22 @@ class GmPage extends StatefulWidget {
 }
 
 class _GmPageState extends State<GmPage> {
-
-
   @override
   Widget build(BuildContext context) {
-
-
-
     return new Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
         leading: IconButton(
-          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 40,),
+          icon: Icon(
+            Icons.keyboard_arrow_left,
+            color: Colors.white,
+            size: 40,
+          ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         backgroundColor: Colors.black,
-        title: new Text('Choose the power of your threat.',
+        title: new Text(
+          'Choose the power of your threat.',
           textAlign: TextAlign.left,
           style: TextStyle(
             fontFamily: 'Calibri',
@@ -39,7 +38,8 @@ class _GmPageState extends State<GmPage> {
             fontSize: 20.0,
             color: Colors.white,
             letterSpacing: 1,
-          ),),
+          ),
+        ),
       ),
       backgroundColor: Colors.black,
       body: SafeArea(
@@ -60,11 +60,12 @@ class _GmPageState extends State<GmPage> {
                     Navigator.push(
                       context,
                       new MaterialPageRoute(
-                        builder: (context) => new StoryPage(),
-                      ),
+                          // builder: (context) => new StoryPage(),
+                          ),
                     );
                   },
-                  child: Text('STORY',
+                  child: Text(
+                    'STORY',
                     style: TextStyle(
                       fontFamily: 'Headliner',
                       color: Colors.white,
@@ -73,10 +74,9 @@ class _GmPageState extends State<GmPage> {
                       letterSpacing: 3,
                     ),
                   ),
-
                 ),
               ),
-            ),//STORY
+            ), //STORY
             Divider(
               height: 0,
               thickness: 2,
@@ -91,11 +91,12 @@ class _GmPageState extends State<GmPage> {
                     Navigator.push(
                       context,
                       new MaterialPageRoute(
-                        builder: (context) => new ThreatPage(),
-                      ),
+                          // builder: (context) => new ThreatPage(),
+                          ),
                     );
                   },
-                  child: Text('THREAT',
+                  child: Text(
+                    'THREAT',
                     style: TextStyle(
                       fontFamily: 'Headliner',
                       color: Colors.white,
@@ -104,10 +105,9 @@ class _GmPageState extends State<GmPage> {
                       letterSpacing: 3,
                     ),
                   ),
-
                 ),
               ),
-            ),//THREAT
+            ), //THREAT
             Divider(
               height: 0,
               thickness: 2,
@@ -125,7 +125,8 @@ class _GmPageState extends State<GmPage> {
                       ),
                     );
                   },
-                  child: Text('NPC',
+                  child: Text(
+                    'NPC',
                     style: TextStyle(
                       fontFamily: 'Headliner',
                       color: Colors.white,
@@ -134,10 +135,9 @@ class _GmPageState extends State<GmPage> {
                       letterSpacing: 3,
                     ),
                   ),
-
                 ),
               ),
-            ),//NPC
+            ), //NPC
             Divider(
               height: 0,
               thickness: 2,
@@ -151,11 +151,12 @@ class _GmPageState extends State<GmPage> {
                     Navigator.push(
                       context,
                       new MaterialPageRoute(
-                        builder: (context) => new LootPage(),
-                      ),
+                          // builder: (context) => new LootPage(),
+                          ),
                     );
                   },
-                  child: Text('LOOT',
+                  child: Text(
+                    'LOOT',
                     style: TextStyle(
                       color: Colors.white,
                       fontFamily: 'Headliner',
@@ -164,10 +165,9 @@ class _GmPageState extends State<GmPage> {
                       letterSpacing: 3,
                     ),
                   ),
-
                 ),
               ),
-            ),//LOOT
+            ), //LOOT
             Divider(
               height: 0,
               thickness: 2,

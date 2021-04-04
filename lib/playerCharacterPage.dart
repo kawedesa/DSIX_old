@@ -138,7 +138,7 @@ class _CharacterPageState extends State<CharacterPage> {
             Container(
               color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                 child: Center(
                   child: Text(
                     'Write your story',
@@ -237,13 +237,13 @@ class _CharacterPageState extends State<CharacterPage> {
                         children: <Widget>[
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                            child: SvgPicture.asset(
-                              'assets/ui/check.svg',
+                            child: Icon(
+                              Icons.check,
                               color: widget.dsix
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.04,
+                              size: 20,
                             ),
                           ),
                         ],
@@ -307,7 +307,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+                          'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                           color: widget.dsix
                               .getCurrentPlayer()
                               .playerColor
@@ -325,7 +325,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
+                          'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                           color: Colors.white,
                         ),
                       );
@@ -477,16 +477,13 @@ class _CharacterPageState extends State<CharacterPage> {
                                       Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             0, 0, 10, 0),
-                                        child: SvgPicture.asset(
-                                          'assets/ui/text.svg',
+                                        child: Icon(
+                                          Icons.title,
                                           color: widget.dsix
                                               .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,
-                                          width: MediaQuery.of(context)
-                                                  .size
-                                                  .width *
-                                              0.04,
+                                          size: 20,
                                         ),
                                       ),
                                     ],

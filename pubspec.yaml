@@ -61,13 +61,17 @@ flutter:
   - images/select/
   - assets/player/
   - assets/ui/
-  - assets/race/
-  - assets/background/
+  - assets/player/race/
+  - assets/player/background/
   - assets/animation/
-  - assets/action/
+  - assets/player/action/
   - assets/item/
   - assets/logo/
   - assets/effect/
+  - assets/gm/npc/
+  - assets/gm/npc/skill/pSkill/
+  - assets/gm/npc/skill/mSkill/
+  - assets/gm/npc/race/
 
   fonts:
   - family: Headline

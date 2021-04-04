@@ -1,4 +1,4 @@
-import 'item.dart';
+import '../game/item.dart';
 import 'bonus.dart';
 
 class PlayerBackground {
@@ -8,7 +8,6 @@ class PlayerBackground {
   List<Bonus> bonus;
   List<Item> bonusItem;
 
-  PlayerBackground (this.icon, this.background, this.description, this.bonus, this.bonusItem);
+  PlayerBackground(
+      this.icon, this.background, this.description, this.bonus, this.bonusItem);
 }
-
-

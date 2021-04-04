@@ -210,7 +210,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 13),
                               child: SvgPicture.asset(
-                                'assets/background/${widget.dsix.getCurrentPlayer().backgrounds[index].icon}.svg',
+                                'assets/player/background/${widget.dsix.getCurrentPlayer().backgrounds[index].icon}.svg',
                                 color: Colors.white,
                                 width:
                                     MediaQuery.of(context).size.width * 0.055,
@@ -238,7 +238,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                                   padding: EdgeInsets.all(0),
                                 ),
                                 child: SvgPicture.asset(
-                                  'assets/background/${selectedBackground[index]}.svg',
+                                  'assets/player/background/${selectedBackground[index]}.svg',
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor

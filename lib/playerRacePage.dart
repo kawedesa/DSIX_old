@@ -210,7 +210,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                               padding:
                                   const EdgeInsets.symmetric(horizontal: 11),
                               child: SvgPicture.asset(
-                                'assets/race/${widget.dsix.getCurrentPlayer().races[index].icon}.svg',
+                                'assets/player/race/${widget.dsix.getCurrentPlayer().races[index].icon}.svg',
                                 color: Colors.white,
                               ),
                             );
@@ -233,7 +233,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                   padding: EdgeInsets.all(0),
                                 ),
                                 child: SvgPicture.asset(
-                                  'assets/race/${selectedRace[index]}.svg',
+                                  'assets/player/race/${selectedRace[index]}.svg',
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor

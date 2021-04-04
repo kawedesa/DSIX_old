@@ -2,11 +2,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'playersPage.dart';
-import 'playerInventory.dart';
-import 'playerCharacter.dart';
+import 'playerInventoryPage.dart';
+import 'playerCharacterPage.dart';
 import 'playerShopPage.dart';
 import 'playerActionPage.dart';
-import 'playerHelp.dart';
+import 'playerHelpPage.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 
 class PlayerUI extends StatefulWidget {
@@ -245,73 +245,6 @@ class _PlayerUIState extends State<PlayerUI> {
     );
   }
 
-  // showAlertDialogWeight(BuildContext context)
-  // {
-  //
-  //   AlertDialog alerta = AlertDialog(
-  //     backgroundColor: Colors.black,
-  //     contentPadding: EdgeInsets.fromLTRB(0,0,0,0),
-  //     content: Container(
-  //       decoration: BoxDecoration(
-  //         border: Border.all(
-  //           color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-  //           width: 1.5, //                   <--- border width here
-  //         ),
-  //       ),
-  //       width: 300,
-  //       height: 200,
-  //       child: Column(
-  //         crossAxisAlignment: CrossAxisAlignment.stretch,
-  //         mainAxisAlignment: MainAxisAlignment.start,
-  //         children: <Widget>[
-  //           Container(
-  //             color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-  //             width: double.infinity,
-  //             child: Padding(
-  //               padding: const EdgeInsets.fromLTRB(30,10,30,10),
-  //               child: Row(
-  //                 mainAxisAlignment: MainAxisAlignment.start,
-  //                 children: <Widget>[
-  //                   Text('WEIGHT: ${widget.dsix.getCurrentPlayer().currentWeight}/${widget.dsix.getCurrentPlayer().maxWeight} ',
-  //                     style: TextStyle(
-  //                       fontFamily: 'Headline',
-  //                       height: 1.3,
-  //                       fontSize: 30.0,
-  //                       color: Colors.white,
-  //                       letterSpacing: 3,
-  //                     ),
-  //                   ),
-  //
-  //                 ],
-  //               ),
-  //
-  //             ),
-  //           ),
-  //           Padding(
-  //             padding: const EdgeInsets.fromLTRB(35,25,25,15),
-  //             child: Text('This represents the maximum weight you can carry.',
-  //               style: TextStyle(
-  //                 height: 1.25,
-  //                 fontSize: 22,
-  //                 fontFamily: 'Calibri',
-  //                 color: Colors.white,
-  //               ),
-  //             ),
-  //
-  //           ),
-  //         ],
-  //       ),
-  //     ),
-  //   );
-  //
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return alerta;
-  //     },
-  //   );
-  // }
-
   refreshPage() {
     setState(() {});
   }
@@ -401,12 +334,12 @@ class _PlayerUIState extends State<PlayerUI> {
     return [
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
-          'assets/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
+          'assets/player/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
           color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         icon: new SvgPicture.asset(
-          'assets/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
+          'assets/player/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
           color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),

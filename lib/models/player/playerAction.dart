@@ -1,4 +1,4 @@
-import 'package:dsixv02app/option.dart';
+import 'package:dsixv02app/models/player/option.dart';
 
 class PlayerAction {
   String icon;

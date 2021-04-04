@@ -1,4 +1,4 @@
-import '../../item.dart';
+import 'item.dart';
 
 class Shop {
   List<Item> menuSelection(String selection) {

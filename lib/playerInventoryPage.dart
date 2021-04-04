@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'item.dart';
+import 'models/game/item.dart';
 import 'models/player/exceptions.dart';
 
 class InventoryPage extends StatefulWidget {
@@ -166,20 +166,20 @@ class _InventoryStatePage extends State<InventoryPage> {
                     width: double.infinity,
                     child: Stack(children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(275, 0, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(270, 5, 0, 0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop(true);
                             showAlertDialogDestroyItem(
                                 context, item, buttonText);
                           },
-                          child: SvgPicture.asset(
-                            'assets/ui/cancel.svg',
+                          child: Icon(
+                            Icons.clear,
                             color: widget.dsix
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
-                            width: MediaQuery.of(context).size.width * 0.05,
+                            size: 20,
                           ),
                         ),
                       ),
@@ -207,7 +207,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(30, 30, 30, 30),
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 15),
                         child: SvgPicture.asset(
                           'assets/item/${item.icon}.svg',
                           color: Colors.white,
@@ -424,14 +424,13 @@ class _InventoryStatePage extends State<InventoryPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SvgPicture.asset(
-                                  'assets/ui/check.svg',
+                                child: Icon(
+                                  Icons.check,
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.04,
+                                  size: 20,
                                 ),
                               ),
                             ],
@@ -484,15 +483,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SvgPicture.asset(
-                                  'assets/ui/money.svg',
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                child: Icon(
+                                  Icons.attach_money,
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.04,
+                                  size: 20,
                                 ),
                               ),
                             ],
@@ -623,14 +621,13 @@ class _InventoryStatePage extends State<InventoryPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SvgPicture.asset(
-                                  'assets/ui/check.svg',
+                                child: Icon(
+                                  Icons.check,
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.04,
+                                  size: 20,
                                 ),
                               ),
                             ],
@@ -682,14 +679,13 @@ class _InventoryStatePage extends State<InventoryPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SvgPicture.asset(
-                                  'assets/ui/cancel.svg',
+                                child: Icon(
+                                  Icons.clear,
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.04,
+                                  size: 20,
                                 ),
                               ),
                             ],
@@ -822,14 +818,13 @@ class _InventoryStatePage extends State<InventoryPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SvgPicture.asset(
-                                  'assets/ui/check.svg',
+                                child: Icon(
+                                  Icons.check,
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.04,
+                                  size: 20,
                                 ),
                               ),
                             ],
@@ -881,14 +876,13 @@ class _InventoryStatePage extends State<InventoryPage> {
                             children: <Widget>[
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                child: SvgPicture.asset(
-                                  'assets/ui/cancel.svg',
+                                child: Icon(
+                                  Icons.clear,
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.04,
+                                  size: 20,
                                 ),
                               ),
                             ],

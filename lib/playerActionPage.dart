@@ -6,7 +6,7 @@ import 'package:dsixv02app/models/game/dice.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'models/player/playerAction.dart';
-import 'option.dart';
+import 'models/player/option.dart';
 
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'models/player/exceptions.dart';
@@ -129,6 +129,17 @@ class _ActionPageState extends State<ActionPage> {
   List<String> itemList = [];
 
   void roll(int diceNumber, Option option) {
+    diceList = [];
+
+    for (int check = 0; check < diceNumber; check++) {
+      diceList.add(die.newDice());
+    }
+
+    displaySum = '';
+    textSize = 0;
+    button = Container();
+    resultColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+
     // SEE IF ITS FIRST ROLL
     if (option.resultText == '') {
       try {
@@ -154,17 +165,6 @@ class _ActionPageState extends State<ActionPage> {
       itemList = widget.dsix.getCurrentPlayer().lootResources(diceNumber * 100);
       showAlertDialogLoot(context);
       return;
-    }
-
-    displaySum = '';
-    textSize = 0;
-    button = Container();
-    resultColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
-
-    diceList = [];
-
-    for (int check = 0; check < diceNumber; check++) {
-      diceList.add(die.newDice());
     }
 
     showAlertDialogActionRoll(context, option);
@@ -623,7 +623,7 @@ class _ActionPageState extends State<ActionPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 17),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+                          'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                           color: Colors.white,
                         ),
                       );
@@ -638,7 +638,7 @@ class _ActionPageState extends State<ActionPage> {
                       return Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 5),
                         child: SvgPicture.asset(
-                          'assets/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
+                          'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
                           color: Colors.white,
                         ),
                       );
@@ -660,7 +660,7 @@ class _ActionPageState extends State<ActionPage> {
                             padding: EdgeInsets.all(0),
                           ),
                           child: SvgPicture.asset(
-                            'assets/action/${selectedAction[index]}.svg',
+                            'assets/player/action/${selectedAction[index]}.svg',
                             color: widget.dsix
                                 .getCurrentPlayer()
                                 .playerColor
