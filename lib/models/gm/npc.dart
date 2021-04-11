@@ -1,381 +1,66 @@
 import 'npcSkill.dart';
-import 'dart:math';
 import 'npcSkillList.dart';
-import 'npcType.dart';
-import 'npcRace.dart';
+import 'dart:math';
 
 class Npc {
+  NpcSkillList npcSkills = new NpcSkillList();
+
   String icon;
   String name;
   String description;
+  String image;
 
-  NpcSkillList npcSkills = new NpcSkillList();
+  int amount = 1;
 
-//  NpcType(this.type, this.health, this.pDamage, this.pArmor, this.mDamage,this.mArmor, this.pSkill, this.mSkill, this.possibleSkills);
+  int baseHealth;
+  int maxHealth;
+  int currentHealth;
+  int dice;
+  int pDamage;
+  int pArmor;
+  int mDamage;
+  int mArmor;
+  int pSkill;
+  int mSkill;
 
-  NpcRace selectedRace = NpcRace(
-      icon: 'npc',
-      name: 'NPC',
-      description: 'This is a NPC.',
-      npcType: [
-        NpcType(
-          type: 'TYPE',
-          description: '',
-          health: 0,
-          pDamage: 0,
-          pArmor: 0,
-          mDamage: 0,
-          mArmor: 0,
-          pSkill: 0,
-          mSkill: 0,
-        )
-      ]);
-  List<NpcRace> races = [
-    NpcRace(
-        icon: 'undead',
-        name: 'UNDEAD',
-        description: 'undead is dead.',
-        npcType: [
-          NpcType(
-            type: 'SKELETON MAGE',
-            description: 'Skely pew pew',
-            health: 3,
-            dice: 2,
-            pDamage: 0,
-            pArmor: 3,
-            mDamage: 2,
-            mArmor: 0,
-            pSkill: 0,
-            mSkill: 1,
-            loot: 0.25,
-            xp: 25,
-          ),
-          NpcType(
-            type: 'SKELETON',
-            description: 'swaordsnd hff ds',
-            health: 3,
-            dice: 2,
-            pDamage: 2,
-            pArmor: 3,
-            mDamage: 0,
-            mArmor: 0,
-            pSkill: 1,
-            mSkill: 0,
-            loot: 0.25,
-            xp: 25,
-          ),
-          NpcType(
-            type: 'ZOMBIE',
-            description: 'Brainsinasin  asd',
-            health: 9,
-            dice: 2,
-            pDamage: 1,
-            pArmor: 2,
-            mDamage: 0,
-            mArmor: 2,
-            pSkill: 0,
-            mSkill: 0,
-            loot: 0.25,
-            xp: 25,
-          )
-        ]),
-    NpcRace(
-        icon: 'halfling',
-        name: 'HALFLING',
-        description: 'Halflingumans usd',
-        npcType: [
-          NpcType(
-            type: 'HALFLING SCOUT',
-            description: 'Brainsinasin  asd',
-            health: 6,
-            dice: 4,
-            pDamage: 3,
-            pArmor: 3,
-            mDamage: 0,
-            mArmor: 0,
-            pSkill: 2,
-            mSkill: 0,
-            loot: 0.5,
-            xp: 50,
-          ),
-          NpcType(
-            type: 'HALFLING MUSICIAN',
-            description: 'Brainsinasin  asd',
-            health: 6,
-            dice: 4,
-            pDamage: 2,
-            pArmor: 2,
-            mDamage: 0,
-            mArmor: 2,
-            pSkill: 1,
-            mSkill: 1,
-            loot: 0.5,
-            xp: 50,
-          ),
-          NpcType(
-            type: 'HALFLING WIZZARD',
-            description: 'Brainsinasin  asd',
-            health: 6,
-            dice: 4,
-            pDamage: 0,
-            pArmor: 0,
-            mDamage: 3,
-            mArmor: 3,
-            pSkill: 0,
-            mSkill: 2,
-            loot: 0.5,
-            xp: 50,
-          )
-        ]),
-    NpcRace(
-        icon: 'goblin',
-        name: 'GOBLIN',
-        description: 'GOOOBLINSd is dead.',
-        npcType: [
-          NpcType(
-            type: 'GOBLIN WARRIOR',
-            description: 'Brainsinasin  asd',
-            health: 6,
-            dice: 4,
-            pDamage: 4,
-            pArmor: 2,
-            mDamage: 0,
-            mArmor: 0,
-            pSkill: 2,
-            mSkill: 0,
-            loot: 0.5,
-            xp: 50,
-          ),
-          NpcType(
-            type: 'GOBLIN SHAMAN',
-            description: 'Brainsinasin  asd',
-            health: 6,
-            dice: 4,
-            pDamage: 0,
-            pArmor: 2,
-            mDamage: 4,
-            mArmor: 0,
-            pSkill: 1,
-            mSkill: 1,
-            loot: 0.5,
-            xp: 50,
-          )
-        ]),
-    NpcRace(
-        icon: 'human',
-        name: 'HUMAN',
-        description: 'humans bajsbdusd',
-        npcType: [
-          NpcType(
-            type: 'HUMAN WARRIOR',
-            description: 'Brainsinasin  asd',
-            health: 12,
-            dice: 6,
-            pDamage: 4,
-            pArmor: 2,
-            mDamage: 0,
-            mArmor: 0,
-            pSkill: 2,
-            mSkill: 0,
-            loot: 1,
-            xp: 100,
-          ),
-          NpcType(
-            type: 'HUMAN WIZZARD',
-            description: 'Brainsinasin  asd',
-            health: 12,
-            dice: 6,
-            pDamage: 0,
-            pArmor: 0,
-            mDamage: 4,
-            mArmor: 4,
-            pSkill: 0,
-            mSkill: 2,
-            loot: 1,
-            xp: 100,
-          ),
-        ]),
-    NpcRace(icon: 'elf', name: 'ELF', description: 'Elf sucks ass.', npcType: [
-      NpcType(
-        type: 'ELF WARRIOR',
-        description: 'Brainsinasin  asd',
-        health: 9,
-        dice: 6,
-        pDamage: 4,
-        pArmor: 3,
-        mDamage: 0,
-        mArmor: 2,
-        pSkill: 1,
-        mSkill: 1,
-        loot: 1,
-        xp: 100,
-      ),
-      NpcType(
-        type: 'ELF WIZZARD',
-        description: 'Brainsinasin  asd',
-        health: 9,
-        dice: 6,
-        pDamage: 0,
-        pArmor: 2,
-        mDamage: 4,
-        mArmor: 3,
-        pSkill: 1,
-        mSkill: 1,
-        loot: 1,
-        xp: 100,
-      ),
-    ]),
-    NpcRace(
-        icon: 'dwarf',
-        name: 'DWARF',
-        description: 'DWARF SUCKS.',
-        npcType: [
-          NpcType(
-            type: 'DWARF WARRIOR',
-            description: 'Brainsinasin  asd',
-            health: 15,
-            dice: 6,
-            pDamage: 3,
-            pArmor: 6,
-            mDamage: 0,
-            mArmor: 0,
-            pSkill: 1,
-            mSkill: 0,
-            loot: 1,
-            xp: 100,
-          ),
-          NpcType(
-            type: 'DWARF CLERIC',
-            description: 'Brainsinasin  asd',
-            health: 15,
-            dice: 6,
-            pDamage: 0,
-            pArmor: 6,
-            mDamage: 3,
-            mArmor: 0,
-            pSkill: 0,
-            mSkill: 1,
-            loot: 1,
-            xp: 100,
-          ),
-        ]),
-    NpcRace(icon: 'orc', name: 'ORC', description: 'Orsc stincky.', npcType: [
-      NpcType(
-        type: 'ORC BERSERKER',
-        description: 'Brainsinasin  asd',
-        health: 18,
-        dice: 6,
-        pDamage: 8,
-        pArmor: 0,
-        mDamage: 0,
-        mArmor: 0,
-        pSkill: 1,
-        mSkill: 0,
-        loot: 1,
-        xp: 100,
-      ),
-      NpcType(
-        type: 'ORC FIGHTER',
-        description: 'Brainsinasin  asd',
-        health: 15,
-        dice: 6,
-        pDamage: 5,
-        pArmor: 4,
-        mDamage: 0,
-        mArmor: 0,
-        pSkill: 1,
-        mSkill: 0,
-        loot: 1,
-        xp: 100,
-      ),
-      NpcType(
-        type: 'ORC SHAMAN',
-        description: 'Brainsinasin  asd',
-        health: 15,
-        dice: 6,
-        pDamage: 0,
-        pArmor: 3,
-        mDamage: 4,
-        mArmor: 2,
-        pSkill: 0,
-        mSkill: 1,
-        loot: 1,
-        xp: 100,
-      ),
-    ]),
-    NpcRace(icon: 'ogre', name: 'OGRE', description: 'Ogre kils.', npcType: [
-      NpcType(
-        type: 'OGRE RAIDER',
-        description: 'Brainsinasin  asd',
-        health: 60,
-        dice: 8,
-        pDamage: 8,
-        pArmor: 0,
-        mDamage: 0,
-        mArmor: 0,
-        pSkill: 2,
-        mSkill: 0,
-        loot: 2,
-        xp: 200,
-      ),
-    ]),
-    NpcRace(
-        icon: 'minotaur',
-        name: 'MINOTAUR',
-        description: 'Minotaur',
-        npcType: [
-          NpcType(
-            type: 'MINOTAUR',
-            description: 'Brainsinasin  asd',
-            health: 45,
-            dice: 8,
-            pDamage: 5,
-            pArmor: 3,
-            mDamage: 0,
-            mArmor: 3,
-            pSkill: 2,
-            mSkill: 1,
-            loot: 2,
-            xp: 200,
-          ),
-        ]),
-  ];
-
-  NpcType selectedType = NpcType(
-    type: 'TYPE',
-    description: '',
-    health: 0,
-    pDamage: 0,
-    pArmor: 0,
-    mDamage: 0,
-    mArmor: 0,
-    pSkill: 0,
-    mSkill: 0,
-  );
+  List<NpcSkill> possibleSkills = [];
 
   List<NpcSkill> selectedSkills = [];
 
-  int maxHealth = 0;
-  int currentHealth = 0;
-  int amount = 1;
+  int totalLoot;
+  double baseLoot;
   int totalXp;
-  double totalLoot;
-  List<NpcSkill> possibleSkills;
+  int baseXp;
 
-  void chooseRace(int index) {
-    this.selectedRace = this.races[index];
-    this.icon = this.races[index].icon;
+  Npc newNpc() {
+    Npc newNpc = new Npc(
+      icon: this.icon,
+      name: this.name,
+      description: this.description,
+      image: this.image,
+      baseHealth: this.baseHealth,
+      dice: this.dice,
+      pDamage: this.pDamage,
+      pArmor: this.pArmor,
+      mDamage: this.mDamage,
+      mArmor: this.mArmor,
+      pSkill: this.pSkill,
+      mSkill: this.mSkill,
+      baseLoot: this.baseLoot,
+      baseXp: this.baseXp,
+    );
+
+    return newNpc;
   }
 
-  void chooseType(int index) {
-    this.selectedType = this.selectedRace.npcType[index];
-    this.name = this.selectedType.type;
-    this.totalXp = this.selectedType.xp;
-    this.totalLoot = this.selectedType.loot;
+  void prepareNpc() {
+    this.possibleSkills = npcSkills.getSkills(this.name);
+    this.maxHealth = this.baseHealth;
+    this.currentHealth = this.maxHealth;
+    this.totalLoot = this.baseLoot.toInt();
+    this.totalXp = this.baseXp;
 
-    this.possibleSkills = npcSkills.getSkills(this.selectedType);
-
-    for (int check = 0; check < this.selectedType.pSkill; check++) {
+    for (int check = 0; check < this.pSkill; check++) {
       selectedSkills.add(
         NpcSkill(
           icon: 'pSkill',
@@ -387,7 +72,7 @@ class Npc {
       );
     }
 
-    for (int check = 0; check < this.selectedType.mSkill; check++) {
+    for (int check = 0; check < this.mSkill; check++) {
       selectedSkills.add(
         NpcSkill(
           icon: 'mSkill',
@@ -408,16 +93,22 @@ class Npc {
 
     this.amount += value;
 
-    this.totalXp = this.selectedType.xp * this.amount;
-    this.totalLoot = this.selectedType.loot * this.amount;
-  }
-
-  void createNpc() {
-    this.maxHealth = this.selectedType.health * this.amount;
+    this.maxHealth = this.baseHealth * this.amount;
     this.currentHealth = this.maxHealth;
+
+    this.totalXp = this.baseXp * this.amount;
+    this.totalLoot = (this.baseLoot * this.amount).toInt();
   }
 
-  List<NpcSkill> skillList;
+  String npcAction() {
+    String result = 'roll';
+
+    result = '${Random().nextInt(this.dice) + 1}';
+
+    return result;
+  }
+
+  List<NpcSkill> skillList = [];
 
   List<NpcSkill> openSkill(NpcSkill skill) {
     this.skillList = [];
@@ -442,14 +133,6 @@ class Npc {
     return this.skillList;
   }
 
-  String npcAction() {
-    String result = 'roll';
-
-    result = '${Random().nextInt(this.selectedType.dice) + 1}';
-
-    return result;
-  }
-
   void chooseSkill(NpcSkill skill) {
     switch (skill.skillType) {
       case 'pSkill':
@@ -470,17 +153,53 @@ class Npc {
   void changeHealth(int value) {
     if (this.currentHealth + value > this.maxHealth) {
       this.currentHealth = this.maxHealth;
+
       return;
     }
 
     if (this.currentHealth + value < 1) {
       this.currentHealth = 0;
+
       return;
     }
 
     this.currentHealth += value;
-    this.amount = ((this.currentHealth - 1) ~/ this.selectedType.health) + 1;
+    this.amount = ((this.currentHealth - 1) ~/ this.baseHealth) + 1;
   }
 
-  Npc(this.icon, this.name, this.description);
+  Npc({
+    String icon,
+    String name,
+    String description,
+    String image,
+    int baseHealth,
+    int dice,
+    int pDamage,
+    int pArmor,
+    int mDamage,
+    int mArmor,
+    int pSkill,
+    int mSkill,
+    double baseLoot,
+    int baseXp,
+  }) {
+    this.icon = icon;
+    this.name = name;
+    this.description = description;
+    this.image = image;
+
+    this.baseHealth = baseHealth;
+    this.dice = dice;
+    this.pDamage = pDamage;
+    this.pArmor = pArmor;
+    this.mDamage = mDamage;
+    this.mArmor = mArmor;
+
+    this.pSkill = pSkill;
+    this.mSkill = mSkill;
+
+    this.baseLoot = baseLoot;
+
+    this.baseXp = baseXp;
+  }
 }

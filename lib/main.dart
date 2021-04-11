@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'playersPage.dart';
+import 'models/layout/playersPage.dart';
 import 'models/player/player.dart';
 import 'models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';

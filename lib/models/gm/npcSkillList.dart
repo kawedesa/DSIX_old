@@ -1,5 +1,4 @@
 import 'npcSkill.dart';
-import 'npcType.dart';
 
 class NpcSkillList {
   List<NpcSkill> pSkills = [
@@ -513,10 +512,10 @@ class NpcSkillList {
 //         possibleSkills.add(this.mSkills[23]); //CHARM
 //         possibleSkills.add(this.mSkills[24]); //IMMUNE
 
-  List<NpcSkill> getSkills(NpcType npcType) {
+  List<NpcSkill> getSkills(String name) {
     this.possibleSkills = [];
 
-    switch (npcType.type) {
+    switch (name) {
       case 'ZOMBIE':
         return possibleSkills;
 
@@ -823,7 +822,7 @@ class NpcSkillList {
         possibleSkills.add(this.mSkills[24]); //IMMUNE
         return possibleSkills;
 
-      case 'ORC BERZERKER':
+      case 'ORC BERSERKER':
         possibleSkills.add(this.pSkills[0]); //CHARGE
         possibleSkills.add(this.pSkills[1]); //SPLASH
         possibleSkills.add(this.pSkills[2]); //POISON

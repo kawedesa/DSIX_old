@@ -47,18 +47,7 @@ flutter:
   uses-material-design: true
 
   assets:
-  - images/dice/
-  - images/location/
-  - images/objective/
-  - images/target/
-  - images/threat/
-  - images/environment/
-  - images/race/
-  - images/occupation/
-  - images/npc/
-  - images/shop/
-  - images/player/
-  - images/select/
+
   - assets/player/
   - assets/ui/
   - assets/player/race/
@@ -68,10 +57,13 @@ flutter:
   - assets/item/
   - assets/logo/
   - assets/effect/
+  - assets/gm/
+  - assets/gm/story/quest/
   - assets/gm/npc/
   - assets/gm/npc/skill/pSkill/
   - assets/gm/npc/skill/mSkill/
-  - assets/gm/npc/race/
+  - assets/gm/npc/race/icon/
+  - assets/gm/npc/race/image/
 
   fonts:
   - family: Headline
