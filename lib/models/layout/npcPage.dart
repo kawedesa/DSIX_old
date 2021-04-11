@@ -33,6 +33,16 @@ class _NpcPageState extends State<NpcPage> {
 
   String actionResult = 'Roll';
 
+//NPC SELECTION
+
+  List<bool> npcSelection;
+
+  void selectNpc(int index) {
+    widget.dsix.gm.npcLayout = 1;
+    widget.dsix.gm.selectedNpc = widget.dsix.gm.npcList[index];
+    actionResult = 'Roll';
+  }
+
   void deleteNpc() {
     if (widget.dsix.gm.selectedNpc.name == 'NPC') {
       return;
@@ -40,30 +50,13 @@ class _NpcPageState extends State<NpcPage> {
 
     widget.dsix.gm.npcList.remove(widget.dsix.gm.selectedNpc);
     widget.dsix.gm.selectedNpc = Npc(
-      icon: 'npc',
+      icon: 'null',
       image: 'goblin',
       name: 'NPC',
       description:
           'An NPC is a character that you control. So pretty much eveyone besides the players. Click on the the buttons below to create a new NPC.',
     );
-    _layoutIndex = 0;
-  }
-
-  int _layoutIndex = 0;
-
-  void selectNpc(int index) {
-    widget.dsix.gm.selectedNpc = widget.dsix.gm.npcList[index];
-    actionResult = 'Roll';
-    checkLayout();
-  }
-
-  void checkLayout() {
-    if (widget.dsix.gm.selectedNpc.name == 'NPC') {
-      _layoutIndex = 0;
-    } else {
-      _layoutIndex = 1;
-    }
-    widget.refresh();
+    widget.dsix.gm.npcLayout = 0;
   }
 
   void npcAction() {
@@ -88,7 +81,7 @@ class _NpcPageState extends State<NpcPage> {
     Scaffold.of(context).openEndDrawer();
   }
 
-//LAYOUT ADAPTATION
+  Widget _healthToLoot;
 
   @override
   void initState() {
@@ -97,6 +90,56 @@ class _NpcPageState extends State<NpcPage> {
 
   @override
   Widget build(BuildContext context) {
+//HEALTH TO LOOT
+
+    if (widget.dsix.gm.selectedNpc.currentHealth < 1) {
+      _healthToLoot = GestureDetector(
+        onTap: () {
+          print(widget.dsix.gm.selectedNpc.totalLoot);
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(3, 0, 3, 5),
+          child: SvgPicture.asset(
+            'assets/gm/npc/loot.svg',
+            color: Colors.grey[700],
+          ),
+        ),
+      );
+    } else {
+      _healthToLoot = Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+            child: SvgPicture.asset(
+              'assets/gm/npc/health.svg',
+              color: Colors.grey[700],
+            ),
+          ),
+          Center(
+            child: Text(
+              '${widget.dsix.gm.selectedNpc.currentHealth}',
+              style: TextStyle(
+                fontFamily: 'Headline',
+                fontSize: 35,
+                color: Colors.black,
+                letterSpacing: 3,
+              ),
+            ),
+          ),
+        ],
+      );
+    }
+
+//NPC SELECTION
+    npcSelection = [];
+    widget.dsix.gm.npcList.forEach((element) {
+      if (element == widget.dsix.gm.selectedNpc) {
+        npcSelection.add(true);
+      } else {
+        npcSelection.add(false);
+      }
+    });
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -109,8 +152,8 @@ class _NpcPageState extends State<NpcPage> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      checkLayout();
-                      Scaffold.of(context).openDrawer();
+                      widget.dsix.gm.npcLayout = 0;
+                      // Scaffold.of(context).openDrawer();
                     });
                   },
                   child: Container(
@@ -124,37 +167,45 @@ class _NpcPageState extends State<NpcPage> {
                 ),
               ),
               Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    physics: ScrollPhysics(),
-                    scrollDirection: Axis.horizontal,
-                    padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
-                    itemCount: widget.dsix.gm.npcList.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      return GestureDetector(
-                        onTap: () {
-                          setState(() {
-                            selectNpc(index);
-                          });
-                        },
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          child: SvgPicture.asset(
-                            'assets/gm/npc/race/icon/${widget.dsix.gm.npcList[index].icon}.svg',
-                            color: Colors.grey[400],
-                          ),
+                child: Stack(
+                  children: [
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: ScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
+                          itemCount: widget.dsix.gm.npcList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  selectNpc(index);
+                                });
+                              },
+                              child: Container(
+                                height: 35,
+                                width: 35,
+                                child: SvgPicture.asset(
+                                  'assets/gm/npc/race/icon/${widget.dsix.gm.npcList[index].icon}.svg',
+                                  color: npcSelection[index]
+                                      ? Colors.grey[400]
+                                      : Colors.grey[700],
+                                ),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(
+                              width: 5,
+                            );
+                          },
                         ),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return SizedBox(
-                        width: 5,
-                      );
-                    },
-                  ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],
@@ -166,7 +217,7 @@ class _NpcPageState extends State<NpcPage> {
           color: Colors.grey[700],
         ),
         IndexedStack(
-          index: _layoutIndex,
+          index: widget.dsix.gm.npcLayout,
           children: [
             Container(
               child: Padding(
@@ -563,7 +614,6 @@ class _NpcPageState extends State<NpcPage> {
                     Container(
                       width: MediaQuery.of(context).size.width * 0.33,
                       height: MediaQuery.of(context).size.height * 0.25,
-
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -572,13 +622,11 @@ class _NpcPageState extends State<NpcPage> {
                             onLongPress: () {
                               setState(() {
                                 widget.dsix.gm.selectedNpc.changeHealth(10);
-                                widget.refresh();
                               });
                             },
                             onTap: () {
                               setState(() {
                                 widget.dsix.gm.selectedNpc.changeHealth(1);
-                                widget.refresh();
                               });
                             },
                             child: Icon(
@@ -592,41 +640,25 @@ class _NpcPageState extends State<NpcPage> {
                             child: Container(
                               width: 100,
                               height: 100,
-                              child: Stack(
-                                children: [
-                                  Center(
-                                    child: SvgPicture.asset(
-                                      'assets/gm/npc/health.svg',
-                                      color: Colors.grey[700],
-                                    ),
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      '${widget.dsix.gm.selectedNpc.currentHealth}',
-                                      style: TextStyle(
-                                        fontFamily: 'Headline',
-                                        fontSize: 35,
-                                        color: Colors.black,
-                                        letterSpacing: 3,
-                                      ),
-                                    ),
-                                  ),
-                                ],
+                              child: AnimatedSwitcher(
+                                duration: const Duration(milliseconds: 100),
+                                transitionBuilder: (Widget child,
+                                        Animation<double> animation) =>
+                                    ScaleTransition(
+                                        child: child, scale: animation),
+                                child: _healthToLoot,
                               ),
-                              // color: Colors.yellow,
                             ),
                           ),
                           GestureDetector(
                             onLongPress: () {
                               setState(() {
                                 widget.dsix.gm.selectedNpc.changeHealth(-10);
-                                widget.refresh();
                               });
                             },
                             onTap: () {
                               setState(() {
                                 widget.dsix.gm.selectedNpc.changeHealth(-1);
-                                widget.refresh();
                               });
                             },
                             child: Icon(
@@ -637,7 +669,6 @@ class _NpcPageState extends State<NpcPage> {
                           ),
                         ],
                       ),
-                      // color: Colors.pink,
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width * 0.33,

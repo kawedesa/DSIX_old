@@ -762,6 +762,8 @@ class _GmUIState extends State<GmUI> {
                                 onPressed: () {
                                   setState(() {
                                     widget.dsix.gm.selectedNpc = npc;
+                                    widget.dsix.gm.npcLayout = 1;
+                                    refreshPage();
                                     Navigator.pop(context);
                                   });
                                 },

@@ -8,12 +8,12 @@ class Gm {
   Quest selectedQuest = Quest(
     icon: 'quest',
     name: 'NEW QUEST',
-    description:
+    questDescription:
         'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
     character: '-',
     background: '-',
     personality: '-',
-    look: '-',
+    characterDescription: '-',
     objective: '-',
     target: '-',
     location: '-',
@@ -24,21 +24,26 @@ class Gm {
     Quest newQuest = new Quest(
       icon: 'quest',
       name: 'NEW QUEST',
-      description:
+      questDescription:
           'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
       character: '-',
       background: '-',
       personality: '-',
-      look: '-',
+      characterDescription: '-',
       objective: '-',
       target: '-',
       location: '-',
       reward: '-',
     );
+
+    this.selectedQuest = newQuest;
+
     this.questList.add(newQuest);
   }
 
   List<Npc> npcList = [];
+
+  int npcLayout = 0;
 
   Npc selectedNpc = Npc(
     icon: 'null',

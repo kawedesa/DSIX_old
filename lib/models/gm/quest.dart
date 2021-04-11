@@ -3,12 +3,12 @@ import 'dart:math';
 class Quest {
   String icon = 'quest';
   String name = 'NEW QUEST';
-  String description =
+  String questDescription =
       'Each quest should be unique, with their backstory. Double tap the text to edit it and write your own story.';
   String character = '-';
   String background = '-';
   String personality = '-';
-  String look = '-';
+  String characterDescription = '-';
   String objective = '-';
   String target = '-';
   String location = '-';
@@ -23,7 +23,7 @@ class Quest {
     'Goblin',
     'Gnome',
     'Halfling',
-    'Beast',
+    // 'Beast',
   ];
 
   List<String> genderList = [
@@ -94,7 +94,7 @@ class Quest {
     'Slow',
   ];
 
-  List<String> lookList = [
+  List<String> characterDescriptionList = [
     'Smelly',
     'Old',
     'Ugly',
@@ -205,8 +205,9 @@ class Quest {
             personalityList[Random().nextInt(personalityList.length)];
         break;
 
-      case 'look':
-        this.look = lookList[Random().nextInt(lookList.length)];
+      case 'characterDescription':
+        this.characterDescription = characterDescriptionList[
+            Random().nextInt(characterDescriptionList.length)];
         break;
 
       case 'objective':
@@ -238,11 +239,11 @@ class Quest {
   Quest({
     String icon,
     String name,
-    String description,
+    String questDescription,
     String character,
     String background,
     String personality,
-    String look,
+    String characterDescription,
     String objective,
     String target,
     String location,
@@ -250,11 +251,11 @@ class Quest {
   }) {
     this.icon = icon;
     this.name = name;
-    this.description = description;
+    this.questDescription = questDescription;
     this.character = character;
     this.background = background;
     this.personality = personality;
-    this.look = look;
+    this.characterDescription = characterDescription;
     this.objective = objective;
     this.target = target;
     this.location = location;
