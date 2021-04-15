@@ -18,20 +18,16 @@ class StoryPage extends StatefulWidget {
 
 class _StoryPageState extends State<StoryPage> {
   int _layoutIndex = 0;
+  List<bool> questSelection;
 
   void selectQuest(int index) {
     widget.dsix.gm.selectedQuest = widget.dsix.gm.questList[index];
     _layoutIndex = 1;
   }
 
-  void newQuest() {
-    widget.dsix.gm.createQuest();
-    // showAlertDialogQuest(context, widget.dsix.gm.selectedQuest);
-  }
-
   void deleteQuest() {
     widget.dsix.gm.questList.remove(widget.dsix.gm.selectedQuest);
-    widget.dsix.gm.selectedQuest.name = '';
+
     _layoutIndex = 0;
   }
 
@@ -42,6 +38,15 @@ class _StoryPageState extends State<StoryPage> {
 
   @override
   Widget build(BuildContext context) {
+    questSelection = [];
+    widget.dsix.gm.questList.forEach((element) {
+      if (element == widget.dsix.gm.selectedQuest) {
+        questSelection.add(true);
+      } else {
+        questSelection.add(false);
+      }
+    });
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -90,7 +95,9 @@ class _StoryPageState extends State<StoryPage> {
                           width: 35,
                           child: SvgPicture.asset(
                             'assets/gm/story/quest/${widget.dsix.gm.questList[index].icon}.svg',
-                            color: Colors.grey[400],
+                            color: questSelection[index]
+                                ? Colors.grey[400]
+                                : Colors.grey[700],
                           ),
                         ),
                       );
@@ -130,22 +137,25 @@ class _StoryPageState extends State<StoryPage> {
                         letterSpacing: 2,
                       ),
                     ),
-                    Text(
-                      'Every game starts with a story. It could be the tale of a fallen prince, or the rise of a evil necromancer. Its hard to come up with something on the fly, so this page is dedicated to help you with that task. Here you can create quests, scenes, or settings with a few steps.',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        height: 1.3,
-                        fontSize: 18,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: Text(
+                        'Every game starts with a story. It could be the tale of a fallen prince, or the rise of a evil necromancer. Its hard to come up with something on the fly, so this page is dedicated to help you with that task. Here you can create quests, scenes, or settings with a few steps.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          height: 1.3,
+                          fontSize: 18,
+                          fontFamily: 'Calibri',
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
                       onPressed: () {
-                        newQuest();
+                        widget.dsix.gm.createQuest();
                         _layoutIndex = 1;
                         widget.refresh();
                       },
@@ -218,7 +228,7 @@ class _StoryPageState extends State<StoryPage> {
                               ),
                             ),
                             Padding(
-                              padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
@@ -228,20 +238,23 @@ class _StoryPageState extends State<StoryPage> {
                                 child: Icon(
                                   Icons.clear,
                                   color: Colors.red,
-                                  size: 20,
+                                  size: 30,
                                 ),
                               ),
                             ),
                           ],
                         ),
-                        Text(
-                          '${widget.dsix.gm.selectedQuest.questDescription}',
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            height: 1.3,
-                            fontSize: 18,
-                            fontFamily: 'Calibri',
-                            color: Colors.white,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          child: Text(
+                            '${widget.dsix.gm.selectedQuest.questDescription}',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              height: 1.3,
+                              fontSize: 18,
+                              fontFamily: 'Calibri',
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ],

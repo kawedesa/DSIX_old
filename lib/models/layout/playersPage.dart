@@ -113,15 +113,15 @@ class _PlayersPageState extends State<PlayersPage> {
     return new Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        leading: IconButton(
-            icon: Icon(
-              Icons.keyboard_arrow_left,
-              color: Colors.grey[600],
-              size: 40,
-            ),
-            onPressed: () {
-              Navigator.of(context).push(_createRouteMainPage());
-            }),
+        // leading: IconButton(
+        //     icon: Icon(
+        //       Icons.keyboard_arrow_left,
+        //       color: Colors.grey[600],
+        //       size: 40,
+        //     ),
+        //     onPressed: () {
+        //       Navigator.of(context).push(_createRouteMainPage());
+        //     }),
         automaticallyImplyLeading: false,
         titleSpacing: 0,
         backgroundColor: Colors.grey[900],

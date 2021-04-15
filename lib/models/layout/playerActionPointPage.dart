@@ -35,34 +35,8 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
       0,
       false);
 
-  List<String> selectedAction = [
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-  ];
-
   int indexAction = 1;
-
-  void actionSelection(index) {
-    selectedAction = [
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-    ];
-
-    indexAction = index + 1;
-
-    displayedAction = widget.dsix.getCurrentPlayer().playerAction[indexAction];
-
-    selectedAction.replaceRange(index, index + 1, [displayedAction.icon]);
-    focus();
-  }
+  List<bool> actionSelection;
 
   Widget focusButton = Container();
   String focusText1 = '';
@@ -487,6 +461,16 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
 
   @override
   Widget build(BuildContext context) {
+    //ACTION SELECTION
+    actionSelection = [];
+    widget.dsix.getCurrentPlayer().playerAction.forEach((element) {
+      if (element == displayedAction) {
+        actionSelection.add(true);
+      } else {
+        actionSelection.add(false);
+      }
+    });
+
     return new Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.black,
@@ -549,22 +533,6 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                   padding: const EdgeInsets.fromLTRB(5, 2.5, 10, 0),
                   child: Stack(
                     children: <Widget>[
-                      //ACTION ICON
-
-                      GridView.count(
-                        crossAxisCount: 6,
-                        children: List.generate(6, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: SvgPicture.asset(
-                              'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                          );
-                        }),
-                      ),
-
                       //ACTION VALUE
 
                       GridView.count(
@@ -581,26 +549,34 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                         }),
                       ),
 
+                      //ACTION ICON
+
                       GridView.count(
                         crossAxisCount: 6,
                         children: List.generate(6, (index) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 15),
-                            child: TextButton(
-                              onPressed: () {
+                            child: GestureDetector(
+                              onTap: () {
                                 setState(() {
-                                  actionSelection(index);
+                                  indexAction = index + 1;
+                                  displayedAction = widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerAction[indexAction];
+
+                                  focus();
                                 });
                               },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.all(0),
-                              ),
                               child: SvgPicture.asset(
-                                'assets/player/action/${selectedAction[index]}.svg',
-                                color: widget.dsix
-                                    .getCurrentPlayer()
-                                    .playerColor
-                                    .primaryColor,
+                                'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+                                color: actionSelection[index + 1]
+                                    ? widget.dsix
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor
+                                    : Colors.white,
+                                width:
+                                    MediaQuery.of(context).size.width * 0.055,
                               ),
                             ),
                           );

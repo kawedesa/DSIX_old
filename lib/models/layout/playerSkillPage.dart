@@ -18,15 +18,6 @@ class PlayerSkillPage extends StatefulWidget {
 }
 
 class _PlayerSkillPageState extends State<PlayerSkillPage> {
-  List<String> selectedSkill = [
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-  ];
-
   Widget focusButton = Container();
   String focusText1 = '';
   String focusText2 = '';
@@ -94,19 +85,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
     }
   }
 
-  void skillSelection(index) {
-    selectedSkill = [
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-    ];
-    selectedSkill.replaceRange(index, index + 1,
-        [widget.dsix.getCurrentPlayer().availableSkills[index].icon]);
-    focus();
-  }
+  List<bool> skillSelection;
 
   showAlertDialogfocus(BuildContext context) {
     AlertDialog alerta = AlertDialog(
@@ -282,6 +261,16 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
 
   @override
   Widget build(BuildContext context) {
+    //SKILL SELECTION
+    skillSelection = [];
+    widget.dsix.getCurrentPlayer().availableSkills.forEach((element) {
+      if (element == widget.dsix.getCurrentPlayer().playerAction[6]) {
+        skillSelection.add(true);
+      } else {
+        skillSelection.add(false);
+      }
+    });
+
     return new Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -339,53 +328,34 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2.5, 10, 0),
-                  child: Stack(
-                    children: <Widget>[
-                      GridView.count(
-                        crossAxisCount: 6,
-                        children: List.generate(6, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 13),
-                            child: SvgPicture.asset(
-                              'assets/player/action/${widget.dsix.getCurrentPlayer().availableSkills[index].icon}.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                          );
-                        }),
-                      ),
-                      GridView.count(
-                        crossAxisCount: 6,
-                        children: List.generate(6, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 13),
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  widget.dsix
-                                      .getCurrentPlayer()
-                                      .chooseSkill(index);
+                  child: GridView.count(
+                    crossAxisCount: 6,
+                    children: List.generate(6, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 13),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              widget.dsix.getCurrentPlayer().chooseSkill(index);
 
-                                  skillSelection(index);
+                              focus();
 
-                                  _updateState();
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.all(0),
-                              ),
-                              child: SvgPicture.asset(
-                                'assets/player/action/${selectedSkill[index]}.svg',
-                                color: widget.dsix
+                              _updateState();
+                            });
+                          },
+                          child: SvgPicture.asset(
+                            'assets/player/action/${widget.dsix.getCurrentPlayer().availableSkills[index].icon}.svg',
+                            color: skillSelection[index]
+                                ? widget.dsix
                                     .getCurrentPlayer()
                                     .playerColor
-                                    .primaryColor,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+                                    .primaryColor
+                                : Colors.white,
+                            width: MediaQuery.of(context).size.width * 0.055,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),

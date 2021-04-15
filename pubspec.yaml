@@ -65,6 +65,7 @@ flutter:
   - assets/gm/npc/race/icon/
   - assets/gm/npc/race/image/
 
+  
   fonts:
   - family: Headline
     fonts:

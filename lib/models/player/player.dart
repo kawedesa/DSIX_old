@@ -23,7 +23,7 @@ class PlayerColor {
       this.name, this.primaryColor, this.secondaryColor, this.tertiaryColor);
 }
 
-Shop shop = Shop();
+Shop shop = new Shop();
 
 class Player {
   // var playerIndex;

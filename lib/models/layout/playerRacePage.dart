@@ -18,30 +18,7 @@ class PlayerRacePage extends StatefulWidget {
 class _PlayerRacePageState extends State<PlayerRacePage> {
   int displaySex = 0;
 
-  List<String> selectedRace = [
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-  ];
-
-  void raceSelection(index) {
-    selectedRace = [
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-    ];
-
-    widget.dsix.getCurrentPlayer().chooseRace(index);
-
-    selectedRace.replaceRange(index, index + 1,
-        [widget.dsix.getCurrentPlayer().availableRaces[index].icon]);
-  }
+  List<bool> raceSelection;
 
   showAlertDialog(BuildContext context, int index) {
     AlertDialog alerta = AlertDialog(
@@ -143,6 +120,16 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
 
   @override
   Widget build(BuildContext context) {
+    //RACE SELECTION
+    raceSelection = [];
+    widget.dsix.getCurrentPlayer().availableRaces.forEach((element) {
+      if (element == widget.dsix.getCurrentPlayer().race) {
+        raceSelection.add(true);
+      } else {
+        raceSelection.add(false);
+      }
+    });
+
     return new Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -200,47 +187,30 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                 width: double.infinity,
                 child: Padding(
                   padding: const EdgeInsets.fromLTRB(5, 2.5, 10, 0),
-                  child: Stack(
-                    children: <Widget>[
-                      GridView.count(
-                        crossAxisCount: 6,
-                        children: List.generate(6, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: SvgPicture.asset(
-                              'assets/player/race/${widget.dsix.getCurrentPlayer().availableRaces[index].icon}.svg',
-                              color: Colors.white,
-                            ),
-                          );
-                        }),
-                      ),
-                      GridView.count(
-                        crossAxisCount: 6,
-                        children: List.generate(6, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 12),
-                            child: TextButton(
-                              onPressed: () {
-                                setState(() {
-                                  _updateState();
-                                  raceSelection(index);
-                                });
-                              },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.all(0),
-                              ),
-                              child: SvgPicture.asset(
-                                'assets/player/race/${selectedRace[index]}.svg',
-                                color: widget.dsix
+                  child: GridView.count(
+                    crossAxisCount: 6,
+                    children: List.generate(6, (index) {
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 12),
+                        child: GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _updateState();
+                              widget.dsix.getCurrentPlayer().chooseRace(index);
+                            });
+                          },
+                          child: SvgPicture.asset(
+                            'assets/player/race/${widget.dsix.getCurrentPlayer().availableRaces[index].icon}.svg',
+                            color: raceSelection[index]
+                                ? widget.dsix
                                     .getCurrentPlayer()
                                     .playerColor
-                                    .primaryColor,
-                              ),
-                            ),
-                          );
-                        }),
-                      ),
-                    ],
+                                    .primaryColor
+                                : Colors.white,
+                          ),
+                        ),
+                      );
+                    }),
                   ),
                 ),
               ),

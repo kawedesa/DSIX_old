@@ -33,8 +33,6 @@ class _NpcPageState extends State<NpcPage> {
 
   String actionResult = 'Roll';
 
-//NPC SELECTION
-
   List<bool> npcSelection;
 
   void selectNpc(int index) {
@@ -44,18 +42,8 @@ class _NpcPageState extends State<NpcPage> {
   }
 
   void deleteNpc() {
-    if (widget.dsix.gm.selectedNpc.name == 'NPC') {
-      return;
-    }
-
     widget.dsix.gm.npcList.remove(widget.dsix.gm.selectedNpc);
-    widget.dsix.gm.selectedNpc = Npc(
-      icon: 'null',
-      image: 'goblin',
-      name: 'NPC',
-      description:
-          'An NPC is a character that you control. So pretty much eveyone besides the players. Click on the the buttons below to create a new NPC.',
-    );
+
     widget.dsix.gm.npcLayout = 0;
   }
 
@@ -167,45 +155,39 @@ class _NpcPageState extends State<NpcPage> {
                 ),
               ),
               Expanded(
-                child: Stack(
-                  children: [
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: ListView.separated(
-                          shrinkWrap: true,
-                          physics: ScrollPhysics(),
-                          scrollDirection: Axis.horizontal,
-                          padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
-                          itemCount: widget.dsix.gm.npcList.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            return GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  selectNpc(index);
-                                });
-                              },
-                              child: Container(
-                                height: 35,
-                                width: 35,
-                                child: SvgPicture.asset(
-                                  'assets/gm/npc/race/icon/${widget.dsix.gm.npcList[index].icon}.svg',
-                                  color: npcSelection[index]
-                                      ? Colors.grey[400]
-                                      : Colors.grey[700],
-                                ),
-                              ),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return SizedBox(
-                              width: 5,
-                            );
-                          },
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
+                    itemCount: widget.dsix.gm.npcList.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onTap: () {
+                          setState(() {
+                            selectNpc(index);
+                          });
+                        },
+                        child: Container(
+                          height: 35,
+                          width: 35,
+                          child: SvgPicture.asset(
+                            'assets/gm/npc/race/icon/${widget.dsix.gm.npcList[index].icon}.svg',
+                            color: npcSelection[index]
+                                ? Colors.grey[400]
+                                : Colors.grey[700],
+                          ),
                         ),
-                      ),
-                    ),
-                  ],
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(
+                        width: 5,
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
@@ -235,19 +217,22 @@ class _NpcPageState extends State<NpcPage> {
                         letterSpacing: 2,
                       ),
                     ),
-                    Text(
-                      'An NPC is a character that you control. So pretty much eveyone besides the players. Click on the the buttons below to create a new NPC.',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        height: 1.3,
-                        fontSize: 18,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                      child: Text(
+                        'An NPC is a character that you control. So pretty much eveyone besides the players. Click on the the buttons below to create a new NPC.',
+                        textAlign: TextAlign.justify,
+                        style: TextStyle(
+                          height: 1.3,
+                          fontSize: 18,
+                          fontFamily: 'Calibri',
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     TextButton(
                       style: TextButton.styleFrom(
-                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
                       onPressed: () {
                         Scaffold.of(context).openDrawer();
@@ -444,7 +429,7 @@ class _NpcPageState extends State<NpcPage> {
                                   ),
                                   Padding(
                                     padding:
-                                        const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                        const EdgeInsets.fromLTRB(0, 10, 0, 0),
                                     child: GestureDetector(
                                       onTap: () {
                                         setState(() {
@@ -454,7 +439,7 @@ class _NpcPageState extends State<NpcPage> {
                                       child: Icon(
                                         Icons.clear,
                                         color: Colors.red,
-                                        size: 20,
+                                        size: 30,
                                       ),
                                     ),
                                   ),

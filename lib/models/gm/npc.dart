@@ -14,7 +14,7 @@ class Npc {
 
   int baseHealth;
   int maxHealth;
-  int currentHealth;
+  int currentHealth = 0;
   int dice;
   int pDamage;
   int pArmor;
