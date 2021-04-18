@@ -517,6 +517,16 @@ class NpcSkillList {
 
     switch (name) {
       case 'ZOMBIE':
+        possibleSkills.add(this.pSkills[2]); //POISON
+
+        possibleSkills.add(this.pSkills[6]); //CLIMB
+
+        possibleSkills.add(this.pSkills[11]); //COMBINE
+        possibleSkills.add(this.pSkills[12]); //SPLIT
+
+        possibleSkills.add(this.pSkills[25]); //FAST
+        possibleSkills.add(this.pSkills[28]); //DISEASE
+        possibleSkills.add(this.pSkills[29]); //BLEED
         return possibleSkills;
 
       case 'SKELETON MAGE':

@@ -920,7 +920,7 @@ class _GmUIState extends State<GmUI> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.green,
+                          color: Colors.grey[400],
                           width: 2, //                   <--- border width here
                         ),
                       ),
@@ -935,7 +935,7 @@ class _GmUIState extends State<GmUI> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
                                 child: Icon(
                                   Icons.check,
-                                  color: Colors.green,
+                                  color: Colors.grey[400],
                                   size: 20,
                                 ),
                               ),
@@ -972,11 +972,6 @@ class _GmUIState extends State<GmUI> {
         return alerta;
       },
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   Widget build(BuildContext context) {
@@ -1072,43 +1067,45 @@ class _GmUIState extends State<GmUI> {
         child: Drawer(
           child: Container(
             color: Colors.grey[700],
-            child: ListView.builder(
-                itemCount: widget.dsix.gm.selectedNpc.skillList.length,
-                itemBuilder: (BuildContext context, int index) {
-                  return Column(
-                    children: [
-                      Divider(
-                        height: 0,
-                        thickness: 2,
-                        color: Colors.black,
-                      ),
-                      ListTile(
-                        onTap: () {
-                          setState(() {
-                            showAlertDialogChooseSkill(context,
-                                widget.dsix.gm.selectedNpc.skillList[index]);
-                          });
-                        },
-                        tileColor: Colors.grey[700],
-                        leading: SvgPicture.asset(
-                          'assets/gm/npc/skill/${widget.dsix.gm.selectedNpc.skillList[index].skillType}/${widget.dsix.gm.selectedNpc.skillList[index].icon}.svg',
+            child: Center(
+              child: ListView.builder(
+                  itemCount: widget.dsix.gm.selectedNpc.skillList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return Column(
+                      children: [
+                        Divider(
+                          height: 0,
+                          thickness: 2,
                           color: Colors.black,
-                          width: MediaQuery.of(context).size.width * 0.1,
                         ),
-                        title: Text(
-                          '${widget.dsix.gm.selectedNpc.skillList[index].name}',
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1,
-                            fontSize: 21,
+                        ListTile(
+                          onTap: () {
+                            setState(() {
+                              showAlertDialogChooseSkill(context,
+                                  widget.dsix.gm.selectedNpc.skillList[index]);
+                            });
+                          },
+                          tileColor: Colors.grey[700],
+                          leading: SvgPicture.asset(
+                            'assets/gm/npc/skill/${widget.dsix.gm.selectedNpc.skillList[index].skillType}/${widget.dsix.gm.selectedNpc.skillList[index].icon}.svg',
                             color: Colors.black,
-                            letterSpacing: 1.5,
+                            width: MediaQuery.of(context).size.width * 0.1,
+                          ),
+                          title: Text(
+                            '${widget.dsix.gm.selectedNpc.skillList[index].name}',
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1,
+                              fontSize: 21,
+                              color: Colors.black,
+                              letterSpacing: 1.5,
+                            ),
                           ),
                         ),
-                      ),
-                    ],
-                  );
-                }),
+                      ],
+                    );
+                  }),
+            ),
           ),
         ),
       ),

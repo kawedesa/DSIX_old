@@ -27,7 +27,7 @@ class Npc {
 
   List<NpcSkill> selectedSkills = [];
 
-  int totalLoot;
+  int totalLoot = 0;
   double baseLoot;
   int totalXp;
   int baseXp;

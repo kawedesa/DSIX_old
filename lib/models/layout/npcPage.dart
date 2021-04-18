@@ -2,7 +2,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:dsixv02app/models/gm/npc.dart';
 
 import '../gm/npcSkill.dart';
 
@@ -71,22 +70,26 @@ class _NpcPageState extends State<NpcPage> {
 
   Widget _healthToLoot;
 
-  @override
-  void initState() {
-    super.initState();
+  void rollLoot() {
+    widget.dsix.gm.createLoot(widget.dsix.gm.selectedNpc.totalLoot);
+    widget.dsix.gm.lootList.last.name = '${widget.dsix.gm.selectedNpc.name}';
+    deleteNpc();
   }
 
   @override
   Widget build(BuildContext context) {
 //HEALTH TO LOOT
 
-    if (widget.dsix.gm.selectedNpc.currentHealth < 1) {
+    if (widget.dsix.gm.selectedNpc.currentHealth < 1 &&
+        widget.dsix.gm.selectedNpc.totalLoot > 0) {
       _healthToLoot = GestureDetector(
         onTap: () {
-          print(widget.dsix.gm.selectedNpc.totalLoot);
+          setState(() {
+            rollLoot();
+          });
         },
         child: Padding(
-          padding: const EdgeInsets.fromLTRB(3, 0, 3, 5),
+          padding: const EdgeInsets.fromLTRB(7, 0, 7, 5),
           child: SvgPicture.asset(
             'assets/gm/npc/loot.svg',
             color: Colors.grey[700],
@@ -598,7 +601,8 @@ class _NpcPageState extends State<NpcPage> {
                   children: [
                     Container(
                       width: MediaQuery.of(context).size.width * 0.33,
-                      height: MediaQuery.of(context).size.height * 0.25,
+                      // height: MediaQuery.of(context).size.height * 0.25,
+                      // color: Colors.amberAccent,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -614,17 +618,20 @@ class _NpcPageState extends State<NpcPage> {
                                 widget.dsix.gm.selectedNpc.changeHealth(1);
                               });
                             },
-                            child: Icon(
-                              Icons.keyboard_arrow_up,
-                              color: Colors.white,
-                              size: 35,
+                            child: Container(
+                              child: Icon(
+                                Icons.keyboard_arrow_up,
+                                color: Colors.white,
+                                size: 45,
+                              ),
                             ),
                           ),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                             child: Container(
+                              // color: Colors.amber,
                               width: 100,
-                              height: 100,
+                              height: 85,
                               child: AnimatedSwitcher(
                                 duration: const Duration(milliseconds: 100),
                                 transitionBuilder: (Widget child,
@@ -646,10 +653,12 @@ class _NpcPageState extends State<NpcPage> {
                                 widget.dsix.gm.selectedNpc.changeHealth(-1);
                               });
                             },
-                            child: Icon(
-                              Icons.keyboard_arrow_down,
-                              color: Colors.white,
-                              size: 35,
+                            child: Container(
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.white,
+                                size: 45,
+                              ),
                             ),
                           ),
                         ],

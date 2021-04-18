@@ -724,14 +724,18 @@ class _LootPageState extends State<LootPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text(
-                              '${widget.dsix.gm.selectedLoot.name}',
-                              style: TextStyle(
-                                fontFamily: 'Headline',
-                                height: 1.3,
-                                fontSize: 45,
-                                color: Colors.grey[700],
-                                letterSpacing: 2,
+                            Container(
+                              // color: Colors.amberAccent,
+                              width: MediaQuery.of(context).size.width * 0.6,
+                              child: Text(
+                                '${widget.dsix.gm.selectedLoot.name}',
+                                style: TextStyle(
+                                  fontFamily: 'Headline',
+                                  height: 1.3,
+                                  fontSize: 45,
+                                  color: Colors.grey[700],
+                                  letterSpacing: 2,
+                                ),
                               ),
                             ),
                             Padding(

@@ -2,7 +2,7 @@ import 'package:dsixv02app/models/player/playerBackground.dart';
 import 'package:dsixv02app/models/game/shop.dart';
 import 'package:dsixv02app/models/player/bonus.dart';
 
-Shop shop = Shop();
+Shop shop = new Shop();
 
 class PlayerBackgroundList {
   List<PlayerBackground> backgrounds = [

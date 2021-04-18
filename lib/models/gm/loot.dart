@@ -10,7 +10,7 @@ class Loot {
   String lootDescription =
       'Each loot should have an interesting orign. Like the sword of an old king or the artifacts of a powerful wizzard. Double tap this text to edit it and write your own description.';
 
-  List<Item> itemList = new List<Item>();
+  List<Item> itemList = [];
 
   void newLoot(int value) {
     value = value * 100;
