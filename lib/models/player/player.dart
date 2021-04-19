@@ -20,10 +20,18 @@ class PlayerColor {
   Color tertiaryColor;
 
   PlayerColor(
-      this.name, this.primaryColor, this.secondaryColor, this.tertiaryColor);
+      {String name,
+      Color primaryColor,
+      Color secondaryColor,
+      Color tertiaryColor}) {
+    this.name = name;
+    this.primaryColor = primaryColor;
+    this.secondaryColor = secondaryColor;
+    this.tertiaryColor = tertiaryColor;
+  }
 }
 
-Shop shop = Shop();
+Shop shop = new Shop();
 
 class Player {
   // var playerIndex;
@@ -148,6 +156,8 @@ class Player {
   }
 
 //CHOOSE BACKGROUND // DEFINE MONEY, INVENTORY, PASSIVE ATTRIBUTES
+
+  List<Item> inventory = [];
 
   List<PlayerBackground> availableBackgrounds =
       PlayerBackgroundList().backgrounds;
@@ -284,13 +294,21 @@ class Player {
               'DAMAGE',
               0),
           Option(
+              'GRAPPLE',
+              'You try to grapple the target, holding them down.',
+              'You hold them in place and they are unable to move.',
+              'You hold them, but they can still move a little.',
+              'They escape your grasp.',
+              '',
+              0),
+          Option(
               'WEAPON',
               'You attack the target with your weapon, trying to bring them down.',
               'You deal',
               '',
               'You miss the target.',
               'DAMAGE',
-              0)
+              0),
         ],
         0,
         false),
@@ -602,88 +620,88 @@ class Player {
   }
 
   Item headEquip = Item(
-    'head',
-    '',
-    '',
-    '',
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    icon: 'head',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
   );
   Item bodyEquip = Item(
-    'body',
-    '',
-    '',
-    '',
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    icon: 'body',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
   );
   Item mainHandEquip = Item(
-    'mainHand',
-    '',
-    '',
-    '',
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    icon: 'mainHand',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
   );
   Item offHandEquip = Item(
-    'offHand',
-    '',
-    '',
-    '',
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    icon: 'offHand',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
   );
   Item handsEquip = Item(
-    'hands',
-    '',
-    '',
-    '',
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    icon: 'hands',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
   );
   Item feetEquip = Item(
-    'feet',
-    '',
-    '',
-    '',
-    '',
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
-    0,
+    icon: 'feet',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
   );
 
   void useOrEquip(Item item, String buttonText) {
@@ -702,7 +720,7 @@ class Player {
     this.mDamage += item.mDamage;
     this.pDamage += item.pDamage;
 
-    this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
+    this.playerAction[1].option[2].value = this.pDamage + this.mDamage;
     this.playerAction[2].option[0].value = this.pArmor;
     this.playerAction[2].option[1].value = this.mArmor;
     this.playerAction[6].option.forEach((element) {
@@ -782,7 +800,7 @@ class Player {
       this.mDamage -= item.mDamage;
       this.pDamage -= item.pDamage;
 
-      this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
+      this.playerAction[1].option[2].value = this.pDamage + this.mDamage;
       this.playerAction[2].option[0].value = this.pArmor;
       this.playerAction[2].option[1].value = this.mArmor;
       this.playerAction[6].option.forEach((element) {
@@ -791,33 +809,33 @@ class Player {
 
       this.inventory.add(item);
       this.mainHandEquip = Item(
-        'mainHand',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        icon: 'mainHand',
+        name: '',
+        itemClass: '',
+        inventorySpace: '',
+        description: '',
+        pDamage: 0,
+        pArmor: 0,
+        mDamage: 0,
+        mArmor: 0,
+        weight: 0,
+        uses: 0,
+        value: 0,
       );
 
       this.offHandEquip = Item(
-        'offHand',
-        '',
-        '',
-        '',
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+        icon: 'offHand',
+        name: '',
+        itemClass: '',
+        inventorySpace: '',
+        description: '',
+        pDamage: 0,
+        pArmor: 0,
+        mDamage: 0,
+        mArmor: 0,
+        weight: 0,
+        uses: 0,
+        value: 0,
       );
 
       return;
@@ -828,7 +846,7 @@ class Player {
     this.mDamage -= item.mDamage;
     this.pDamage -= item.pDamage;
 
-    this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
+    this.playerAction[1].option[2].value = this.pDamage + this.mDamage;
     this.playerAction[2].option[0].value = this.pArmor;
     this.playerAction[2].option[1].value = this.mArmor;
     this.playerAction[6].option.forEach((element) {
@@ -841,72 +859,72 @@ class Player {
       case 'head':
         {
           this.headEquip = Item(
-            'head',
-            '',
-            '',
-            '',
-            '',
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            icon: 'head',
+            name: '',
+            itemClass: '',
+            inventorySpace: '',
+            description: '',
+            pDamage: 0,
+            pArmor: 0,
+            mDamage: 0,
+            mArmor: 0,
+            weight: 0,
+            uses: 0,
+            value: 0,
           );
         }
         break;
       case 'hands':
         {
           this.handsEquip = Item(
-            'hands',
-            '',
-            '',
-            '',
-            '',
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            icon: 'hands',
+            name: '',
+            itemClass: '',
+            inventorySpace: '',
+            description: '',
+            pDamage: 0,
+            pArmor: 0,
+            mDamage: 0,
+            mArmor: 0,
+            weight: 0,
+            uses: 0,
+            value: 0,
           );
         }
         break;
       case 'body':
         {
           this.bodyEquip = Item(
-            'body',
-            '',
-            '',
-            '',
-            '',
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            icon: 'body',
+            name: '',
+            itemClass: '',
+            inventorySpace: '',
+            description: '',
+            pDamage: 0,
+            pArmor: 0,
+            mDamage: 0,
+            mArmor: 0,
+            weight: 0,
+            uses: 0,
+            value: 0,
           );
         }
         break;
       case 'feet':
         {
           this.feetEquip = Item(
-            'feet',
-            '',
-            '',
-            '',
-            '',
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
-            0,
+            icon: 'feet',
+            name: '',
+            itemClass: '',
+            inventorySpace: '',
+            description: '',
+            pDamage: 0,
+            pArmor: 0,
+            mDamage: 0,
+            mArmor: 0,
+            weight: 0,
+            uses: 0,
+            value: 0,
           );
         }
         break;
@@ -915,33 +933,33 @@ class Player {
         {
           if (item == this.mainHandEquip) {
             this.mainHandEquip = Item(
-              'mainHand',
-              '',
-              '',
-              '',
-              '',
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
+              icon: 'mainHand',
+              name: '',
+              itemClass: '',
+              inventorySpace: '',
+              description: '',
+              pDamage: 0,
+              pArmor: 0,
+              mDamage: 0,
+              mArmor: 0,
+              weight: 0,
+              uses: 0,
+              value: 0,
             );
           } else {
             this.offHandEquip = Item(
-              'offHand',
-              '',
-              '',
-              '',
-              '',
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
-              0,
+              icon: 'offHand',
+              name: '',
+              itemClass: '',
+              inventorySpace: '',
+              description: '',
+              pDamage: 0,
+              pArmor: 0,
+              mDamage: 0,
+              mArmor: 0,
+              weight: 0,
+              uses: 0,
+              value: 0,
             );
           }
         }
@@ -1091,8 +1109,6 @@ class Player {
     }
     return itemList;
   }
-
-  List<Item> inventory = [];
 
   List<Effect> effectList = [];
 

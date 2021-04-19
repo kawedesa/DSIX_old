@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "704428775377",
+    "project_id": "dsix-646c4",
+    "storage_bucket": "dsix-646c4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:704428775377:android:8baa88292fedd4926932f0",
+        "android_client_info": {
+          "package_name": "kawedesa.dsixv02app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "704428775377-n2vc8atnep9muigp57k1imvmka77a4qq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBW8KEvzsa3wb4uCvDEcCZmXlNq_KUGwtI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "704428775377-n2vc8atnep9muigp57k1imvmka77a4qq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

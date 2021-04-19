@@ -16,28 +16,7 @@ class PlayerBackgroundPage extends StatefulWidget {
 }
 
 class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
-  List<String> selectedBackground = [
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-  ];
-
-  void backgroundSelection(index) {
-    selectedBackground = [
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-    ];
-
-    selectedBackground.replaceRange(index, index + 1,
-        [widget.dsix.getCurrentPlayer().availableBackgrounds[index].icon]);
-  }
+  List<bool> backgroundSelection;
 
   showAlertDialog(BuildContext context, int index) {
     AlertDialog alerta = AlertDialog(
@@ -143,6 +122,16 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
 
   @override
   Widget build(BuildContext context) {
+//BACKGROUND SELECTION
+    backgroundSelection = [];
+    widget.dsix.getCurrentPlayer().availableBackgrounds.forEach((element) {
+      if (element == widget.dsix.getCurrentPlayer().playerBackground) {
+        backgroundSelection.add(true);
+      } else {
+        backgroundSelection.add(false);
+      }
+    });
+
     return new Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
@@ -207,37 +196,24 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                         children: List.generate(6, (index) {
                           return Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 13),
-                            child: SvgPicture.asset(
-                              'assets/player/background/${widget.dsix.getCurrentPlayer().availableBackgrounds[index].icon}.svg',
-                              color: Colors.white,
-                            ),
-                          );
-                        }),
-                      ),
-                      GridView.count(
-                        crossAxisCount: 6,
-                        children: List.generate(6, (index) {
-                          return Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 13),
-                            child: TextButton(
-                              onPressed: () {
+                            child: GestureDetector(
+                              onTap: () {
                                 setState(() {
                                   widget.dsix
                                       .getCurrentPlayer()
                                       .chooseBackground(index);
-                                  backgroundSelection(index);
+
                                   _updateState();
                                 });
                               },
-                              style: TextButton.styleFrom(
-                                padding: EdgeInsets.all(0),
-                              ),
                               child: SvgPicture.asset(
-                                'assets/player/background/${selectedBackground[index]}.svg',
-                                color: widget.dsix
-                                    .getCurrentPlayer()
-                                    .playerColor
-                                    .primaryColor,
+                                'assets/player/background/${widget.dsix.getCurrentPlayer().availableBackgrounds[index].icon}.svg',
+                                color: backgroundSelection[index]
+                                    ? widget.dsix
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor
+                                    : Colors.white,
                               ),
                             ),
                           );

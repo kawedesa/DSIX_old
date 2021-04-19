@@ -140,6 +140,76 @@ class _PlayerUIState extends State<PlayerUI> {
     );
   }
 
+  showAlertDialogWeight(BuildContext context) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                width: 1.5, //                   <--- border width here
+              ),
+            ),
+            width: 300,
+            // height: 200,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          'WEIGHT: ${widget.dsix.getCurrentPlayer().currentWeight}/${widget.dsix.getCurrentPlayer().maxWeight} ',
+                          style: TextStyle(
+                            fontFamily: 'Headline',
+                            height: 1.3,
+                            fontSize: 30.0,
+                            color: Colors.white,
+                            letterSpacing: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
+                  child: Text(
+                    'This represents the maximum weight you can carry.',
+                    style: TextStyle(
+                      height: 1.25,
+                      fontSize: 19,
+                      fontFamily: 'Calibri',
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
   showAlertDialogMoney(BuildContext context) {
     showDialog(
       context: context,
@@ -197,7 +267,7 @@ class _PlayerUIState extends State<PlayerUI> {
                           GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  widget.dsix.getCurrentPlayer().gold += 100;
+                                  widget.dsix.getCurrentPlayer().gold += 50;
                                 });
                                 refreshPage();
                               },
@@ -222,7 +292,7 @@ class _PlayerUIState extends State<PlayerUI> {
                               onTap: () {
                                 setState(() {
                                   if (widget.dsix.getCurrentPlayer().gold > 0) {
-                                    widget.dsix.getCurrentPlayer().gold -= 100;
+                                    widget.dsix.getCurrentPlayer().gold -= 50;
                                   }
                                 });
                                 refreshPage();
@@ -491,17 +561,17 @@ class _PlayerUIState extends State<PlayerUI> {
         titleSpacing: 10,
         backgroundColor:
             widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-        title: new Text(
-          '$pageTitle',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontFamily: 'Headline',
-            height: 1.3,
-            fontSize: 24.0,
-            color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
-            letterSpacing: 2,
-          ),
-        ),
+        // title: new Text(
+        //   '$pageTitle',
+        //   textAlign: TextAlign.left,
+        //   style: TextStyle(
+        //     fontFamily: 'Headline',
+        //     height: 1.3,
+        //     fontSize: 24.0,
+        //     color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+        //     letterSpacing: 2,
+        //   ),
+        // ),
         actions: <Widget>[
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
@@ -591,6 +661,74 @@ class _PlayerUIState extends State<PlayerUI> {
                                 .playerColor
                                 .secondaryColor,
                             letterSpacing: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    showAlertDialogWeight(context);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/item/weight.svg',
+                          color: Colors.white,
+                          width: MediaQuery.of(context).size.width * 0.055,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(7, 1, 0, 5),
+                          child: Text(
+                            '${widget.dsix.getCurrentPlayer().currentWeight}',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1.1,
+                              fontSize: 20.0,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .secondaryColor,
+                              letterSpacing: 2,
+                            ),
+                          ),
+                        ),
+                        Text(
+                          '/',
+                          textAlign: TextAlign.left,
+                          style: TextStyle(
+                            fontFamily: 'Headline',
+                            height: 1.1,
+                            fontSize: 23.0,
+                            fontWeight: FontWeight.bold,
+                            color: widget.dsix
+                                .getCurrentPlayer()
+                                .playerColor
+                                .secondaryColor,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(1, 6, 5, 0),
+                          child: Text(
+                            '${widget.dsix.getCurrentPlayer().maxWeight}',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1.1,
+                              fontSize: 20.0,
+                              color: widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .secondaryColor,
+                              letterSpacing: 2,
+                            ),
                           ),
                         ),
                       ],

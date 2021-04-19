@@ -22,15 +22,6 @@ class ActionPage extends StatefulWidget {
 }
 
 class _ActionPageState extends State<ActionPage> {
-  List<String> selectedAction = [
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-    'null',
-  ];
-
   PlayerAction displayedAction = PlayerAction(
       'action',
       'ACTION',
@@ -39,8 +30,6 @@ class _ActionPageState extends State<ActionPage> {
       0,
       false);
 
-  // String displayText;
-  // String displayTitle;
   String displaySum = '';
   Widget button;
   List<Dice> diceList = [];
@@ -51,26 +40,7 @@ class _ActionPageState extends State<ActionPage> {
   String focusText2 = '';
   double textSize;
 
-  void actionSelection(index) {
-    selectedAction = [
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-      'null',
-    ];
-    selectedAction.replaceRange(index - 1, index,
-        [widget.dsix.getCurrentPlayer().playerAction[index].icon]);
-    displayedAction = widget.dsix.getCurrentPlayer().playerAction[index];
-    if (displayedAction.focus == true) {
-      focusText1 = ' You need to';
-      focusText2 = ' focus.';
-    } else {
-      focusText1 = '';
-      focusText2 = '';
-    }
-  }
+  List<bool> actionSelection;
 
   void checkResult(List<Dice> dice, Option option) {
     for (int check = 0; check < diceList.length; check++) {
@@ -604,6 +574,16 @@ class _ActionPageState extends State<ActionPage> {
 
   @override
   Widget build(BuildContext context) {
+    //ACTION SELECTION
+    actionSelection = [];
+    widget.dsix.getCurrentPlayer().playerAction.forEach((element) {
+      if (element == displayedAction) {
+        actionSelection.add(true);
+      } else {
+        actionSelection.add(false);
+      }
+    });
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -614,21 +594,6 @@ class _ActionPageState extends State<ActionPage> {
             padding: const EdgeInsets.fromLTRB(5, 2.5, 10, 0),
             child: Stack(
               children: <Widget>[
-                //ACTION ICON
-
-                GridView.count(
-                  crossAxisCount: 6,
-                  children: List.generate(6, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 17),
-                      child: SvgPicture.asset(
-                        'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
-                        color: Colors.white,
-                      ),
-                    );
-                  }),
-                ),
-
                 //ACTION VALUE
 
                 GridView.count(
@@ -643,27 +608,36 @@ class _ActionPageState extends State<ActionPage> {
                     );
                   }),
                 ),
+                //ACTION ICON
 
                 GridView.count(
                   crossAxisCount: 6,
                   children: List.generate(6, (index) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 17),
-                      child: TextButton(
-                        onPressed: () {
+                      child: GestureDetector(
+                        onTap: () {
                           setState(() {
-                            actionSelection(index + 1);
+                            displayedAction = widget.dsix
+                                .getCurrentPlayer()
+                                .playerAction[index + 1];
+                            if (displayedAction.focus == true) {
+                              focusText1 = ' You need to';
+                              focusText2 = ' focus.';
+                            } else {
+                              focusText1 = '';
+                              focusText2 = '';
+                            }
                           });
                         },
-                        style: TextButton.styleFrom(
-                          padding: EdgeInsets.all(0),
-                        ),
                         child: SvgPicture.asset(
-                          'assets/player/action/${selectedAction[index]}.svg',
-                          color: widget.dsix
-                              .getCurrentPlayer()
-                              .playerColor
-                              .primaryColor,
+                          'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+                          color: actionSelection[index + 1]
+                              ? widget.dsix
+                                  .getCurrentPlayer()
+                                  .playerColor
+                                  .primaryColor
+                              : Colors.white,
                         ),
                       ),
                     );

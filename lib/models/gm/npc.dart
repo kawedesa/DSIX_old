@@ -14,7 +14,7 @@ class Npc {
 
   int baseHealth;
   int maxHealth;
-  int currentHealth;
+  int currentHealth = 0;
   int dice;
   int pDamage;
   int pArmor;
@@ -27,7 +27,7 @@ class Npc {
 
   List<NpcSkill> selectedSkills = [];
 
-  int totalLoot;
+  int totalLoot = 0;
   double baseLoot;
   int totalXp;
   int baseXp;
