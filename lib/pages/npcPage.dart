@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../gm/npcSkill.dart';
+import '../models/gm/npcSkill.dart';
 
 class NpcPage extends StatefulWidget {
   final Function() refresh;

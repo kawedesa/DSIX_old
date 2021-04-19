@@ -2,8 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'playersPage.dart';
-import '../gm/npc.dart';
-import '../gm/npcSkill.dart';
+import '../models/gm/npc.dart';
+import '../models/gm/npcSkill.dart';
 import 'storyPage.dart';
 import 'lootPage.dart';
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../game/item.dart';
-import '../player/exceptions.dart';
+import '../models/game/item.dart';
+import '../models/player/exceptions.dart';
 
 class InventoryPage extends StatefulWidget {
   final Function() refresh;

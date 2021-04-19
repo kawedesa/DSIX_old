@@ -5,11 +5,11 @@ import 'package:dsixv02app/models/game/dice.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
-import '../player/playerAction.dart';
-import '../player/option.dart';
+import '../models/player/playerAction.dart';
+import '../models/player/option.dart';
 
 import 'package:dsixv02app/models/game/dsix.dart';
-import '../player/exceptions.dart';
+import '../models/player/exceptions.dart';
 
 class ActionPage extends StatefulWidget {
   final Function() refresh;

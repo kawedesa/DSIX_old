@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
-import '../game/item.dart';
-import '../game/shop.dart';
+import '../models/game/item.dart';
+import '../models/game/shop.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../game/dsix.dart';
-import '../player/exceptions.dart';
+import '../models/game/dsix.dart';
+import '../models/player/exceptions.dart';
 
 class ShopPage extends StatefulWidget {
   final Function() refresh;

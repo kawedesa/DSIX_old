@@ -1,10 +1,10 @@
 import 'playerUI.dart';
-import '../player/option.dart';
+import '../models/player/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../player/playerAction.dart';
+import '../models/player/playerAction.dart';
 
 class PlayerAttributePage extends StatefulWidget {
   final Dsix dsix;
