@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dsixv02app/pages/homePage.dart';
 import 'package:provider/provider.dart';
 import 'authenticate/authenticatePage.dart';
-import 'authenticate/signInPage.dart';
+
 import 'package:dsixv02app/models/dsixUser.dart';
 
 class WrapperPage extends StatelessWidget {
@@ -10,7 +10,6 @@ class WrapperPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = Provider.of<DsixUser>(context);
 
-    print(user);
     // return hope or authenticate widget
     if (user == null) {
       return AuthenticatePage();

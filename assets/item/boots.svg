@@ -1,1 +1,19 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 314.5 314"><defs><style>.cls-1{fill:none;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><line class="cls-1" x2="314.5"/><line class="cls-1" x1="314.5" y1="314" y2="314"/></g><g id="Armor"><g id="boots"><polygon points="43.83 192.94 28.88 207.92 28.88 223.69 28.88 229.77 28.88 250.88 148.53 250.88 148.53 223.69 148.5 63.14 72.86 63.14 72.86 78.22 59.92 78.22 59.92 147.68 72.85 147.68 72.83 192.94 43.83 192.94"/><polygon points="285.62 223.69 285.62 223.69 285.62 207.92 285.56 207.85 270.66 192.94 241.68 192.94 241.68 147.68 255.05 147.68 255.05 78.22 241.68 78.22 241.68 63.12 166.01 63.14 165.98 223.69 165.97 223.69 165.97 250.88 285.62 250.88 285.62 223.69"/></g></g></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 314.5 314" style="enable-background:new 0 0 314.5 314;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:#1D1D1B;}
+</style>
+<g id="Layer_2_1_">
+	<g id="Layer_1-2">
+		<line class="st0" x1="0" y1="0" x2="314.5" y2="0"/>
+		<line class="st0" x1="314.5" y1="314" x2="0" y2="314"/>
+	</g>
+</g>
+<polygon class="st1" points="285.5,192.4 267.6,174.4 239.4,174.4 239.4,153.6 246.9,153.6 246.9,138 239.4,138 239.4,128.6 
+	246.9,128.6 246.9,113.1 239.4,113.1 239.4,100.5 165.6,100.5 165.6,224.3 285.6,224.3 285.6,192.5 "/>
+<polygon class="st1" points="28.5,192.4 46.4,174.4 74.6,174.4 74.6,153.6 67.1,153.6 67.1,138 74.6,138 74.6,128.6 67.1,128.6 
+	67.1,113.1 74.6,113.1 74.6,100.5 148.4,100.5 148.4,224.3 28.4,224.3 28.4,192.5 "/>
+</svg>

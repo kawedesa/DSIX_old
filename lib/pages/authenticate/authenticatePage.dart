@@ -5,6 +5,7 @@ import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:dsixv02app/models/service/auth.dart';
+import 'package:dsixv02app/models/shared/loading.dart';
 
 class AuthenticatePage extends StatefulWidget {
   @override
@@ -12,25 +13,6 @@ class AuthenticatePage extends StatefulWidget {
 }
 
 class _AuthenticatePageState extends State<AuthenticatePage> {
-// Route _createRoute() {
-//     return PageRouteBuilder(
-//       pageBuilder: (context, animation, secondaryAnimation) =>
-//           PlayersPage(dsix: dsix),
-//       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-//         var begin = Offset(1.0, 0.0);
-//         var end = Offset(0.0, 0.0);
-//         var curve = Curves.ease;
-//         var tween =
-//             Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-//         return SlideTransition(
-//           position: animation.drive(tween),
-//           child: child,
-//         );
-//       },
-//     );
-//   }
-
   final AuthService _auth = AuthService();
   final _formKey = GlobalKey<FormState>();
 
@@ -39,6 +21,8 @@ class _AuthenticatePageState extends State<AuthenticatePage> {
   String email = '';
   String password = '';
   String error = '';
+
+  bool loading = false;
 
   showAlertDialogRegister(BuildContext context) {
     showDialog(
@@ -201,12 +185,16 @@ class _AuthenticatePageState extends State<AuthenticatePage> {
                         child: GestureDetector(
                           onTap: () async {
                             if (_formKey.currentState.validate()) {
+                              setState(() => loading = true);
+
                               dynamic result =
                                   await _auth.registerWithEmailAndPassword(
                                       email, password);
                               if (result == null) {
-                                setState(() =>
-                                    error = 'Please supply a valid e-mail.');
+                                setState(() {
+                                  error = 'Please supply a valid e-mail.';
+                                  loading = false;
+                                });
                               }
                               Navigator.pop(context);
                             }
@@ -426,11 +414,16 @@ class _AuthenticatePageState extends State<AuthenticatePage> {
                         child: GestureDetector(
                           onTap: () async {
                             if (_formKey.currentState.validate()) {
+                              setState(() => loading = true);
+
                               dynamic result = await _auth
                                   .signInWithEmailAndPassword(email, password);
 
                               if (result == null) {
-                                setState(() => error = 'Could not sign in.');
+                                setState(() {
+                                  loading = false;
+                                  error = 'Could not sign in.';
+                                });
                               }
                               Navigator.pop(context);
                             }
@@ -491,255 +484,152 @@ class _AuthenticatePageState extends State<AuthenticatePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
-            child: Container(
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: MediaQuery.of(context).size.width * 0.6,
-              child: SvgPicture.asset(
-                'assets/logo/logo.svg',
-                color: Colors.grey[500],
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
-            child: Text(
-              error,
-              style: TextStyle(
-                height: 0,
-                color: Colors.red,
-                fontSize: 14,
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              ),
-              onPressed: () {
-                showAlertDialogSignIn(context);
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                width: MediaQuery.of(context).size.width * 0.62,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey[600],
-                    width: 2.5, //                   <--- border width here
+    return loading
+        ? Loading()
+        : Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 30),
+                  child: Container(
+                    width: MediaQuery.of(context).size.width * 0.6,
+                    height: MediaQuery.of(context).size.width * 0.6,
+                    child: SvgPicture.asset(
+                      'assets/logo/logo.svg',
+                      color: Colors.grey[500],
+                    ),
                   ),
                 ),
-                child: Stack(
-                  alignment: AlignmentDirectional.centerEnd,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                          child: Icon(
-                            Icons.keyboard_arrow_right,
-                            color: Colors.grey[600],
-                            size: 30,
-                          ),
-                        ),
-                      ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
+                  child: Text(
+                    error,
+                    style: TextStyle(
+                      height: 0,
+                      color: Colors.red,
+                      fontSize: 14,
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Center(
-                        child: Text(
-                          'SIGN IN',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontFamily: 'Calibri',
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              ),
-              onPressed: () {
-                showAlertDialogRegister(context);
-                // Navigator.of(context).push(_createRoute());
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                width: MediaQuery.of(context).size.width * 0.62,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey[600],
-                    width: 2.5, //                   <--- border width here
                   ),
                 ),
-                child: Stack(
-                  alignment: AlignmentDirectional.centerEnd,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                          child: Icon(
-                            Icons.keyboard_arrow_right,
-                            color: Colors.grey[600],
-                            size: 30,
-                          ),
-                        ),
-                      ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Center(
-                        child: Text(
-                          'REGISTER',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontFamily: 'Calibri',
-                            color: Colors.grey[600],
-                          ),
+                    onPressed: () {
+                      showAlertDialogSignIn(context);
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.62,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[600],
+                          width:
+                              2.5, //                   <--- border width here
                         ),
                       ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                child: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.grey[600],
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                            child: Center(
+                              child: Text(
+                                'SIGN IN',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    ),
+                    onPressed: () {
+                      showAlertDialogRegister(context);
+                      // Navigator.of(context).push(_createRoute());
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.62,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[600],
+                          width:
+                              2.5, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                child: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.grey[600],
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                            child: Center(
+                              child: Text(
+                                'REGISTER',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-          // Padding(
-          //   padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-          //   child: TextButton(
-          //     style: TextButton.styleFrom(
-          //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          //     ),
-          //     onPressed: () {
-          //       // Navigator.of(context).push(_createRoute());
-          //     },
-          //     child: Container(
-          //       height: MediaQuery.of(context).size.height * 0.08,
-          //       width: MediaQuery.of(context).size.width * 0.62,
-          //       decoration: BoxDecoration(
-          //         border: Border.all(
-          //           color: Colors.grey[600],
-          //           width: 2.5, //                   <--- border width here
-          //         ),
-          //       ),
-          //       child: Stack(
-          //         alignment: AlignmentDirectional.centerEnd,
-          //         children: [
-          //           Column(
-          //             mainAxisAlignment: MainAxisAlignment.center,
-          //             crossAxisAlignment: CrossAxisAlignment.start,
-          //             children: <Widget>[
-          //               Padding(
-          //                 padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-          //                 child: Icon(
-          //                   Icons.keyboard_arrow_right,
-          //                   color: Colors.grey[600],
-          //                   size: 30,
-          //                 ),
-          //               ),
-          //             ],
-          //           ),
-          //           Padding(
-          //             padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-          //             child: Center(
-          //               child: Text(
-          //                 'SIGN IN',
-          //                 style: TextStyle(
-          //                   fontSize: 15,
-          //                   fontWeight: FontWeight.bold,
-          //                   letterSpacing: 1.5,
-          //                   fontFamily: 'Calibri',
-          //                   color: Colors.grey[600],
-          //                 ),
-          //               ),
-          //             ),
-          //           ),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-          // TextButton(
-          //   style: TextButton.styleFrom(
-          //     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-          //   ),
-          //   onPressed: () {
-          //     // Navigator.of(context).push(_createRoute());
-          //   },
-          //   child: Container(
-          //     height: MediaQuery.of(context).size.height * 0.08,
-          //     width: MediaQuery.of(context).size.width * 0.62,
-          //     decoration: BoxDecoration(
-          //       border: Border.all(
-          //         color: Colors.grey[600],
-          //         width: 2.5, //                   <--- border width here
-          //       ),
-          //     ),
-          //     child: Stack(
-          //       alignment: AlignmentDirectional.centerEnd,
-          //       children: [
-          //         Column(
-          //           mainAxisAlignment: MainAxisAlignment.center,
-          //           crossAxisAlignment: CrossAxisAlignment.start,
-          //           children: <Widget>[
-          //             Padding(
-          //               padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-          //               child: Icon(
-          //                 Icons.keyboard_arrow_right,
-          //                 color: Colors.grey[600],
-          //                 size: 30,
-          //               ),
-          //             ),
-          //           ],
-          //         ),
-          //         Padding(
-          //           padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-          //           child: Center(
-          //             child: Text(
-          //               'REGISTER',
-          //               style: TextStyle(
-          //                 fontSize: 15,
-          //                 fontWeight: FontWeight.bold,
-          //                 letterSpacing: 1.5,
-          //                 fontFamily: 'Calibri',
-          //                 color: Colors.grey[600],
-          //               ),
-          //             ),
-          //           ),
-          //         ),
-          //       ],
-          //     ),
-          //   ),
-          // ),
-        ],
-      ),
-    );
+          );
   }
 }
