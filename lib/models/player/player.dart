@@ -724,7 +724,11 @@ class Player {
     this.playerAction[2].option[0].value = this.pArmor;
     this.playerAction[2].option[1].value = this.mArmor;
     this.playerAction[6].option.forEach((element) {
-      element.value = this.mDamage;
+      if (element.result == 'PROTECT') {
+        element.value = this.mArmor;
+      } else {
+        element.value = this.mDamage;
+      }
     });
 
     switch (item.inventorySpace) {
@@ -804,7 +808,11 @@ class Player {
       this.playerAction[2].option[0].value = this.pArmor;
       this.playerAction[2].option[1].value = this.mArmor;
       this.playerAction[6].option.forEach((element) {
-        element.value = this.mDamage;
+        if (element.result == 'PROTECT') {
+          element.value = this.mArmor;
+        } else {
+          element.value = this.mDamage;
+        }
       });
 
       this.inventory.add(item);
@@ -850,7 +858,11 @@ class Player {
     this.playerAction[2].option[0].value = this.pArmor;
     this.playerAction[2].option[1].value = this.mArmor;
     this.playerAction[6].option.forEach((element) {
-      element.value = this.mDamage;
+      if (element.result == 'PROTECT') {
+        element.value = this.mArmor;
+      } else {
+        element.value = this.mDamage;
+      }
     });
 
     this.inventory.add(item);
