@@ -29,7 +29,7 @@ class PlayerRaceList {
           Bonus(
               '+ WEIGHT  ',
               'maxWeight',
-              'This represents the total amount of weight you can carry. Because of your strength, you can carry +6 weight.',
+              'This represents the total amount of weight you can carry. Because of your strength, you can carry +4 weight.',
               6)
         ]),
     PlayerRace(
@@ -47,7 +47,7 @@ class PlayerRaceList {
           Bonus(
               '- WEIGHT  ',
               'maxWeight',
-              'This represents the total amount of weight you can carry. Because you are weak, you carry -6 weight.',
+              'This represents the total amount of weight you can carry. Because you are weak, you carry -4 weight.',
               -6)
         ]),
     PlayerRace(
@@ -62,7 +62,7 @@ class PlayerRaceList {
           Bonus(
               '+ HEALTH  ',
               'maxHealth',
-              'This represents your total health and you die when it reaches zero. Because of your sturdy nature you have +6 HP.',
+              'This represents your total health and you die when it reaches zero. Because of your sturdy nature you have +4 HP.',
               6)
         ]),
     PlayerRace(

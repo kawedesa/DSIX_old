@@ -90,7 +90,7 @@ class _HomePageState extends State<HomePage> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
             child: TextButton(
               style: TextButton.styleFrom(
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

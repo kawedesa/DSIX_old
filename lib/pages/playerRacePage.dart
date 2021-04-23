@@ -302,8 +302,8 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return TextButton(
                                     style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 0, 10),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 5),
                                     ),
                                     onPressed: () {
                                       showAlertDialog(context, index);

@@ -52,7 +52,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
       focusText2 = '  focus.';
       focusButton = TextButton(
         style: TextButton.styleFrom(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
         ),
         onPressed: () {
           showAlertDialogfocus(context);
@@ -712,8 +712,8 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                                 itemBuilder: (BuildContext context, int index) {
                                   return TextButton(
                                     style: TextButton.styleFrom(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 0, 0, 10),
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 5),
                                     ),
                                     onPressed: () {
                                       showAlertDialog(context, index);

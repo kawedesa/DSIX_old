@@ -343,7 +343,7 @@ class _PlayersPageState extends State<PlayersPage> {
                   itemCount: widget.dsix.players.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: GestureDetector(
                         onLongPress: () {
                           setState(() {

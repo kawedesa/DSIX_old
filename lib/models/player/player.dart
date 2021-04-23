@@ -106,7 +106,7 @@ class Player {
         {
           this.actionPoints[1] = 1; //ATTACK
           this.actionPoints[5] = -1; //MOVE
-          this.maxWeight = 18; //WEIGHT
+          this.maxWeight = 16; //WEIGHT
         }
         break;
 
@@ -114,7 +114,7 @@ class Player {
         {
           this.actionPoints[1] = 1; //ATTACK
           this.actionPoints[5] = 1; //MOVE
-          this.maxWeight = 6; //WEIGHT
+          this.maxWeight = 8; //WEIGHT
         }
         break;
 
@@ -122,7 +122,7 @@ class Player {
         {
           this.actionPoints[2] = 1; //DEFENSE
           this.actionPoints[3] = -1; //PERCEIVE
-          this.maxHealth = 18; //HEALTH
+          this.maxHealth = 16; //HEALTH
         }
         break;
 
@@ -294,20 +294,20 @@ class Player {
               'DAMAGE',
               0),
           Option(
-              'GRAPPLE',
-              'You try to grapple the target, holding them down.',
-              'You hold them in place and they are unable to move.',
-              'You hold them, but they can still move a little.',
-              'They escape your grasp.',
-              '',
-              0),
-          Option(
               'WEAPON',
               'You attack the target with your weapon, trying to bring them down.',
               'You deal',
               '',
               'You miss the target.',
               'DAMAGE',
+              0),
+          Option(
+              'GRAPPLE',
+              'You try to grapple the target, holding them down.',
+              'You hold them in place and they are unable to move.',
+              'You hold them, but they can still move a little.',
+              'They escape your grasp.',
+              '',
               0),
         ],
         0,
@@ -555,6 +555,11 @@ class Player {
 
         break;
 
+      case 'MAGIC RUNE':
+        this.inventory.remove(item);
+
+        break;
+
       case 'HEALING POTION':
         if (this.currentHealth == this.maxHealth) {
           throw new MaxHpException();
@@ -720,7 +725,7 @@ class Player {
     this.mDamage += item.mDamage;
     this.pDamage += item.pDamage;
 
-    this.playerAction[1].option[2].value = this.pDamage + this.mDamage;
+    this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
     this.playerAction[2].option[0].value = this.pArmor;
     this.playerAction[2].option[1].value = this.mArmor;
     this.playerAction[6].option.forEach((element) {
@@ -804,7 +809,7 @@ class Player {
       this.mDamage -= item.mDamage;
       this.pDamage -= item.pDamage;
 
-      this.playerAction[1].option[2].value = this.pDamage + this.mDamage;
+      this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
       this.playerAction[2].option[0].value = this.pArmor;
       this.playerAction[2].option[1].value = this.mArmor;
       this.playerAction[6].option.forEach((element) {
@@ -854,7 +859,7 @@ class Player {
     this.mDamage -= item.mDamage;
     this.pDamage -= item.pDamage;
 
-    this.playerAction[1].option[2].value = this.pDamage + this.mDamage;
+    this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
     this.playerAction[2].option[0].value = this.pArmor;
     this.playerAction[2].option[1].value = this.mArmor;
     this.playerAction[6].option.forEach((element) {
@@ -1097,7 +1102,7 @@ class Player {
           'focus',
           'This action requires you to focus and it will have a lower chance of success if taken consecutively.',
           -1,
-          2));
+          1));
       this.playerAction[6].value--;
     }
   }

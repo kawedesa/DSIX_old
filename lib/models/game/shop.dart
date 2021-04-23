@@ -54,6 +54,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'dagger',
@@ -68,6 +69,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'mace',
@@ -82,6 +84,7 @@ class Shop {
       weight: 3,
       uses: 0,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'claw',
@@ -96,6 +99,7 @@ class Shop {
       weight: 0,
       uses: 0,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'axe',
@@ -110,6 +114,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'shortSword',
@@ -124,6 +129,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'shortSpear',
@@ -138,6 +144,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'rapier',
@@ -152,6 +159,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'sword',
@@ -166,20 +174,7 @@ class Shop {
       weight: 4,
       uses: 0,
       value: 400,
-    ),
-    Item(
-      icon: 'saber',
-      name: 'SABER',
-      itemClass: 'lightWeapon',
-      inventorySpace: '1hand',
-      description: 'A curved blade with a very sharp edge.',
-      pDamage: 4,
-      pArmor: 0,
-      mDamage: 0,
-      mArmor: 0,
-      weight: 3,
-      uses: 0,
-      value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'morningStar',
@@ -194,6 +189,22 @@ class Shop {
       weight: 6,
       uses: 0,
       value: 400,
+      enchant: 0,
+    ),
+    Item(
+      icon: 'saber',
+      name: 'SABER',
+      itemClass: 'lightWeapon',
+      inventorySpace: '1hand',
+      description: 'A curved blade with a very sharp edge.',
+      pDamage: 4,
+      pArmor: 0,
+      mDamage: 0,
+      mArmor: 0,
+      weight: 3,
+      uses: 0,
+      value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'longSword',
@@ -208,6 +219,7 @@ class Shop {
       weight: 5,
       uses: 0,
       value: 500,
+      enchant: 0,
     ),
   ];
 
@@ -225,6 +237,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'quarterstaff',
@@ -239,6 +252,7 @@ class Shop {
       weight: 4,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'doubleSword',
@@ -253,6 +267,7 @@ class Shop {
       weight: 5,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'trident',
@@ -267,6 +282,7 @@ class Shop {
       weight: 3,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'battleAxe',
@@ -281,6 +297,7 @@ class Shop {
       weight: 8,
       uses: 0,
       value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'halberd',
@@ -295,6 +312,7 @@ class Shop {
       weight: 6,
       uses: 0,
       value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'warHammer',
@@ -309,6 +327,7 @@ class Shop {
       weight: 9,
       uses: 0,
       value: 600,
+      enchant: 0,
     ),
     Item(
       icon: 'greatSword',
@@ -323,6 +342,7 @@ class Shop {
       weight: 7,
       uses: 0,
       value: 600,
+      enchant: 0,
     ),
   ];
 
@@ -340,6 +360,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'boomerang',
@@ -355,6 +376,7 @@ class Shop {
       weight: 1,
       uses: 3,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'javelins',
@@ -369,6 +391,7 @@ class Shop {
       weight: 2,
       uses: 3,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'shortBow',
@@ -384,6 +407,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'kunai',
@@ -398,6 +422,7 @@ class Shop {
       weight: 1,
       uses: 3,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'handCrossbow',
@@ -412,6 +437,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'longBow',
@@ -427,6 +453,7 @@ class Shop {
       weight: 4,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'greatBow',
@@ -442,6 +469,7 @@ class Shop {
       weight: 5,
       uses: 0,
       value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'lightCrossbow',
@@ -457,6 +485,7 @@ class Shop {
       weight: 3,
       uses: 0,
       value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'handCannon',
@@ -471,6 +500,7 @@ class Shop {
       weight: 0,
       uses: 0,
       value: 600,
+      enchant: 0,
     ),
     Item(
       icon: 'heavyCrossbow',
@@ -486,6 +516,7 @@ class Shop {
       weight: 8,
       uses: 0,
       value: 600,
+      enchant: 0,
     ),
     Item(
       icon: 'musket',
@@ -500,6 +531,7 @@ class Shop {
       weight: 3,
       uses: 0,
       value: 700,
+      enchant: 0,
     ),
   ];
 
@@ -517,6 +549,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'grenades',
@@ -531,6 +564,7 @@ class Shop {
       weight: 1,
       uses: 3,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'wand',
@@ -545,6 +579,7 @@ class Shop {
       weight: 0,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'ritualDagger',
@@ -559,6 +594,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'magicSword',
@@ -573,6 +609,7 @@ class Shop {
       weight: 3,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'spellBook',
@@ -587,6 +624,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'magicAxe',
@@ -601,6 +639,7 @@ class Shop {
       weight: 4,
       uses: 0,
       value: 600,
+      enchant: 0,
     ),
     Item(
       icon: 'magicStaff',
@@ -615,6 +654,7 @@ class Shop {
       weight: 5,
       uses: 0,
       value: 700,
+      enchant: 0,
     ),
     Item(
       icon: 'ancientSword',
@@ -629,20 +669,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 1600,
-    ),
-    Item(
-      icon: 'ancientWarAxe',
-      name: 'ANCIENT WAR AXE',
-      itemClass: 'heavyWeapon',
-      inventorySpace: '2hand',
-      description: 'An old war axe that was imbued with magic powers.',
-      pDamage: 5,
-      pArmor: 0,
-      mDamage: 2,
-      mArmor: 0,
-      weight: 3,
-      uses: 0,
-      value: 1600,
+      enchant: 0,
     ),
     Item(
       icon: 'ancientBow',
@@ -657,6 +684,22 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 1600,
+      enchant: 0,
+    ),
+    Item(
+      icon: 'ancientWarAxe',
+      name: 'ANCIENT WAR AXE',
+      itemClass: 'heavyWeapon',
+      inventorySpace: '2hand',
+      description: 'An old war axe that was imbued with magic powers.',
+      pDamage: 6,
+      pArmor: 0,
+      mDamage: 2,
+      mArmor: 0,
+      weight: 4,
+      uses: 0,
+      value: 1700,
+      enchant: 0,
     ),
     Item(
       icon: 'ancientSpellbook',
@@ -671,6 +714,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 1900,
+      enchant: 0,
     ),
   ];
 
@@ -688,6 +732,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'gloves',
@@ -702,6 +747,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'buckler',
@@ -716,6 +762,7 @@ class Shop {
       weight: 0,
       uses: 0,
       value: 200,
+      enchant: 0,
     ),
 
 // I am removing so I have an even distribution of itens on this page
@@ -747,6 +794,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'lightShield',
@@ -761,6 +809,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 300,
+      enchant: 0,
     ),
     Item(
       icon: 'lightArmor',
@@ -775,6 +824,7 @@ class Shop {
       weight: 4,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'magicRobe',
@@ -789,6 +839,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 400,
+      enchant: 0,
     ),
     Item(
       icon: 'heavyShield',
@@ -803,6 +854,7 @@ class Shop {
       weight: 3,
       uses: 0,
       value: 500,
+      enchant: 0,
     ),
     Item(
       icon: 'fullHelmet',
@@ -817,6 +869,7 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 600,
+      enchant: 0,
     ),
     Item(
       icon: 'magicShield',
@@ -831,6 +884,7 @@ class Shop {
       weight: 3,
       uses: 0,
       value: 600,
+      enchant: 0,
     ),
     Item(
       icon: 'heavyArmor',
@@ -845,6 +899,7 @@ class Shop {
       weight: 7,
       uses: 0,
       value: 700,
+      enchant: 0,
     ),
     Item(
       icon: 'ancientGloves',
@@ -859,6 +914,7 @@ class Shop {
       weight: 0,
       uses: 0,
       value: 800,
+      enchant: 0,
     ),
     Item(
       icon: 'ancientBoots',
@@ -873,34 +929,7 @@ class Shop {
       weight: 1,
       uses: 0,
       value: 900,
-    ),
-    Item(
-      icon: 'ancientShield',
-      name: 'ANCIENT SHIELD',
-      itemClass: 'armor',
-      inventorySpace: '1hand',
-      description: 'An old shield that was imbued with magic powers.',
-      pDamage: 0,
-      pArmor: 3,
-      mDamage: 0,
-      mArmor: 2,
-      weight: 2,
-      uses: 0,
-      value: 1600,
-    ),
-    Item(
-      icon: 'ancientArmor',
-      name: 'ANCIENT ARMOR',
-      itemClass: 'armor',
-      inventorySpace: 'body',
-      description: 'An old armor that was imbued with magic powers.',
-      pDamage: 0,
-      pArmor: 5,
-      mDamage: 0,
-      mArmor: 2,
-      weight: 3,
-      uses: 0,
-      value: 1600,
+      enchant: 0,
     ),
     Item(
       icon: 'ancientHelmet',
@@ -915,6 +944,37 @@ class Shop {
       weight: 2,
       uses: 0,
       value: 1500,
+      enchant: 0,
+    ),
+    Item(
+      icon: 'ancientShield',
+      name: 'ANCIENT SHIELD',
+      itemClass: 'armor',
+      inventorySpace: '1hand',
+      description: 'An old shield that was imbued with magic powers.',
+      pDamage: 0,
+      pArmor: 3,
+      mDamage: 0,
+      mArmor: 2,
+      weight: 2,
+      uses: 0,
+      value: 1600,
+      enchant: 0,
+    ),
+    Item(
+      icon: 'ancientArmor',
+      name: 'ANCIENT ARMOR',
+      itemClass: 'armor',
+      inventorySpace: 'body',
+      description: 'An old armor that was imbued with magic powers.',
+      pDamage: 0,
+      pArmor: 5,
+      mDamage: 0,
+      mArmor: 2,
+      weight: 3,
+      uses: 0,
+      value: 1600,
+      enchant: 0,
     ),
   ];
 
@@ -932,6 +992,7 @@ class Shop {
       weight: 0,
       uses: 1,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'herbs',
@@ -946,6 +1007,7 @@ class Shop {
       weight: 0,
       uses: 1,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'book',
@@ -960,6 +1022,7 @@ class Shop {
       weight: 0,
       uses: 1,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'tool',
@@ -974,6 +1037,7 @@ class Shop {
       weight: 1,
       uses: 1,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'ammo',
@@ -988,6 +1052,7 @@ class Shop {
       weight: 0,
       uses: 5,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'food',
@@ -1002,6 +1067,7 @@ class Shop {
       weight: 1,
       uses: 1,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'key',
@@ -1016,6 +1082,7 @@ class Shop {
       weight: 0,
       uses: 1,
       value: 100,
+      enchant: 0,
     ),
     Item(
       icon: 'antidote',
@@ -1030,6 +1097,7 @@ class Shop {
       weight: 0,
       uses: 1,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'ward',
@@ -1045,6 +1113,7 @@ class Shop {
       weight: 1,
       uses: 1,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'resistancePotion',
@@ -1059,6 +1128,7 @@ class Shop {
       weight: 0,
       uses: 1,
       value: 200,
+      enchant: 0,
     ),
     Item(
       icon: 'healingPotion',
@@ -1073,6 +1143,22 @@ class Shop {
       weight: 0,
       uses: 1,
       value: 300,
+      enchant: 0,
+    ),
+    Item(
+      icon: 'magicRune',
+      name: 'MAGIC RUNE',
+      itemClass: 'resource',
+      inventorySpace: 'consumable',
+      description: 'A magic rune that can enchant an item.',
+      pDamage: 0,
+      pArmor: 0,
+      mDamage: 0,
+      mArmor: 0,
+      weight: 0,
+      uses: 1,
+      value: 600,
+      enchant: 0,
     ),
   ];
 

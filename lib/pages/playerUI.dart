@@ -265,6 +265,12 @@ class _PlayerUIState extends State<PlayerUI> {
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
                           GestureDetector(
+                              onLongPress: () {
+                                setState(() {
+                                  widget.dsix.getCurrentPlayer().gold += 500;
+                                });
+                                refreshPage();
+                              },
                               onTap: () {
                                 setState(() {
                                   widget.dsix.getCurrentPlayer().gold += 50;
@@ -289,6 +295,12 @@ class _PlayerUIState extends State<PlayerUI> {
                             ),
                           ),
                           GestureDetector(
+                              onLongPress: () {
+                                setState(() {
+                                  widget.dsix.getCurrentPlayer().gold -= 500;
+                                });
+                                refreshPage();
+                              },
                               onTap: () {
                                 setState(() {
                                   if (widget.dsix.getCurrentPlayer().gold > 0) {

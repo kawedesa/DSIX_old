@@ -3,6 +3,7 @@ import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../models/game/item.dart';
 import '../models/player/exceptions.dart';
+import 'package:dsixv02app/models/player/player.dart';
 
 class InventoryPage extends StatefulWidget {
   final Function() refresh;
@@ -22,6 +23,7 @@ class _InventoryStatePage extends State<InventoryPage> {
   Color offHandColor;
   Color bodyColor;
   List<String> ammoQuantity = [];
+  List<String> enchantQuantity = [];
   String buttonText;
 
   void checkColor() {
@@ -93,6 +95,12 @@ class _InventoryStatePage extends State<InventoryPage> {
       return;
     }
 
+    //SHOW HOW MUCH ENCHANTMENT AN ITEM HAS
+    enchantQuantity = [];
+    for (int check = 0; check < item.enchant; check++) {
+      enchantQuantity.add('magicRune');
+    }
+
     //ADD AMMO TO THE DISPLAY
     ammoQuantity = [];
 
@@ -108,6 +116,8 @@ class _InventoryStatePage extends State<InventoryPage> {
       if (item.inventorySpace == 'consumable') {
         if (item.name == 'AMMO') {
           buttonText = 'REFIL';
+        } else if (item.name == 'MAGIC RUNE') {
+          buttonText = 'ENCHANT';
         } else {
           buttonText = 'USE';
         }
@@ -117,6 +127,46 @@ class _InventoryStatePage extends State<InventoryPage> {
     }
 
     showAlertDialogItemDetail(context, item, buttonText);
+  }
+
+  List<Player> availablePlayers = [];
+
+  void giveItem(Item item, String buttonText) {
+    String giveText = 'Select the player you want to give the item to.';
+
+    availablePlayers = [];
+
+    widget.dsix.players.forEach((element) {
+      if (element.characterFinished == true &&
+          element != widget.dsix.getCurrentPlayer()) {
+        availablePlayers.add(element);
+      }
+    });
+
+    if (availablePlayers.isEmpty == true) {
+      giveText = 'There are no other players.';
+    }
+
+    showAlertDialogGive(context, item, buttonText, giveText);
+  }
+
+  List<Item> availableItems = [];
+  void enchantItem(Item item) {
+    String enchantText = 'Select an item to enchant.';
+    availableItems = [];
+    widget.dsix.getCurrentPlayer().inventory.forEach((element) {
+      if (element.itemClass != 'resource' &&
+          element.itemClass != 'thrownWeapon' &&
+          element.enchant < 3) {
+        availableItems.add(element);
+      }
+    });
+
+    if (availableItems.isEmpty == true) {
+      enchantText = 'There are no items available.';
+    }
+
+    showAlertDialogEnchant(context, item, enchantText);
   }
 
   showAlertDialogItemDetail(
@@ -166,7 +216,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     width: double.infinity,
                     child: Stack(children: <Widget>[
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(270, 5, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(260, 5, 0, 0),
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop(true);
@@ -179,7 +229,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
-                            size: 20,
+                            size: 30,
                           ),
                         ),
                       ),
@@ -196,6 +246,29 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     const EdgeInsets.symmetric(horizontal: 0),
                                 child: SvgPicture.asset(
                                   'assets/item/${ammoQuantity[index]}.svg',
+                                  color: widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerColor
+                                      .primaryColor,
+                                ),
+                              );
+                            }),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(15),
+                        child: Container(
+                          width: 27,
+                          child: GridView.count(
+                            crossAxisCount: 1,
+                            children:
+                                List.generate(enchantQuantity.length, (index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 0),
+                                child: SvgPicture.asset(
+                                  'assets/item/${enchantQuantity[index]}.svg',
                                   color: widget.dsix
                                       .getCurrentPlayer()
                                       .playerColor
@@ -398,10 +471,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 5, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      useOrEquip(item, buttonText);
+                      if (buttonText == 'ENCHANT') {
+                        enchantItem(item);
+                      } else {
+                        useOrEquip(item, buttonText);
+                      }
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.058,
@@ -453,6 +530,66 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ),
 
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+
+                      giveItem(item, buttonText);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.058,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .primaryColor,
+                          width: 2, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                child: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: widget.dsix
+                                      .getCurrentPlayer()
+                                      .playerColor
+                                      .primaryColor,
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'GIVE',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
                   child: TextButton(
@@ -576,7 +713,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
                     child: Text(
-                      'The item will be sold for half of it\'s cost!',
+                      'The item will be sold for \$${item.value ~/ 2}. Are you sure about that?',
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                         height: 1.25,
@@ -598,7 +735,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     ),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.058,
@@ -656,7 +793,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                     ),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.058,
@@ -718,6 +855,314 @@ class _InventoryStatePage extends State<InventoryPage> {
       context: context,
       builder: (BuildContext context) {
         return alerta;
+      },
+    );
+  }
+
+  showAlertDialogGive(
+      BuildContext context, Item item, String buttonText, String giveText) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.black,
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              content: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:
+                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                    width: 2.5, //                   <--- border width here
+                  ),
+                ),
+                width: 300,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        color: widget.dsix
+                            .getCurrentPlayer()
+                            .playerColor
+                            .primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                          child: Center(
+                            child: Text(
+                              'GIVE ${item.name}',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.3,
+                                fontSize: 25.0,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(35, 15, 35, 10),
+                          child: Text(
+                            giveText,
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              height: 1.25,
+                              fontSize: 19,
+                              fontFamily: 'Calibri',
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50.0 * availablePlayers.length,
+                        child: ListView.builder(
+                            itemCount: availablePlayers.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    availablePlayers[index]
+                                        .inventory
+                                        .add(item.copyItem());
+                                    widget.dsix
+                                        .getCurrentPlayer()
+                                        .destroyItem(item, buttonText);
+                                    widget.refresh();
+                                    Navigator.pop(context);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                  ),
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.058,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: availablePlayers[index]
+                                            .playerColor
+                                            .primaryColor,
+                                        width:
+                                            2, //                   <--- border width here
+                                      ),
+                                    ),
+                                    child: Stack(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 10, 0),
+                                              child: Icon(
+                                                Icons.keyboard_arrow_right,
+                                                color: availablePlayers[index]
+                                                    .playerColor
+                                                    .primaryColor,
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            '${availablePlayers[index].playerColor.name}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.5,
+                                              fontFamily: 'Calibri',
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
+
+  showAlertDialogEnchant(BuildContext context, Item item, String enchantText) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.black,
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              content: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color:
+                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                    width: 2.5, //                   <--- border width here
+                  ),
+                ),
+                width: 300,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        color: widget.dsix
+                            .getCurrentPlayer()
+                            .playerColor
+                            .primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                          child: Center(
+                            child: Text(
+                              'ENCHANT',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.3,
+                                fontSize: 25.0,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(35, 15, 35, 10),
+                          child: Text(
+                            enchantText,
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              height: 1.25,
+                              fontSize: 19,
+                              fontFamily: 'Calibri',
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50.0 * availableItems.length,
+                        child: ListView.builder(
+                            itemCount: availableItems.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    availableItems[index].enchant++;
+                                    availableItems[index].value += 600;
+
+                                    if (availableItems[index].itemClass ==
+                                        'armor') {
+                                      availableItems[index].mArmor++;
+                                    } else {
+                                      availableItems[index].mDamage++;
+                                    }
+                                    widget.dsix
+                                        .getCurrentPlayer()
+                                        .destroyItem(item, 'ENCHANT');
+                                    widget.refresh();
+                                    Navigator.pop(context);
+                                    Navigator.pop(context);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                  ),
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.058,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: widget.dsix
+                                            .getCurrentPlayer()
+                                            .playerColor
+                                            .primaryColor,
+                                        width:
+                                            2, //                   <--- border width here
+                                      ),
+                                    ),
+                                    child: Stack(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 10, 0),
+                                              child: Icon(
+                                                Icons.plus_one,
+                                                color: widget.dsix
+                                                    .getCurrentPlayer()
+                                                    .playerColor
+                                                    .primaryColor,
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            '${availableItems[index].name}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.5,
+                                              fontFamily: 'Calibri',
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
       },
     );
   }
@@ -795,7 +1240,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                     ),
                     child: Container(
                       height: MediaQuery.of(context).size.height * 0.058,
@@ -847,7 +1292,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 15),
+                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);

@@ -676,7 +676,7 @@ class _ActionPageState extends State<ActionPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
                   child: RichText(
                     textAlign: TextAlign.justify,
                     text: new TextSpan(
@@ -708,7 +708,7 @@ class _ActionPageState extends State<ActionPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return TextButton(
                         style: TextButton.styleFrom(
-                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                         ),
                         onPressed: () {
                           newOption =

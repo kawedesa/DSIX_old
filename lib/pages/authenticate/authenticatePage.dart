@@ -516,7 +516,69 @@ class _AuthenticatePageState extends State<AuthenticatePage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    ),
+                    onPressed: () async {
+                      dynamic result = await _auth.signInAnon();
+                      if (result == null) {
+                        setState(() {
+                          loading = false;
+                          error = 'Could not sign in.';
+                        });
+                      }
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: MediaQuery.of(context).size.width * 0.62,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[600],
+                          width:
+                              2.5, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                child: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.grey[600],
+                                  size: 30,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                            child: Center(
+                              child: Text(
+                                'SKIP',
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.grey[600],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                   child: TextButton(
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
