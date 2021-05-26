@@ -85,6 +85,24 @@ class Npc {
     }
   }
 
+  void changeAmount(int value) {
+    if (this.amount + value < 1) {
+      this.amount = 0;
+      this.currentHealth = 0;
+      this.maxHealth = 0;
+      this.totalXp = 0;
+      this.totalLoot = 0;
+      return;
+    }
+
+    this.amount += value;
+    this.maxHealth += this.baseHealth * value;
+    this.currentHealth += this.baseHealth * value;
+
+    this.totalXp += this.baseXp * value;
+    this.totalLoot += (this.baseLoot * value).toInt();
+  }
+
   void chooseAmount(int value) {
     if (this.amount + value < 1) {
       this.amount = 1;

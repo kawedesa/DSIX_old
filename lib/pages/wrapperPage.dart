@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/pages/homePage.dart';
 import 'package:provider/provider.dart';
-import 'authenticate/authenticatePage.dart';
+import 'authenticatePage.dart';
 
 import 'package:dsixv02app/models/dsixUser.dart';
 

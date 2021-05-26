@@ -4,7 +4,6 @@ import 'playersPage.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 class HomePage extends StatefulWidget {
   @override

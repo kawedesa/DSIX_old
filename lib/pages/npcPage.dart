@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'package:dsixv02app/models/gm/npc.dart';
 import '../models/gm/npcSkill.dart';
 
 class NpcPage extends StatefulWidget {
@@ -74,6 +74,327 @@ class _NpcPageState extends State<NpcPage> {
     widget.dsix.gm.createLoot(widget.dsix.gm.selectedNpc.totalLoot);
     widget.dsix.gm.lootList.last.name = '${widget.dsix.gm.selectedNpc.name}';
     deleteNpc();
+  }
+
+  int displayAmount;
+  int displayXp;
+  int displayLoot;
+
+  void changeAmount(int value) {
+    if (displayAmount + value < 1) {
+      displayAmount = 0;
+      return;
+    }
+
+    displayAmount += value;
+
+    displayXp = widget.dsix.gm.selectedNpc.baseXp * displayAmount;
+    displayLoot = (widget.dsix.gm.selectedNpc.baseLoot * displayAmount).toInt();
+  }
+
+  showAlertDialogAmount(BuildContext context, Npc npc) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.black,
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              content: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey[700],
+                    width: 2.5, //                   <--- border width here
+                  ),
+                ),
+                width: 300,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        color: Colors.grey[700],
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                          child: Center(
+                            child: Text(
+                              'HOW MANY?',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.3,
+                                fontSize: 25.0,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        // color: Colors.pink,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                child: Row(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Expanded(
+                                      flex: 1,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            changeAmount(-5);
+                                          });
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.centerRight,
+                                          child: Text(
+                                            '- 5',
+                                            style: TextStyle(
+                                              fontFamily: 'Headline',
+                                              fontSize: 20.0,
+                                              color: Colors.white,
+                                              letterSpacing: 2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 3,
+                                      child: Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            10, 0, 10, 0),
+                                        child: Center(
+                                            child: Container(
+                                          height: 125,
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    changeAmount(1);
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  Icons.keyboard_arrow_up,
+                                                  color: Colors.white,
+                                                  size: 35,
+                                                ),
+                                              ),
+                                              Container(
+                                                // width: 100,
+                                                // height: 100,
+                                                // color: Colors.white,
+                                                child: Center(
+                                                  child: Text(
+                                                    '$displayAmount',
+                                                    style: TextStyle(
+                                                      fontFamily: 'Headline',
+                                                      height: 1.3,
+                                                      fontSize: 35.0,
+                                                      color: Colors.grey[700],
+                                                      letterSpacing: 2,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    changeAmount(-1);
+                                                  });
+                                                },
+                                                child: Icon(
+                                                  Icons.keyboard_arrow_down,
+                                                  color: Colors.white,
+                                                  size: 35,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          // color: Colors.red,
+                                        )),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      flex: 1,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            changeAmount(5);
+                                          });
+                                        },
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            '+ 5',
+                                            style: TextStyle(
+                                              fontFamily: 'Headline',
+                                              fontSize: 20.0,
+                                              color: Colors.white,
+                                              letterSpacing: 2,
+                                            ),
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        SvgPicture.asset(
+                                          'assets/gm/npc/loot.svg',
+                                          color: Colors.grey[700],
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.065,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 0, 3, 0),
+                                          child: Text(
+                                            '$displayLoot',
+                                            style: TextStyle(
+                                              fontFamily: 'Headline',
+                                              height: 1,
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              letterSpacing: 3,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        SvgPicture.asset(
+                                          'assets/gm/npc/xp.svg',
+                                          color: Colors.grey[700],
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.065,
+                                        ),
+                                        Padding(
+                                          padding: const EdgeInsets.fromLTRB(
+                                              10, 0, 3, 0),
+                                          child: Text(
+                                            '$displayXp',
+                                            style: TextStyle(
+                                              fontFamily: 'Headline',
+                                              height: 1,
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              letterSpacing: 3,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              TextButton(
+                                style: TextButton.styleFrom(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                ),
+                                onPressed: () {
+                                  setState(() {
+                                    npc.changeAmount(
+                                        displayAmount - npc.amount);
+                                    widget.refresh();
+                                    Navigator.pop(context);
+                                  });
+                                },
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.058,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey[400],
+                                      width:
+                                          2, //                   <--- border width here
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    alignment: AlignmentDirectional.centerEnd,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 10, 0),
+                                            child: Icon(
+                                              Icons.check,
+                                              color: Colors.grey[400],
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'CONFIRM',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.5,
+                                            fontFamily: 'Calibri',
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -468,29 +789,38 @@ class _NpcPageState extends State<NpcPage> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/gm/npc/race/icon/${widget.dsix.gm.selectedNpc.icon}.svg',
-                              color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.06,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                              child: Text(
-                                '${widget.dsix.gm.selectedNpc.amount}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
+                        GestureDetector(
+                          onTap: () {
+                            displayAmount = widget.dsix.gm.selectedNpc.amount;
+                            displayXp = widget.dsix.gm.selectedNpc.totalXp;
+                            displayLoot = widget.dsix.gm.selectedNpc.totalLoot;
+                            showAlertDialogAmount(
+                                context, widget.dsix.gm.selectedNpc);
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: <Widget>[
+                              SvgPicture.asset(
+                                'assets/gm/npc/race/icon/${widget.dsix.gm.selectedNpc.icon}.svg',
+                                color: Colors.grey[700],
+                                width: MediaQuery.of(context).size.width * 0.06,
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                child: Text(
+                                  '${widget.dsix.gm.selectedNpc.amount}',
+                                  style: TextStyle(
+                                    fontFamily: 'Headline',
+                                    height: 1,
+                                    fontSize: 15,
+                                    color: Colors.white,
+                                    letterSpacing: 3,
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.start,
