@@ -89,7 +89,7 @@ class _PlayerUIState extends State<PlayerUI> {
                                         .currentHealth += 1;
                                   }
                                 });
-                                refreshPage();
+                                refresh();
                               },
                               child: Icon(
                                 Icons.keyboard_arrow_up,
@@ -120,7 +120,7 @@ class _PlayerUIState extends State<PlayerUI> {
                                         .currentHealth -= 1;
                                   }
                                 });
-                                refreshPage();
+                                refresh();
                               },
                               child: Icon(
                                 Icons.keyboard_arrow_down,
@@ -269,13 +269,13 @@ class _PlayerUIState extends State<PlayerUI> {
                                 setState(() {
                                   widget.dsix.getCurrentPlayer().gold += 500;
                                 });
-                                refreshPage();
+                                refresh();
                               },
                               onTap: () {
                                 setState(() {
                                   widget.dsix.getCurrentPlayer().gold += 50;
                                 });
-                                refreshPage();
+                                refresh();
                               },
                               child: Icon(
                                 Icons.keyboard_arrow_up,
@@ -299,7 +299,7 @@ class _PlayerUIState extends State<PlayerUI> {
                                 setState(() {
                                   widget.dsix.getCurrentPlayer().gold -= 500;
                                 });
-                                refreshPage();
+                                refresh();
                               },
                               onTap: () {
                                 setState(() {
@@ -307,7 +307,7 @@ class _PlayerUIState extends State<PlayerUI> {
                                     widget.dsix.getCurrentPlayer().gold -= 50;
                                   }
                                 });
-                                refreshPage();
+                                refresh();
                               },
                               child: Icon(
                                 Icons.keyboard_arrow_down,
@@ -327,8 +327,85 @@ class _PlayerUIState extends State<PlayerUI> {
     );
   }
 
-  refreshPage() {
-    setState(() {});
+  String alertTitle;
+  String alertDescription;
+
+  showAlertDialogAlert(
+    BuildContext context,
+  ) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                width: 1.5, //                   <--- border width here
+              ),
+            ),
+            width: 300,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color:
+                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          alertTitle,
+                          style: TextStyle(
+                            fontFamily: 'Headline',
+                            height: 1.3,
+                            fontSize: 25.0,
+                            color: Colors.white,
+                            letterSpacing: 2,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
+                  child: Text(
+                    alertDescription,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      height: 1.25,
+                      fontSize: 19,
+                      fontFamily: 'Calibri',
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  refresh() {
+    setState(() {
+      widget.dsix.checkTurn();
+    });
   }
 
   int bottomSelectedIndex = 0;
@@ -510,14 +587,14 @@ class _PlayerUIState extends State<PlayerUI> {
         CharacterPage(
           dsix: widget.dsix,
         ),
-        ShopPage(dsix: widget.dsix, refresh: refreshPage),
+        ShopPage(dsix: widget.dsix, refresh: refresh),
         InventoryPage(
           dsix: widget.dsix,
-          refresh: refreshPage,
+          refresh: refresh,
         ),
         ActionPage(
           dsix: widget.dsix,
-          refresh: refreshPage,
+          refresh: refresh,
         ),
         HelpPage(
           dsix: widget.dsix,
@@ -554,6 +631,8 @@ class _PlayerUIState extends State<PlayerUI> {
   }
 
   Widget build(BuildContext context) {
+    List<bool> turn = widget.dsix.getCurrentPlayer().turn;
+
     return new Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
@@ -591,35 +670,106 @@ class _PlayerUIState extends State<PlayerUI> {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
-                GestureDetector(
-                  onTap: () {},
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                    child: Row(
-                      children: <Widget>[
-                        SvgPicture.asset(
-                          'assets/player/action.svg',
-                          color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.05,
-                        ),
-                        Text(
-                          ' ${widget.dsix.getCurrentPlayer().actionsTaken}',
-                          textAlign: TextAlign.left,
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.1,
-                            fontSize: 25,
-                            color: widget.dsix
-                                .getCurrentPlayer()
-                                .playerColor
-                                .secondaryColor,
-                            letterSpacing: 2,
-                          ),
-                        ),
-                      ],
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.dsix.getCurrentPlayer().playerTurn();
+
+                      turn = widget.dsix.getCurrentPlayer().turn;
+                      refresh();
+                    },
+                    child: SvgPicture.asset(
+                      'assets/player/action.svg',
+                      color: turn[0]
+                          ? widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .tertiaryColor
+                          : Colors.white,
+                      width: MediaQuery.of(context).size.width * 0.05,
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2.5, 0, 15, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      widget.dsix.getCurrentPlayer().playerTurn();
+                      turn = widget.dsix.getCurrentPlayer().turn;
+                      refresh();
+                    },
+                    child: SvgPicture.asset(
+                      'assets/player/action.svg',
+                      color: turn[1]
+                          ? widget.dsix
+                              .getCurrentPlayer()
+                              .playerColor
+                              .tertiaryColor
+                          : Colors.white,
+                      width: MediaQuery.of(context).size.width * 0.05,
+                    ),
+                  ),
+                ),
+                // Expanded(
+                //   child: ListView.builder(
+                //       itemCount: turn.length,
+                //       shrinkWrap: true,
+                //       itemBuilder: (BuildContext context, int index) {
+                //         return GestureDetector(
+                //           onTap: () {},
+                //           child: Container(
+                //             height: 5,
+                //             width: 0,
+                //             color: Colors.white,
+                //           ),
+                //           // child: SvgPicture.asset(
+                //           //   'assets/player/action.svg',
+                //           //   color: turn[index]
+                //           //       ? Colors.white
+                //           //       : widget.dsix
+                //           //           .getCurrentPlayer()
+                //           //           .playerColor
+                //           //           .secondaryColor,
+                //           //   width: MediaQuery.of(context).size.width * 0.05,
+                //           // ),
+                //         );
+                //       }),
+                // ),
+                // GestureDetector(
+                //   onTap: () {},
+                //   child: Padding(
+                //     padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                //     child: Row(
+                //       children: <Widget>[
+                //         SvgPicture.asset(
+                //           'assets/player/action.svg',
+                //           color: Colors.white,
+                //           width: MediaQuery.of(context).size.width * 0.05,
+                //         ),
+                //         SvgPicture.asset(
+                //           'assets/player/action.svg',
+                //           color: Colors.white,
+                //           width: MediaQuery.of(context).size.width * 0.05,
+                //         ),
+                //         // Text(
+                //         //   ' ${widget.dsix.getCurrentPlayer().actionsTaken}',
+                //         //   textAlign: TextAlign.left,
+                //         //   style: TextStyle(
+                //         //     fontFamily: 'Headline',
+                //         //     height: 1.1,
+                //         //     fontSize: 25,
+                //         //     color: widget.dsix
+                //         //         .getCurrentPlayer()
+                //         //         .playerColor
+                //         //         .secondaryColor,
+                //         //     letterSpacing: 2,
+                //         //   ),
+                //         // ),
+                //       ],
+                //     ),
+                //   ),
+                // ),
                 GestureDetector(
                   onTap: () {
                     showAlertDialogHealth(context);

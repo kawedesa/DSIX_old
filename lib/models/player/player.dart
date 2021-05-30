@@ -49,13 +49,10 @@ class Player {
   PlayerRace race = PlayerRace(
     'null',
     'RACES',
-    'There are many races that live in this world. They vary in size, culture and color. Click on the icons above to choose your race.',
+    'There are many races in this world. They vary in size, culture and color. Click on the icons above to choose a race.',
     [
-      Bonus(
-          'BONUS',
-          'bonus',
-          'Each race is unique and has different bonuses. Some are good, while others are bad. They affect how the game plays and the outcome of your actions.',
-          0)
+      Bonus('BONUS', 'bonus',
+          'Each race has different strenghs and weaknesses.', 0)
     ],
   );
 
@@ -165,13 +162,10 @@ class Player {
   PlayerBackground playerBackground = PlayerBackground(
       'null',
       'BACKGROUND',
-      'This represents your story. How you where raised and how people see you. Click on the icons above to choose your background.',
+      'This is your story. Where you were born, how you where raised and if people like you or not. Click on the icons above to choose a background.',
       [
-        Bonus(
-            'BONUS',
-            'bonus',
-            'All backgrounds are unique and have different bonuses. They can be items, gold, and passive attributes, like armor and damage.',
-            0)
+        Bonus('THINGS', 'bonus',
+            'Every background starts with different things.', 0)
       ],
       []);
 
@@ -265,237 +259,225 @@ class Player {
 
   List<PlayerAction> playerAction = [
     PlayerAction(
-        'action',
-        'ACTION',
-        'These are the actions your character can make throughout the game. Use the arrows on the left to add or remove points from a specific action. The more points you have, the easier it will be to get a good result on that action.',
-        [
-          Option(
-              'OPTIONS',
-              'Some actions have more than one option or effect to choose from.',
-              '',
-              '',
-              '',
-              '',
-              0)
-        ],
-        0,
-        false),
+      'action',
+      'ACTION',
+      'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
+      [
+        Option('OPTIONS', 'Each action has different options to choose from.',
+            '', '', '', '', 0)
+      ],
+      0,
+    ),
     PlayerAction(
-        'attack',
-        'ATTACK',
-        'You attack the target with your fists or weapon.',
-        [
-          Option(
-              'PUNCH',
-              'You punch the target with your bare fists, trying to knock them out.',
-              'You deal',
-              '',
-              'You miss the target and open your guard.',
-              'DAMAGE',
-              0),
-          Option(
-              'WEAPON',
-              'You attack the target with your weapon, trying to bring them down.',
-              'You deal',
-              '',
-              'You miss the target.',
-              'DAMAGE',
-              0),
-          Option(
-              'GRAPPLE',
-              'You try to grapple the target, holding them down.',
-              'You hold them in place and they are unable to move.',
-              'You hold them, but they can still move a little.',
-              'They escape your grasp.',
-              '',
-              0),
-        ],
-        0,
-        false),
+      'attack',
+      'ATTACK',
+      'You attack things.',
+      [
+        Option(
+            'PUNCH',
+            'You punch the target with your bare fists, trying to knock them out.',
+            'You deal',
+            '',
+            'You miss the target and open your guard.',
+            'DAMAGE',
+            0),
+        Option(
+            'WEAPON',
+            'You attack the target with your weapon, trying to bring them down.',
+            'You deal',
+            '',
+            'You miss the target.',
+            'DAMAGE',
+            0),
+        Option(
+            'GRAPPLE',
+            'You try to grapple the target, holding them down.',
+            'You hold them in place and they are unable to move.',
+            'You hold them, but they can still move a little.',
+            'They escape your grasp.',
+            '',
+            0),
+      ],
+      0,
+    ),
     PlayerAction(
-        'defend',
-        'DEFEND',
-        'You defend yourself and others around you.',
-        [
-          Option(
-              'PHYSICAL DEFENSE',
-              'You face the danger, raise your shield and brace for impact. ',
-              'You protect',
-              '',
-              'You can\'t raise your guard in time and take full damage.',
-              'PROTECT',
-              0),
-          Option(
-              'MAGIC DEFENSE',
-              'You cast an enchantment that defends yourself and others around you.',
-              'You protect',
-              '',
-              'You can\'t defend in time and take full damage.',
-              'PROTECT',
-              0),
-          Option(
-              'HELP',
-              'You help someone, making it easier for them to succeed.',
-              'You give them a real advantage.',
-              'You make things easier for them.',
-              'You get in the way and make things harder for them.',
-              '',
-              0),
-        ],
-        0,
-        false),
+      'defend',
+      'DEFEND',
+      'You protect things.',
+      [
+        Option(
+            'PHYSICAL DEFENSE',
+            'You face the danger, raise your shield and brace for impact. ',
+            'You protect',
+            '',
+            'You can\'t raise your guard in time and take full damage.',
+            'PROTECT',
+            0),
+        Option(
+            'MAGIC DEFENSE',
+            'You cast an enchantment that defends yourself and others around you.',
+            'You protect',
+            '',
+            'You can\'t defend in time and take full damage.',
+            'PROTECT',
+            0),
+        Option(
+            'HELP',
+            'You help someone, making it easier for them to succeed.',
+            'You give them a real advantage.',
+            'You make things easier for them.',
+            'You get in the way and make things harder for them.',
+            '',
+            0),
+      ],
+      0,
+    ),
     PlayerAction(
-        'look',
-        'LOOK',
-        'You look around and search for something.',
-        [
-          Option(
-              'RESOURCES',
-              'You search for something useful, like potions, food, and resources.',
-              'You find something useful.',
-              '',
-              'You find something bad',
-              'LOOT',
-              0),
-          Option(
-              'INFORMATION',
-              'You look around and try to gather more information.',
-              'You gather meaningful information.',
-              'You gather information, but it costs you.',
-              'You find something bad.',
-              '',
-              0),
-          // Option(
-          //     'DANGER',
-          //     'You search for signs of danger, trying to prevent an encounter.',
-          //     'You spot danger before it becomes a problem.',
-          //     'You spot danger coming your way.',
-          //     'You are exposed to a hidden danger.',
-          //     '',
-          //     0),
-          Option(
-              'PLACE',
-              'You try to gather more information about your surroundings.',
-              'You find a hidden passage, door or secrete.',
-              'You find something, but it\'s blocked, guarded or out of reach.',
-              'You find something bad',
-              '',
-              0)
-        ],
-        0,
-        false),
+      'look',
+      'LOOK',
+      'You look around and search for things.',
+      [
+        Option(
+            'RESOURCES',
+            'You search for something useful, like potions, food, and resources.',
+            'You find something useful.',
+            '',
+            'You find something bad',
+            'LOOT',
+            0),
+        Option(
+            'INFORMATION',
+            'You look around and try to gather more information.',
+            'You gather meaningful information.',
+            'You gather information, but it costs you.',
+            'You find something bad.',
+            '',
+            0),
+        // Option(
+        //     'DANGER',
+        //     'You search for signs of danger, trying to prevent an encounter.',
+        //     'You spot danger before it becomes a problem.',
+        //     'You spot danger coming your way.',
+        //     'You are exposed to a hidden danger.',
+        //     '',
+        //     0),
+        Option(
+            'PLACE',
+            'You try to gather more information about your surroundings.',
+            'You find a hidden passage, door or secrete.',
+            'You find something, but it\'s blocked, guarded or out of reach.',
+            'You find something bad',
+            '',
+            0)
+      ],
+      0,
+    ),
     PlayerAction(
-        'talk',
-        'TALK',
-        'You talk to someone that can understand you.',
-        [
-          Option(
-              'TRADE',
-              'You try to strike a deal on your favor.',
-              'They accept your offer.',
-              'They accept, but ask for more in return.',
-              'The deal is off and they dislike you.',
-              '',
-              0),
-          Option(
-              'INFORMATION',
-              'You talk to someone and try to gather meaningful information.',
-              'You receive valuable information.',
-              'They will share what they know, but ask for something in return.',
-              'You receive bad news.',
-              '',
-              0),
-          Option(
-              'CONVINCE',
-              'You convince people to follow your lead or see things your way.',
-              'You change their minds.',
-              'They see your point, but ask for something in return.',
-              'They are offended and dislike you.',
-              '',
-              0),
-          Option(
-              'ENTERTAIN',
-              'You entertain people around you.',
-              'Everyone loves your performance and become friendly.',
-              'Some people enjoy your performance and become friendly, while others are not that impressed.',
-              'They think you suck and are mean to you.',
-              '',
-              0),
-        ],
-        0,
-        false),
+      'talk',
+      'TALK',
+      'You talk to someone that can understand you.',
+      [
+        Option(
+            'TRADE',
+            'You try to strike a deal on your favor.',
+            'They accept your offer.',
+            'They accept, but ask for more in return.',
+            'The deal is off and they dislike you.',
+            '',
+            0),
+        Option(
+            'INFORMATION',
+            'You talk to someone and try to gather meaningful information.',
+            'You receive valuable information.',
+            'They will share what they know, but ask for something in return.',
+            'You receive bad news.',
+            '',
+            0),
+        Option(
+            'CONVINCE',
+            'You convince people to follow your lead or see things your way.',
+            'You change their minds.',
+            'They see your point, but ask for something in return.',
+            'They are offended and dislike you.',
+            '',
+            0),
+        Option(
+            'ENTERTAIN',
+            'You entertain people around you.',
+            'Everyone loves your performance and becomes friendly.',
+            'Some people enjoy your performance and become friendly.',
+            'They think you suck and are mean to you.',
+            '',
+            0),
+      ],
+      0,
+    ),
     PlayerAction(
-        'move',
-        'MOVE',
-        'You jump, climb, swim, dodge, hide, or escape.',
-        [
-          Option(
-              'DODGE',
-              'You dodge and take no damage.',
-              'You dodge and take no damage.',
-              'You dodge partially and take half damage.',
-              'You can\'t dodge in time and take damage.',
-              '',
-              0),
-          Option(
-              'ESCAPE',
-              'You release your shackles, run away from danger or free yourself from a tough situation.',
-              'You escape without trouble.',
-              'You escape, but call unwanted attention.',
-              'You can\'t escape.',
-              '',
-              0),
-          Option(
-              'HIDE',
-              'You avoid being seen by someone or sneak pass some guards.',
-              'You are hidden.',
-              'You are noticed.',
-              'You are exposed.',
-              '',
-              0),
-          Option(
-              'JUMP',
-              'You jump over a gap, try to reach for something or pass over an obstacle.',
-              'You land where you wanted.',
-              'You land somewhere close.',
-              'You stumble and fail.',
-              '',
-              0),
-          Option(
-              'CLIMB',
-              'You climb a wall, a rope or the back of a giant.',
-              'You have no trouble.',
-              'You face some difficulty.',
-              'You slide and fall.',
-              '',
-              0),
-          Option(
-              'SWIM',
-              'You swim, dive or hold your breath under water.',
-              'You have no trouble.',
-              'You face some difficulty.',
-              'You can\'t stay afloat.',
-              '',
-              0)
-        ],
-        0,
-        false),
+      'move',
+      'MOVE',
+      'You move around, hide or try to escape.',
+      [
+        Option(
+            'DODGE',
+            'You dodge and take no damage.',
+            'You dodge and take no damage.',
+            'You dodge partially and take half damage.',
+            'You can\'t dodge in time and take damage.',
+            '',
+            0),
+        Option(
+            'ESCAPE',
+            'You release your shackles, run away from danger or free yourself from a tough situation.',
+            'You escape without trouble.',
+            'You escape, but call unwanted attention.',
+            'You can\'t escape.',
+            '',
+            0),
+        Option(
+            'HIDE',
+            'You avoid being seen by someone or sneak pass some guards.',
+            'You are hidden.',
+            'You are noticed.',
+            'You are exposed.',
+            '',
+            0),
+        Option(
+            'JUMP',
+            'You jump over a gap, try to reach for something or pass over an obstacle.',
+            'You land where you wanted.',
+            'You land somewhere close.',
+            'You stumble and fail.',
+            '',
+            0),
+        Option(
+            'CLIMB',
+            'You climb a wall, a rope or the back of a giant.',
+            'You have no trouble.',
+            'You face some difficulty.',
+            'You slide and fall.',
+            '',
+            0),
+        Option(
+            'SWIM',
+            'You swim, dive or hold your breath under water.',
+            'You have no trouble.',
+            'You face some difficulty.',
+            'You can\'t stay afloat.',
+            '',
+            0)
+      ],
+      0,
+    ),
     PlayerAction(
-        'skill',
-        'SKILL',
-        'This is your signature move and what you are known for. Choose your skill by clicking on the icons above.',
-        [
-          Option(
-              'OPTIONS',
-              'Some skills have more than one option or effect to choose from.',
-              'Success.',
-              'Half Success.',
-              'Fail.',
-              '',
-              0)
-        ],
-        0,
-        false),
+      'skill',
+      'SKILL',
+      'This is your special move and what you are known for. Choose your skill by clicking on the icons above.',
+      [
+        Option('OPTIONS', 'Each skill has different options to choose from.',
+            'Success.', 'Half Success.', 'Fail.', '', 0)
+      ],
+      0,
+    ),
   ];
 
   void chooseSkill(int index) {
@@ -556,7 +538,7 @@ class Player {
           this.currentHealth = this.maxHealth;
         }
         this.inventory.remove(item);
-
+        playerTurn();
         break;
 
       case 'FOOD':
@@ -568,7 +550,7 @@ class Player {
           this.currentHealth = this.maxHealth;
         }
         this.inventory.remove(item);
-
+        playerTurn();
         break;
 
       case 'MAGIC RUNE':
@@ -585,7 +567,7 @@ class Player {
           this.currentHealth = this.maxHealth;
         }
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'RESISTANCE POTION':
         print('here');
@@ -594,27 +576,27 @@ class Player {
         this.mArmor += 3;
 
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'KEY':
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'BOOK':
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'HERBS':
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'TOOL':
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'WARD':
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'ANTIDOTE':
         this.effectList.forEach((element) {
@@ -623,7 +605,7 @@ class Player {
         this.effects();
 
         this.inventory.remove(item);
-
+        playerTurn();
         break;
       case 'AMMO':
         if (item.uses > 4) {
@@ -1021,10 +1003,9 @@ class Player {
 
 //ACTION
 
-  void action(bool focus, Option option) {
-    this.effects();
-    this.actionsTaken++;
-    this.focus(focus);
+  void action(Option option) {
+    playerTurn();
+    // this.focus(focus);
     if (option.name == 'WEAPON') {
       this.reduceAmmo();
     }
@@ -1080,6 +1061,41 @@ class Player {
 
 //EFFECTS
 
+// PLAYER TURN
+
+  bool endTurn = false;
+
+  List<bool> turn = [false, false];
+
+  void newTurn() {
+    turn = [false, false];
+    endTurn = false;
+  }
+
+  void checkTurn() {
+    if (turn.contains(false)) {
+      endTurn = false;
+    } else {
+      endTurn = true;
+    }
+  }
+
+  void playerTurn() {
+    if (endTurn) {
+      return;
+    }
+    this.actionsTaken++;
+    this.effects();
+
+    if (turn[0]) {
+      turn[1] = true;
+    } else {
+      turn[0] = true;
+    }
+
+    checkTurn();
+  }
+
   void effects() {
     if (this.effectList.isEmpty == true) {
       return;
@@ -1094,11 +1110,11 @@ class Player {
         return;
       }
       switch (element.name) {
-        case 'focus':
-          {
-            this.playerAction[6].value++;
-          }
-          break;
+        // case 'focus':
+        //   {
+        //     this.playerAction[6].value++;
+        //   }
+        //   break;
 
         case 'RESISTANCE POTION':
           {
@@ -1111,17 +1127,17 @@ class Player {
     this.effectList.removeWhere((element) => element.duration < 1);
   }
 
-  void focus(bool focus) {
-    if (focus == true) {
-      this.effectList.add(Effect(
-          playerAction[6].icon,
-          'focus',
-          'This action requires you to focus and it will have a lower chance of success if taken consecutively.',
-          -1,
-          1));
-      this.playerAction[6].value--;
-    }
-  }
+  // void focus(bool focus) {
+  //   if (focus == true) {
+  //     this.effectList.add(Effect(
+  //         playerAction[6].icon,
+  //         'focus',
+  //         'This action requires you to focus and it will have a lower chance of success if taken consecutively.',
+  //         -1,
+  //         1));
+  //     this.playerAction[6].value--;
+  //   }
+  // }
 
   List<String> lootResources(int value) {
     List<String> itemList = [];

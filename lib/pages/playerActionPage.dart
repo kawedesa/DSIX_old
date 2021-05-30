@@ -23,12 +23,12 @@ class ActionPage extends StatefulWidget {
 
 class _ActionPageState extends State<ActionPage> {
   PlayerAction displayedAction = PlayerAction(
-      'action',
-      'ACTION',
-      'These are the actions your character can make in the game. Each one will have a different outcome depending on your luck.',
-      [],
-      0,
-      false);
+    'action',
+    'ACTION',
+    'These are the actions your character can make in the game. Each one will have a different outcome depending on your luck.',
+    [],
+    0,
+  );
 
   String displaySum = '';
   Widget button;
@@ -36,8 +36,8 @@ class _ActionPageState extends State<ActionPage> {
   Dice die = Dice('Roll', 1);
   int bonus;
   Color resultColor;
-  String focusText1 = '';
-  String focusText2 = '';
+  // String focusText1 = '';
+  // String focusText2 = '';
   double textSize;
 
   List<bool> actionSelection;
@@ -69,7 +69,7 @@ class _ActionPageState extends State<ActionPage> {
     result += bonus;
     displaySum = '${result - bonus} + $bonus = $result';
 
-    widget.dsix.getCurrentPlayer().action(displayedAction.focus, option);
+    widget.dsix.getCurrentPlayer().action(option);
 
     option.useOption(result);
 
@@ -99,6 +99,15 @@ class _ActionPageState extends State<ActionPage> {
   List<String> itemList = [];
 
   void roll(int diceNumber, Option option) {
+    widget.dsix.getCurrentPlayer().checkTurn();
+    widget.dsix.checkTurn();
+    if (widget.dsix.getCurrentPlayer().endTurn) {
+      alertTitle = 'WAIT';
+      alertDescription = 'You already acted this turn, wait for the next turn.';
+      showAlertDialogAlert(context);
+      return;
+    }
+
     diceList = [];
 
     for (int check = 0; check < diceNumber; check++) {
@@ -119,12 +128,12 @@ class _ActionPageState extends State<ActionPage> {
       } on NoAmmoException catch (e) {
         alertTitle = e.title;
         alertDescription = e.message;
-        showAlertDialogCheckWeapon(context);
+        showAlertDialogAlert(context);
         return;
       } on NoWeaponException catch (e) {
         alertTitle = e.title;
         alertDescription = e.message;
-        showAlertDialogCheckWeapon(context);
+        showAlertDialogAlert(context);
         return;
       }
     }
@@ -500,7 +509,7 @@ class _ActionPageState extends State<ActionPage> {
   String alertTitle;
   String alertDescription;
 
-  showAlertDialogCheckWeapon(
+  showAlertDialogAlert(
     BuildContext context,
   ) {
     AlertDialog alerta = AlertDialog(
@@ -621,13 +630,13 @@ class _ActionPageState extends State<ActionPage> {
                             displayedAction = widget.dsix
                                 .getCurrentPlayer()
                                 .playerAction[index + 1];
-                            if (displayedAction.focus == true) {
-                              focusText1 = ' You need to';
-                              focusText2 = ' focus.';
-                            } else {
-                              focusText1 = '';
-                              focusText2 = '';
-                            }
+                            // if (displayedAction.focus == true) {
+                            //   focusText1 = ' You need to';
+                            //   focusText2 = ' focus.';
+                            // } else {
+                            //   focusText1 = '';
+                            //   focusText2 = '';
+                            // }
                           });
                         },
                         child: SvgPicture.asset(
@@ -688,15 +697,15 @@ class _ActionPageState extends State<ActionPage> {
                       ),
                       children: <TextSpan>[
                         TextSpan(text: displayedAction.description),
-                        TextSpan(text: focusText1),
-                        TextSpan(
-                            text: focusText2,
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: widget.dsix
-                                    .getCurrentPlayer()
-                                    .playerColor
-                                    .primaryColor)),
+                        // TextSpan(text: focusText1),
+                        // TextSpan(
+                        //     text: focusText2,
+                        //     style: new TextStyle(
+                        //         fontWeight: FontWeight.bold,
+                        //         color: widget.dsix
+                        //             .getCurrentPlayer()
+                        //             .playerColor
+                        //             .primaryColor)),
                       ],
                     ),
                   ),

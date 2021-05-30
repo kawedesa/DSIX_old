@@ -19,158 +19,152 @@ class PlayerAttributePage extends StatefulWidget {
 
 class _PlayerAttributePageState extends State<PlayerAttributePage> {
   PlayerAction displayedAction = PlayerAction(
-      'action',
-      'ACTION',
-      'These are the actions your character can make throughout the game. Use the arrows on the left to add or remove points from a specific action. The more points you have, the easier it will be to get a good result on that action.',
-      [
-        Option(
-            'OPTIONS',
-            'Some actions have more than one option or effect to choose from.',
-            '',
-            '',
-            '',
-            '',
-            0)
-      ],
-      0,
-      false);
+    'action',
+    'ACTION',
+    'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
+    [
+      Option('OPTIONS', 'Each action has different options to choose from.', '',
+          '', '', '', 0)
+    ],
+    0,
+  );
 
   int indexAction = 1;
   List<bool> actionSelection;
 
-  Widget focusButton = Container();
-  String focusText1 = '';
-  String focusText2 = '';
+  // Widget focusButton = Container();
+  // String focusText1 = '';
+  // String focusText2 = '';
 
-  void focus() {
-    if (displayedAction.focus == false) {
-      focusText1 = '';
-      focusText2 = '';
-      focusButton = Container();
-    } else {
-      focusText1 = ' You need to';
-      focusText2 = '  focus.';
-      focusButton = TextButton(
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-        ),
-        onPressed: () {
-          showAlertDialogfocus(context);
-        },
-        child: Container(
-          height: MediaQuery.of(context).size.height * 0.058,
-          width: double.infinity,
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-              width: 2, //                   <--- border width here
-            ),
-          ),
-          child: Stack(
-            alignment: AlignmentDirectional.centerEnd,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                    child: SvgPicture.asset(
-                      'assets/ui/help.svg',
-                      color: widget.dsix
-                          .getCurrentPlayer()
-                          .playerColor
-                          .primaryColor,
-                      width: MediaQuery.of(context).size.width * 0.04,
-                    ),
-                  ),
-                ],
-              ),
-              Center(
-                child: Text(
-                  'FOCUS',
-                  style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: 1.5,
-                    fontFamily: 'Calibri',
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-    }
-  }
+  // void focus() {
+  //   if (displayedAction.focus == false) {
+  //     focusText1 = '';
+  //     focusText2 = '';
+  //     focusButton = Container();
+  //   } else {
+  //     focusText1 = ' You need to';
+  //     focusText2 = '  focus.';
+  //     focusButton = TextButton(
+  //       style: TextButton.styleFrom(
+  //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+  //       ),
+  //       onPressed: () {
+  //         showAlertDialogfocus(context);
+  //       },
+  //       child: Container(
+  //         height: MediaQuery.of(context).size.height * 0.058,
+  //         width: double.infinity,
+  //         decoration: BoxDecoration(
+  //           border: Border.all(
+  //             color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+  //             width: 2, //                   <--- border width here
+  //           ),
+  //         ),
+  //         child: Stack(
+  //           alignment: AlignmentDirectional.centerEnd,
+  //           children: [
+  //             Column(
+  //               mainAxisAlignment: MainAxisAlignment.center,
+  //               crossAxisAlignment: CrossAxisAlignment.start,
+  //               children: <Widget>[
+  //                 Padding(
+  //                   padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+  //                   child: SvgPicture.asset(
+  //                     'assets/ui/help.svg',
+  //                     color: widget.dsix
+  //                         .getCurrentPlayer()
+  //                         .playerColor
+  //                         .primaryColor,
+  //                     width: MediaQuery.of(context).size.width * 0.04,
+  //                   ),
+  //                 ),
+  //               ],
+  //             ),
+  //             Center(
+  //               child: Text(
+  //                 'FOCUS',
+  //                 style: TextStyle(
+  //                   fontSize: 14,
+  //                   fontWeight: FontWeight.bold,
+  //                   letterSpacing: 1.5,
+  //                   fontFamily: 'Calibri',
+  //                   color: Colors.white,
+  //                 ),
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 
-  showAlertDialogfocus(BuildContext context) {
-    AlertDialog alerta = AlertDialog(
-      backgroundColor: Colors.black,
-      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-                width: 2.5, //                   <--- border width here
-              ),
-            ),
-            width: 300,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-                    child: Center(
-                      child: Text(
-                        'focus',
-                        style: TextStyle(
-                          fontFamily: 'Headline',
-                          height: 1.3,
-                          fontSize: 25.0,
-                          color: Colors.white,
-                          letterSpacing: 2,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
-                  child: Text(
-                    'You need to focus when using this skill and the chance of success will decrease if you use it consecutively.',
-                    textAlign: TextAlign.justify,
-                    style: TextStyle(
-                      height: 1.25,
-                      fontSize: 19,
-                      fontFamily: 'Calibri',
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
+  // showAlertDialogfocus(BuildContext context) {
+  //   AlertDialog alerta = AlertDialog(
+  //     backgroundColor: Colors.black,
+  //     contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+  //     content: Column(
+  //       mainAxisSize: MainAxisSize.min,
+  //       children: [
+  //         Container(
+  //           decoration: BoxDecoration(
+  //             border: Border.all(
+  //               color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+  //               width: 2.5, //                   <--- border width here
+  //             ),
+  //           ),
+  //           width: 300,
+  //           child: Column(
+  //             crossAxisAlignment: CrossAxisAlignment.stretch,
+  //             mainAxisAlignment: MainAxisAlignment.start,
+  //             children: <Widget>[
+  //               Container(
+  //                 color:
+  //                     widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+  //                 width: double.infinity,
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+  //                   child: Center(
+  //                     child: Text(
+  //                       'focus',
+  //                       style: TextStyle(
+  //                         fontFamily: 'Headline',
+  //                         height: 1.3,
+  //                         fontSize: 25.0,
+  //                         color: Colors.white,
+  //                         letterSpacing: 2,
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 ),
+  //               ),
+  //               Padding(
+  //                 padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
+  //                 child: Text(
+  //                   'You need to focus when using this skill and the chance of success will decrease if you use it consecutively.',
+  //                   textAlign: TextAlign.justify,
+  //                   style: TextStyle(
+  //                     height: 1.25,
+  //                     fontSize: 19,
+  //                     fontFamily: 'Calibri',
+  //                     color: Colors.white,
+  //                   ),
+  //                 ),
+  //               ),
+  //             ],
+  //           ),
+  //         ),
+  //       ],
+  //     ),
+  //   );
 
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alerta;
-      },
-    );
-  }
+  //   showDialog(
+  //     context: context,
+  //     builder: (BuildContext context) {
+  //       return alerta;
+  //     },
+  //   );
+  // }
 
   showAlertDialog(BuildContext context, int index) {
     AlertDialog alerta = AlertDialog(
@@ -564,7 +558,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                                       .getCurrentPlayer()
                                       .playerAction[indexAction];
 
-                                  focus();
+                                  // focus();
                                 });
                               },
                               child: SvgPicture.asset(
@@ -691,20 +685,20 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
                                   ),
                                   children: <TextSpan>[
                                     TextSpan(text: displayedAction.description),
-                                    TextSpan(text: focusText1),
-                                    TextSpan(
-                                        text: focusText2,
-                                        style: new TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: widget.dsix
-                                                .getCurrentPlayer()
-                                                .playerColor
-                                                .primaryColor)),
+                                    // TextSpan(text: focusText1),
+                                    // TextSpan(
+                                    //     text: focusText2,
+                                    //     style: new TextStyle(
+                                    //         fontWeight: FontWeight.bold,
+                                    //         color: widget.dsix
+                                    //             .getCurrentPlayer()
+                                    //             .playerColor
+                                    //             .primaryColor)),
                                   ],
                                 ),
                               ),
                             ),
-                            focusButton,
+                            // focusButton,
                             ListView.builder(
                                 shrinkWrap: true,
                                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

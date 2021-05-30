@@ -78,4 +78,22 @@ class Dsix {
         break;
     }
   }
+
+  void checkTurn() {
+    int check = 0;
+    this.players.forEach((element) {
+      if (element.endTurn) {
+        check++;
+      }
+      if (element.characterFinished == false) {
+        check++;
+      }
+    });
+
+    if (check == this.players.length) {
+      this.players.forEach((element) {
+        element.newTurn();
+      });
+    }
+  }
 }

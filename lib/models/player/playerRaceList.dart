@@ -6,95 +6,53 @@ class PlayerRaceList {
     PlayerRace(
         'human',
         'HUMAN',
-        'Humans are everywhere. They are flexible and adapt to most circumstances, so you get an extra action point to spend anyway you want.',
+        'Humans are flexible and adapt to anything, because they learn quicker than others.',
         [
-          Bonus(
-              '+ ACTION POINT  ',
-              'actionPoint',
-              'Each action point allows you to improve the chance of success of an action for ever.',
-              1)
+          Bonus('+ ACTION POINT  ', 'actionPoint',
+              'Action points allow you to do something better.', 1)
         ]),
     PlayerRace(
         'orc',
         'ORC',
-        'Orcs are tall and strong, making them good fighters but easy targets. They can carry more weight, but have a harder time moving around.',
+        'Orcs are tall and strong, making them good fighters, but easy targets.',
         [
-          Bonus('+ ATTACK  ', 'attack',
-              'You use this action when you attack a target.', 1),
-          Bonus(
-              '- MOVE  ',
-              'move',
-              'You use this action when you jump, climb, hide, dodge or escape.',
-              -1),
-          Bonus(
-              '+ WEIGHT  ',
-              'maxWeight',
-              'This represents the total amount of weight you can carry. Because of your strength, you can carry +4 weight.',
-              6)
+          Bonus('+ ATTACK  ', 'attack', 'You are good at attacking things.', 1),
+          Bonus('- MOVE  ', 'move', 'You are slow.', -1),
+          Bonus('STRONG  ', 'maxWeight',
+              'You are strong and can carry more things.', 6)
         ]),
-    PlayerRace(
-        'goblin',
-        'GOBLIN',
-        'Goblins are small, vicious creatures with sharp teeth and quick feet. They are not really strong, but are still very dangerous.',
-        [
-          Bonus('+ ATTACK  ', 'attack',
-              'You use this action when you attack a target.', 1),
-          Bonus(
-              '+ MOVE  ',
-              'move',
-              'You use this action when you jump, climb, hide, dodge or escape.',
-              1),
-          Bonus(
-              '- WEIGHT  ',
-              'maxWeight',
-              'This represents the total amount of weight you can carry. Because you are weak, you carry -4 weight.',
-              -6)
-        ]),
-    PlayerRace(
-        'dwarf',
-        'DWARF',
-        'Dwarfs are sturdy, allowing them to take more blows before going down. However, their small size and stubborn personality limits their perception.',
-        [
-          Bonus('+ DEFENSE  ', 'defense',
-              'You use this action when you protect yourself or others.', 1),
-          Bonus('- PERCEIVE  ', 'perceive',
-              'You use this action when you search for something.', -1),
-          Bonus(
-              '+ HEALTH  ',
-              'maxHealth',
-              'This represents your total health and you die when it reaches zero. Because of your sturdy nature you have +4 HP.',
-              6)
-        ]),
+    PlayerRace('goblin', 'GOBLIN',
+        'Goblins are small creatures with sharp teeth and quick feet.', [
+      Bonus('+ ATTACK  ', 'attack', 'You are good at attacking things.', 1),
+      Bonus('+ MOVE  ', 'move', 'You are fast.', 1),
+      Bonus('WEAK  ', 'maxWeight',
+          'You are weak and can\'t carry a lot of things.', -6)
+    ]),
+    PlayerRace('dwarf', 'DWARF',
+        'Dwarfs have long beards and are small, tough and stubborn.', [
+      Bonus('+ DEFEND  ', 'defense', 'You are good at protecting things.', 1),
+      Bonus('- LOOK  ', 'perceive', 'Your size limits your vision.', -1),
+      Bonus(
+          'TOUGH  ', 'maxHealth', 'You take more blows befores going down.', 6)
+    ]),
     PlayerRace(
         'halfling',
         'HALFLING',
-        'Halflings are small curious creatures, always looking for something new to learn. They are not really good at fighting and try to solve most problems without violence.',
+        'Halflings are small curious creatures, always looking for something new to learn.',
         [
           Bonus('- ATTACK  ', 'attack',
-              'You use this action when you attack a target.', -1),
-          Bonus('+ PERCEIVE  ', 'perceive',
-              'You use this action when you search for something.', 1),
-          Bonus(
-              '+ TALK  ',
-              'talk',
-              'You use this action when you talk to someone that can understand you.',
+              'You are not really good at attacking things.', -1),
+          Bonus('+ LOOK  ', 'perceive', 'You have amazing senses.', 1),
+          Bonus('+ TALK  ', 'talk', 'You are charismatic, and people like you.',
               1)
         ]),
-    PlayerRace(
-        'elf',
-        'ELF',
-        'Elves have slim bodies and sharp senses, making them very perceptive and agile. Because of their frail constitution, they rely on their reflexes to avoid danger.',
-        [
-          Bonus('- DEFENSE  ', 'defense',
-              'You use this action when you protect yourself or others.', -1),
-          Bonus('+ PERCEIVE  ', 'perceive',
-              'You use this action when you search for something.', 1),
-          Bonus(
-              '+ MOVE  ',
-              'move',
-              'You use this action when you jump, climb, hide, dodge or escape.',
-              1)
-        ]),
+    PlayerRace('elf', 'ELF',
+        'Elves have sharp senses, making them very perceptive and agile.', [
+      Bonus('- DEFENSE  ', 'defense',
+          'You are not really good at protecting things.', -1),
+      Bonus('+ LOOK  ', 'perceive', 'You have amazing senses.', 1),
+      Bonus('+ MOVE  ', 'move', 'You are fast.', 1)
+    ]),
 
 //PlayerRace('gnome','GNOME','Gnomes are small and curious creatures, that are always working on a crazy project.',Bonus(0,'INVENTION', 'Choose your invention:',[Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),])),
     //PlayerRace('darkElf','DARK ELF','Dark elfs are smarter than most people, making them quite arrogant.',Bonus(1,'INTELLIGENCE', 'Intelligence represents how much you know about the world.',[])),

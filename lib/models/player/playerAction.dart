@@ -6,8 +6,13 @@ class PlayerAction {
   String description;
   List<Option> option;
   int value;
-  bool focus;
+  // bool focus;
 
-  PlayerAction(this.icon, this.name, this.description, this.option, this.value,
-      this.focus);
+  PlayerAction(
+    this.icon,
+    this.name,
+    this.description,
+    this.option,
+    this.value,
+  );
 }
