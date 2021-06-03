@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:dsixv02app/models/game/effect.dart';
 
 class CharacterPage extends StatefulWidget {
   final Dsix dsix;
@@ -26,11 +27,10 @@ class _CharacterPageState extends State<CharacterPage> {
 
   void showEffect(int index) {
     alertTitle =
-        '${widget.dsix.getCurrentPlayer().effectList[index].name}: ${widget.dsix.getCurrentPlayer().effectList[index].value}';
+        '${widget.dsix.getCurrentPlayer().effects[index].name}: ${widget.dsix.getCurrentPlayer().effects[index].value}';
     alertDescription =
-        widget.dsix.getCurrentPlayer().effectList[index].description;
-    alertDuration =
-        '${widget.dsix.getCurrentPlayer().effectList[index].duration}';
+        widget.dsix.getCurrentPlayer().effects[index].description;
+    alertDuration = '${widget.dsix.getCurrentPlayer().effects[index].duration}';
     showAlertDialogAlert(context);
   }
 
@@ -350,8 +350,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   child: GridView.count(
                     crossAxisCount: 1,
                     children: List.generate(
-                        widget.dsix.getCurrentPlayer().effectList.length,
-                        (index) {
+                        widget.dsix.getCurrentPlayer().effects.length, (index) {
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: GestureDetector(
@@ -359,7 +358,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             showEffect(index);
                           },
                           child: SvgPicture.asset(
-                            'assets/effect/${widget.dsix.getCurrentPlayer().effectList[index].icon}.svg',
+                            'assets/effect/${widget.dsix.getCurrentPlayer().effects[index].icon}.svg',
                             color: widget.dsix
                                 .getCurrentPlayer()
                                 .playerColor

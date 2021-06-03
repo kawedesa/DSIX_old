@@ -403,9 +403,7 @@ class _PlayerUIState extends State<PlayerUI> {
   }
 
   refresh() {
-    setState(() {
-      widget.dsix.checkTurn();
-    });
+    setState(() {});
   }
 
   int bottomSelectedIndex = 0;
@@ -591,10 +589,12 @@ class _PlayerUIState extends State<PlayerUI> {
         InventoryPage(
           dsix: widget.dsix,
           refresh: refresh,
+          alert: displayAlert,
         ),
         ActionPage(
           dsix: widget.dsix,
           refresh: refresh,
+          alert: displayAlert,
         ),
         HelpPage(
           dsix: widget.dsix,
@@ -623,6 +623,26 @@ class _PlayerUIState extends State<PlayerUI> {
         );
       },
     );
+  }
+
+  SnackBar displayAlert(String description) {
+    SnackBar newAlert = new SnackBar(
+      backgroundColor: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.05,
+        child: Text(
+          description,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            height: 1.25,
+            fontSize: 22,
+            fontFamily: 'Calibri',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+    return newAlert;
   }
 
   @override

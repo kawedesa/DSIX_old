@@ -7,9 +7,11 @@ import 'package:dsixv02app/models/player/player.dart';
 
 class InventoryPage extends StatefulWidget {
   final Function() refresh;
+  final Function(String) alert;
   final Dsix dsix;
 
-  const InventoryPage({Key key, this.dsix, this.refresh}) : super(key: key);
+  const InventoryPage({Key key, this.dsix, this.refresh, this.alert})
+      : super(key: key);
 
   @override
   _InventoryStatePage createState() => _InventoryStatePage();
@@ -68,19 +70,26 @@ class _InventoryStatePage extends State<InventoryPage> {
     try {
       widget.dsix.getCurrentPlayer().useOrEquip(item, buttonText);
     } on NoGoldException catch (e) {
-      alertTitle = e.title;
-      alertDescription = e.message;
-      showAlertDialogAlert(context);
+      // alertTitle = e.title;
+      // alertDescription = e.message;
+
+      // showAlertDialogAlert(context);
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
     } on MaxHpException catch (e) {
-      alertTitle = e.title;
-      alertDescription = e.message;
-      showAlertDialogAlert(context);
+      // alertTitle = e.title;
+      // alertDescription = e.message;
+      // showAlertDialogAlert(context);
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
     } on MaxAmmoException catch (e) {
-      alertTitle = e.title;
-      alertDescription = e.message;
-      showAlertDialogAlert(context);
+      // alertTitle = e.title;
+      // alertDescription = e.message;
+      // showAlertDialogAlert(context);
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
     }
 
@@ -336,17 +345,17 @@ class _InventoryStatePage extends State<InventoryPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/pArmor.svg',
+                              'assets/item/mDamage.svg',
                               color: widget.dsix
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.055,
+                              width: MediaQuery.of(context).size.width * 0.065,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${item.pArmor}',
+                                '${item.mDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -363,17 +372,17 @@ class _InventoryStatePage extends State<InventoryPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/mDamage.svg',
+                              'assets/item/pArmor.svg',
                               color: widget.dsix
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.065,
+                              width: MediaQuery.of(context).size.width * 0.055,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${item.mDamage}',
+                                '${item.pArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -1589,17 +1598,17 @@ class _InventoryStatePage extends State<InventoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SvgPicture.asset(
-                      'assets/item/pArmor.svg',
+                      'assets/item/mDamage.svg',
                       color: widget.dsix
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
-                      width: MediaQuery.of(context).size.width * 0.070,
+                      width: MediaQuery.of(context).size.width * 0.080,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
-                        '${widget.dsix.getCurrentPlayer().pArmor}',
+                        '${widget.dsix.getCurrentPlayer().mDamage}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1,
@@ -1616,17 +1625,17 @@ class _InventoryStatePage extends State<InventoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SvgPicture.asset(
-                      'assets/item/mDamage.svg',
+                      'assets/item/pArmor.svg',
                       color: widget.dsix
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
-                      width: MediaQuery.of(context).size.width * 0.080,
+                      width: MediaQuery.of(context).size.width * 0.070,
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
-                        '${widget.dsix.getCurrentPlayer().mDamage}',
+                        '${widget.dsix.getCurrentPlayer().pArmor}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1,

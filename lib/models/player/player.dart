@@ -12,6 +12,7 @@ import 'package:dsixv02app/models/player/bonus.dart';
 import 'package:dsixv02app/models/game/shop.dart';
 import 'package:dsixv02app/models/player/playerBackgroundList.dart';
 import 'package:dsixv02app/models/player/playerSkillList.dart';
+import 'package:dsixv02app/models/game/effectList.dart';
 
 class PlayerColor {
   String name;
@@ -51,8 +52,11 @@ class Player {
     'RACES',
     'There are many races in this world. They vary in size, culture and color. Click on the icons above to choose a race.',
     [
-      Bonus('BONUS', 'bonus',
-          'Each race has different strenghs and weaknesses.', 0)
+      Bonus(
+        'BONUS',
+        'bonus',
+        'Each race has different strenghs and weaknesses that make them unique.',
+      )
     ],
   );
 
@@ -95,7 +99,13 @@ class Player {
     switch (this.race.race) {
       case 'HUMAN':
         {
-          this.actionPoints[0] = 4; //ACTION POINT
+          this.actionPoints[0] = 2; //ACTION POINT
+          this.actionPoints[1] = 1;
+          this.actionPoints[2] = 1;
+          this.actionPoints[3] = 1;
+          this.actionPoints[4] = 1;
+          this.actionPoints[5] = 1;
+          this.actionPoints[6] = 1;
         }
         break;
 
@@ -164,86 +174,43 @@ class Player {
       'BACKGROUND',
       'This is your story. Where you were born, how you where raised and if people like you or not. Click on the icons above to choose a background.',
       [
-        Bonus('THINGS', 'bonus',
-            'Every background starts with different things.', 0)
+        Bonus(
+          'THINGS',
+          'bonus',
+          'Every background starts with different things.',
+        )
       ],
       []);
 
-  int pDamage;
-  int mDamage;
-  int pArmor;
-  int mArmor;
+  int pDamage = 0;
+  int mDamage = 0;
+  int pArmor = 0;
+  int mArmor = 0;
 
-  int gold;
+  int fame = 0;
+  int gold = 500;
+  EffectList effectList = EffectList();
+
+  List<Effect> effects = [];
 
   void chooseBackground(int index) {
-    this.pDamage = 0;
-    this.mDamage = 0;
-    this.pArmor = 0;
-    this.mArmor = 0;
-
-    this.gold = 1000;
-
+    this.gold = 500;
+    this.fame = 0;
     this.inventory.clear();
-
     this.currentWeight = 0;
 
     // ASSIGN BONUSES
 
     this.playerBackground = availableBackgrounds[index];
 
-    switch (this.playerBackground.background) {
-      case 'NOBLE':
-        {
-          this.gold = 1500; //GOLD
-        }
-        break;
+    if (this.playerBackground.background == 'NOBLE') {
+      this.gold += 400; //GOLD
+      this.fame = 1;
+      this.effects.add(effectList.effectList[0]);
+    }
 
-      case 'FIGHTER':
-        {
-          this.pArmor = 2;
-          for (Item item in this.playerBackground.bonusItem) {
-            this.inventory.add(item.copyItem());
-          }
-        }
-        break;
-
-      case 'THIEF':
-        {
-          this.pDamage = 1;
-          this.pArmor = 1;
-          for (Item item in this.playerBackground.bonusItem) {
-            this.inventory.add(item.copyItem());
-          }
-        }
-        break;
-
-      case 'MAGE':
-        {
-          this.mDamage = 1;
-          for (Item item in this.playerBackground.bonusItem) {
-            this.inventory.add(item.copyItem());
-          }
-        }
-        break;
-
-      case 'HUNTER':
-        {
-          this.pDamage = 2;
-          for (Item item in this.playerBackground.bonusItem) {
-            this.inventory.add(item.copyItem());
-          }
-        }
-        break;
-
-      case 'MEDIC':
-        {
-          this.mArmor = 1;
-          for (Item item in this.playerBackground.bonusItem) {
-            this.inventory.add(item.copyItem());
-          }
-        }
-        break;
+    for (Item item in this.playerBackground.bonusItem) {
+      this.inventory.add(item.copyItem());
     }
 
     //ASSIGN CURRENT WEIGHT
@@ -264,71 +231,71 @@ class Player {
       'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
       [
         Option('OPTIONS', 'Each action has different options to choose from.',
-            '', '', '', '', 0)
+            '', '', '', '', false)
       ],
       0,
     ),
     PlayerAction(
       'attack',
       'ATTACK',
-      'You attack things.',
+      'You attack a target or try to hold it down.',
       [
         Option(
             'PUNCH',
             'You punch the target with your bare fists, trying to knock them out.',
-            'You deal',
-            '',
+            'You deal a lot of damage.',
+            'You hit the target.',
             'You miss the target and open your guard.',
             'DAMAGE',
-            0),
+            true),
         Option(
             'WEAPON',
             'You attack the target with your weapon, trying to bring them down.',
-            'You deal',
-            '',
+            'You deal a lot of damage.',
+            'You hit the target.',
             'You miss the target.',
             'DAMAGE',
-            0),
+            true),
         Option(
             'GRAPPLE',
             'You try to grapple the target, holding them down.',
             'You hold them in place and they are unable to move.',
             'You hold them, but they can still move a little.',
             'They escape your grasp.',
-            '',
-            0),
+            'HOLD',
+            false),
       ],
       0,
     ),
     PlayerAction(
       'defend',
       'DEFEND',
-      'You protect things.',
+      'You protect yourself or others around you.',
       [
         Option(
-            'PHYSICAL DEFENSE',
+            'DEFEND',
             'You face the danger, raise your shield and brace for impact. ',
-            'You protect',
-            '',
+            'You protect a lot of damage.',
+            'You protect some damage.',
             'You can\'t raise your guard in time and take full damage.',
             'PROTECT',
-            0),
+            true),
         Option(
-            'MAGIC DEFENSE',
+            'RESIST',
             'You cast an enchantment that defends yourself and others around you.',
-            'You protect',
-            '',
+            'You resist a lot of damage.',
+            'You resist some damage.',
             'You can\'t defend in time and take full damage.',
             'PROTECT',
-            0),
+            true),
         Option(
             'HELP',
             'You help someone, making it easier for them to succeed.',
             'You give them a real advantage.',
             'You make things easier for them.',
             'You get in the way and make things harder for them.',
-            '',
-            0),
+            'HELP',
+            false),
       ],
       0,
     ),
@@ -340,19 +307,19 @@ class Player {
         Option(
             'RESOURCES',
             'You search for something useful, like potions, food, and resources.',
-            'You find something useful.',
-            '',
+            'You find loot and gold.',
+            'You find loot.',
             'You find something bad',
-            'LOOT',
-            0),
+            'RESOURCES',
+            true),
         Option(
             'INFORMATION',
             'You look around and try to gather more information.',
             'You gather meaningful information.',
             'You gather information, but it costs you.',
             'You find something bad.',
-            '',
-            0),
+            'INFORMATION',
+            false),
         // Option(
         //     'DANGER',
         //     'You search for signs of danger, trying to prevent an encounter.',
@@ -365,10 +332,10 @@ class Player {
             'PLACE',
             'You try to gather more information about your surroundings.',
             'You find a hidden passage, door or secrete.',
-            'You find something, but it\'s blocked, guarded or out of reach.',
+            'You find a secrete, but it\'s blocked.',
             'You find something bad',
-            '',
-            0)
+            'SECRETE',
+            false)
       ],
       0,
     ),
@@ -383,16 +350,16 @@ class Player {
             'They accept your offer.',
             'They accept, but ask for more in return.',
             'The deal is off and they dislike you.',
-            '',
-            0),
+            'DEAL',
+            false),
         Option(
             'INFORMATION',
             'You talk to someone and try to gather meaningful information.',
             'You receive valuable information.',
             'They will share what they know, but ask for something in return.',
             'You receive bad news.',
-            '',
-            0),
+            'INFORMATION',
+            false),
         Option(
             'CONVINCE',
             'You convince people to follow your lead or see things your way.',
@@ -400,15 +367,15 @@ class Player {
             'They see your point, but ask for something in return.',
             'They are offended and dislike you.',
             '',
-            0),
+            false),
         Option(
             'ENTERTAIN',
             'You entertain people around you.',
             'Everyone loves your performance and becomes friendly.',
             'Some people enjoy your performance and become friendly.',
             'They think you suck and are mean to you.',
-            '',
-            0),
+            'PERFORM',
+            false),
       ],
       0,
     ),
@@ -421,50 +388,50 @@ class Player {
             'DODGE',
             'You dodge and take no damage.',
             'You dodge and take no damage.',
-            'You dodge partially and take half damage.',
-            'You can\'t dodge in time and take damage.',
-            '',
-            0),
+            'You take half damage.',
+            'You can\'t dodge and take full damage.',
+            'AVOID',
+            false),
         Option(
             'ESCAPE',
             'You release your shackles, run away from danger or free yourself from a tough situation.',
             'You escape without trouble.',
             'You escape, but call unwanted attention.',
             'You can\'t escape.',
-            '',
-            0),
+            'ESCAPE',
+            false),
         Option(
             'HIDE',
             'You avoid being seen by someone or sneak pass some guards.',
             'You are hidden.',
             'You are noticed.',
             'You are exposed.',
-            '',
-            0),
+            'HIDE',
+            false),
         Option(
             'JUMP',
             'You jump over a gap, try to reach for something or pass over an obstacle.',
             'You land where you wanted.',
             'You land somewhere close.',
             'You stumble and fail.',
-            '',
-            0),
+            'JUMP',
+            false),
         Option(
             'CLIMB',
             'You climb a wall, a rope or the back of a giant.',
             'You have no trouble.',
             'You face some difficulty.',
             'You slide and fall.',
-            '',
-            0),
+            'CLIMB',
+            false),
         Option(
             'SWIM',
             'You swim, dive or hold your breath under water.',
             'You have no trouble.',
             'You face some difficulty.',
             'You can\'t stay afloat.',
-            '',
-            0)
+            'SWIM',
+            false)
       ],
       0,
     ),
@@ -474,7 +441,7 @@ class Player {
       'This is your special move and what you are known for. Choose your skill by clicking on the icons above.',
       [
         Option('OPTIONS', 'Each skill has different options to choose from.',
-            'Success.', 'Half Success.', 'Fail.', '', 0)
+            'Success.', 'Half Success.', 'Fail.', 'OPTIONS', false)
       ],
       0,
     ),
@@ -562,7 +529,7 @@ class Player {
         if (this.currentHealth == this.maxHealth) {
           throw new MaxHpException();
         }
-        this.currentHealth += Random().nextInt(10) + 2;
+        this.currentHealth += Random().nextInt(7) + 6;
         if (this.currentHealth > this.maxHealth) {
           this.currentHealth = this.maxHealth;
         }
@@ -570,11 +537,8 @@ class Player {
         playerTurn();
         break;
       case 'RESISTANCE POTION':
-        print('here');
-        this.effectList.add(Effect('mArmor', 'MAGIC ARMOR',
-            'Increase your magic armor by tree.', 3, 3));
+        this.effects.add(effectList.effectList[1]);
         this.mArmor += 3;
-
         this.inventory.remove(item);
         playerTurn();
         break;
@@ -599,10 +563,10 @@ class Player {
         playerTurn();
         break;
       case 'ANTIDOTE':
-        this.effectList.forEach((element) {
+        this.effects.forEach((element) {
           element.duration = 0;
         });
-        this.effects();
+        this.checkEffects();
 
         this.inventory.remove(item);
         playerTurn();
@@ -723,17 +687,6 @@ class Player {
     this.mDamage += item.mDamage;
     this.pDamage += item.pDamage;
 
-    this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
-    this.playerAction[2].option[0].value = this.pArmor;
-    this.playerAction[2].option[1].value = this.mArmor;
-    this.playerAction[6].option.forEach((element) {
-      if (element.result == 'PROTECT') {
-        element.value = this.mArmor;
-      } else {
-        element.value = this.mDamage;
-      }
-    });
-
     switch (item.inventorySpace) {
       case 'head':
         {
@@ -807,17 +760,6 @@ class Player {
       this.mDamage -= item.mDamage;
       this.pDamage -= item.pDamage;
 
-      this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
-      this.playerAction[2].option[0].value = this.pArmor;
-      this.playerAction[2].option[1].value = this.mArmor;
-      this.playerAction[6].option.forEach((element) {
-        if (element.result == 'PROTECT') {
-          element.value = this.mArmor;
-        } else {
-          element.value = this.mDamage;
-        }
-      });
-
       this.inventory.add(item);
       this.mainHandEquip = Item(
         icon: 'mainHand',
@@ -856,17 +798,6 @@ class Player {
     this.pArmor -= item.pArmor;
     this.mDamage -= item.mDamage;
     this.pDamage -= item.pDamage;
-
-    this.playerAction[1].option[1].value = this.pDamage + this.mDamage;
-    this.playerAction[2].option[0].value = this.pArmor;
-    this.playerAction[2].option[1].value = this.mArmor;
-    this.playerAction[6].option.forEach((element) {
-      if (element.result == 'PROTECT') {
-        element.value = this.mArmor;
-      } else {
-        element.value = this.mDamage;
-      }
-    });
 
     this.inventory.add(item);
 
@@ -1004,11 +935,16 @@ class Player {
 //ACTION
 
   void action(Option option) {
+    //Count player turn
     playerTurn();
-    // this.focus(focus);
+
+    //Reduce ammunition
     if (option.name == 'WEAPON') {
       this.reduceAmmo();
     }
+
+    //Prepare for second roll
+    option.firstRoll = false;
   }
 
   void reduceAmmo() {
@@ -1072,12 +1008,13 @@ class Player {
     endTurn = false;
   }
 
-  void checkTurn() {
+  bool checkTurn() {
     if (turn.contains(false)) {
       endTurn = false;
     } else {
       endTurn = true;
     }
+    return endTurn;
   }
 
   void playerTurn() {
@@ -1085,7 +1022,7 @@ class Player {
       return;
     }
     this.actionsTaken++;
-    this.effects();
+    this.checkEffects();
 
     if (turn[0]) {
       turn[1] = true;
@@ -1096,27 +1033,24 @@ class Player {
     checkTurn();
   }
 
-  void effects() {
-    if (this.effectList.isEmpty == true) {
+  void checkEffects() {
+    if (this.effects.isEmpty == true) {
       return;
     }
 
-    this.effectList.forEach((element) {
+    this.effects.forEach((element) {
+      if (element.duration > 10) {
+        return;
+      }
       element.duration--;
     });
 
-    this.effectList.forEach((element) {
+    this.effects.forEach((element) {
       if (element.duration > 0) {
         return;
       }
       switch (element.name) {
-        // case 'focus':
-        //   {
-        //     this.playerAction[6].value++;
-        //   }
-        //   break;
-
-        case 'RESISTANCE POTION':
+        case 'MAGIC RESISTANCE':
           {
             this.mArmor -= 3;
           }
@@ -1124,42 +1058,24 @@ class Player {
       }
     });
 
-    this.effectList.removeWhere((element) => element.duration < 1);
+    this.effects.removeWhere((element) => element.duration < 1);
   }
 
-  // void focus(bool focus) {
-  //   if (focus == true) {
-  //     this.effectList.add(Effect(
-  //         playerAction[6].icon,
-  //         'focus',
-  //         'This action requires you to focus and it will have a lower chance of success if taken consecutively.',
-  //         -1,
-  //         1));
-  //     this.playerAction[6].value--;
-  //   }
-  // }
+  List<String> resources(int numberDice) {
+    List<String> lootList = [];
 
-  List<String> lootResources(int value) {
-    List<String> itemList = [];
-
-    while (value > 0) {
-      Random randomDrop = new Random();
-      int randomLoot = randomDrop.nextInt(shop.resources.length);
-
-      if (shop.resources[randomLoot].value <= value &&
-          shop.resources[randomLoot].weight <=
-              this.maxWeight - this.currentWeight) {
-        this.inventory.add(shop.resources[randomLoot].copyItem());
-
-        itemList.add(shop.resources[randomLoot].name);
-        value -= shop.resources[randomLoot].value;
-        this.currentWeight += shop.resources[randomLoot].weight;
-      }
+    if (numberDice > 1) {
+      int randomGold = (Random().nextInt(4) + 1) * 25;
+      this.gold += randomGold;
+      lootList.add('\$ $randomGold');
     }
-    return itemList;
-  }
 
-  List<Effect> effectList = [];
+    int loot = Random().nextInt(shop.resources.length);
+    inventory.add(shop.resources[loot]);
+
+    lootList.add('${shop.resources[loot].name}');
+    return lootList;
+  }
 
   Player(this.playerColor);
 

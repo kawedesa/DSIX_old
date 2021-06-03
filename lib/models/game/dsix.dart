@@ -12,6 +12,8 @@ class Dsix {
 
   Gm gm = new Gm();
 
+  // Shop
+
   static Shop shop;
 
   Dsix();
@@ -79,6 +81,12 @@ class Dsix {
     }
   }
 
+  void newTurn() {
+    this.players.forEach((element) {
+      element.newTurn();
+    });
+  }
+
   void checkTurn() {
     int check = 0;
     this.players.forEach((element) {
@@ -91,9 +99,7 @@ class Dsix {
     });
 
     if (check == this.players.length) {
-      this.players.forEach((element) {
-        element.newTurn();
-      });
+      newTurn();
     }
   }
 }

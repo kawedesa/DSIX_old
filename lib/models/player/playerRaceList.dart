@@ -6,53 +6,109 @@ class PlayerRaceList {
     PlayerRace(
         'human',
         'HUMAN',
-        'Humans are flexible and adapt to anything, because they learn quicker than others.',
+        'Humans are flexible and can adapt to anything. They have the worlds largest population.',
         [
-          Bonus('+ ACTION POINT  ', 'actionPoint',
-              'Action points allow you to do something better.', 1)
+          Bonus(
+            'FLEXIBLE  ',
+            'actionPoint',
+            'Humans are flexible and can perform any role.',
+          )
         ]),
     PlayerRace(
         'orc',
         'ORC',
-        'Orcs are tall and strong, making them good fighters, but easy targets.',
+        'Orcs are big and strong, making them good warriors, but easy targets.',
         [
-          Bonus('+ ATTACK  ', 'attack', 'You are good at attacking things.', 1),
-          Bonus('- MOVE  ', 'move', 'You are slow.', -1),
-          Bonus('STRONG  ', 'maxWeight',
-              'You are strong and can carry more things.', 6)
+          Bonus(
+            'BIG  ',
+            'move',
+            'Your size makes it hard for you to move around.',
+          ),
+          Bonus(
+            'STRONG  ',
+            'maxWeight',
+            'You are strong and can carry more things.',
+          ),
+          Bonus(
+            'WARRIOR  ',
+            'attack',
+            'You are a warrior and know how to fight.',
+          ),
         ]),
-    PlayerRace('goblin', 'GOBLIN',
-        'Goblins are small creatures with sharp teeth and quick feet.', [
-      Bonus('+ ATTACK  ', 'attack', 'You are good at attacking things.', 1),
-      Bonus('+ MOVE  ', 'move', 'You are fast.', 1),
-      Bonus('WEAK  ', 'maxWeight',
-          'You are weak and can\'t carry a lot of things.', -6)
-    ]),
-    PlayerRace('dwarf', 'DWARF',
-        'Dwarfs have long beards and are small, tough and stubborn.', [
-      Bonus('+ DEFEND  ', 'defense', 'You are good at protecting things.', 1),
-      Bonus('- LOOK  ', 'perceive', 'Your size limits your vision.', -1),
-      Bonus(
-          'TOUGH  ', 'maxHealth', 'You take more blows befores going down.', 6)
-    ]),
+    PlayerRace(
+        'goblin',
+        'GOBLIN',
+        'Goblins are small vicious creatures with sharp teeth and quick feet.',
+        [
+          Bonus(
+            'VICIOUS  ',
+            'attack',
+            'You are evil and love hurting others. Sometimes even yourself.',
+          ),
+          Bonus(
+            'QUICK FEET  ',
+            'move',
+            'You are fast and have quick reflexes.',
+          ),
+          Bonus(
+            'WEAK  ',
+            'maxWeight',
+            'You are weak and can\'t carry a lot of things.',
+          )
+        ]),
+    PlayerRace(
+        'dwarf',
+        'DWARF',
+        'Dwarfs have long beards and love to drink. They are small, tough and stubborn.',
+        [
+          Bonus(
+            'STUBBORN  ',
+            'perceive',
+            'Your size and stubborn personality limits your perception of things.',
+          ),
+          Bonus(
+            'TOUGH  ',
+            'maxHealth',
+            'You can take more blows befores going down.',
+          )
+        ]),
     PlayerRace(
         'halfling',
         'HALFLING',
         'Halflings are small curious creatures, always looking for something new to learn.',
         [
-          Bonus('- ATTACK  ', 'attack',
-              'You are not really good at attacking things.', -1),
-          Bonus('+ LOOK  ', 'perceive', 'You have amazing senses.', 1),
-          Bonus('+ TALK  ', 'talk', 'You are charismatic, and people like you.',
-              1)
+          Bonus(
+            'PEACEFUL  ',
+            'attack',
+            'You are peaceful and hate violence.',
+          ),
+          Bonus(
+            'CURIOUS  ',
+            'perceive',
+            'You are always intrigued by your surrounding.',
+          ),
+          Bonus(
+            'CHARISMATIC  ',
+            'talk',
+            'You are friendly and people usually like you.',
+          )
         ]),
-    PlayerRace('elf', 'ELF',
-        'Elves have sharp senses, making them very perceptive and agile.', [
-      Bonus('- DEFENSE  ', 'defense',
-          'You are not really good at protecting things.', -1),
-      Bonus('+ LOOK  ', 'perceive', 'You have amazing senses.', 1),
-      Bonus('+ MOVE  ', 'move', 'You are fast.', 1)
-    ]),
+    PlayerRace(
+        'elf',
+        'ELF',
+        'Elves have quick reflexes and sharp senses, making them very agile and precise.',
+        [
+          Bonus(
+            'QUICK REFLEXES  ',
+            'defense',
+            'Your instinct is to get out of the way, instead of holding your ground.',
+          ),
+          Bonus(
+            'KEEN SENSES  ',
+            'perceive',
+            'You have perfect vision and amazing hearing.',
+          ),
+        ]),
 
 //PlayerRace('gnome','GNOME','Gnomes are small and curious creatures, that are always working on a crazy project.',Bonus(0,'INVENTION', 'Choose your invention:',[Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),Option(0,'DAMAGE','You receive a bonus of +2 to your damage.','CON'),])),
     //PlayerRace('darkElf','DARK ELF','Dark elfs are smarter than most people, making them quite arrogant.',Bonus(1,'INTELLIGENCE', 'Intelligence represents how much you know about the world.',[])),

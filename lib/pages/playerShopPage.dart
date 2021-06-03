@@ -220,17 +220,17 @@ class _ShopPageState extends State<ShopPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/pArmor.svg',
+                              'assets/item/mDamage.svg',
                               color: widget.dsix
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.055,
+                              width: MediaQuery.of(context).size.width * 0.065,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${displayItems[index].pArmor}',
+                                '${displayItems[index].mDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -247,17 +247,17 @@ class _ShopPageState extends State<ShopPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/mDamage.svg',
+                              'assets/item/pArmor.svg',
                               color: widget.dsix
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.065,
+                              width: MediaQuery.of(context).size.width * 0.055,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${displayItems[index].mDamage}',
+                                '${displayItems[index].pArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,

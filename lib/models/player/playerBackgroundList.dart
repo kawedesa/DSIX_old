@@ -11,8 +11,16 @@ class PlayerBackgroundList {
         'NOBLE',
         'Your life is filled with money and gifts. Your family is well known, and most people respect you.',
         [
-          Bonus('GOLD', 'gold', 'You are rich! So you get an extra \$500 gold.',
-              500)
+          Bonus(
+            'GOLD',
+            'gold',
+            'You are rich! So you get an extra \$400 gold.',
+          ),
+          Bonus(
+            'FAME',
+            'fame',
+            'You are famous and receive special treatment.',
+          ),
         ],
         []),
     PlayerBackground(
@@ -20,29 +28,41 @@ class PlayerBackgroundList {
         'FIGHTER',
         'You move around, from place to place, looking for blood and coin. People stay out of your way, by will or by force.',
         [
-          Bonus('+2 ARMOR   ', 'pArmor',
-              'This represents how much damage you mitigate from attacks.', 2),
-          Bonus('GLOVES', 'item', '${shop.armor[1].description}', 0),
-          Bonus('BOOTS', 'item', '${shop.armor[0].description}', 0)
+          Bonus(
+            'GLOVES',
+            'item',
+            '${shop.armor[1].description}',
+          ),
+          Bonus(
+            'BOOTS',
+            'item',
+            '${shop.armor[0].description}',
+          ),
+          Bonus(
+            'HELMET',
+            'item',
+            '${shop.armor[3].description}',
+          )
         ],
         [
           shop.armor[0],
           shop.armor[1],
+          shop.armor[3],
         ]),
     PlayerBackground(
         'thief',
         'THIEF',
         'You have quick hands and a burning desire for treasure. Some people steal out of necessity, others do it for fun. You do it because you can.',
         [
-          Bonus('+1 DAMAGE   ', 'pDamage',
-              'This represents how much damage you deal with your attacks.', 1),
-          Bonus('+1 ARMOR   ', 'pArmor',
-              'This represents how much damage you mitigate from attacks.', 1),
-          Bonus('2x KEYS   ', 'item', '${shop.resources[6].description}', 0)
+          Bonus(
+            '2x KUNAIS   ',
+            'item',
+            '${shop.rangedWeapons[4].description}',
+          )
         ],
         [
-          shop.resources[6],
-          shop.resources[6],
+          shop.rangedWeapons[4],
+          shop.rangedWeapons[4],
         ]),
     PlayerBackground(
         'mage',
@@ -50,27 +70,32 @@ class PlayerBackgroundList {
         'You are familiar with magic. Either born with it or taught by a mentor. Most people see you as a freak and keep their distance.',
         [
           Bonus(
-              '+1 MAGIC DAMAGE   ',
-              'mDamage',
-              'This represents how much magic damage you deal with your attacks.',
-              1),
-          Bonus('MAGIC ORB', 'item', '${shop.magicWeapons[0].description}', 0)
+            'SPELLBOOK',
+            'item',
+            '${shop.magicWeapons[5].description}',
+          )
         ],
         [
-          shop.magicWeapons[0],
+          shop.magicWeapons[5],
         ]),
     PlayerBackground(
         'hunter',
         'HUNTER',
         'You spend most of your time hunting for game. You are not really used to people and feel more comfortable outdoors.',
         [
-          Bonus('+2 DAMAGE   ', 'pDamage',
-              'This represents how much damage you deal with your attacks.', 1),
-          Bonus('AMMO  ', 'item', '${shop.resources[4].description}', 0),
-          Bonus('HERBS  ', 'item', '${shop.resources[1].description}', 0)
+          Bonus(
+            'LONG BOW  ',
+            'item',
+            '${shop.rangedWeapons[6].description}',
+          ),
+          Bonus(
+            'AMMO  ',
+            'item',
+            '${shop.resources[4].description}',
+          ),
         ],
         [
-          shop.resources[4],
+          shop.rangedWeapons[6],
           shop.resources[1],
         ]),
     PlayerBackground(
@@ -79,15 +104,14 @@ class PlayerBackgroundList {
         'You already saved many lives and people respect you. Blood, diseases, guts and bones don\'t bother you.',
         [
           Bonus(
-              '+1 MAGIC ARMOR   ',
-              'mArmor',
-              'This represents how much damage you mitigate from magic attacks.',
-              1),
-          Bonus('2x BANDAGES   ', 'item', '${shop.resources[0].description}', 0)
+            '2x HEALING POTION   ',
+            'item',
+            '${shop.resources[10].description}',
+          ),
         ],
         [
-          shop.resources[0],
-          shop.resources[0]
+          shop.resources[10],
+          shop.resources[10],
         ]),
     PlayerBackground(
         '',
@@ -95,10 +119,10 @@ class PlayerBackgroundList {
         'This represents your story. How you where raised and how people see you. Click on the icons above to choose your background.',
         [
           Bonus(
-              'BONUS',
-              'bonus',
-              'All backgrounds are unique and have different bonuses. They can be items, gold, and passive attributes, like armor and damage.',
-              0)
+            'BONUS',
+            'bonus',
+            'All backgrounds are unique and have different bonuses. They can be items, gold, and passive attributes, like armor and damage.',
+          )
         ],
         []),
 

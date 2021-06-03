@@ -8,6 +8,8 @@ class Gm {
 
   List<Quest> questList = [];
 
+  // Campaign campaign;
+
   Quest selectedQuest = Quest(
     icon: 'quest',
     name: 'NEW QUEST',

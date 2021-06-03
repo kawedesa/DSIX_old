@@ -974,40 +974,88 @@ class _GmUIState extends State<GmUI> {
     );
   }
 
+  SnackBar displayAlert(String description) {
+    SnackBar newAlert = new SnackBar(
+      content: Container(
+        height: MediaQuery.of(context).size.height * 0.05,
+        child: Text(
+          description,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            height: 1.25,
+            fontSize: 22,
+            fontFamily: 'Calibri',
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+    return newAlert;
+  }
+
   Widget build(BuildContext context) {
     return new Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
-        leading: Padding(
-          padding: const EdgeInsets.fromLTRB(5, 2, 0, 0),
-          child: IconButton(
-            icon: Icon(
-              Icons.exit_to_app,
-              color: Colors.grey[400],
-              size: 30,
+          leading: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 2, 0, 0),
+            child: IconButton(
+              icon: Icon(
+                Icons.exit_to_app,
+                color: Colors.grey[400],
+                size: 30,
+              ),
+              onPressed: () {
+                Navigator.of(context).push(_createRouteHome());
+              },
             ),
-            onPressed: () {
-              Navigator.of(context).push(_createRouteHome());
-            },
           ),
-        ),
-        titleSpacing: 10,
-        backgroundColor: Colors.grey[900],
-        title: new Text(
-          '$pageTitle',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontFamily: 'Headline',
-            height: 1.3,
-            fontSize: 24.0,
-            color: Colors.grey[600],
-            letterSpacing: 2,
+          titleSpacing: 10,
+          backgroundColor: Colors.grey[900],
+          title: new Text(
+            '$pageTitle',
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontFamily: 'Headline',
+              height: 1.3,
+              fontSize: 24.0,
+              color: Colors.grey[600],
+              letterSpacing: 2,
+            ),
           ),
-        ),
-        actions: <Widget>[
-          new Container(),
-        ],
-      ),
+          actions: <Widget>[
+            Container(
+              width: MediaQuery.of(context).size.width * 0.5,
+              height: double.infinity,
+              child: Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+                  child: new Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Builder(
+                        builder: (BuildContext context) {
+                          return GestureDetector(
+                            onTap: () {
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(displayAlert('NEW TURN'));
+                              widget.dsix.newTurn();
+                            },
+                            child: SvgPicture.asset(
+                              'assets/player/action.svg',
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width * 0.05,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            )
+          ]),
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
       drawer: Container(

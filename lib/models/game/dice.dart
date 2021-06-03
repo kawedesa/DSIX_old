@@ -4,13 +4,13 @@ class Dice {
   String dice = 'Roll';
   double animationLines = 1;
 
-  Dice newDice() {
-    Dice newDice = new Dice(
+  Dice newDie() {
+    Dice newDie = new Dice(
       this.dice,
       this.animationLines,
     );
 
-    return newDice;
+    return newDie;
   }
 
   rollDice() {

@@ -5,14 +5,13 @@ class Quest {
   String name = 'NEW QUEST';
   String questDescription =
       'Each quest should be unique, with their backstory. Double tap the text to edit it and write your own story.';
-  String character = '-';
-  String background = '-';
-  String personality = '-';
-  String characterDescription = '-';
   String objective = '-';
   String target = '-';
   String location = '-';
   String reward = '-';
+  int questXP;
+  int questGold;
+  int questFame;
 
   List<String> characterList = [
     'Human',
@@ -65,58 +64,6 @@ class Quest {
     'Knight',
     'Monk',
     'Gardener',
-  ];
-
-  List<String> personalityList = [
-    'Brave',
-    'Clever',
-    'Coward',
-    'Friendly',
-    'Generous',
-    'Grumpy',
-    'Honest',
-    'Kind',
-    'Lazy',
-    'Nervous',
-    'Popular',
-    'Selfish',
-    'Serious',
-    'Shy',
-    'Stupid',
-    'Vain',
-    'Religious',
-    'Proud',
-    'Flamboyant',
-    'Stubborn',
-    'Obsessed',
-    'Greedy',
-    'Calm',
-    'Slow',
-  ];
-
-  List<String> characterDescriptionList = [
-    'Smelly',
-    'Old',
-    'Ugly',
-    'Weird',
-    'Sick',
-    'Weak',
-    'Strong',
-    'Hairy',
-    'Mute',
-    'Young',
-    'Blind',
-    'Pale',
-    'Tall',
-    'Short',
-    'Deaf',
-    'Bald',
-    'Fit',
-    'Fat',
-    'Gorgeous',
-    'Skinny',
-    'Tattooed',
-    'Unkempt',
   ];
 
   List<String> objectiveList = [
@@ -194,10 +141,6 @@ class Quest {
       name: 'NEW QUEST',
       questDescription:
           'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
-      character: '-',
-      background: '-',
-      personality: '-',
-      characterDescription: '-',
       objective: '-',
       target: '-',
       location: '-',
@@ -208,26 +151,6 @@ class Quest {
 
   void chooseQuest(String category) {
     switch (category) {
-      case 'character':
-        this.character =
-            '${genderList[Random().nextInt(genderList.length)]} ${characterList[Random().nextInt(characterList.length)]}';
-        break;
-
-      case 'background':
-        this.background =
-            backgroundList[Random().nextInt(backgroundList.length)];
-        break;
-
-      case 'personality':
-        this.personality =
-            personalityList[Random().nextInt(personalityList.length)];
-        break;
-
-      case 'characterDescription':
-        this.characterDescription = characterDescriptionList[
-            Random().nextInt(characterDescriptionList.length)];
-        break;
-
       case 'objective':
         this.objective = objectiveList[Random().nextInt(objectiveList.length)];
         break;
@@ -258,10 +181,6 @@ class Quest {
     String icon,
     String name,
     String questDescription,
-    String character,
-    String background,
-    String personality,
-    String characterDescription,
     String objective,
     String target,
     String location,
@@ -270,10 +189,6 @@ class Quest {
     this.icon = icon;
     this.name = name;
     this.questDescription = questDescription;
-    this.character = character;
-    this.background = background;
-    this.personality = personality;
-    this.characterDescription = characterDescription;
     this.objective = objective;
     this.target = target;
     this.location = location;
