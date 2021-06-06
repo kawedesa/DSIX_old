@@ -6,7 +6,7 @@ import '../models/gm/npc.dart';
 import '../models/gm/npcSkill.dart';
 import 'storyPage.dart';
 import 'lootPage.dart';
-
+import 'settingsPage.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'npcPage.dart';
 
@@ -38,32 +38,32 @@ class _GmUIState extends State<GmUI> {
       switch (index) {
         case 0:
           {
-            pageTitle = 'STORY';
+            pageTitle = 'SETTINGS';
           }
           break;
         case 1:
           {
-            pageTitle = 'NPC';
+            pageTitle = 'STORY';
           }
           break;
         case 2:
           {
-            pageTitle = 'LOOT';
+            pageTitle = 'NPC';
           }
           break;
         case 3:
           {
-            pageTitle = 'ACTION';
+            pageTitle = 'LOOT';
           }
           break;
         case 4:
           {
-            pageTitle = 'MAP';
+            pageTitle = 'ACTION';
           }
           break;
         case 5:
           {
-            pageTitle = 'HELP';
+            pageTitle = 'MAP';
           }
           break;
       }
@@ -75,32 +75,32 @@ class _GmUIState extends State<GmUI> {
       switch (index) {
         case 0:
           {
-            pageTitle = 'STORY';
+            pageTitle = 'SETTINGS';
           }
           break;
         case 1:
           {
-            pageTitle = 'NPC';
+            pageTitle = 'STORY';
           }
           break;
         case 2:
           {
-            pageTitle = 'LOOT';
+            pageTitle = 'NPC';
           }
           break;
         case 3:
           {
-            pageTitle = 'ACTION';
+            pageTitle = 'LOOT';
           }
           break;
         case 4:
           {
-            pageTitle = 'MAP';
+            pageTitle = 'ACTION';
           }
           break;
         case 5:
           {
-            pageTitle = 'HELP';
+            pageTitle = 'MAP';
           }
           break;
       }
@@ -112,6 +112,19 @@ class _GmUIState extends State<GmUI> {
 
   List<BottomNavigationBarItem> buildBottomNavBarItems() {
     return [
+      BottomNavigationBarItem(
+        activeIcon: new SvgPicture.asset(
+          'assets/gm/settings.svg',
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width * 0.085,
+        ),
+        icon: new SvgPicture.asset(
+          'assets/gm/settings.svg',
+          color: Colors.grey[600],
+          width: MediaQuery.of(context).size.width * 0.075,
+        ),
+        label: 'SETTINGS',
+      ),
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/gm/story.svg',
@@ -177,19 +190,6 @@ class _GmUIState extends State<GmUI> {
         ),
         label: '',
       ),
-      BottomNavigationBarItem(
-        activeIcon: new SvgPicture.asset(
-          'assets/player/help.svg',
-          color: Colors.white,
-          width: MediaQuery.of(context).size.width * 0.085,
-        ),
-        icon: new SvgPicture.asset(
-          'assets/player/help.svg',
-          color: Colors.grey[600],
-          width: MediaQuery.of(context).size.width * 0.075,
-        ),
-        label: '',
-      ),
     ];
   }
 
@@ -205,13 +205,17 @@ class _GmUIState extends State<GmUI> {
         pageChanged(index);
       },
       children: <Widget>[
+        SettingsPage(
+          dsix: widget.dsix,
+          refresh: refreshPage,
+          pageChanged: bottomTapped,
+        ),
         StoryPage(
           dsix: widget.dsix,
           refresh: refreshPage,
         ),
         NpcPage(dsix: widget.dsix, refresh: refreshPage),
         LootPage(dsix: widget.dsix, refresh: refreshPage),
-        NpcPage(dsix: widget.dsix, refresh: refreshPage),
         NpcPage(dsix: widget.dsix, refresh: refreshPage),
         NpcPage(dsix: widget.dsix, refresh: refreshPage),
       ],

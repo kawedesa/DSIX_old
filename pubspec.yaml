@@ -64,6 +64,7 @@ flutter:
   - assets/logo/
   - assets/effect/
   - assets/gm/
+  - assets/gm/settings/
   - assets/gm/story/quest/
   - assets/gm/npc/
   - assets/gm/npc/skill/pSkill/

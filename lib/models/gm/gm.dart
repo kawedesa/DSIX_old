@@ -1,49 +1,18 @@
-import 'quest.dart';
 import 'package:dsixv02app/models/gm/npcTypeList.dart';
 import 'package:dsixv02app/models/gm/npc.dart';
 import 'package:dsixv02app/models/gm/loot.dart';
+import 'story.dart';
+import 'package:dsixv02app/models/player/player.dart';
 
 class Gm {
-//STORY AND QUESTS
+  // SET PLAYERS
 
-  List<Quest> questList = [];
+  // SET DIFFICULTY AND STORY
 
-  // Campaign campaign;
+  Story story = Story();
 
-  Quest selectedQuest = Quest(
-    icon: 'quest',
-    name: 'NEW QUEST',
-    questDescription:
-        'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
-    character: '-',
-    background: '-',
-    personality: '-',
-    characterDescription: '-',
-    objective: '-',
-    target: '-',
-    location: '-',
-    reward: '-',
-  );
-
-  void createQuest() {
-    Quest newQuest = new Quest(
-      icon: 'quest',
-      name: 'NEW QUEST',
-      questDescription:
-          'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
-      character: '-',
-      background: '-',
-      personality: '-',
-      characterDescription: '-',
-      objective: '-',
-      target: '-',
-      location: '-',
-      reward: '-',
-    );
-
-    this.selectedQuest = newQuest;
-
-    this.questList.add(newQuest);
+  void startQuest() {
+    this.story.acceptQuest();
   }
 
 //NPCS AND MONSTERS
@@ -103,6 +72,8 @@ class Gm {
 
     this.selectedLoot = newLoot;
   }
+
+//TURNS
 
   Gm();
 }

@@ -12,6 +12,7 @@ class Quest {
   int questXP;
   int questGold;
   int questFame;
+  bool onGoing = false;
 
   List<String> characterList = [
     'Human',
@@ -147,6 +148,29 @@ class Quest {
       reward: '-',
     );
     return newQuest;
+  }
+
+  Quest newRandomQuest() {
+    String randomObjective =
+        '${objectiveList[Random().nextInt(objectiveList.length)]}';
+    String randomTarget = (target == 'Person')
+        ? '${characterList[Random().nextInt(characterList.length)]} ${backgroundList[Random().nextInt(backgroundList.length)]}'
+        : 'Group of ${backgroundList[Random().nextInt(backgroundList.length)]} ${characterList[Random().nextInt(characterList.length)]}s';
+    String randomLocation =
+        '${locationList[Random().nextInt(locationList.length)]}';
+    String randomReward = '${rewardList[Random().nextInt(rewardList.length)]}';
+
+    Quest newRandomQuest = new Quest(
+      icon: 'quest',
+      name: randomObjective,
+      questDescription:
+          '$randomObjective a $randomTarget at the $randomLocation and you will get $randomReward.',
+      objective: randomObjective,
+      target: randomTarget,
+      location: randomLocation,
+      reward: randomReward,
+    );
+    return newRandomQuest;
   }
 
   void chooseQuest(String category) {

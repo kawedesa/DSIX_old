@@ -21,12 +21,12 @@ class _StoryPageState extends State<StoryPage> {
   List<bool> questSelection;
 
   void selectQuest(int index) {
-    widget.dsix.gm.selectedQuest = widget.dsix.gm.questList[index];
+    widget.dsix.gm.story.selectQuest(index);
     _layoutIndex = 1;
   }
 
   void deleteQuest() {
-    widget.dsix.gm.questList.remove(widget.dsix.gm.selectedQuest);
+    widget.dsix.gm.story.cancelQuest();
 
     _layoutIndex = 0;
   }
@@ -39,8 +39,8 @@ class _StoryPageState extends State<StoryPage> {
   @override
   Widget build(BuildContext context) {
     questSelection = [];
-    widget.dsix.gm.questList.forEach((element) {
-      if (element == widget.dsix.gm.selectedQuest) {
+    widget.dsix.gm.story.questList.forEach((element) {
+      if (element == widget.dsix.gm.story.newQuest) {
         questSelection.add(true);
       } else {
         questSelection.add(false);
@@ -82,7 +82,7 @@ class _StoryPageState extends State<StoryPage> {
                     physics: ScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
-                    itemCount: widget.dsix.gm.questList.length,
+                    itemCount: widget.dsix.gm.story.questList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
@@ -94,7 +94,7 @@ class _StoryPageState extends State<StoryPage> {
                           height: 35,
                           width: 35,
                           child: SvgPicture.asset(
-                            'assets/gm/story/quest/${widget.dsix.gm.questList[index].icon}.svg',
+                            'assets/gm/story/quest/${widget.dsix.gm.story.questList[index].icon}.svg',
                             color: questSelection[index]
                                 ? Colors.grey[400]
                                 : Colors.grey[700],
@@ -155,7 +155,8 @@ class _StoryPageState extends State<StoryPage> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
                       onPressed: () {
-                        widget.dsix.gm.createQuest();
+                        // widget.dsix.gm.story.createQuest();
+                        // widget.dsix.gm.story.newStory();
                         _layoutIndex = 1;
                         widget.refresh();
                       },
@@ -218,7 +219,7 @@ class _StoryPageState extends State<StoryPage> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              '${widget.dsix.gm.selectedQuest.name}',
+                              '${widget.dsix.gm.story.newQuest.name}',
                               style: TextStyle(
                                 fontFamily: 'Headline',
                                 height: 1.3,
@@ -245,9 +246,9 @@ class _StoryPageState extends State<StoryPage> {
                           ],
                         ),
                         Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                          padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                           child: Text(
-                            '${widget.dsix.gm.selectedQuest.questDescription}',
+                            '${widget.dsix.gm.story.newQuest.questDescription}',
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               height: 1.3,
@@ -258,6 +259,83 @@ class _StoryPageState extends State<StoryPage> {
                           ),
                         ),
                       ],
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(65, 0, 65, 15),
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      ),
+                      onPressed: () {
+                        widget.dsix.checkPlayers();
+                        setState(() {
+                          (widget.dsix.gm.story.newQuest.onGoing)
+                              ? widget.dsix.gm.story.finishQuest()
+                              : widget.dsix.gm.story.acceptQuest();
+                        });
+
+                        widget.refresh();
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.058,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: (widget.dsix.gm.story.newQuest.onGoing)
+                                ? Colors.green
+                                : Colors.grey[700],
+                            width:
+                                2, //                   <--- border width here
+                          ),
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerEnd,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Icon(
+                                    Icons.check,
+                                    color:
+                                        (widget.dsix.gm.story.newQuest.onGoing)
+                                            ? Colors.green
+                                            : Colors.grey[700],
+                                    size: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: (widget.dsix.gm.story.newQuest.onGoing)
+                                  ? Text(
+                                      'FINISH',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.5,
+                                        fontFamily: 'Calibri',
+                                        color: Colors.white,
+                                      ),
+                                    )
+                                  : Text(
+                                      'ACCEPT',
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.5,
+                                        fontFamily: 'Calibri',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
                   ),
                   Divider(
@@ -271,158 +349,158 @@ class _StoryPageState extends State<StoryPage> {
                       physics: AlwaysScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       children: [
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: ListTile(
+                        //     onTap: () {
+                        //       setState(() {
+                        //         widget.dsix.gm.selectedQuest
+                        //             .chooseQuest('character');
+                        //         widget.refresh();
+                        //       });
+                        //     },
+                        //     title: Text(
+                        //       'Character:',
+                        //       style: TextStyle(
+                        //         fontFamily: 'Headliner',
+                        //         height: 1.5,
+                        //         fontSize: 20.0,
+                        //         color: Colors.grey[300],
+                        //         letterSpacing: 2.5,
+                        //       ),
+                        //     ),
+                        //     trailing: Text(
+                        //       widget.dsix.gm.selectedQuest.character,
+                        //       style: TextStyle(
+                        //         height: 1.5,
+                        //         fontSize: 18,
+                        //         fontFamily: 'Calibri',
+                        //         color: Colors.white,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Divider(
+                        //   height: 0,
+                        //   thickness: 2,
+                        //   color: Colors.grey[700],
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: ListTile(
+                        //     onTap: () {
+                        //       setState(() {
+                        //         widget.dsix.gm.selectedQuest
+                        //             .chooseQuest('background');
+                        //         widget.refresh();
+                        //       });
+                        //     },
+                        //     title: Text(
+                        //       'Background:',
+                        //       style: TextStyle(
+                        //         fontFamily: 'Headliner',
+                        //         height: 1.5,
+                        //         fontSize: 20.0,
+                        //         color: Colors.grey[300],
+                        //         letterSpacing: 2.5,
+                        //       ),
+                        //     ),
+                        //     trailing: Text(
+                        //       widget.dsix.gm.selectedQuest.background,
+                        //       style: TextStyle(
+                        //         height: 1.5,
+                        //         fontSize: 18,
+                        //         fontFamily: 'Calibri',
+                        //         color: Colors.white,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Divider(
+                        //   height: 0,
+                        //   thickness: 2,
+                        //   color: Colors.grey[700],
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: ListTile(
+                        //     onTap: () {
+                        //       setState(() {
+                        //         widget.dsix.gm.selectedQuest
+                        //             .chooseQuest('personality');
+                        //         widget.refresh();
+                        //       });
+                        //     },
+                        //     title: Text(
+                        //       'Personality:',
+                        //       style: TextStyle(
+                        //         fontFamily: 'Headliner',
+                        //         height: 1.5,
+                        //         fontSize: 20.0,
+                        //         color: Colors.grey[300],
+                        //         letterSpacing: 2.5,
+                        //       ),
+                        //     ),
+                        //     trailing: Text(
+                        //       widget.dsix.gm.selectedQuest.personality,
+                        //       style: TextStyle(
+                        //         height: 1.5,
+                        //         fontSize: 18,
+                        //         fontFamily: 'Calibri',
+                        //         color: Colors.white,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Divider(
+                        //   height: 0,
+                        //   thickness: 2,
+                        //   color: Colors.grey[700],
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: ListTile(
+                        //     onTap: () {
+                        //       setState(() {
+                        //         widget.dsix.gm.selectedQuest
+                        //             .chooseQuest('characterDescription');
+                        //         widget.refresh();
+                        //       });
+                        //     },
+                        //     title: Text(
+                        //       'Description:',
+                        //       style: TextStyle(
+                        //         fontFamily: 'Headliner',
+                        //         height: 1.5,
+                        //         fontSize: 20.0,
+                        //         color: Colors.grey[300],
+                        //         letterSpacing: 2.5,
+                        //       ),
+                        //     ),
+                        //     trailing: Text(
+                        //       widget.dsix.gm.selectedQuest.characterDescription,
+                        //       style: TextStyle(
+                        //         height: 1.5,
+                        //         fontSize: 18,
+                        //         fontFamily: 'Calibri',
+                        //         color: Colors.white,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
+                        // Divider(
+                        //   height: 0,
+                        //   thickness: 2,
+                        //   color: Colors.grey[700],
+                        // ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: ListTile(
                             onTap: () {
                               setState(() {
-                                widget.dsix.gm.selectedQuest
-                                    .chooseQuest('character');
-                                widget.refresh();
-                              });
-                            },
-                            title: Text(
-                              'Character:',
-                              style: TextStyle(
-                                fontFamily: 'Headliner',
-                                height: 1.5,
-                                fontSize: 20.0,
-                                color: Colors.grey[300],
-                                letterSpacing: 2.5,
-                              ),
-                            ),
-                            trailing: Text(
-                              widget.dsix.gm.selectedQuest.character,
-                              style: TextStyle(
-                                height: 1.5,
-                                fontSize: 18,
-                                fontFamily: 'Calibri',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          height: 0,
-                          thickness: 2,
-                          color: Colors.grey[700],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: ListTile(
-                            onTap: () {
-                              setState(() {
-                                widget.dsix.gm.selectedQuest
-                                    .chooseQuest('background');
-                                widget.refresh();
-                              });
-                            },
-                            title: Text(
-                              'Background:',
-                              style: TextStyle(
-                                fontFamily: 'Headliner',
-                                height: 1.5,
-                                fontSize: 20.0,
-                                color: Colors.grey[300],
-                                letterSpacing: 2.5,
-                              ),
-                            ),
-                            trailing: Text(
-                              widget.dsix.gm.selectedQuest.background,
-                              style: TextStyle(
-                                height: 1.5,
-                                fontSize: 18,
-                                fontFamily: 'Calibri',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          height: 0,
-                          thickness: 2,
-                          color: Colors.grey[700],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: ListTile(
-                            onTap: () {
-                              setState(() {
-                                widget.dsix.gm.selectedQuest
-                                    .chooseQuest('personality');
-                                widget.refresh();
-                              });
-                            },
-                            title: Text(
-                              'Personality:',
-                              style: TextStyle(
-                                fontFamily: 'Headliner',
-                                height: 1.5,
-                                fontSize: 20.0,
-                                color: Colors.grey[300],
-                                letterSpacing: 2.5,
-                              ),
-                            ),
-                            trailing: Text(
-                              widget.dsix.gm.selectedQuest.personality,
-                              style: TextStyle(
-                                height: 1.5,
-                                fontSize: 18,
-                                fontFamily: 'Calibri',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          height: 0,
-                          thickness: 2,
-                          color: Colors.grey[700],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: ListTile(
-                            onTap: () {
-                              setState(() {
-                                widget.dsix.gm.selectedQuest
-                                    .chooseQuest('characterDescription');
-                                widget.refresh();
-                              });
-                            },
-                            title: Text(
-                              'Description:',
-                              style: TextStyle(
-                                fontFamily: 'Headliner',
-                                height: 1.5,
-                                fontSize: 20.0,
-                                color: Colors.grey[300],
-                                letterSpacing: 2.5,
-                              ),
-                            ),
-                            trailing: Text(
-                              widget.dsix.gm.selectedQuest.characterDescription,
-                              style: TextStyle(
-                                height: 1.5,
-                                fontSize: 18,
-                                fontFamily: 'Calibri',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                        Divider(
-                          height: 0,
-                          thickness: 2,
-                          color: Colors.grey[700],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: ListTile(
-                            onTap: () {
-                              setState(() {
-                                widget.dsix.gm.selectedQuest
-                                    .chooseQuest('objective');
-                                widget.refresh();
+                                // widget.dsix.gm.selectedQuest
+                                //     .chooseQuest('objective');
+                                // widget.refresh();
                               });
                             },
                             title: Text(
@@ -436,7 +514,7 @@ class _StoryPageState extends State<StoryPage> {
                               ),
                             ),
                             trailing: Text(
-                              widget.dsix.gm.selectedQuest.objective,
+                              widget.dsix.gm.story.newQuest.objective,
                               style: TextStyle(
                                 height: 1.5,
                                 fontSize: 18,
@@ -456,9 +534,9 @@ class _StoryPageState extends State<StoryPage> {
                           child: ListTile(
                             onTap: () {
                               setState(() {
-                                widget.dsix.gm.selectedQuest
-                                    .chooseQuest('target');
-                                widget.refresh();
+                                // widget.dsix.gm.story.newQuest
+                                //     .chooseQuest('target');
+                                // widget.refresh();
                               });
                             },
                             title: Text(
@@ -472,7 +550,7 @@ class _StoryPageState extends State<StoryPage> {
                               ),
                             ),
                             trailing: Text(
-                              widget.dsix.gm.selectedQuest.target,
+                              widget.dsix.gm.story.newQuest.target,
                               style: TextStyle(
                                 height: 1.5,
                                 fontSize: 18,
@@ -492,9 +570,9 @@ class _StoryPageState extends State<StoryPage> {
                           child: ListTile(
                             onTap: () {
                               setState(() {
-                                widget.dsix.gm.selectedQuest
-                                    .chooseQuest('location');
-                                widget.refresh();
+                                // widget.dsix.gm.story.newQuest
+                                //     .chooseQuest('location');
+                                // widget.refresh();
                               });
                             },
                             title: Text(
@@ -508,7 +586,7 @@ class _StoryPageState extends State<StoryPage> {
                               ),
                             ),
                             trailing: Text(
-                              widget.dsix.gm.selectedQuest.location,
+                              widget.dsix.gm.story.newQuest.location,
                               style: TextStyle(
                                 height: 1.5,
                                 fontSize: 18,
@@ -528,7 +606,7 @@ class _StoryPageState extends State<StoryPage> {
                           child: ListTile(
                             onTap: () {
                               setState(() {
-                                widget.dsix.gm.selectedQuest
+                                widget.dsix.gm.story.newQuest
                                     .chooseQuest('reward');
                                 widget.refresh();
                               });
@@ -544,7 +622,7 @@ class _StoryPageState extends State<StoryPage> {
                               ),
                             ),
                             trailing: Text(
-                              widget.dsix.gm.selectedQuest.reward,
+                              widget.dsix.gm.story.newQuest.reward,
                               style: TextStyle(
                                 height: 1.5,
                                 fontSize: 18,

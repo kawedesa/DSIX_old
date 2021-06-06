@@ -117,6 +117,7 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
     widget.dsix.getCurrentPlayer().playerColor.name = myController.text;
 
     widget.dsix.getCurrentPlayer().characterFinished = true;
+    widget.dsix.checkPlayers();
 
     Navigator.push(
       context,

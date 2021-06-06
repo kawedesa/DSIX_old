@@ -1,22 +1,18 @@
 import '../player/player.dart';
-import 'shop.dart';
+
 import 'package:dsixv02app/models/gm/gm.dart';
 import 'package:flutter/material.dart';
 
 class Dsix {
-  int currentPlayerIndex;
-
-  List<Player> players = [];
-
   // Gm gm;
 
   Gm gm = new Gm();
 
-  // Shop
-
-  static Shop shop;
-
   Dsix();
+
+  int currentPlayerIndex;
+
+  List<Player> players = [];
 
   void setCurrentPlayer(int playerIndex) {
     this.currentPlayerIndex = playerIndex;
@@ -79,6 +75,16 @@ class Dsix {
         ]);
         break;
     }
+  }
+
+  int numberPlayers = 0;
+  void checkPlayers() {
+    this.numberPlayers = 0;
+    this.players.forEach((element) {
+      if (element.characterFinished) {
+        this.numberPlayers++;
+      }
+    });
   }
 
   void newTurn() {
