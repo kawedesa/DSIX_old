@@ -48,10 +48,10 @@ class Player {
   List<PlayerRace> availableRaces = PlayerRaceList().races;
 
   PlayerRace race = PlayerRace(
-    'null',
-    'RACES',
-    'There are many races in this world. They vary in size, culture and color. Click on the icons above to choose a race.',
-    [
+    race: 'RACES',
+    description:
+        'There are many races in this world. They vary in size, culture and color. Click on the icons above to choose a race.',
+    bonus: [
       Bonus(
         'BONUS',
         'bonus',
@@ -62,95 +62,13 @@ class Player {
 
   String playerSex = 'female';
 
-  // int availableActionPoint;
-  // List<int> originalActionPoint;
-
-  List<int> actionPoints = [
-    0, //0-Available Action Points
-    0, //1-ATTACK
-    0, //2-DEFENSE
-    0, //3-PERCEIVE
-    0, //4-TALK
-    0, //5-MOVE
-    0, //6-SKILL
-  ];
-
   int currentHealth;
-  int maxHealth;
+
   int currentWeight;
-  int maxWeight;
 
   void chooseRace(int index) {
     this.race = this.availableRaces[index];
-
-    this.maxHealth = 12;
-    this.maxWeight = 12;
-
-    for (int i = 0; i < actionPoints.length; i++) {
-      actionPoints[i] = 0;
-    }
-
-    this.actionPoints[0] = 3;
-
-    for (PlayerAction playerAction in this.playerAction) {
-      playerAction.value = 0;
-    }
-
-    switch (this.race.race) {
-      case 'HUMAN':
-        {
-          this.actionPoints[0] = 2; //ACTION POINT
-          this.actionPoints[1] = 1;
-          this.actionPoints[2] = 1;
-          this.actionPoints[3] = 1;
-          this.actionPoints[4] = 1;
-          this.actionPoints[5] = 1;
-          this.actionPoints[6] = 1;
-        }
-        break;
-
-      case 'ORC':
-        {
-          this.actionPoints[1] = 1; //ATTACK
-          this.actionPoints[5] = -1; //MOVE
-          this.maxWeight = 16; //WEIGHT
-        }
-        break;
-
-      case 'GOBLIN':
-        {
-          this.actionPoints[1] = 1; //ATTACK
-          this.actionPoints[5] = 1; //MOVE
-          this.maxWeight = 8; //WEIGHT
-        }
-        break;
-
-      case 'DWARF':
-        {
-          this.actionPoints[2] = 1; //DEFENSE
-          this.actionPoints[3] = -1; //PERCEIVE
-          this.maxHealth = 16; //HEALTH
-        }
-        break;
-
-      case 'HALFLING':
-        {
-          this.actionPoints[1] = -1; //ATTACK
-          this.actionPoints[3] = 1; //PERCEIVE
-          this.actionPoints[4] = 1; //TALK
-        }
-        break;
-
-      case 'ELF':
-        {
-          this.actionPoints[2] = -1; //DEFENCE
-          this.actionPoints[3] = 1; //PERCEIVE
-          this.actionPoints[5] = 1; //MOVE
-        }
-        break;
-    }
-
-    this.currentHealth = this.maxHealth;
+    this.currentHealth = this.race.maxHealth;
     this.currentWeight = 0;
   }
 
@@ -187,8 +105,8 @@ class Player {
   int pArmor = 0;
   int mArmor = 0;
 
-  int fame = 0;
-  int gold = 500;
+  int fame;
+  int gold;
   EffectList effectList = EffectList();
 
   List<Effect> effects = [];
@@ -450,8 +368,8 @@ class Player {
   void chooseSkill(int index) {
     this.playerAction[6] = availableSkills[index];
 
-    for (int i = 0; i < playerAction.length; i++) {
-      playerAction[i].value = actionPoints[i];
+    for (int i = 0; i < this.playerAction.length; i++) {
+      this.playerAction[i].value = this.race.actionPoints[i];
     }
   }
 
@@ -469,7 +387,7 @@ class Player {
   }
 
   void decreaseActionPoint(int index) {
-    if (this.playerAction[index].value != this.actionPoints[index]) {
+    if (this.playerAction[index].value != this.race.actionPoints[index]) {
       this.playerAction[index].value--;
       this.playerAction[0].value++;
     }
@@ -483,7 +401,7 @@ class Player {
           'You don\'t have enough gold to buy this item.');
     }
 
-    if (this.maxWeight - this.currentWeight < item.weight) {
+    if (this.race.maxWeight - this.currentWeight < item.weight) {
       throw new TooHeavyException(
           'You are carrying too much weight and can\'t carry this item.');
     }
@@ -497,24 +415,24 @@ class Player {
   void use(Item item) {
     switch (item.name) {
       case 'BANDAGES':
-        if (this.currentHealth == this.maxHealth) {
+        if (this.currentHealth == this.race.maxHealth) {
           throw new MaxHpException();
         }
         this.currentHealth += Random().nextInt(2) + 1;
-        if (this.currentHealth > this.maxHealth) {
-          this.currentHealth = this.maxHealth;
+        if (this.currentHealth > this.race.maxHealth) {
+          this.currentHealth = this.race.maxHealth;
         }
         this.inventory.remove(item);
         playerTurn();
         break;
 
       case 'FOOD':
-        if (this.currentHealth == this.maxHealth) {
+        if (this.currentHealth == this.race.maxHealth) {
           throw new MaxHpException();
         }
         this.currentHealth += Random().nextInt(5) + 1;
-        if (this.currentHealth > this.maxHealth) {
-          this.currentHealth = this.maxHealth;
+        if (this.currentHealth > this.race.maxHealth) {
+          this.currentHealth = this.race.maxHealth;
         }
         this.inventory.remove(item);
         playerTurn();
@@ -526,12 +444,12 @@ class Player {
         break;
 
       case 'HEALING POTION':
-        if (this.currentHealth == this.maxHealth) {
+        if (this.currentHealth == this.race.maxHealth) {
           throw new MaxHpException();
         }
         this.currentHealth += Random().nextInt(7) + 6;
-        if (this.currentHealth > this.maxHealth) {
-          this.currentHealth = this.maxHealth;
+        if (this.currentHealth > this.race.maxHealth) {
+          this.currentHealth = this.race.maxHealth;
         }
         this.inventory.remove(item);
         playerTurn();
@@ -1075,6 +993,19 @@ class Player {
 
     lootList.add('${shop.resources[loot].name}');
     return lootList;
+  }
+
+  void createRandomPlayer() {
+    chooseRace(Random().nextInt(this.availableRaces.length));
+    chooseBackground(Random().nextInt(this.availableBackgrounds.length));
+    chooseSkill(Random().nextInt(this.availableSkills.length));
+    while (this.playerAction[0].value > 0) {
+      int random = Random().nextInt(5) + 1;
+      increaseActionPoint(random);
+    }
+    this.playerColor.name =
+        '${Random().nextInt(10)}${Random().nextInt(10)}${Random().nextInt(10)}';
+    this.characterFinished = true;
   }
 
   Player(this.playerColor);

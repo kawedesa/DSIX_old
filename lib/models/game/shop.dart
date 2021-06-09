@@ -1,4 +1,5 @@
 import 'item.dart';
+import 'dart:math';
 
 class Shop {
   List<Item> menuSelection(String selection) {
@@ -37,6 +38,91 @@ class Shop {
     }
 
     return [];
+  }
+
+  Item randomResource() {
+    int randomNumber = Random().nextInt(this.resources.length);
+
+    Item newResource = this.resources[randomNumber];
+
+    return newResource;
+  }
+
+  Item randomItemRange(int min, int max) {
+    List<String> shopMenu = [
+      'lightWeapons',
+      'heavyWeapons',
+      'rangedWeapons',
+      'magicWeapons',
+      'armor',
+    ];
+
+    int menuSelection;
+    int randomItem;
+
+    bool itemNotFound = true;
+
+    while (itemNotFound) {
+      menuSelection = Random().nextInt(shopMenu.length);
+
+      switch (shopMenu[menuSelection]) {
+        case 'lightWeapons':
+          randomItem = Random().nextInt(this.lightWeapons.length);
+
+          if (this.lightWeapons[randomItem].value <= max &&
+              this.lightWeapons[randomItem].value >= min) {
+            itemNotFound = false;
+            return this.lightWeapons[randomItem];
+          }
+
+          break;
+
+        case 'heavyWeapons':
+          randomItem = Random().nextInt(this.heavyWeapons.length);
+
+          if (this.heavyWeapons[randomItem].value <= max &&
+              this.heavyWeapons[randomItem].value >= min) {
+            itemNotFound = false;
+            return this.heavyWeapons[randomItem];
+          }
+
+          break;
+
+        case 'rangedWeapons':
+          randomItem = Random().nextInt(this.rangedWeapons.length);
+
+          if (this.rangedWeapons[randomItem].value <= max &&
+              this.rangedWeapons[randomItem].value >= min) {
+            itemNotFound = false;
+            return this.rangedWeapons[randomItem];
+          }
+
+          break;
+
+        case 'magicWeapons':
+          randomItem = Random().nextInt(this.magicWeapons.length);
+
+          if (this.magicWeapons[randomItem].value <= max &&
+              this.magicWeapons[randomItem].value >= min) {
+            itemNotFound = false;
+            return this.magicWeapons[randomItem];
+          }
+
+          break;
+
+        case 'armor':
+          randomItem = Random().nextInt(this.armor.length);
+
+          if (this.armor[randomItem].value <= max &&
+              this.armor[randomItem].value >= min) {
+            itemNotFound = false;
+            return this.armor[randomItem];
+          }
+          break;
+      }
+    }
+
+    return null;
   }
 
   //Item(this.icon, this.name, this.itemClass, this.inventorySpace,  this.description, this.pDamage, this.pArmor, this.mDamage, this.mArmor,this.weight,this.uses,this.value,);

@@ -28,7 +28,8 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 1.5, //                   <--- border width here
               ),
             ),
@@ -38,13 +39,15 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                     child: Center(
                       child: Text(
-                        widget.dsix
+                        widget.dsix.gm
                             .getCurrentPlayer()
                             .playerBackground
                             .bonus[index]
@@ -63,7 +66,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
                   child: Text(
-                    widget.dsix
+                    widget.dsix.gm
                         .getCurrentPlayer()
                         .playerBackground
                         .bonus[index]
@@ -124,8 +127,8 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
   Widget build(BuildContext context) {
 //BACKGROUND SELECTION
     backgroundSelection = [];
-    widget.dsix.getCurrentPlayer().availableBackgrounds.forEach((element) {
-      if (element == widget.dsix.getCurrentPlayer().playerBackground) {
+    widget.dsix.gm.getCurrentPlayer().availableBackgrounds.forEach((element) {
+      if (element == widget.dsix.gm.getCurrentPlayer().playerBackground) {
         backgroundSelection.add(true);
       } else {
         backgroundSelection.add(false);
@@ -138,14 +141,15 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
-              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+              color:
+                  widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
               size: 40,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           titleSpacing: 0,
           backgroundColor:
-              widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+              widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
           centerTitle: true,
           title: new Text(
             'Background ',
@@ -154,7 +158,8 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
               fontFamily: 'Headline',
               height: 1.1,
               fontSize: 25.0,
-              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+              color:
+                  widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
               letterSpacing: 2,
             ),
           ),
@@ -199,7 +204,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                             child: GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  widget.dsix
+                                  widget.dsix.gm
                                       .getCurrentPlayer()
                                       .chooseBackground(index);
 
@@ -207,9 +212,9 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                                 });
                               },
                               child: SvgPicture.asset(
-                                'assets/player/background/${widget.dsix.getCurrentPlayer().availableBackgrounds[index].icon}.svg',
+                                'assets/player/background/${widget.dsix.gm.getCurrentPlayer().availableBackgrounds[index].icon}.svg',
                                 color: backgroundSelection[index]
-                                    ? widget.dsix
+                                    ? widget.dsix.gm
                                         .getCurrentPlayer()
                                         .playerColor
                                         .primaryColor
@@ -226,7 +231,8 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
               Divider(
                 height: 0,
                 thickness: 2,
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
               ),
               Expanded(
                 flex: 13,
@@ -242,7 +248,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                               child: Text(
-                                widget.dsix
+                                widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerBackground
                                     .background,
@@ -250,7 +256,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                                   fontFamily: 'Headline',
                                   height: 1.3,
                                   fontSize: 45,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -261,7 +267,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                               child: Text(
-                                widget.dsix
+                                widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerBackground
                                     .description,
@@ -277,7 +283,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                             ListView.builder(
                                 shrinkWrap: true,
                                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                itemCount: widget.dsix
+                                itemCount: widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerBackground
                                     .bonus
@@ -298,7 +304,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: widget.dsix
+                                          color: widget.dsix.gm
                                               .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,
@@ -322,7 +328,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                                                         0, 0, 10, 0),
                                                 child: SvgPicture.asset(
                                                   'assets/ui/help.svg',
-                                                  color: widget.dsix
+                                                  color: widget.dsix.gm
                                                       .getCurrentPlayer()
                                                       .playerColor
                                                       .primaryColor,
@@ -336,7 +342,7 @@ class _PlayerBackgroundPageState extends State<PlayerBackgroundPage> {
                                           ),
                                           Center(
                                             child: Text(
-                                              widget.dsix
+                                              widget.dsix.gm
                                                   .getCurrentPlayer()
                                                   .playerBackground
                                                   .bonus[index]

@@ -47,6 +47,10 @@ class _StoryPageState extends State<StoryPage> {
       }
     });
 
+    if (widget.dsix.gm.story.questList.isEmpty) {
+      _layoutIndex = 0;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -268,13 +272,11 @@ class _StoryPageState extends State<StoryPage> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
                       onPressed: () {
-                        widget.dsix.checkPlayers();
                         setState(() {
                           (widget.dsix.gm.story.newQuest.onGoing)
-                              ? widget.dsix.gm.story.finishQuest()
-                              : widget.dsix.gm.story.acceptQuest();
+                              ? widget.dsix.gm.finishQuest()
+                              : widget.dsix.gm.startQuest();
                         });
-
                         widget.refresh();
                       },
                       child: Container(

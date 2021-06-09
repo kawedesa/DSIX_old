@@ -1,21 +1,27 @@
-import 'npcSkill.dart';
-import 'npcSkillList.dart';
+import 'characterSkill.dart';
 import 'dart:math';
 
-class Npc {
-  NpcSkillList npcSkills = new NpcSkillList();
+class Character {
+  // CharacterSkillList CharacterSkills = new CharacterSkillList();
 
+//NAME DESCRIPTION
   String icon;
   String name;
   String description;
   String image;
 
-  int amount = 1;
+//HEALTH
 
   int baseHealth;
   int maxHealth;
   int currentHealth = 0;
+
+  //DICE
+
   int dice;
+
+  //STATS
+
   int pDamage;
   int pArmor;
   int mDamage;
@@ -23,38 +29,42 @@ class Npc {
   int pSkill;
   int mSkill;
 
-  List<NpcSkill> possibleSkills = [];
+//SKILLS
 
-  List<NpcSkill> selectedSkills = [];
+  List<CharacterSkill> possibleSkills = [];
+  List<CharacterSkill> availableSkills = [];
+  List<CharacterSkill> selectedSkills = [];
+
+  int amount = 1;
+
+//LOOT DESCRIPTION
 
   int totalLoot = 0;
   double baseLoot;
   int totalXp;
   int baseXp;
 
-  Npc newNpc() {
-    Npc newNpc = new Npc(
-      icon: this.icon,
-      name: this.name,
-      description: this.description,
-      image: this.image,
-      baseHealth: this.baseHealth,
-      dice: this.dice,
-      pDamage: this.pDamage,
-      pArmor: this.pArmor,
-      mDamage: this.mDamage,
-      mArmor: this.mArmor,
-      pSkill: this.pSkill,
-      mSkill: this.mSkill,
-      baseLoot: this.baseLoot,
-      baseXp: this.baseXp,
-    );
-
-    return newNpc;
+  void newCharacter() {
+    this.icon = 'character';
+    this.image = 'undead';
+    this.name = 'CHARACTER';
+    this.description = 'A character.';
+    this.baseHealth = 1;
+    this.dice = 1;
+    this.pDamage = 0;
+    this.pArmor = 0;
+    this.mDamage = 0;
+    this.mArmor = 0;
+    this.pSkill = 0;
+    this.mSkill = 0;
+    this.possibleSkills = [];
+    this.availableSkills = [];
+    this.selectedSkills = [];
+    this.baseLoot = 0;
+    this.baseXp = 0;
   }
 
-  void prepareNpc() {
-    this.possibleSkills = npcSkills.getSkills(this.name);
+  void prepareCharacterNpc() {
     this.maxHealth = this.baseHealth;
     this.currentHealth = this.maxHealth;
     this.totalLoot = this.baseLoot.toInt();
@@ -62,7 +72,7 @@ class Npc {
 
     for (int check = 0; check < this.pSkill; check++) {
       selectedSkills.add(
-        NpcSkill(
+        CharacterSkill(
           icon: 'pSkill',
           name: 'ABILITY',
           skillType: 'pSkill',
@@ -74,7 +84,7 @@ class Npc {
 
     for (int check = 0; check < this.mSkill; check++) {
       selectedSkills.add(
-        NpcSkill(
+        CharacterSkill(
           icon: 'mSkill',
           name: 'SPELL',
           skillType: 'mSkill',
@@ -103,7 +113,7 @@ class Npc {
     this.totalLoot += (this.baseLoot * value).toInt();
   }
 
-  void chooseAmount(int value) {
+  void setAmount(int value) {
     if (this.amount + value < 1) {
       this.amount = 1;
       return;
@@ -118,7 +128,7 @@ class Npc {
     this.totalLoot = (this.baseLoot * this.amount).toInt();
   }
 
-  String npcAction() {
+  String characterAction() {
     String result = 'roll';
 
     result = '${Random().nextInt(this.dice) + 1}';
@@ -126,43 +136,48 @@ class Npc {
     return result;
   }
 
-  List<NpcSkill> skillList = [];
+  void openSkill(CharacterSkill skill) {
+    this.availableSkills = [];
 
-  List<NpcSkill> openSkill(NpcSkill skill) {
-    this.skillList = [];
-    if (skill.icon == 'pSkill') {
-      this.possibleSkills.forEach((element) {
-        if (element.skillType == skill.skillType) {
-          this.skillList.add(element);
+    switch (skill.icon) {
+      case 'pSkill':
+        {
+          this.possibleSkills.forEach((element) {
+            if (element.skillType == 'pSkill') {
+              this.availableSkills.add(element);
+            }
+          });
         }
-      });
-      return this.skillList;
-    }
+        break;
 
-    if (skill.icon == 'mSkill') {
-      this.possibleSkills.forEach((element) {
-        if (element.skillType == skill.skillType) {
-          this.skillList.add(element);
+      case 'mSkill':
+        {
+          this.possibleSkills.forEach((element) {
+            if (element.skillType == 'mSkill') {
+              this.availableSkills.add(element);
+            }
+          });
         }
-      });
-      return this.skillList;
+        break;
     }
-
-    return this.skillList;
   }
 
-  void chooseSkill(NpcSkill skill) {
+  void chooseSkill(CharacterSkill skill) {
     switch (skill.skillType) {
       case 'pSkill':
-        this.selectedSkills.remove(
-            this.selectedSkills.firstWhere((e) => e.skillType == 'pSkill'));
+        // this.selectedSkills.remove((element) => element.name == 'ABILITY');
+        this.selectedSkills.remove(this
+            .selectedSkills
+            .lastWhere((element) => element.name == 'ABILITY'));
+
         this.selectedSkills.add(skill);
 
         break;
 
       case 'mSkill':
-        this.selectedSkills.remove(
-            this.selectedSkills.firstWhere((e) => e.skillType == 'mSkill'));
+        this.selectedSkills.remove(this
+            .selectedSkills
+            .lastWhere((element) => element.name == 'SPELL'));
         this.selectedSkills.add(skill);
         break;
     }
@@ -185,7 +200,7 @@ class Npc {
     this.amount = ((this.currentHealth - 1) ~/ this.baseHealth) + 1;
   }
 
-  Npc({
+  Character({
     String icon,
     String name,
     String description,
@@ -198,6 +213,8 @@ class Npc {
     int mArmor,
     int pSkill,
     int mSkill,
+    List<CharacterSkill> possibleSkills,
+    List<CharacterSkill> selectedSkills,
     double baseLoot,
     int baseXp,
   }) {
@@ -216,8 +233,10 @@ class Npc {
     this.pSkill = pSkill;
     this.mSkill = mSkill;
 
-    this.baseLoot = baseLoot;
+    this.possibleSkills = possibleSkills;
+    this.selectedSkills = selectedSkills;
 
+    this.baseLoot = baseLoot;
     this.baseXp = baseXp;
   }
 }

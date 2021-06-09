@@ -17,7 +17,7 @@ class LootPage extends StatefulWidget {
 }
 
 class _LootPageState extends State<LootPage> {
-  int _layoutIndex = 0;
+  int _layoutIndex = 1;
   List<bool> lootSelection;
   int lootAmount;
 
@@ -28,16 +28,6 @@ class _LootPageState extends State<LootPage> {
     }
 
     lootAmount += value;
-  }
-
-  void selectLoot(int index) {
-    widget.dsix.gm.selectedLoot = widget.dsix.gm.lootList[index];
-    _layoutIndex = 1;
-  }
-
-  void deleteLoot() {
-    widget.dsix.gm.lootList.remove(widget.dsix.gm.selectedLoot);
-    _layoutIndex = 0;
   }
 
   List<String> ammoQuantity = [];
@@ -52,11 +42,6 @@ class _LootPageState extends State<LootPage> {
     }
 
     showAlertDialogItemDetail(context, item);
-  }
-
-  @override
-  void initState() {
-    super.initState();
   }
 
   showAlertDialogItemDetail(BuildContext context, Item item) {
@@ -474,7 +459,7 @@ class _LootPageState extends State<LootPage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    widget.dsix.gm.createLoot(lootAmount);
+                                    widget.dsix.gm.createRandomLoot(lootAmount);
                                     _layoutIndex = 1;
                                     widget.refresh();
                                     Navigator.pop(context);
@@ -546,7 +531,7 @@ class _LootPageState extends State<LootPage> {
   Widget build(BuildContext context) {
     lootSelection = [];
     widget.dsix.gm.lootList.forEach((element) {
-      if (element == widget.dsix.gm.selectedLoot) {
+      if (element == widget.dsix.gm.loot) {
         lootSelection.add(true);
       } else {
         lootSelection.add(false);
@@ -593,7 +578,8 @@ class _LootPageState extends State<LootPage> {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            selectLoot(index);
+                            _layoutIndex = 1;
+                            widget.dsix.gm.selectLoot(index);
                           });
                         },
                         child: Container(
@@ -728,7 +714,7 @@ class _LootPageState extends State<LootPage> {
                               // color: Colors.amberAccent,
                               width: MediaQuery.of(context).size.width * 0.6,
                               child: Text(
-                                '${widget.dsix.gm.selectedLoot.name}',
+                                '${widget.dsix.gm.loot.name}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1.3,
@@ -743,7 +729,7 @@ class _LootPageState extends State<LootPage> {
                               child: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    deleteLoot();
+                                    widget.dsix.gm.deleteLoot();
                                   });
                                 },
                                 child: Icon(
@@ -758,7 +744,7 @@ class _LootPageState extends State<LootPage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                           child: Text(
-                            '${widget.dsix.gm.selectedLoot.lootDescription}',
+                            '${widget.dsix.gm.loot.lootDescription}',
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               height: 1.3,
@@ -781,7 +767,7 @@ class _LootPageState extends State<LootPage> {
                         shrinkWrap: true,
                         physics: AlwaysScrollableScrollPhysics(),
                         scrollDirection: Axis.vertical,
-                        itemCount: widget.dsix.gm.selectedLoot.itemList.length,
+                        itemCount: widget.dsix.gm.loot.itemList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Column(
                             children: [
@@ -791,12 +777,12 @@ class _LootPageState extends State<LootPage> {
                                 child: ListTile(
                                   onTap: () {
                                     setState(() {
-                                      showItem(widget.dsix.gm.selectedLoot
-                                          .itemList[index]);
+                                      showItem(
+                                          widget.dsix.gm.loot.itemList[index]);
                                     });
                                   },
                                   title: Text(
-                                    '${widget.dsix.gm.selectedLoot.itemList[index].name}',
+                                    '${widget.dsix.gm.loot.itemList[index].name}',
                                     style: TextStyle(
                                       fontFamily: 'Headliner',
                                       height: 1.5,
@@ -806,7 +792,7 @@ class _LootPageState extends State<LootPage> {
                                     ),
                                   ),
                                   trailing: Text(
-                                    '\$ ${widget.dsix.gm.selectedLoot.itemList[index].value}',
+                                    '\$ ${widget.dsix.gm.loot.itemList[index].value}',
                                     style: TextStyle(
                                       height: 1.5,
                                       fontSize: 18,

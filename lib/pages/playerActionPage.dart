@@ -49,9 +49,9 @@ class _ActionPageState extends State<ActionPage> {
   List<String> itemList = [];
 
   void checkAction(Option option, int numberDice) {
-    widget.dsix.checkTurn();
+    widget.dsix.gm.checkTurn();
     widget.refresh();
-    if (widget.dsix.getCurrentPlayer().checkTurn()) {
+    if (widget.dsix.gm.getCurrentPlayer().checkTurn()) {
       ScaffoldMessenger.of(context)
           .showSnackBar(widget.alert('Wait for the next turn'));
       return;
@@ -59,7 +59,7 @@ class _ActionPageState extends State<ActionPage> {
 
     try {
       if (option.name == 'WEAPON') {
-        widget.dsix.getCurrentPlayer().checkWeapon();
+        widget.dsix.gm.getCurrentPlayer().checkWeapon();
       }
     } on NoAmmoException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
@@ -80,7 +80,7 @@ class _ActionPageState extends State<ActionPage> {
     resultText = '';
     button = Container();
     bonus = displayedAction.value;
-    resultColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     showAlertDialogAction(context, option);
   }
 
@@ -99,29 +99,30 @@ class _ActionPageState extends State<ActionPage> {
 
             case 'WEAPON':
               {
-                bonus = widget.dsix.getCurrentPlayer().pDamage;
-                bonus += widget.dsix.getCurrentPlayer().mDamage;
+                bonus = widget.dsix.gm.getCurrentPlayer().pDamage;
+                bonus += widget.dsix.gm.getCurrentPlayer().mDamage;
                 newRoll(option, numberDice);
               }
               break;
 
             case 'DEFEND':
               {
-                bonus = widget.dsix.getCurrentPlayer().pArmor;
+                bonus = widget.dsix.gm.getCurrentPlayer().pArmor;
                 newRoll(option, numberDice);
               }
               break;
 
             case 'RESIST':
               {
-                bonus = widget.dsix.getCurrentPlayer().mArmor;
+                bonus = widget.dsix.gm.getCurrentPlayer().mArmor;
                 newRoll(option, numberDice);
               }
               break;
 
             case 'RESOURCES':
               {
-                itemList = widget.dsix.getCurrentPlayer().resources(numberDice);
+                itemList =
+                    widget.dsix.gm.getCurrentPlayer().resources(numberDice);
                 showOutcome(option, numberDice);
               }
               break;
@@ -163,20 +164,20 @@ class _ActionPageState extends State<ActionPage> {
 
             case 'FIRE BOMB':
               {
-                bonus = widget.dsix.getCurrentPlayer().mDamage;
+                bonus = widget.dsix.gm.getCurrentPlayer().mDamage;
                 newRoll(option, numberDice);
               }
               break;
 
             case 'STRIKE':
               {
-                bonus = widget.dsix.getCurrentPlayer().mDamage;
+                bonus = widget.dsix.gm.getCurrentPlayer().mDamage;
                 newRoll(option, numberDice);
               }
               break;
             case 'BARRIER':
               {
-                bonus = widget.dsix.getCurrentPlayer().mArmor;
+                bonus = widget.dsix.gm.getCurrentPlayer().mArmor;
                 newRoll(option, numberDice);
               }
               break;
@@ -296,7 +297,7 @@ class _ActionPageState extends State<ActionPage> {
     displaySum = '';
     title = option.outcome;
     button = Container();
-    resultColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     showAlertDialogAction(context, option);
   }
 
@@ -318,7 +319,7 @@ class _ActionPageState extends State<ActionPage> {
     displaySum = '$partialResult + $bonus = $totalResult';
 
     if (option.firstRoll) {
-      widget.dsix.getCurrentPlayer().action(option);
+      widget.dsix.gm.getCurrentPlayer().action(option);
 
       if (totalResult < 7) {
         resultColor = Colors.red;
@@ -446,7 +447,7 @@ class _ActionPageState extends State<ActionPage> {
                                                       'assets/animation/line.flr',
                                                       fit: BoxFit.fitHeight,
                                                       animation: 'Lines',
-                                                      color: widget.dsix
+                                                      color: widget.dsix.gm
                                                           .getCurrentPlayer()
                                                           .playerColor
                                                           .primaryColor,
@@ -541,7 +542,7 @@ class _ActionPageState extends State<ActionPage> {
                   Container(
                     decoration: BoxDecoration(
                       border: Border.all(
-                        color: widget.dsix
+                        color: widget.dsix.gm
                             .getCurrentPlayer()
                             .playerColor
                             .primaryColor,
@@ -554,7 +555,7 @@ class _ActionPageState extends State<ActionPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Container(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -594,7 +595,7 @@ class _ActionPageState extends State<ActionPage> {
                         Divider(
                           height: 0,
                           thickness: 2,
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -630,7 +631,7 @@ class _ActionPageState extends State<ActionPage> {
                                                   .height *
                                               0.058,
                                           color: outcomeList[index]
-                                              ? widget.dsix
+                                              ? widget.dsix.gm
                                                   .getCurrentPlayer()
                                                   .playerColor
                                                   .primaryColor
@@ -656,7 +657,7 @@ class _ActionPageState extends State<ActionPage> {
                                       Divider(
                                         height: 0,
                                         thickness: 2,
-                                        color: widget.dsix
+                                        color: widget.dsix.gm
                                             .getCurrentPlayer()
                                             .playerColor
                                             .primaryColor,
@@ -669,7 +670,7 @@ class _ActionPageState extends State<ActionPage> {
                         Divider(
                           height: 0,
                           thickness: 2,
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -688,7 +689,7 @@ class _ActionPageState extends State<ActionPage> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -709,7 +710,7 @@ class _ActionPageState extends State<ActionPage> {
                                             0, 0, 10, 0),
                                         child: SvgPicture.asset(
                                           'assets/ui/check.svg',
-                                          color: widget.dsix
+                                          color: widget.dsix.gm
                                               .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,
@@ -754,7 +755,7 @@ class _ActionPageState extends State<ActionPage> {
   Widget build(BuildContext context) {
     //ACTION SELECTION
     actionSelection = [];
-    widget.dsix.getCurrentPlayer().playerAction.forEach((element) {
+    widget.dsix.gm.getCurrentPlayer().playerAction.forEach((element) {
       if (element == displayedAction) {
         actionSelection.add(true);
       } else {
@@ -780,7 +781,7 @@ class _ActionPageState extends State<ActionPage> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: SvgPicture.asset(
-                        'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
+                        'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].value}.svg',
                         color: Colors.white,
                       ),
                     );
@@ -796,15 +797,15 @@ class _ActionPageState extends State<ActionPage> {
                       child: GestureDetector(
                         onTap: () {
                           setState(() {
-                            displayedAction = widget.dsix
+                            displayedAction = widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerAction[index + 1];
                           });
                         },
                         child: SvgPicture.asset(
-                          'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+                          'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].icon}.svg',
                           color: actionSelection[index + 1]
-                              ? widget.dsix
+                              ? widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor
@@ -821,7 +822,7 @@ class _ActionPageState extends State<ActionPage> {
         Divider(
           height: 0,
           thickness: 2,
-          color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
         ),
         Expanded(
           flex: 13,
@@ -838,7 +839,7 @@ class _ActionPageState extends State<ActionPage> {
                       fontFamily: 'Headline',
                       height: 1.3,
                       fontSize: 45,
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -880,7 +881,7 @@ class _ActionPageState extends State<ActionPage> {
                             width: double.infinity,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: widget.dsix
+                                color: widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerColor
                                     .primaryColor,
@@ -900,7 +901,7 @@ class _ActionPageState extends State<ActionPage> {
                                           0, 0, 10, 0),
                                       child: SvgPicture.asset(
                                         'assets/ui/action.svg',
-                                        color: widget.dsix
+                                        color: widget.dsix.gm
                                             .getCurrentPlayer()
                                             .playerColor
                                             .primaryColor,

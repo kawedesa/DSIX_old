@@ -4,10 +4,22 @@ import 'package:dsixv02app/models/player/playerRace.dart';
 class PlayerRaceList {
   List<PlayerRace> races = [
     PlayerRace(
-        'human',
-        'HUMAN',
-        'Humans are flexible and can adapt to anything. They have the worlds largest population.',
-        [
+        icon: 'human',
+        race: 'HUMAN',
+        description:
+            'Humans are flexible and can adapt to anything. They have the worlds largest population.',
+        maxHealth: 12,
+        maxWeight: 12,
+        actionPoints: [
+          2,
+          1,
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        bonus: [
           Bonus(
             'FLEXIBLE  ',
             'actionPoint',
@@ -15,10 +27,22 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        'orc',
-        'ORC',
-        'Orcs are big and strong, making them good warriors, but easy targets.',
-        [
+        icon: 'orc',
+        race: 'ORC',
+        description:
+            'Orcs are big and strong, making them good warriors, but easy targets.',
+        maxHealth: 12,
+        maxWeight: 16,
+        actionPoints: [
+          3,
+          1,
+          0,
+          0,
+          0,
+          -1,
+          0
+        ],
+        bonus: [
           Bonus(
             'BIG  ',
             'move',
@@ -36,10 +60,22 @@ class PlayerRaceList {
           ),
         ]),
     PlayerRace(
-        'goblin',
-        'GOBLIN',
-        'Goblins are small vicious creatures with sharp teeth and quick feet.',
-        [
+        icon: 'goblin',
+        race: 'GOBLIN',
+        description:
+            'Goblins are small vicious creatures with sharp teeth and quick feet.',
+        maxHealth: 12,
+        maxWeight: 8,
+        actionPoints: [
+          3,
+          1,
+          0,
+          0,
+          0,
+          1,
+          0
+        ],
+        bonus: [
           Bonus(
             'VICIOUS  ',
             'attack',
@@ -57,10 +93,22 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        'dwarf',
-        'DWARF',
-        'Dwarfs have long beards and love to drink. They are small, tough and stubborn.',
-        [
+        icon: 'dwarf',
+        race: 'DWARF',
+        description:
+            'Dwarfs have long beards and love to drink. They are small, tough and stubborn.',
+        maxHealth: 16,
+        maxWeight: 12,
+        actionPoints: [
+          3,
+          0,
+          1,
+          -1,
+          0,
+          0,
+          0
+        ],
+        bonus: [
           Bonus(
             'STUBBORN  ',
             'perceive',
@@ -73,10 +121,22 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        'halfling',
-        'HALFLING',
-        'Halflings are small curious creatures, always looking for something new to learn.',
-        [
+        icon: 'halfling',
+        race: 'HALFLING',
+        description:
+            'Halflings are small curious creatures, always looking for something new to learn.',
+        maxHealth: 12,
+        maxWeight: 12,
+        actionPoints: [
+          3,
+          -1,
+          0,
+          1,
+          1,
+          0,
+          0
+        ],
+        bonus: [
           Bonus(
             'PEACEFUL  ',
             'attack',
@@ -94,10 +154,22 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        'elf',
-        'ELF',
-        'Elves have quick reflexes and sharp senses, making them very agile and precise.',
-        [
+        icon: 'elf',
+        race: 'ELF',
+        description:
+            'Elves have quick reflexes and sharp senses, making them very agile and precise.',
+        maxHealth: 16,
+        maxWeight: 12,
+        actionPoints: [
+          3,
+          0,
+          -1,
+          1,
+          0,
+          1,
+          0
+        ],
+        bonus: [
           Bonus(
             'QUICK REFLEXES  ',
             'defense',

@@ -33,8 +33,10 @@ class _PlayerUIState extends State<PlayerUI> {
               content: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                    color: widget.dsix.gm
+                        .getCurrentPlayer()
+                        .playerColor
+                        .primaryColor,
                     width: 1.5, //                   <--- border width here
                   ),
                 ),
@@ -45,7 +47,7 @@ class _PlayerUIState extends State<PlayerUI> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -78,13 +80,14 @@ class _PlayerUIState extends State<PlayerUI> {
                           GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  if (widget.dsix
+                                  if (widget.dsix.gm
                                           .getCurrentPlayer()
                                           .currentHealth <
-                                      widget.dsix
+                                      widget.dsix.gm
                                           .getCurrentPlayer()
+                                          .race
                                           .maxHealth) {
-                                    widget.dsix
+                                    widget.dsix.gm
                                         .getCurrentPlayer()
                                         .currentHealth += 1;
                                   }
@@ -99,7 +102,7 @@ class _PlayerUIState extends State<PlayerUI> {
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
-                              '${widget.dsix.getCurrentPlayer().currentHealth}',
+                              '${widget.dsix.gm.getCurrentPlayer().currentHealth}',
                               style: TextStyle(
                                 height: 1.25,
                                 fontSize: 50,
@@ -111,11 +114,11 @@ class _PlayerUIState extends State<PlayerUI> {
                           GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  if (widget.dsix
+                                  if (widget.dsix.gm
                                           .getCurrentPlayer()
                                           .currentHealth >
                                       0) {
-                                    widget.dsix
+                                    widget.dsix.gm
                                         .getCurrentPlayer()
                                         .currentHealth -= 1;
                                   }
@@ -150,7 +153,8 @@ class _PlayerUIState extends State<PlayerUI> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 1.5, //                   <--- border width here
               ),
             ),
@@ -161,8 +165,10 @@ class _PlayerUIState extends State<PlayerUI> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -170,7 +176,7 @@ class _PlayerUIState extends State<PlayerUI> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'WEIGHT: ${widget.dsix.getCurrentPlayer().currentWeight}/${widget.dsix.getCurrentPlayer().maxWeight} ',
+                          'WEIGHT: ${widget.dsix.gm.getCurrentPlayer().currentWeight}/${widget.dsix.gm.getCurrentPlayer().race.maxWeight} ',
                           style: TextStyle(
                             fontFamily: 'Headline',
                             height: 1.3,
@@ -222,8 +228,10 @@ class _PlayerUIState extends State<PlayerUI> {
               content: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                    color: widget.dsix.gm
+                        .getCurrentPlayer()
+                        .playerColor
+                        .primaryColor,
                     width: 1.5, //                   <--- border width here
                   ),
                 ),
@@ -234,7 +242,7 @@ class _PlayerUIState extends State<PlayerUI> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -267,13 +275,13 @@ class _PlayerUIState extends State<PlayerUI> {
                           GestureDetector(
                               onLongPress: () {
                                 setState(() {
-                                  widget.dsix.getCurrentPlayer().gold += 500;
+                                  widget.dsix.gm.getCurrentPlayer().gold += 500;
                                 });
                                 refresh();
                               },
                               onTap: () {
                                 setState(() {
-                                  widget.dsix.getCurrentPlayer().gold += 50;
+                                  widget.dsix.gm.getCurrentPlayer().gold += 50;
                                 });
                                 refresh();
                               },
@@ -285,7 +293,7 @@ class _PlayerUIState extends State<PlayerUI> {
                           Padding(
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
-                              '${widget.dsix.getCurrentPlayer().gold}',
+                              '${widget.dsix.gm.getCurrentPlayer().gold}',
                               style: TextStyle(
                                 height: 1.25,
                                 fontSize: 50,
@@ -297,14 +305,16 @@ class _PlayerUIState extends State<PlayerUI> {
                           GestureDetector(
                               onLongPress: () {
                                 setState(() {
-                                  widget.dsix.getCurrentPlayer().gold -= 500;
+                                  widget.dsix.gm.getCurrentPlayer().gold -= 500;
                                 });
                                 refresh();
                               },
                               onTap: () {
                                 setState(() {
-                                  if (widget.dsix.getCurrentPlayer().gold > 0) {
-                                    widget.dsix.getCurrentPlayer().gold -= 50;
+                                  if (widget.dsix.gm.getCurrentPlayer().gold >
+                                      0) {
+                                    widget.dsix.gm.getCurrentPlayer().gold -=
+                                        50;
                                   }
                                 });
                                 refresh();
@@ -342,7 +352,8 @@ class _PlayerUIState extends State<PlayerUI> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 1.5, //                   <--- border width here
               ),
             ),
@@ -352,8 +363,10 @@ class _PlayerUIState extends State<PlayerUI> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
@@ -491,13 +504,13 @@ class _PlayerUIState extends State<PlayerUI> {
     return [
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
-          'assets/player/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          'assets/player/race/${widget.dsix.gm.getCurrentPlayer().race.icon}.svg',
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         icon: new SvgPicture.asset(
-          'assets/player/race/${widget.dsix.getCurrentPlayer().race.icon}.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          'assets/player/race/${widget.dsix.gm.getCurrentPlayer().race.icon}.svg',
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         label: '',
@@ -505,12 +518,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/shop.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.060,
         ),
         icon: new SvgPicture.asset(
           'assets/player/shop.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.060,
         ),
         label: 'SHOP',
@@ -518,12 +531,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/inventory.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.070,
         ),
         icon: new SvgPicture.asset(
           'assets/player/inventory.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.070,
         ),
         label: 'INVENTORY',
@@ -531,12 +544,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/action.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.075,
         ),
         icon: new SvgPicture.asset(
           'assets/player/action.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.065,
         ),
         label: '',
@@ -544,12 +557,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/map.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         icon: new SvgPicture.asset(
           'assets/player/map.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         label: '',
@@ -557,12 +570,12 @@ class _PlayerUIState extends State<PlayerUI> {
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
           'assets/player/help.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
           width: MediaQuery.of(context).size.width * 0.085,
         ),
         icon: new SvgPicture.asset(
           'assets/player/help.svg',
-          color: widget.dsix.getCurrentPlayer().playerColor.tertiaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.tertiaryColor,
           width: MediaQuery.of(context).size.width * 0.075,
         ),
         label: '',
@@ -627,7 +640,8 @@ class _PlayerUIState extends State<PlayerUI> {
 
   SnackBar displayAlert(String description) {
     SnackBar newAlert = new SnackBar(
-      backgroundColor: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+      backgroundColor:
+          widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
       content: Container(
         height: MediaQuery.of(context).size.height * 0.05,
         child: Text(
@@ -651,7 +665,7 @@ class _PlayerUIState extends State<PlayerUI> {
   }
 
   Widget build(BuildContext context) {
-    List<bool> turn = widget.dsix.getCurrentPlayer().turn;
+    List<bool> turn = widget.dsix.gm.getCurrentPlayer().turn;
 
     return new Scaffold(
       backgroundColor: Colors.black,
@@ -671,7 +685,7 @@ class _PlayerUIState extends State<PlayerUI> {
         ),
         titleSpacing: 10,
         backgroundColor:
-            widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+            widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
         // title: new Text(
         //   '$pageTitle',
         //   textAlign: TextAlign.left,
@@ -679,7 +693,7 @@ class _PlayerUIState extends State<PlayerUI> {
         //     fontFamily: 'Headline',
         //     height: 1.3,
         //     fontSize: 24.0,
-        //     color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+        //     color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
         //     letterSpacing: 2,
         //   ),
         // ),
@@ -694,15 +708,15 @@ class _PlayerUIState extends State<PlayerUI> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 0),
                   child: GestureDetector(
                     onTap: () {
-                      widget.dsix.getCurrentPlayer().playerTurn();
+                      widget.dsix.gm.getCurrentPlayer().playerTurn();
 
-                      turn = widget.dsix.getCurrentPlayer().turn;
+                      turn = widget.dsix.gm.getCurrentPlayer().turn;
                       refresh();
                     },
                     child: SvgPicture.asset(
                       'assets/player/action.svg',
                       color: turn[0]
-                          ? widget.dsix
+                          ? widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .tertiaryColor
@@ -715,14 +729,14 @@ class _PlayerUIState extends State<PlayerUI> {
                   padding: const EdgeInsets.fromLTRB(2.5, 0, 15, 0),
                   child: GestureDetector(
                     onTap: () {
-                      widget.dsix.getCurrentPlayer().playerTurn();
-                      turn = widget.dsix.getCurrentPlayer().turn;
+                      widget.dsix.gm.getCurrentPlayer().playerTurn();
+                      turn = widget.dsix.gm.getCurrentPlayer().turn;
                       refresh();
                     },
                     child: SvgPicture.asset(
                       'assets/player/action.svg',
                       color: turn[1]
-                          ? widget.dsix
+                          ? widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .tertiaryColor
@@ -731,65 +745,6 @@ class _PlayerUIState extends State<PlayerUI> {
                     ),
                   ),
                 ),
-                // Expanded(
-                //   child: ListView.builder(
-                //       itemCount: turn.length,
-                //       shrinkWrap: true,
-                //       itemBuilder: (BuildContext context, int index) {
-                //         return GestureDetector(
-                //           onTap: () {},
-                //           child: Container(
-                //             height: 5,
-                //             width: 0,
-                //             color: Colors.white,
-                //           ),
-                //           // child: SvgPicture.asset(
-                //           //   'assets/player/action.svg',
-                //           //   color: turn[index]
-                //           //       ? Colors.white
-                //           //       : widget.dsix
-                //           //           .getCurrentPlayer()
-                //           //           .playerColor
-                //           //           .secondaryColor,
-                //           //   width: MediaQuery.of(context).size.width * 0.05,
-                //           // ),
-                //         );
-                //       }),
-                // ),
-                // GestureDetector(
-                //   onTap: () {},
-                //   child: Padding(
-                //     padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                //     child: Row(
-                //       children: <Widget>[
-                //         SvgPicture.asset(
-                //           'assets/player/action.svg',
-                //           color: Colors.white,
-                //           width: MediaQuery.of(context).size.width * 0.05,
-                //         ),
-                //         SvgPicture.asset(
-                //           'assets/player/action.svg',
-                //           color: Colors.white,
-                //           width: MediaQuery.of(context).size.width * 0.05,
-                //         ),
-                //         // Text(
-                //         //   ' ${widget.dsix.getCurrentPlayer().actionsTaken}',
-                //         //   textAlign: TextAlign.left,
-                //         //   style: TextStyle(
-                //         //     fontFamily: 'Headline',
-                //         //     height: 1.1,
-                //         //     fontSize: 25,
-                //         //     color: widget.dsix
-                //         //         .getCurrentPlayer()
-                //         //         .playerColor
-                //         //         .secondaryColor,
-                //         //     letterSpacing: 2,
-                //         //   ),
-                //         // ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 GestureDetector(
                   onTap: () {
                     showAlertDialogHealth(context);
@@ -802,13 +757,13 @@ class _PlayerUIState extends State<PlayerUI> {
                         width: MediaQuery.of(context).size.width * 0.08,
                       ),
                       Text(
-                        '${widget.dsix.getCurrentPlayer().currentHealth}',
+                        '${widget.dsix.gm.getCurrentPlayer().currentHealth}',
                         textAlign: TextAlign.left,
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1.1,
                           fontSize: 25,
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .secondaryColor,
@@ -832,13 +787,13 @@ class _PlayerUIState extends State<PlayerUI> {
                           width: MediaQuery.of(context).size.width * 0.055,
                         ),
                         Text(
-                          '${widget.dsix.getCurrentPlayer().gold}',
+                          '${widget.dsix.gm.getCurrentPlayer().gold}',
                           textAlign: TextAlign.left,
                           style: TextStyle(
                             fontFamily: 'Headline',
                             height: 1.1,
                             fontSize: 25,
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .secondaryColor,
@@ -867,13 +822,13 @@ class _PlayerUIState extends State<PlayerUI> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(7, 1, 0, 5),
                           child: Text(
-                            '${widget.dsix.getCurrentPlayer().currentWeight}',
+                            '${widget.dsix.gm.getCurrentPlayer().currentWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontFamily: 'Headline',
                               height: 1.1,
                               fontSize: 20.0,
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .secondaryColor,
@@ -889,7 +844,7 @@ class _PlayerUIState extends State<PlayerUI> {
                             height: 1.1,
                             fontSize: 23.0,
                             fontWeight: FontWeight.bold,
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .secondaryColor,
@@ -899,13 +854,13 @@ class _PlayerUIState extends State<PlayerUI> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(1, 6, 5, 0),
                           child: Text(
-                            '${widget.dsix.getCurrentPlayer().maxWeight}',
+                            '${widget.dsix.gm.getCurrentPlayer().race.maxWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontFamily: 'Headline',
                               height: 1.1,
                               fontSize: 20.0,
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .secondaryColor,
@@ -927,16 +882,16 @@ class _PlayerUIState extends State<PlayerUI> {
       ),
       bottomNavigationBar: BottomNavigationBar(
         selectedLabelStyle: TextStyle(
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
         ),
         unselectedLabelStyle: TextStyle(
-          color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
         ),
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         backgroundColor:
-            widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+            widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
         currentIndex: bottomSelectedIndex,
         onTap: (index) {
           bottomTapped(index);

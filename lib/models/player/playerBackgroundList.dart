@@ -113,18 +113,6 @@ class PlayerBackgroundList {
           shop.resources[10],
           shop.resources[10],
         ]),
-    PlayerBackground(
-        '',
-        'BACKGROUND',
-        'This represents your story. How you where raised and how people see you. Click on the icons above to choose your background.',
-        [
-          Bonus(
-            'BONUS',
-            'bonus',
-            'All backgrounds are unique and have different bonuses. They can be items, gold, and passive attributes, like armor and damage.',
-          )
-        ],
-        []),
 
     //OLD BACKGROUNDS
 

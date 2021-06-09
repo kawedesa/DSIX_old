@@ -36,40 +36,6 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    List<PlayerColor> playerColors = [
-      PlayerColor(
-          name: 'PINK',
-          primaryColor: Colors.pinkAccent,
-          secondaryColor: Colors.pink[100],
-          tertiaryColor: Colors.pink[800]),
-      PlayerColor(
-          name: 'BLUE',
-          primaryColor: Colors.indigoAccent,
-          secondaryColor: Colors.indigo[100],
-          tertiaryColor: Colors.indigo[800]),
-      PlayerColor(
-          name: 'GREEN',
-          primaryColor: Colors.teal,
-          secondaryColor: Colors.teal[100],
-          tertiaryColor: Colors.teal[800]),
-      PlayerColor(
-          name: 'YELLOW',
-          primaryColor: Colors.orange,
-          secondaryColor: Colors.orange[100],
-          tertiaryColor: Colors.orange[800]),
-      PlayerColor(
-          name: 'PURPLE',
-          primaryColor: Colors.purple,
-          secondaryColor: Colors.purple[100],
-          tertiaryColor: Colors.purple[800]),
-    ];
-
-    if (dsix.players.isEmpty == true) {
-      for (PlayerColor playerColor in playerColors) {
-        dsix.players.add(new Player(playerColor));
-      }
-    }
-
     return Container(
       width: double.infinity,
       height: double.infinity,
@@ -95,6 +61,7 @@ class _HomePageState extends State<HomePage> {
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               ),
               onPressed: () async {
+                dsix.gm.createPlayers();
                 Navigator.of(context).push(_createRoute());
               },
               child: Container(

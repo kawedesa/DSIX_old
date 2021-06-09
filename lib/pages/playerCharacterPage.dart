@@ -16,7 +16,7 @@ class _CharacterPageState extends State<CharacterPage> {
   TextEditingController myController;
 
   void confirm() {
-    widget.dsix.getCurrentPlayer().playerBackground.description =
+    widget.dsix.gm.getCurrentPlayer().playerBackground.description =
         myController.text;
     Navigator.of(context).pop(true);
   }
@@ -27,10 +27,11 @@ class _CharacterPageState extends State<CharacterPage> {
 
   void showEffect(int index) {
     alertTitle =
-        '${widget.dsix.getCurrentPlayer().effects[index].name}: ${widget.dsix.getCurrentPlayer().effects[index].value}';
+        '${widget.dsix.gm.getCurrentPlayer().effects[index].name}: ${widget.dsix.gm.getCurrentPlayer().effects[index].value}';
     alertDescription =
-        widget.dsix.getCurrentPlayer().effects[index].description;
-    alertDuration = '${widget.dsix.getCurrentPlayer().effects[index].duration}';
+        widget.dsix.gm.getCurrentPlayer().effects[index].description;
+    alertDuration =
+        '${widget.dsix.gm.getCurrentPlayer().effects[index].duration}';
     showAlertDialogAlert(context);
   }
 
@@ -46,7 +47,8 @@ class _CharacterPageState extends State<CharacterPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 1.5, //                   <--- border width here
               ),
             ),
@@ -56,8 +58,10 @@ class _CharacterPageState extends State<CharacterPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
@@ -96,7 +100,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             text: alertDuration,
                             style: new TextStyle(
                                 fontWeight: FontWeight.bold,
-                                color: widget.dsix
+                                color: widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerColor
                                     .primaryColor)),
@@ -126,7 +130,7 @@ class _CharacterPageState extends State<CharacterPage> {
       content: Container(
         decoration: BoxDecoration(
           border: Border.all(
-            color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+            color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
             width: 2.5, //                   <--- border width here
           ),
         ),
@@ -136,7 +140,7 @@ class _CharacterPageState extends State<CharacterPage> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             Container(
-              color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+              color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                 child: Center(
@@ -160,12 +164,14 @@ class _CharacterPageState extends State<CharacterPage> {
                     keyboardType: TextInputType.multiline,
                     maxLines: 4,
                     autofocus: true,
-                    cursorColor:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                    cursorColor: widget.dsix.gm
+                        .getCurrentPlayer()
+                        .playerColor
+                        .primaryColor,
                     textAlign: TextAlign.center,
                     onEditingComplete: confirm,
                     onSubmitted: (value) {
-                      widget.dsix
+                      widget.dsix.gm
                           .getCurrentPlayer()
                           .playerBackground
                           .description = value;
@@ -182,7 +188,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     decoration: InputDecoration(
                       enabledBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -191,7 +197,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       ),
                       focusedBorder: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -200,7 +206,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       ),
                       border: UnderlineInputBorder(
                         borderSide: BorderSide(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -221,7 +227,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   width: double.infinity,
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -239,7 +245,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                             child: Icon(
                               Icons.check,
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -283,7 +289,7 @@ class _CharacterPageState extends State<CharacterPage> {
     super.initState();
 
     myController = new TextEditingController(
-        text: widget.dsix.getCurrentPlayer().playerBackground.description);
+        text: widget.dsix.gm.getCurrentPlayer().playerBackground.description);
   }
 
   @override
@@ -306,8 +312,8 @@ class _CharacterPageState extends State<CharacterPage> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 17),
                       child: SvgPicture.asset(
-                        'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].icon}.svg',
-                        color: widget.dsix
+                        'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+                        color: widget.dsix.gm
                             .getCurrentPlayer()
                             .playerColor
                             .primaryColor,
@@ -324,7 +330,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       child: SvgPicture.asset(
-                        'assets/player/action/${widget.dsix.getCurrentPlayer().playerAction[index + 1].value}.svg',
+                        'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].value}.svg',
                         color: Colors.white,
                       ),
                     );
@@ -337,7 +343,7 @@ class _CharacterPageState extends State<CharacterPage> {
         Divider(
           height: 0,
           thickness: 2,
-          color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
         ),
         Expanded(
           flex: 13,
@@ -350,7 +356,8 @@ class _CharacterPageState extends State<CharacterPage> {
                   child: GridView.count(
                     crossAxisCount: 1,
                     children: List.generate(
-                        widget.dsix.getCurrentPlayer().effects.length, (index) {
+                        widget.dsix.gm.getCurrentPlayer().effects.length,
+                        (index) {
                       return Padding(
                         padding: const EdgeInsets.all(5.0),
                         child: GestureDetector(
@@ -358,8 +365,8 @@ class _CharacterPageState extends State<CharacterPage> {
                             showEffect(index);
                           },
                           child: SvgPicture.asset(
-                            'assets/effect/${widget.dsix.getCurrentPlayer().effects[index].icon}.svg',
-                            color: widget.dsix
+                            'assets/effect/${widget.dsix.gm.getCurrentPlayer().effects[index].icon}.svg',
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -381,12 +388,12 @@ class _CharacterPageState extends State<CharacterPage> {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: <Widget>[
                           Text(
-                            widget.dsix.getCurrentPlayer().playerColor.name,
+                            widget.dsix.gm.getCurrentPlayer().playerColor.name,
                             style: TextStyle(
                               fontFamily: 'Headline',
                               height: 1.3,
                               fontSize: 45,
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -399,8 +406,8 @@ class _CharacterPageState extends State<CharacterPage> {
                               height: 30,
                               width: 30,
                               child: SvgPicture.asset(
-                                'assets/player/${widget.dsix.getCurrentPlayer().playerSex}.svg',
-                                color: widget.dsix
+                                'assets/player/${widget.dsix.gm.getCurrentPlayer().playerSex}.svg',
+                                color: widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerColor
                                     .primaryColor,
@@ -422,7 +429,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: SingleChildScrollView(
                           scrollDirection: Axis.vertical,
                           child: Text(
-                            widget.dsix
+                            widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerBackground
                                 .description,
@@ -455,7 +462,7 @@ class _CharacterPageState extends State<CharacterPage> {
                               width: double.infinity,
                               decoration: BoxDecoration(
                                 border: Border.all(
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -476,7 +483,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                             0, 0, 10, 0),
                                         child: Icon(
                                           Icons.title,
-                                          color: widget.dsix
+                                          color: widget.dsix.gm
                                               .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,

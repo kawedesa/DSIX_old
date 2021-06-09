@@ -6,8 +6,6 @@ List<StorySettings> settingsList = [
     name: 'VERY EASY',
     description: 'Very easy.',
     fame: 2,
-    questXp: 25,
-    questGold: 200,
     numberOfQuests: 2,
   ),
   StorySettings(
@@ -15,8 +13,6 @@ List<StorySettings> settingsList = [
     name: 'EASY',
     description: 'Easy.',
     fame: 1,
-    questXp: 25,
-    questGold: 150,
     numberOfQuests: 2,
   ),
   StorySettings(
@@ -24,8 +20,6 @@ List<StorySettings> settingsList = [
     name: 'NORMAL',
     description: 'Normal.',
     fame: 1,
-    questXp: 50,
-    questGold: 100,
     numberOfQuests: 2,
   ),
   StorySettings(
@@ -33,8 +27,6 @@ List<StorySettings> settingsList = [
     name: 'HARD',
     description: 'Hard.',
     fame: 1,
-    questXp: 100,
-    questGold: 50,
     numberOfQuests: 2,
   ),
   StorySettings(
@@ -42,8 +34,6 @@ List<StorySettings> settingsList = [
     name: 'VERY HARD',
     description: 'Very hard.',
     fame: 2,
-    questXp: 150,
-    questGold: 300,
     numberOfQuests: 3,
   ),
 ];

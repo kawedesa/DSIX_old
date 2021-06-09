@@ -2,49 +2,46 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:dsixv02app/models/gm/npc.dart';
-import '../models/gm/npcSkill.dart';
 
-class NpcPage extends StatefulWidget {
+import 'package:dsixv02app/models/gm/character.dart';
+
+import 'package:dsixv02app/models/gm/characterSkill.dart';
+
+class CharacterPage extends StatefulWidget {
   final Function() refresh;
   final Dsix dsix;
 
-  NpcPage({
+  CharacterPage({
     Key key,
     this.dsix,
     this.refresh,
   }) : super(key: key);
 
-  static const String routeName = "/npcPage";
+  static const String routeName = "/characterPage";
 
   @override
-  _NpcPageState createState() => new _NpcPageState();
+  _CharacterPageState createState() => new _CharacterPageState();
 }
 
-class _NpcPageState extends State<NpcPage> {
-  NpcSkill displaySkill = NpcSkill(
-    icon: 'skill',
-    name: 'SKILL',
-    skillType: 'null',
-    description: 'Skill',
-    value: 0,
-  );
-
+class _CharacterPageState extends State<CharacterPage> {
   String actionResult = 'Roll';
+  int _layout = 0;
+  List<bool> characterSelection;
 
-  List<bool> npcSelection;
-
-  void selectNpc(int index) {
-    widget.dsix.gm.npcLayout = 1;
-    widget.dsix.gm.selectedNpc = widget.dsix.gm.npcList[index];
-    actionResult = 'Roll';
+  void newCharacter(String environment) {
+    widget.dsix.gm.availableCharacter(environment);
+    widget.refresh();
+    Scaffold.of(context).openDrawer();
   }
 
-  void deleteNpc() {
-    widget.dsix.gm.npcList.remove(widget.dsix.gm.selectedNpc);
+  // void selectNpc(int index) {
+  //   widget.dsix.gm.selectedCharacter = widget.dsix.gm.characters[index];
+  //   actionResult = 'Roll';
+  // }
 
-    widget.dsix.gm.npcLayout = 0;
-  }
+  // void deleteNpc() {
+  //   widget.dsix.gm.characters.remove(widget.dsix.gm.selectedCharacter);
+  // }
 
   void npcAction() {
     if (actionResult != 'Roll') {
@@ -52,14 +49,13 @@ class _NpcPageState extends State<NpcPage> {
       return;
     }
 
-    actionResult = widget.dsix.gm.selectedNpc.npcAction();
+    actionResult = widget.dsix.gm.selectedCharacter.characterAction();
   }
 
-  void openSkill(NpcSkill skill) {
-    widget.dsix.gm.selectedNpc.skillList =
-        widget.dsix.gm.selectedNpc.openSkill(skill);
-
-    if (widget.dsix.gm.selectedNpc.skillList.isEmpty) {
+  void openSkill(CharacterSkill skill) {
+    if (skill.name == 'ABILITY' || skill.name == 'SPELL') {
+      widget.dsix.gm.selectedCharacter.openSkill(skill);
+    } else {
       return;
     }
 
@@ -69,12 +65,6 @@ class _NpcPageState extends State<NpcPage> {
   }
 
   Widget _healthToLoot;
-
-  void rollLoot() {
-    widget.dsix.gm.createLoot(widget.dsix.gm.selectedNpc.totalLoot);
-    widget.dsix.gm.lootList.last.name = '${widget.dsix.gm.selectedNpc.name}';
-    deleteNpc();
-  }
 
   int displayAmount;
   int displayXp;
@@ -88,11 +78,12 @@ class _NpcPageState extends State<NpcPage> {
 
     displayAmount += value;
 
-    displayXp = widget.dsix.gm.selectedNpc.baseXp * displayAmount;
-    displayLoot = (widget.dsix.gm.selectedNpc.baseLoot * displayAmount).toInt();
+    displayXp = widget.dsix.gm.selectedCharacter.baseXp * displayAmount;
+    displayLoot =
+        (widget.dsix.gm.selectedCharacter.baseLoot * displayAmount).toInt();
   }
 
-  showAlertDialogAmount(BuildContext context, Npc npc) {
+  showAlertDialogAmount(BuildContext context, Character character) {
     showDialog(
       context: context,
       builder: (context) {
@@ -329,8 +320,8 @@ class _NpcPageState extends State<NpcPage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    npc.changeAmount(
-                                        displayAmount - npc.amount);
+                                    character.changeAmount(
+                                        displayAmount - character.amount);
                                     widget.refresh();
                                     Navigator.pop(context);
                                   });
@@ -399,14 +390,22 @@ class _NpcPageState extends State<NpcPage> {
 
   @override
   Widget build(BuildContext context) {
-//HEALTH TO LOOT
+    //LAYOUT
 
-    if (widget.dsix.gm.selectedNpc.currentHealth < 1 &&
-        widget.dsix.gm.selectedNpc.totalLoot > 0) {
+    // if (widget.dsix.gm.characters.isEmpty) {
+    //   _layout = 0;
+    // } else {
+    //   _layout = 1;
+    // }
+
+    //HEALTH TO LOOT
+
+    if (widget.dsix.gm.selectedCharacter.currentHealth < 1 &&
+        widget.dsix.gm.selectedCharacter.totalLoot > 0) {
       _healthToLoot = GestureDetector(
         onTap: () {
           setState(() {
-            rollLoot();
+            widget.dsix.gm.characterLoot();
           });
         },
         child: Padding(
@@ -429,7 +428,7 @@ class _NpcPageState extends State<NpcPage> {
           ),
           Center(
             child: Text(
-              '${widget.dsix.gm.selectedNpc.currentHealth}',
+              '${widget.dsix.gm.selectedCharacter.currentHealth}',
               style: TextStyle(
                 fontFamily: 'Headline',
                 fontSize: 35,
@@ -443,12 +442,12 @@ class _NpcPageState extends State<NpcPage> {
     }
 
 //NPC SELECTION
-    npcSelection = [];
-    widget.dsix.gm.npcList.forEach((element) {
-      if (element == widget.dsix.gm.selectedNpc) {
-        npcSelection.add(true);
+    characterSelection = [];
+    widget.dsix.gm.characters.forEach((element) {
+      if (element == widget.dsix.gm.selectedCharacter) {
+        characterSelection.add(true);
       } else {
-        npcSelection.add(false);
+        characterSelection.add(false);
       }
     });
 
@@ -464,8 +463,8 @@ class _NpcPageState extends State<NpcPage> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      widget.dsix.gm.npcLayout = 0;
                       // Scaffold.of(context).openDrawer();
+                      _layout = 0;
                     });
                   },
                   child: Container(
@@ -486,20 +485,21 @@ class _NpcPageState extends State<NpcPage> {
                     physics: ScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
-                    itemCount: widget.dsix.gm.npcList.length,
+                    itemCount: widget.dsix.gm.characters.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
                           setState(() {
-                            selectNpc(index);
+                            widget.dsix.gm.selectCharacter(index);
+                            _layout = 1;
                           });
                         },
                         child: Container(
                           height: 35,
                           width: 35,
                           child: SvgPicture.asset(
-                            'assets/gm/npc/race/icon/${widget.dsix.gm.npcList[index].icon}.svg',
-                            color: npcSelection[index]
+                            'assets/gm/npc/race/icon/${widget.dsix.gm.characters[index].icon}.svg',
+                            color: characterSelection[index]
                                 ? Colors.grey[400]
                                 : Colors.grey[700],
                           ),
@@ -523,7 +523,7 @@ class _NpcPageState extends State<NpcPage> {
           color: Colors.grey[700],
         ),
         IndexedStack(
-          index: widget.dsix.gm.npcLayout,
+          index: _layout,
           children: [
             Container(
               child: Padding(
@@ -559,7 +559,7 @@ class _NpcPageState extends State<NpcPage> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
                       onPressed: () {
-                        Scaffold.of(context).openDrawer();
+                        newCharacter('MOUNTAINS');
                       },
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.058,
@@ -591,7 +591,7 @@ class _NpcPageState extends State<NpcPage> {
                             ),
                             Center(
                               child: Text(
-                                'NEW NPC',
+                                'MOUNTAINS',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -634,7 +634,7 @@ class _NpcPageState extends State<NpcPage> {
                                     padding:
                                         const EdgeInsets.fromLTRB(0, 15, 0, 0),
                                     child: Text(
-                                      '${widget.dsix.gm.selectedNpc.name}',
+                                      '${widget.dsix.gm.selectedCharacter.name}',
                                       style: TextStyle(
                                         fontFamily: 'Headline',
                                         height: 1.3,
@@ -668,7 +668,7 @@ class _NpcPageState extends State<NpcPage> {
                                                   const EdgeInsets.fromLTRB(
                                                       5, 0, 0, 0),
                                               child: Text(
-                                                '${widget.dsix.gm.selectedNpc.totalLoot}',
+                                                '${widget.dsix.gm.selectedCharacter.totalLoot}',
                                                 style: TextStyle(
                                                   fontFamily: 'Headline',
                                                   height: 1,
@@ -702,7 +702,7 @@ class _NpcPageState extends State<NpcPage> {
                                                     const EdgeInsets.fromLTRB(
                                                         5, 0, 0, 0),
                                                 child: Text(
-                                                  '${widget.dsix.gm.selectedNpc.totalXp}',
+                                                  '${widget.dsix.gm.selectedCharacter.totalXp}',
                                                   style: TextStyle(
                                                     fontFamily: 'Headline',
                                                     height: 1,
@@ -719,7 +719,7 @@ class _NpcPageState extends State<NpcPage> {
                                     ),
                                   ),
                                   Text(
-                                    '${widget.dsix.gm.selectedNpc.description}',
+                                    '${widget.dsix.gm.selectedCharacter.description}',
                                     textAlign: TextAlign.justify,
                                     style: TextStyle(
                                       height: 1.3,
@@ -746,7 +746,7 @@ class _NpcPageState extends State<NpcPage> {
                                       padding: const EdgeInsets.fromLTRB(
                                           10, 20, 10, 0),
                                       child: SvgPicture.asset(
-                                        'assets/gm/npc/race/image/${widget.dsix.gm.selectedNpc.image}.svg',
+                                        'assets/gm/npc/race/image/${widget.dsix.gm.selectedCharacter.image}.svg',
                                         color: Colors.grey[700],
                                       ),
                                     ),
@@ -757,7 +757,9 @@ class _NpcPageState extends State<NpcPage> {
                                     child: GestureDetector(
                                       onTap: () {
                                         setState(() {
-                                          deleteNpc();
+                                          widget.dsix.gm.deleteCharacter();
+                                          _layout = 0;
+                                          widget.refresh();
                                         });
                                       },
                                       child: Icon(
@@ -791,25 +793,28 @@ class _NpcPageState extends State<NpcPage> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: () {
-                            displayAmount = widget.dsix.gm.selectedNpc.amount;
-                            displayXp = widget.dsix.gm.selectedNpc.totalXp;
-                            displayLoot = widget.dsix.gm.selectedNpc.totalLoot;
+                            displayAmount =
+                                widget.dsix.gm.selectedCharacter.amount;
+                            displayXp =
+                                widget.dsix.gm.selectedCharacter.totalXp;
+                            displayLoot =
+                                widget.dsix.gm.selectedCharacter.totalLoot;
                             showAlertDialogAmount(
-                                context, widget.dsix.gm.selectedNpc);
+                                context, widget.dsix.gm.selectedCharacter);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               SvgPicture.asset(
-                                'assets/gm/npc/race/icon/${widget.dsix.gm.selectedNpc.icon}.svg',
+                                'assets/gm/npc/race/icon/${widget.dsix.gm.selectedCharacter.icon}.svg',
                                 color: Colors.grey[700],
                                 width: MediaQuery.of(context).size.width * 0.06,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                                 child: Text(
-                                  '${widget.dsix.gm.selectedNpc.amount}',
+                                  '${widget.dsix.gm.selectedCharacter.amount}',
                                   style: TextStyle(
                                     fontFamily: 'Headline',
                                     height: 1,
@@ -834,7 +839,7 @@ class _NpcPageState extends State<NpcPage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${widget.dsix.gm.selectedNpc.pDamage}',
+                                '${widget.dsix.gm.selectedCharacter.pDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -858,7 +863,7 @@ class _NpcPageState extends State<NpcPage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${widget.dsix.gm.selectedNpc.pArmor}',
+                                '${widget.dsix.gm.selectedCharacter.pArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -882,7 +887,7 @@ class _NpcPageState extends State<NpcPage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${widget.dsix.gm.selectedNpc.mDamage}',
+                                '${widget.dsix.gm.selectedCharacter.mDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -906,7 +911,7 @@ class _NpcPageState extends State<NpcPage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${widget.dsix.gm.selectedNpc.mArmor}',
+                                '${widget.dsix.gm.selectedCharacter.mArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -940,12 +945,14 @@ class _NpcPageState extends State<NpcPage> {
                           GestureDetector(
                             onLongPress: () {
                               setState(() {
-                                widget.dsix.gm.selectedNpc.changeHealth(10);
+                                widget.dsix.gm.selectedCharacter
+                                    .changeHealth(10);
                               });
                             },
                             onTap: () {
                               setState(() {
-                                widget.dsix.gm.selectedNpc.changeHealth(1);
+                                widget.dsix.gm.selectedCharacter
+                                    .changeHealth(1);
                               });
                             },
                             child: Container(
@@ -975,12 +982,14 @@ class _NpcPageState extends State<NpcPage> {
                           GestureDetector(
                             onLongPress: () {
                               setState(() {
-                                widget.dsix.gm.selectedNpc.changeHealth(-10);
+                                widget.dsix.gm.selectedCharacter
+                                    .changeHealth(-10);
                               });
                             },
                             onTap: () {
                               setState(() {
-                                widget.dsix.gm.selectedNpc.changeHealth(-1);
+                                widget.dsix.gm.selectedCharacter
+                                    .changeHealth(-1);
                               });
                             },
                             child: Container(
@@ -1004,7 +1013,7 @@ class _NpcPageState extends State<NpcPage> {
                             padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
                             child: Center(
                               child: Text(
-                                'Npc Skills',
+                                'Skills',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -1022,18 +1031,18 @@ class _NpcPageState extends State<NpcPage> {
                               physics: ScrollPhysics(),
                               crossAxisCount: 2,
                               children: List.generate(
-                                  widget.dsix.gm.selectedNpc.selectedSkills
-                                      .length, (index) {
+                                  widget.dsix.gm.selectedCharacter
+                                      .selectedSkills.length, (index) {
                                 return GestureDetector(
                                   onTap: () {
                                     setState(() {
-                                      openSkill(widget.dsix.gm.selectedNpc
+                                      openSkill(widget.dsix.gm.selectedCharacter
                                           .selectedSkills[index]);
                                     });
                                   },
                                   child: Center(
                                     child: SvgPicture.asset(
-                                      'assets/gm/npc/skill/${widget.dsix.gm.selectedNpc.selectedSkills[index].skillType}/${widget.dsix.gm.selectedNpc.selectedSkills[index].icon}.svg',
+                                      'assets/gm/npc/skill/${widget.dsix.gm.selectedCharacter.selectedSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.selectedSkills[index].icon}.svg',
                                       color: Colors.grey[400],
                                       width: MediaQuery.of(context).size.width *
                                           0.1,

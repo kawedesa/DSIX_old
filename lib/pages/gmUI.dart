@@ -2,13 +2,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'playersPage.dart';
-import '../models/gm/npc.dart';
-import '../models/gm/npcSkill.dart';
+
 import 'storyPage.dart';
 import 'lootPage.dart';
 import 'settingsPage.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
-import 'npcPage.dart';
+import 'characterPage.dart';
+import 'package:dsixv02app/models/gm/character.dart';
+import 'package:dsixv02app/models/gm/characterSkill.dart';
 
 class GmUI extends StatefulWidget {
   final Dsix dsix;
@@ -214,10 +215,10 @@ class _GmUIState extends State<GmUI> {
           dsix: widget.dsix,
           refresh: refreshPage,
         ),
-        NpcPage(dsix: widget.dsix, refresh: refreshPage),
+        CharacterPage(dsix: widget.dsix, refresh: refreshPage),
         LootPage(dsix: widget.dsix, refresh: refreshPage),
-        NpcPage(dsix: widget.dsix, refresh: refreshPage),
-        NpcPage(dsix: widget.dsix, refresh: refreshPage),
+        CharacterPage(dsix: widget.dsix, refresh: refreshPage),
+        CharacterPage(dsix: widget.dsix, refresh: refreshPage),
       ],
     );
   }
@@ -243,7 +244,7 @@ class _GmUIState extends State<GmUI> {
 
   // final globalScaffoldKey = GlobalKey<ScaffoldState>();
 
-  showAlertDialogChooseNpc(BuildContext context, Npc npc) {
+  showAlertDialogChooseCharacter(BuildContext context, Character character) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -269,7 +270,7 @@ class _GmUIState extends State<GmUI> {
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                     child: Center(
                       child: Text(
-                        '${npc.name}',
+                        '${character.name}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1.3,
@@ -289,7 +290,7 @@ class _GmUIState extends State<GmUI> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                       child: SvgPicture.asset(
-                        'assets/gm/npc/race/image/${npc.image}.svg',
+                        'assets/gm/npc/race/image/${character.image}.svg',
                         color: Colors.grey[700],
                       ),
                     ),
@@ -318,7 +319,7 @@ class _GmUIState extends State<GmUI> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
                               child: Text(
-                                '${npc.baseHealth}',
+                                '${character.baseHealth}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -342,7 +343,7 @@ class _GmUIState extends State<GmUI> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${npc.pDamage}',
+                                '${character.pDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -366,7 +367,7 @@ class _GmUIState extends State<GmUI> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${npc.pArmor}',
+                                '${character.pArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -390,7 +391,7 @@ class _GmUIState extends State<GmUI> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${npc.mDamage}',
+                                '${character.mDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -414,7 +415,7 @@ class _GmUIState extends State<GmUI> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${npc.mArmor}',
+                                '${character.mArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -441,7 +442,7 @@ class _GmUIState extends State<GmUI> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
                     child: Text(
-                      '${npc.description}',
+                      '${character.description}',
                       textAlign: TextAlign.justify,
                       style: TextStyle(
                         height: 1.25,
@@ -458,13 +459,13 @@ class _GmUIState extends State<GmUI> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        widget.dsix.gm.createNpc(npc);
+                        widget.dsix.gm.newCharacter(character);
 
                         Navigator.pop(context);
                         Navigator.pop(context);
 
                         showAlertDialogAmount(
-                            context, widget.dsix.gm.npcList.last);
+                            context, widget.dsix.gm.selectedCharacter);
                       });
                     },
                     style: TextButton.styleFrom(
@@ -529,7 +530,7 @@ class _GmUIState extends State<GmUI> {
     );
   }
 
-  showAlertDialogAmount(BuildContext context, Npc npc) {
+  showAlertDialogAmount(BuildContext context, Character character) {
     showDialog(
       context: context,
       builder: (context) {
@@ -587,7 +588,7 @@ class _GmUIState extends State<GmUI> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            npc.chooseAmount(-5);
+                                            character.setAmount(-5);
                                           });
                                         },
                                         child: Align(
@@ -619,7 +620,7 @@ class _GmUIState extends State<GmUI> {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    npc.chooseAmount(1);
+                                                    character.setAmount(1);
                                                   });
                                                 },
                                                 child: Icon(
@@ -634,7 +635,7 @@ class _GmUIState extends State<GmUI> {
                                                 // color: Colors.white,
                                                 child: Center(
                                                   child: Text(
-                                                    '${npc.amount}',
+                                                    '${character.amount}',
                                                     style: TextStyle(
                                                       fontFamily: 'Headline',
                                                       height: 1.3,
@@ -648,7 +649,7 @@ class _GmUIState extends State<GmUI> {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    npc.chooseAmount(-1);
+                                                    character.setAmount(-1);
                                                   });
                                                 },
                                                 child: Icon(
@@ -668,7 +669,7 @@ class _GmUIState extends State<GmUI> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            npc.chooseAmount(5);
+                                            character.setAmount(5);
                                           });
                                         },
                                         child: Align(
@@ -714,7 +715,7 @@ class _GmUIState extends State<GmUI> {
                                           padding: const EdgeInsets.fromLTRB(
                                               10, 0, 3, 0),
                                           child: Text(
-                                            '${npc.totalLoot}',
+                                            '${character.totalLoot}',
                                             style: TextStyle(
                                               fontFamily: 'Headline',
                                               height: 1,
@@ -744,7 +745,7 @@ class _GmUIState extends State<GmUI> {
                                           padding: const EdgeInsets.fromLTRB(
                                               10, 0, 3, 0),
                                           child: Text(
-                                            '${npc.totalXp}',
+                                            '${character.totalXp}',
                                             style: TextStyle(
                                               fontFamily: 'Headline',
                                               height: 1,
@@ -766,8 +767,8 @@ class _GmUIState extends State<GmUI> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    widget.dsix.gm.selectedNpc = npc;
-                                    widget.dsix.gm.npcLayout = 1;
+                                    widget.dsix.gm.confirmCharacter();
+
                                     refreshPage();
                                     Navigator.pop(context);
                                   });
@@ -834,7 +835,7 @@ class _GmUIState extends State<GmUI> {
     );
   }
 
-  showAlertDialogChooseSkill(BuildContext context, NpcSkill skill) {
+  showAlertDialogChooseSkill(BuildContext context, CharacterSkill skill) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -911,7 +912,7 @@ class _GmUIState extends State<GmUI> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        widget.dsix.gm.selectedNpc.chooseSkill(skill);
+                        widget.dsix.gm.selectedCharacter.chooseSkill(skill);
                         Navigator.pop(context);
                         Navigator.pop(context);
                       });
@@ -1036,15 +1037,61 @@ class _GmUIState extends State<GmUI> {
                   padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                   child: new Row(
                     crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              'assets/gm/players.svg',
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width * 0.08,
+                            ),
+                            Text(
+                              '${widget.dsix.gm.numberPlayers}',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.1,
+                                fontSize: 25,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      GestureDetector(
+                        onTap: () {},
+                        child: Row(
+                          children: <Widget>[
+                            SvgPicture.asset(
+                              'assets/gm/xp.svg',
+                              color: Colors.white,
+                              width: MediaQuery.of(context).size.width * 0.08,
+                            ),
+                            Text(
+                              '${widget.dsix.gm.totalXp}',
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.1,
+                                fontSize: 25,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       Builder(
                         builder: (BuildContext context) {
                           return GestureDetector(
                             onTap: () {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(displayAlert('NEW TURN'));
-                              widget.dsix.newTurn();
+                              widget.dsix.gm.newTurn();
                             },
                             child: SvgPicture.asset(
                               'assets/player/action.svg',
@@ -1066,7 +1113,7 @@ class _GmUIState extends State<GmUI> {
         width: MediaQuery.of(context).size.width * 0.65,
         child: Drawer(
           child: ListView.builder(
-              itemCount: widget.dsix.gm.npcTypeList.length,
+              itemCount: widget.dsix.gm.availableCharacters.length,
               itemBuilder: (BuildContext context, int index) {
                 return Column(
                   children: [
@@ -1079,18 +1126,18 @@ class _GmUIState extends State<GmUI> {
                       onTap: () {
                         setState(() {
                           // Navigator.pop(context);
-                          showAlertDialogChooseNpc(
-                              context, widget.dsix.gm.npcTypeList[index]);
+                          showAlertDialogChooseCharacter(context,
+                              widget.dsix.gm.availableCharacters[index]);
                         });
                       },
                       tileColor: Colors.grey[700],
                       leading: SvgPicture.asset(
-                        'assets/gm/npc/race/icon/${widget.dsix.gm.npcTypeList[index].icon}.svg',
+                        'assets/gm/npc/race/icon/${widget.dsix.gm.availableCharacters[index].icon}.svg',
                         color: Colors.black,
                         width: MediaQuery.of(context).size.width * 0.125,
                       ),
                       title: Text(
-                        '${widget.dsix.gm.npcTypeList[index].name}',
+                        '${widget.dsix.gm.availableCharacters[index].name}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1,
@@ -1100,7 +1147,7 @@ class _GmUIState extends State<GmUI> {
                         ),
                       ),
                       subtitle: Text(
-                        'XP: ${widget.dsix.gm.npcTypeList[index].baseXp}',
+                        'XP: ${widget.dsix.gm.availableCharacters[index].baseXp}',
                         style: TextStyle(
                           height: 1.3,
                           fontSize: 14,
@@ -1121,7 +1168,8 @@ class _GmUIState extends State<GmUI> {
             color: Colors.grey[700],
             child: Center(
               child: ListView.builder(
-                  itemCount: widget.dsix.gm.selectedNpc.skillList.length,
+                  itemCount:
+                      widget.dsix.gm.selectedCharacter.availableSkills.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Column(
                       children: [
@@ -1133,18 +1181,20 @@ class _GmUIState extends State<GmUI> {
                         ListTile(
                           onTap: () {
                             setState(() {
-                              showAlertDialogChooseSkill(context,
-                                  widget.dsix.gm.selectedNpc.skillList[index]);
+                              showAlertDialogChooseSkill(
+                                  context,
+                                  widget.dsix.gm.selectedCharacter
+                                      .availableSkills[index]);
                             });
                           },
                           tileColor: Colors.grey[700],
                           leading: SvgPicture.asset(
-                            'assets/gm/npc/skill/${widget.dsix.gm.selectedNpc.skillList[index].skillType}/${widget.dsix.gm.selectedNpc.skillList[index].icon}.svg',
+                            'assets/gm/npc/skill/${widget.dsix.gm.selectedCharacter.availableSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.availableSkills[index].icon}.svg',
                             color: Colors.black,
                             width: MediaQuery.of(context).size.width * 0.1,
                           ),
                           title: Text(
-                            '${widget.dsix.gm.selectedNpc.skillList[index].name}',
+                            '${widget.dsix.gm.selectedCharacter.availableSkills[index].name}',
                             style: TextStyle(
                               fontFamily: 'Headline',
                               height: 1,

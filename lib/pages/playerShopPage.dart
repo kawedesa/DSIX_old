@@ -105,7 +105,8 @@ class _ShopPageState extends State<ShopPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -115,8 +116,10 @@ class _ShopPageState extends State<ShopPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
@@ -153,7 +156,7 @@ class _ShopPageState extends State<ShopPage> {
                                     const EdgeInsets.symmetric(horizontal: 0),
                                 child: SvgPicture.asset(
                                   'assets/item/${ammoQuantity[index]}.svg',
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -176,8 +179,10 @@ class _ShopPageState extends State<ShopPage> {
 
                 Divider(
                   thickness: 2,
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                 ),
 
                 SizedBox(
@@ -194,7 +199,7 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/pDamage.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -221,7 +226,7 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/mDamage.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -248,7 +253,7 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/pArmor.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -275,7 +280,7 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/mArmor.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -302,7 +307,7 @@ class _ShopPageState extends State<ShopPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/weight.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -330,8 +335,10 @@ class _ShopPageState extends State<ShopPage> {
 
                 Divider(
                   thickness: 2,
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                 ),
 
                 Container(
@@ -366,7 +373,7 @@ class _ShopPageState extends State<ShopPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -384,7 +391,7 @@ class _ShopPageState extends State<ShopPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
                                 child: Icon(
                                   Icons.attach_money,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -427,7 +434,7 @@ class _ShopPageState extends State<ShopPage> {
 
   void buy(int index) {
     try {
-      widget.dsix.getCurrentPlayer().buyItem(displayItems[index]);
+      widget.dsix.gm.getCurrentPlayer().buyItem(displayItems[index]);
     } on NoGoldException catch (e) {
       exceptionTitle = e.title;
       exceptionDescription = e.message;
@@ -455,7 +462,8 @@ class _ShopPageState extends State<ShopPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -466,8 +474,10 @@ class _ShopPageState extends State<ShopPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -555,7 +565,7 @@ class _ShopPageState extends State<ShopPage> {
                         ),
                         child: SvgPicture.asset(
                           'assets/item/${selectedMenu[index]}.svg',
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -571,7 +581,7 @@ class _ShopPageState extends State<ShopPage> {
         Divider(
           height: 0,
           thickness: 2,
-          color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
         ),
         Expanded(
           flex: 13,
@@ -591,7 +601,7 @@ class _ShopPageState extends State<ShopPage> {
                           fontFamily: 'Headline',
                           height: 1.3,
                           fontSize: 45,
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -651,7 +661,7 @@ class _ShopPageState extends State<ShopPage> {
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: 2,
                                       fontFamily: 'Calibri',
-                                      color: widget.dsix
+                                      color: widget.dsix.gm
                                           .getCurrentPlayer()
                                           .playerColor
                                           .primaryColor,

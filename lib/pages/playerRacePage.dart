@@ -30,7 +30,8 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 1.5, //                   <--- border width here
               ),
             ),
@@ -39,13 +40,19 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                     child: Center(
                       child: Text(
-                        widget.dsix.getCurrentPlayer().race.bonus[index].name,
+                        widget.dsix.gm
+                            .getCurrentPlayer()
+                            .race
+                            .bonus[index]
+                            .name,
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1.3,
@@ -60,7 +67,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
                   child: Text(
-                    widget.dsix
+                    widget.dsix.gm
                         .getCurrentPlayer()
                         .race
                         .bonus[index]
@@ -122,8 +129,8 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
   Widget build(BuildContext context) {
     //RACE SELECTION
     raceSelection = [];
-    widget.dsix.getCurrentPlayer().availableRaces.forEach((element) {
-      if (element == widget.dsix.getCurrentPlayer().race) {
+    widget.dsix.gm.getCurrentPlayer().availableRaces.forEach((element) {
+      if (element == widget.dsix.gm.getCurrentPlayer().race) {
         raceSelection.add(true);
       } else {
         raceSelection.add(false);
@@ -136,14 +143,15 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
-              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+              color:
+                  widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
               size: 40,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           titleSpacing: 0,
           backgroundColor:
-              widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+              widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
           centerTitle: true,
           title: new Text(
             'Race and Gender',
@@ -152,7 +160,8 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
               fontFamily: 'Headline',
               height: 1.1,
               fontSize: 25.0,
-              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+              color:
+                  widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
               letterSpacing: 2,
             ),
           ),
@@ -196,13 +205,15 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                           onTap: () {
                             setState(() {
                               _updateState();
-                              widget.dsix.getCurrentPlayer().chooseRace(index);
+                              widget.dsix.gm
+                                  .getCurrentPlayer()
+                                  .chooseRace(index);
                             });
                           },
                           child: SvgPicture.asset(
-                            'assets/player/race/${widget.dsix.getCurrentPlayer().availableRaces[index].icon}.svg',
+                            'assets/player/race/${widget.dsix.gm.getCurrentPlayer().availableRaces[index].icon}.svg',
                             color: raceSelection[index]
-                                ? widget.dsix
+                                ? widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerColor
                                     .primaryColor
@@ -217,7 +228,8 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
               Divider(
                 height: 0,
                 thickness: 2,
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
               ),
               Expanded(
                 flex: 13,
@@ -238,12 +250,12 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                 crossAxisAlignment: CrossAxisAlignment.end,
                                 children: <Widget>[
                                   Text(
-                                    widget.dsix.getCurrentPlayer().race.race,
+                                    widget.dsix.gm.getCurrentPlayer().race.race,
                                     style: TextStyle(
                                       fontFamily: 'Headline',
                                       height: 1.3,
                                       fontSize: 45,
-                                      color: widget.dsix
+                                      color: widget.dsix.gm
                                           .getCurrentPlayer()
                                           .playerColor
                                           .primaryColor,
@@ -259,14 +271,14 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            widget.dsix
+                                            widget.dsix.gm
                                                 .getCurrentPlayer()
                                                 .chooseSex();
                                           });
                                         },
                                         child: SvgPicture.asset(
-                                          'assets/player/${widget.dsix.getCurrentPlayer().playerSex}.svg',
-                                          color: widget.dsix
+                                          'assets/player/${widget.dsix.gm.getCurrentPlayer().playerSex}.svg',
+                                          color: widget.dsix.gm
                                               .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,
@@ -280,7 +292,10 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                             Padding(
                               padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                               child: Text(
-                                widget.dsix.getCurrentPlayer().race.description,
+                                widget.dsix.gm
+                                    .getCurrentPlayer()
+                                    .race
+                                    .description,
                                 textAlign: TextAlign.justify,
                                 style: TextStyle(
                                   height: 1.3,
@@ -294,7 +309,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                             ListView.builder(
                                 shrinkWrap: true,
                                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                itemCount: widget.dsix
+                                itemCount: widget.dsix.gm
                                     .getCurrentPlayer()
                                     .race
                                     .bonus
@@ -315,7 +330,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: widget.dsix
+                                          color: widget.dsix.gm
                                               .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,
@@ -339,7 +354,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                                         0, 0, 10, 0),
                                                 child: SvgPicture.asset(
                                                   'assets/ui/help.svg',
-                                                  color: widget.dsix
+                                                  color: widget.dsix.gm
                                                       .getCurrentPlayer()
                                                       .playerColor
                                                       .primaryColor,
@@ -353,7 +368,7 @@ class _PlayerRacePageState extends State<PlayerRacePage> {
                                           ),
                                           Center(
                                             child: Text(
-                                              widget.dsix
+                                              widget.dsix.gm
                                                   .getCurrentPlayer()
                                                   .race
                                                   .bonus[index]

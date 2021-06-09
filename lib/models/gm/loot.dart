@@ -12,7 +12,31 @@ class Loot {
 
   List<Item> itemList = [];
 
-  void newLoot(int value) {
+  Loot rewardItemLoot(int rounds) {
+    int max = rounds * 300;
+    int min = rounds * 200;
+
+    Loot newLoot = Loot().newLoot();
+    newLoot.itemList.add(this.shop.randomItemRange(min, max));
+    newLoot.name = newLoot.itemList.first.name;
+    newLoot.icon = newLoot.itemList.first.icon;
+    newLoot.lootDescription = 'Quest reward.';
+
+    return newLoot;
+  }
+
+  Loot newLoot() {
+    Loot loot = new Loot(
+      icon: 'loot',
+      name: 'NEW LOOT',
+      lootDescription:
+          'Each loot should have an interesting orign. Like the sword of an old king or the artifacts of a powerful wizzard. Double tap this text to edit it and write your own description.',
+    );
+
+    return loot;
+  }
+
+  void randomLoot(int value) {
     value = value * 100;
 
     List<String> shopMenu = [

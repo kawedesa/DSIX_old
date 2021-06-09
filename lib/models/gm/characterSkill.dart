@@ -1,4 +1,4 @@
-class NpcSkill {
+class CharacterSkill {
   String icon;
   String name;
   String skillType;
@@ -6,8 +6,8 @@ class NpcSkill {
 
   int value;
 
-  NpcSkill addSkill() {
-    NpcSkill newSkill = new NpcSkill(
+  CharacterSkill addSkill() {
+    CharacterSkill newSkill = new CharacterSkill(
       icon: this.icon,
       name: this.name,
       description: this.description,
@@ -17,7 +17,7 @@ class NpcSkill {
     return newSkill;
   }
 
-  NpcSkill({
+  CharacterSkill({
     String icon,
     String name,
     String skillType,

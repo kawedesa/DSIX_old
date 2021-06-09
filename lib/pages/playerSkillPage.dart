@@ -23,7 +23,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
   // String focusText2 = '';
 
   // void focus() {
-  //   if (widget.dsix.getCurrentPlayer().playerAction[6].focus == false) {
+  //   if (widget.dsix.gm.getCurrentPlayer().playerAction[6].focus == false) {
   //     focusButton = Container();
   //     focusText1 = '';
   //     focusText2 = '';
@@ -42,7 +42,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
   //         width: double.infinity,
   //         decoration: BoxDecoration(
   //           border: Border.all(
-  //             color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+  //             color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
   //             width: 2, //                   <--- border width here
   //           ),
   //         ),
@@ -95,7 +95,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
   //         Container(
   //           decoration: BoxDecoration(
   //             border: Border.all(
-  //               color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+  //               color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
   //               width: 2.5, //                   <--- border width here
   //             ),
   //           ),
@@ -106,7 +106,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
   //             children: <Widget>[
   //               Container(
   //                 color:
-  //                     widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+  //                     widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
   //                 width: double.infinity,
   //                 child: Padding(
   //                   padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
@@ -164,7 +164,8 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -174,14 +175,16 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                     child: Center(
                       child: Text(
-                        widget.dsix
+                        widget.dsix.gm
                             .getCurrentPlayer()
                             .playerAction[6]
                             .option[index]
@@ -200,7 +203,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
                   child: Text(
-                    widget.dsix
+                    widget.dsix.gm
                         .getCurrentPlayer()
                         .playerAction[6]
                         .option[index]
@@ -263,8 +266,8 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
   Widget build(BuildContext context) {
     //SKILL SELECTION
     skillSelection = [];
-    widget.dsix.getCurrentPlayer().availableSkills.forEach((element) {
-      if (element == widget.dsix.getCurrentPlayer().playerAction[6]) {
+    widget.dsix.gm.getCurrentPlayer().availableSkills.forEach((element) {
+      if (element == widget.dsix.gm.getCurrentPlayer().playerAction[6]) {
         skillSelection.add(true);
       } else {
         skillSelection.add(false);
@@ -277,14 +280,15 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
           leading: IconButton(
             icon: Icon(
               Icons.keyboard_arrow_left,
-              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+              color:
+                  widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
               size: 40,
             ),
             onPressed: () => Navigator.of(context).pop(),
           ),
           titleSpacing: 0,
           backgroundColor:
-              widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+              widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
           centerTitle: true,
           title: new Text(
             'Skill   ',
@@ -293,7 +297,8 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
               fontFamily: 'Headline',
               height: 1.1,
               fontSize: 25.0,
-              color: widget.dsix.getCurrentPlayer().playerColor.secondaryColor,
+              color:
+                  widget.dsix.gm.getCurrentPlayer().playerColor.secondaryColor,
               letterSpacing: 2,
             ),
           ),
@@ -336,7 +341,9 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              widget.dsix.getCurrentPlayer().chooseSkill(index);
+                              widget.dsix.gm
+                                  .getCurrentPlayer()
+                                  .chooseSkill(index);
 
                               // focus();
 
@@ -344,9 +351,9 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                             });
                           },
                           child: SvgPicture.asset(
-                            'assets/player/action/${widget.dsix.getCurrentPlayer().availableSkills[index].icon}.svg',
+                            'assets/player/action/${widget.dsix.gm.getCurrentPlayer().availableSkills[index].icon}.svg',
                             color: skillSelection[index]
-                                ? widget.dsix
+                                ? widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerColor
                                     .primaryColor
@@ -362,7 +369,8 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
               Divider(
                 height: 0,
                 thickness: 2,
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
               ),
               Expanded(
                 flex: 13,
@@ -376,12 +384,12 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Text(
-                              '${widget.dsix.getCurrentPlayer().playerAction[6].name}',
+                              '${widget.dsix.gm.getCurrentPlayer().playerAction[6].name}',
                               style: TextStyle(
                                 fontFamily: 'Headline',
                                 height: 1.3,
                                 fontSize: 45,
-                                color: widget.dsix
+                                color: widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerColor
                                     .primaryColor,
@@ -401,7 +409,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                                   ),
                                   children: <TextSpan>[
                                     TextSpan(
-                                        text: widget.dsix
+                                        text: widget.dsix.gm
                                             .getCurrentPlayer()
                                             .playerAction[6]
                                             .description),
@@ -422,7 +430,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                             ListView.builder(
                                 shrinkWrap: true,
                                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                itemCount: widget.dsix
+                                itemCount: widget.dsix.gm
                                     .getCurrentPlayer()
                                     .playerAction[6]
                                     .option
@@ -444,7 +452,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: widget.dsix
+                                          color: widget.dsix.gm
                                               .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,
@@ -468,7 +476,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                                                         0, 0, 10, 0),
                                                 child: SvgPicture.asset(
                                                   'assets/ui/help.svg',
-                                                  color: widget.dsix
+                                                  color: widget.dsix.gm
                                                       .getCurrentPlayer()
                                                       .playerColor
                                                       .primaryColor,
@@ -482,7 +490,7 @@ class _PlayerSkillPageState extends State<PlayerSkillPage> {
                                           ),
                                           Center(
                                             child: Text(
-                                              widget.dsix
+                                              widget.dsix.gm
                                                   .getCurrentPlayer()
                                                   .playerAction[6]
                                                   .option[index]

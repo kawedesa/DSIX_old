@@ -29,38 +29,39 @@ class _InventoryStatePage extends State<InventoryPage> {
   String buttonText;
 
   void checkColor() {
-    if (widget.dsix.getCurrentPlayer().mainHandEquip.name == '') {
-      mainHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().mainHandEquip.name == '') {
+      mainHandColor =
+          widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       mainHandColor = Colors.white;
     }
 
-    if (widget.dsix.getCurrentPlayer().offHandEquip.name == '') {
-      offHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().offHandEquip.name == '') {
+      offHandColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       offHandColor = Colors.white;
     }
 
-    if (widget.dsix.getCurrentPlayer().headEquip.name == '') {
-      headColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().headEquip.name == '') {
+      headColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       headColor = Colors.white;
     }
 
-    if (widget.dsix.getCurrentPlayer().bodyEquip.name == '') {
-      bodyColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().bodyEquip.name == '') {
+      bodyColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       bodyColor = Colors.white;
     }
 
-    if (widget.dsix.getCurrentPlayer().handsEquip.name == '') {
-      handsColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().handsEquip.name == '') {
+      handsColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       handsColor = Colors.white;
     }
 
-    if (widget.dsix.getCurrentPlayer().feetEquip.name == '') {
-      feetColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().feetEquip.name == '') {
+      feetColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       feetColor = Colors.white;
     }
@@ -68,7 +69,7 @@ class _InventoryStatePage extends State<InventoryPage> {
 
   void useOrEquip(Item item, String buttonText) {
     try {
-      widget.dsix.getCurrentPlayer().useOrEquip(item, buttonText);
+      widget.dsix.gm.getCurrentPlayer().useOrEquip(item, buttonText);
     } on NoGoldException catch (e) {
       // alertTitle = e.title;
       // alertDescription = e.message;
@@ -145,9 +146,9 @@ class _InventoryStatePage extends State<InventoryPage> {
 
     availablePlayers = [];
 
-    widget.dsix.players.forEach((element) {
+    widget.dsix.gm.players.forEach((element) {
       if (element.characterFinished == true &&
-          element != widget.dsix.getCurrentPlayer()) {
+          element != widget.dsix.gm.getCurrentPlayer()) {
         availablePlayers.add(element);
       }
     });
@@ -163,7 +164,7 @@ class _InventoryStatePage extends State<InventoryPage> {
   void enchantItem(Item item) {
     String enchantText = 'Select an item to enchant.';
     availableItems = [];
-    widget.dsix.getCurrentPlayer().inventory.forEach((element) {
+    widget.dsix.gm.getCurrentPlayer().inventory.forEach((element) {
       if (element.itemClass != 'resource' &&
           element.itemClass != 'thrownWeapon' &&
           element.enchant < 3) {
@@ -189,7 +190,8 @@ class _InventoryStatePage extends State<InventoryPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -199,8 +201,10 @@ class _InventoryStatePage extends State<InventoryPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
@@ -234,7 +238,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           },
                           child: Icon(
                             Icons.clear,
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -255,7 +259,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     const EdgeInsets.symmetric(horizontal: 0),
                                 child: SvgPicture.asset(
                                   'assets/item/${ammoQuantity[index]}.svg',
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -278,7 +282,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     const EdgeInsets.symmetric(horizontal: 0),
                                 child: SvgPicture.asset(
                                   'assets/item/${enchantQuantity[index]}.svg',
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -301,8 +305,10 @@ class _InventoryStatePage extends State<InventoryPage> {
 
                 Divider(
                   thickness: 2,
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                 ),
 
                 SizedBox(
@@ -319,7 +325,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/pDamage.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -346,7 +352,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/mDamage.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -373,7 +379,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/pArmor.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -400,7 +406,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/mArmor.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -427,7 +433,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           children: <Widget>[
                             SvgPicture.asset(
                               'assets/item/weight.svg',
-                              color: widget.dsix
+                              color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .primaryColor,
@@ -455,8 +461,10 @@ class _InventoryStatePage extends State<InventoryPage> {
 
                 Divider(
                   thickness: 2,
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                 ),
 
                 Container(
@@ -494,7 +502,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -512,7 +520,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: Icon(
                                   Icons.check,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -555,7 +563,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -573,7 +581,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
                                 child: Icon(
                                   Icons.keyboard_arrow_right,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -614,7 +622,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -632,7 +640,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
                                 child: Icon(
                                   Icons.attach_money,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -683,7 +691,8 @@ class _InventoryStatePage extends State<InventoryPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -694,8 +703,10 @@ class _InventoryStatePage extends State<InventoryPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
@@ -738,7 +749,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      widget.dsix.getCurrentPlayer().sellItem(item, buttonText);
+                      widget.dsix.gm
+                          .getCurrentPlayer()
+                          .sellItem(item, buttonText);
                       checkColor();
                       widget.refresh();
                       Navigator.of(context).pop(true);
@@ -751,7 +764,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -769,7 +782,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: Icon(
                                   Icons.check,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -809,7 +822,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -827,7 +840,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: Icon(
                                   Icons.clear,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -881,8 +894,10 @@ class _InventoryStatePage extends State<InventoryPage> {
               content: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                    color: widget.dsix.gm
+                        .getCurrentPlayer()
+                        .playerColor
+                        .primaryColor,
                     width: 2.5, //                   <--- border width here
                   ),
                 ),
@@ -893,7 +908,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Container(
-                        color: widget.dsix
+                        color: widget.dsix.gm
                             .getCurrentPlayer()
                             .playerColor
                             .primaryColor,
@@ -942,7 +957,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     availablePlayers[index]
                                         .inventory
                                         .add(item.copyItem());
-                                    widget.dsix
+                                    widget.dsix.gm
                                         .getCurrentPlayer()
                                         .destroyItem(item, buttonText);
                                     widget.refresh();
@@ -1030,8 +1045,10 @@ class _InventoryStatePage extends State<InventoryPage> {
               content: Container(
                 decoration: BoxDecoration(
                   border: Border.all(
-                    color:
-                        widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                    color: widget.dsix.gm
+                        .getCurrentPlayer()
+                        .playerColor
+                        .primaryColor,
                     width: 2.5, //                   <--- border width here
                   ),
                 ),
@@ -1042,7 +1059,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     mainAxisSize: MainAxisSize.min,
                     children: <Widget>[
                       Container(
-                        color: widget.dsix
+                        color: widget.dsix.gm
                             .getCurrentPlayer()
                             .playerColor
                             .primaryColor,
@@ -1097,7 +1114,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     } else {
                                       availableItems[index].mDamage++;
                                     }
-                                    widget.dsix
+                                    widget.dsix.gm
                                         .getCurrentPlayer()
                                         .destroyItem(item, 'ENCHANT');
                                     widget.refresh();
@@ -1114,7 +1131,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     width: double.infinity,
                                     decoration: BoxDecoration(
                                       border: Border.all(
-                                        color: widget.dsix
+                                        color: widget.dsix.gm
                                             .getCurrentPlayer()
                                             .playerColor
                                             .primaryColor,
@@ -1137,7 +1154,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                                       0, 0, 10, 0),
                                               child: Icon(
                                                 Icons.plus_one,
-                                                color: widget.dsix
+                                                color: widget.dsix.gm
                                                     .getCurrentPlayer()
                                                     .playerColor
                                                     .primaryColor,
@@ -1187,7 +1204,8 @@ class _InventoryStatePage extends State<InventoryPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -1197,8 +1215,10 @@ class _InventoryStatePage extends State<InventoryPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -1241,7 +1261,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      widget.dsix
+                      widget.dsix.gm
                           .getCurrentPlayer()
                           .destroyItem(item, buttonText);
                       checkColor();
@@ -1256,7 +1276,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -1274,7 +1294,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: Icon(
                                   Icons.check,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -1314,7 +1334,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -1332,7 +1352,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: Icon(
                                   Icons.clear,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -1383,7 +1403,8 @@ class _InventoryStatePage extends State<InventoryPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 1.5, //                   <--- border width here
               ),
             ),
@@ -1394,8 +1415,10 @@ class _InventoryStatePage extends State<InventoryPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -1403,7 +1426,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
                         Text(
-                          'WEIGHT: ${widget.dsix.getCurrentPlayer().currentWeight}/${widget.dsix.getCurrentPlayer().maxWeight} ',
+                          'WEIGHT: ${widget.dsix.gm.getCurrentPlayer().currentWeight}/${widget.dsix.gm.getCurrentPlayer().race.maxWeight} ',
                           style: TextStyle(
                             fontFamily: 'Headline',
                             height: 1.3,
@@ -1458,7 +1481,8 @@ class _InventoryStatePage extends State<InventoryPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 1.5, //                   <--- border width here
               ),
             ),
@@ -1468,8 +1492,10 @@ class _InventoryStatePage extends State<InventoryPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
@@ -1523,33 +1549,34 @@ class _InventoryStatePage extends State<InventoryPage> {
   void initState() {
     super.initState();
 
-    if (widget.dsix.getCurrentPlayer().feetEquip.name == '') {
-      feetColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().feetEquip.name == '') {
+      feetColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       feetColor = Colors.white;
     }
-    if (widget.dsix.getCurrentPlayer().handsEquip.name == '') {
-      handsColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().handsEquip.name == '') {
+      handsColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       handsColor = Colors.white;
     }
-    if (widget.dsix.getCurrentPlayer().headEquip.name == '') {
-      headColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().headEquip.name == '') {
+      headColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       headColor = Colors.white;
     }
-    if (widget.dsix.getCurrentPlayer().mainHandEquip.name == '') {
-      mainHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().mainHandEquip.name == '') {
+      mainHandColor =
+          widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       mainHandColor = Colors.white;
     }
-    if (widget.dsix.getCurrentPlayer().offHandEquip.name == '') {
-      offHandColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().offHandEquip.name == '') {
+      offHandColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       offHandColor = Colors.white;
     }
-    if (widget.dsix.getCurrentPlayer().bodyEquip.name == '') {
-      bodyColor = widget.dsix.getCurrentPlayer().playerColor.primaryColor;
+    if (widget.dsix.gm.getCurrentPlayer().bodyEquip.name == '') {
+      bodyColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     } else {
       bodyColor = Colors.white;
     }
@@ -1572,7 +1599,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   children: <Widget>[
                     SvgPicture.asset(
                       'assets/item/pDamage.svg',
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -1581,7 +1608,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
-                        '${widget.dsix.getCurrentPlayer().pDamage}',
+                        '${widget.dsix.gm.getCurrentPlayer().pDamage}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1,
@@ -1599,7 +1626,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   children: <Widget>[
                     SvgPicture.asset(
                       'assets/item/mDamage.svg',
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -1608,7 +1635,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
-                        '${widget.dsix.getCurrentPlayer().mDamage}',
+                        '${widget.dsix.gm.getCurrentPlayer().mDamage}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1,
@@ -1626,7 +1653,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   children: <Widget>[
                     SvgPicture.asset(
                       'assets/item/pArmor.svg',
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -1635,7 +1662,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
-                        '${widget.dsix.getCurrentPlayer().pArmor}',
+                        '${widget.dsix.gm.getCurrentPlayer().pArmor}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1,
@@ -1653,7 +1680,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   children: <Widget>[
                     SvgPicture.asset(
                       'assets/item/mArmor.svg',
-                      color: widget.dsix
+                      color: widget.dsix.gm
                           .getCurrentPlayer()
                           .playerColor
                           .primaryColor,
@@ -1662,7 +1689,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
-                        '${widget.dsix.getCurrentPlayer().mArmor}',
+                        '${widget.dsix.gm.getCurrentPlayer().mArmor}',
                         style: TextStyle(
                           fontFamily: 'Headline',
                           height: 1,
@@ -1686,7 +1713,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       children: <Widget>[
                         SvgPicture.asset(
                           'assets/item/weight.svg',
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -1695,7 +1722,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(7, 1, 0, 5),
                           child: Text(
-                            '${widget.dsix.getCurrentPlayer().currentWeight}',
+                            '${widget.dsix.gm.getCurrentPlayer().currentWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontFamily: 'Headline',
@@ -1721,7 +1748,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(1, 6, 5, 0),
                           child: Text(
-                            '${widget.dsix.getCurrentPlayer().maxWeight}',
+                            '${widget.dsix.gm.getCurrentPlayer().race.maxWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
                               fontFamily: 'Headline',
@@ -1743,7 +1770,7 @@ class _InventoryStatePage extends State<InventoryPage> {
         Divider(
           height: 0,
           thickness: 2,
-          color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
         ),
         Expanded(
           flex: 9,
@@ -1761,7 +1788,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         height: MediaQuery.of(context).size.height * 0.235,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -1775,12 +1802,12 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                              widget.dsix.getCurrentPlayer().mainHandEquip,
+                              widget.dsix.gm.getCurrentPlayer().mainHandEquip,
                               'mainHand',
                             );
                           },
                           child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.getCurrentPlayer().mainHandEquip.icon}.svg',
+                            'assets/item/${widget.dsix.gm.getCurrentPlayer().mainHandEquip.icon}.svg',
                             color: mainHandColor,
                           ),
                         ),
@@ -1790,7 +1817,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         height: MediaQuery.of(context).size.width * 0.25,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -1804,12 +1831,12 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                              widget.dsix.getCurrentPlayer().handsEquip,
+                              widget.dsix.gm.getCurrentPlayer().handsEquip,
                               'hands',
                             );
                           },
                           child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.getCurrentPlayer().handsEquip.icon}.svg',
+                            'assets/item/${widget.dsix.gm.getCurrentPlayer().handsEquip.icon}.svg',
                             color: handsColor,
                           ),
                         ),
@@ -1824,7 +1851,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         height: MediaQuery.of(context).size.width * 0.25,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -1838,12 +1865,12 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                              widget.dsix.getCurrentPlayer().headEquip,
+                              widget.dsix.gm.getCurrentPlayer().headEquip,
                               'head',
                             );
                           },
                           child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.getCurrentPlayer().headEquip.icon}.svg',
+                            'assets/item/${widget.dsix.gm.getCurrentPlayer().headEquip.icon}.svg',
                             color: headColor,
                           ),
                         ),
@@ -1853,7 +1880,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         height: MediaQuery.of(context).size.height * 0.235,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -1867,11 +1894,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                                widget.dsix.getCurrentPlayer().bodyEquip,
+                                widget.dsix.gm.getCurrentPlayer().bodyEquip,
                                 'body');
                           },
                           child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.getCurrentPlayer().bodyEquip.icon}.svg',
+                            'assets/item/${widget.dsix.gm.getCurrentPlayer().bodyEquip.icon}.svg',
                             color: bodyColor,
                           ),
                         ),
@@ -1886,7 +1913,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         height: MediaQuery.of(context).size.height * 0.235,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -1897,14 +1924,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                         child: TextButton(
                           onPressed: () {
                             checkEquipped(
-                                widget.dsix.getCurrentPlayer().offHandEquip,
+                                widget.dsix.gm.getCurrentPlayer().offHandEquip,
                                 'offHand');
                           },
                           style: TextButton.styleFrom(
                             padding: const EdgeInsets.all(10),
                           ),
                           child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.getCurrentPlayer().offHandEquip.icon}.svg',
+                            'assets/item/${widget.dsix.gm.getCurrentPlayer().offHandEquip.icon}.svg',
                             color: offHandColor,
                           ),
                         ),
@@ -1914,7 +1941,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         height: MediaQuery.of(context).size.width * 0.25,
                         decoration: BoxDecoration(
                           border: Border.all(
-                            color: widget.dsix
+                            color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .primaryColor,
@@ -1928,11 +1955,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           onPressed: () {
                             checkEquipped(
-                                widget.dsix.getCurrentPlayer().feetEquip,
+                                widget.dsix.gm.getCurrentPlayer().feetEquip,
                                 'feet');
                           },
                           child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.getCurrentPlayer().feetEquip.icon}.svg',
+                            'assets/item/${widget.dsix.gm.getCurrentPlayer().feetEquip.icon}.svg',
                             color: feetColor,
                           ),
                         ),
@@ -1947,7 +1974,7 @@ class _InventoryStatePage extends State<InventoryPage> {
         Divider(
           height: 0,
           thickness: 2,
-          color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
         ),
         Expanded(
           flex: 4,
@@ -1956,20 +1983,20 @@ class _InventoryStatePage extends State<InventoryPage> {
             child: GridView.count(
               crossAxisCount: 6,
               children: List.generate(
-                  widget.dsix.getCurrentPlayer().inventory.length, (index) {
+                  widget.dsix.gm.getCurrentPlayer().inventory.length, (index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: TextButton(
                     onPressed: () {
                       checkEquipped(
-                          widget.dsix.getCurrentPlayer().inventory[index],
+                          widget.dsix.gm.getCurrentPlayer().inventory[index],
                           'inventory');
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.all(0),
                     ),
                     child: SvgPicture.asset(
-                      'assets/item/${widget.dsix.getCurrentPlayer().inventory[index].icon}.svg',
+                      'assets/item/${widget.dsix.gm.getCurrentPlayer().inventory[index].icon}.svg',
                       color: Colors.white,
                       width: MediaQuery.of(context).size.width * 0.125,
                     ),

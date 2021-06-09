@@ -1,31 +1,28 @@
-import 'package:dsixv02app/models/gm/loot.dart';
-import 'package:dsixv02app/models/gm/newQuest.dart';
-import 'package:dsixv02app/models/gm/npc.dart';
+import 'package:dsixv02app/models/gm/quest.dart';
+
 import 'storySettings.dart';
 import 'storySettingsList.dart';
 
 class Story {
 //SETTING
 
-  StorySettings settings = StorySettings(
+  StorySettings story = StorySettings(
     icon: 'normal',
     name: 'NORMAL',
     description: 'Normal.',
     fame: 1,
-    questXp: 50,
-    questGold: 100,
     numberOfQuests: 2,
   );
   List<StorySettings> storySettingsList = settingsList;
 
   int currentSetting = 2;
   void chooseDifficulty(int value) {
-    if (currentSetting + value > storySettingsList.length ||
+    if (currentSetting + value == storySettingsList.length ||
         currentSetting + value < 0) {
       return;
     }
     this.currentSetting += value;
-    this.settings = this.storySettingsList[currentSetting];
+    this.story = this.storySettingsList[currentSetting];
   }
 
 //QUEST
@@ -42,14 +39,16 @@ class Story {
     reward: '-',
   );
 
+  int round = 0;
   void newStory() {
+    this.round = 1;
     newRandomQuest();
     this.newQuest = questList.first;
   }
 
   void newRandomQuest() {
-    for (int i = 0; i < this.settings.numberOfQuests; i++) {
-      this.questList.add(newQuest.newRandomQuest());
+    for (int i = 0; i < this.story.numberOfQuests; i++) {
+      this.questList.add(newQuest.newRandomQuest(this.story.name, this.round));
     }
   }
 
@@ -67,28 +66,14 @@ class Story {
   }
 
   void finishQuest() {
-    switch (this.newQuest.reward) {
-      case 'Gold':
-        {}
-        break;
-      case 'Item':
-        {}
-        break;
-      case 'Information':
-        {}
-        break;
-      case 'Resources':
-        {}
-        break;
-      case 'Fame':
-        {}
-        break;
-      case 'Favor':
-        {}
-        break;
-    }
     questList.clear();
-    newStory();
+    newRound();
+  }
+
+  void newRound() {
+    this.round++;
+    newRandomQuest();
+    this.newQuest = questList.first;
   }
 
   Story();

@@ -20,7 +20,7 @@ class PlayersPage extends StatefulWidget {
 
 class _PlayersPageState extends State<PlayersPage> {
   void checkPlayer() {
-    if (widget.dsix.getCurrentPlayer().characterFinished == false) {
+    if (widget.dsix.gm.getCurrentPlayer().characterFinished == false) {
       Navigator.of(context).push(_createRouteRace());
     } else {
       Navigator.of(context).push(_createRoutePlayerUI());
@@ -117,7 +117,8 @@ class _PlayersPageState extends State<PlayersPage> {
           Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                color:
+                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
                 width: 2.5, //                   <--- border width here
               ),
             ),
@@ -127,8 +128,10 @@ class _PlayersPageState extends State<PlayersPage> {
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
                 Container(
-                  color:
-                      widget.dsix.getCurrentPlayer().playerColor.primaryColor,
+                  color: widget.dsix.gm
+                      .getCurrentPlayer()
+                      .playerColor
+                      .primaryColor,
                   width: double.infinity,
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
@@ -172,7 +175,7 @@ class _PlayersPageState extends State<PlayersPage> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        widget.dsix.deleteCurrentPlayer(index);
+                        widget.dsix.gm.deleteCurrentPlayer(index);
                         Navigator.of(context).pop(true);
                       });
                     },
@@ -184,7 +187,7 @@ class _PlayersPageState extends State<PlayersPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -202,7 +205,7 @@ class _PlayersPageState extends State<PlayersPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: Icon(
                                   Icons.check,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -242,7 +245,7 @@ class _PlayersPageState extends State<PlayersPage> {
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: widget.dsix
+                          color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
@@ -260,7 +263,7 @@ class _PlayersPageState extends State<PlayersPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
                                 child: Icon(
                                   Icons.clear,
-                                  color: widget.dsix
+                                  color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
@@ -340,27 +343,29 @@ class _PlayersPageState extends State<PlayersPage> {
                 ListView.builder(
                   shrinkWrap: true,
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  itemCount: widget.dsix.players.length,
+                  itemCount: widget.dsix.gm.players.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
                       child: GestureDetector(
                         onLongPress: () {
+                          widget.dsix.gm.setCurrentPlayer(index);
                           setState(() {
-                            widget.dsix.setCurrentPlayer(index);
-                            showAlertDialogDeletePlayer(context, index);
+                            (widget.dsix.gm.players[index].characterFinished)
+                                ? showAlertDialogDeletePlayer(context, index)
+                                : widget.dsix.gm.newRandomPlayer(index);
                           });
                         },
                         onTap: () {
-                          widget.dsix.setCurrentPlayer(index);
+                          widget.dsix.gm.setCurrentPlayer(index);
                           checkPlayer();
                         },
                         child: Container(
                           height: MediaQuery.of(context).size.height * 0.08,
                           decoration: BoxDecoration(
                             border: Border.all(
-                              color: widget
-                                  .dsix.players[index].playerColor.primaryColor,
+                              color: widget.dsix.gm.players[index].playerColor
+                                  .primaryColor,
                               width:
                                   2.5, //                   <--- border width here
                             ),
@@ -377,7 +382,7 @@ class _PlayersPageState extends State<PlayersPage> {
                                         const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                     child: Icon(
                                       Icons.keyboard_arrow_right,
-                                      color: widget.dsix.players[index]
+                                      color: widget.dsix.gm.players[index]
                                           .playerColor.primaryColor,
                                       size: 30,
                                     ),
@@ -388,13 +393,13 @@ class _PlayersPageState extends State<PlayersPage> {
                                 padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
                                 child: Center(
                                   child: Text(
-                                    '${widget.dsix.players[index].playerColor.name}',
+                                    '${widget.dsix.gm.players[index].playerColor.name}',
                                     style: TextStyle(
                                       fontSize: 15,
                                       fontWeight: FontWeight.bold,
                                       letterSpacing: 1.5,
                                       fontFamily: 'Calibri',
-                                      color: widget.dsix.players[index]
+                                      color: widget.dsix.gm.players[index]
                                           .playerColor.primaryColor,
                                     ),
                                   ),
