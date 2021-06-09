@@ -1,15 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
-
+import 'package:dsixv02app/models/shared/exceptions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SettingsPage extends StatefulWidget {
+  final Function(String) alert;
   final Function(int index) pageChanged;
   final Function() refresh;
   final Dsix dsix;
 
-  SettingsPage({Key key, this.dsix, this.refresh, this.pageChanged})
+  SettingsPage({Key key, this.dsix, this.refresh, this.pageChanged, this.alert})
       : super(key: key);
 
   static const String routeName = "/settingsPage";
@@ -27,6 +28,18 @@ class _SettingsPageState extends State<SettingsPage> {
     'VERY HARD',
   ];
 
+  void newStory() {
+    try {
+      widget.dsix.gm.newStory();
+    } on NoPlayersException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
+    }
+
+    widget.pageChanged(1);
+    widget.refresh();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -40,7 +53,24 @@ class _SettingsPageState extends State<SettingsPage> {
               Expanded(
                 child: Container(
                   child: Center(
-                      child: Text('FAME: ${widget.dsix.gm.story.story.fame}')),
+                      child:
+                          Text('FAME: ${widget.dsix.gm.story.settings.fame}')),
+                  color: Colors.amber,
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  child: Center(
+                      child: Text(
+                          'QUESTS: ${widget.dsix.gm.story.settings.numberOfQuests}')),
+                  color: Colors.amber,
+                ),
+              ),
+              Expanded(
+                child: Container(
+                  child: Center(
+                      child: Text(
+                          'GOLD: ${widget.dsix.gm.story.settings.questGold}')),
                   color: Colors.amber,
                 ),
               ),
@@ -48,19 +78,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 child: Container(
                   child: Center(
                       child:
-                          Text('QUESTS: ${widget.dsix.gm.story.story.fame}')),
-                  color: Colors.amber,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  child: Center(child: Text('FAME')),
-                  color: Colors.amber,
-                ),
-              ),
-              Expanded(
-                child: Container(
-                  child: Center(child: Text('QUESTS')),
+                          Text('XP: ${widget.dsix.gm.story.settings.questXp}')),
                   color: Colors.amber,
                 ),
               ),
@@ -104,7 +122,7 @@ class _SettingsPageState extends State<SettingsPage> {
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         Text(
-                          '${widget.dsix.gm.story.story.name}',
+                          '${widget.dsix.gm.story.settings.name}',
                           style: TextStyle(
                             fontFamily: 'Headline',
                             height: 1.3,
@@ -116,7 +134,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         Padding(
                           padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                           child: Text(
-                            '${widget.dsix.gm.story.story.description}',
+                            '${widget.dsix.gm.story.settings.description}',
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               height: 1.3,
@@ -131,9 +149,7 @@ class _SettingsPageState extends State<SettingsPage> {
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           ),
                           onPressed: () {
-                            widget.dsix.gm.story.newStory();
-                            widget.pageChanged(1);
-                            widget.refresh();
+                            newStory();
                           },
                           child: Container(
                             height: MediaQuery.of(context).size.height * 0.058,

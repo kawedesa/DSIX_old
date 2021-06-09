@@ -9,8 +9,8 @@ class Quest {
   String target = '-';
   String location = '-';
   String reward = '-';
-  int questXp = 0;
-  int questGold = 0;
+  // int questXp = 0;
+  // int questGold = 0;
   int questFame = 0;
   bool onGoing = false;
 
@@ -150,7 +150,7 @@ class Quest {
     return newQuest;
   }
 
-  Quest newRandomQuest(String difficulty, int round) {
+  Quest newRandomQuest() {
     String randomObjective =
         '${objectiveList[Random().nextInt(objectiveList.length)]}';
     String randomTarget = (target == 'Person')
@@ -159,40 +159,6 @@ class Quest {
     String randomLocation =
         '${locationList[Random().nextInt(locationList.length)]}';
     String randomReward = '${rewardList[Random().nextInt(rewardList.length)]}';
-
-    switch (difficulty) {
-      case 'VERY EASY':
-        {
-          this.questXp = 25 * round;
-          this.questGold = 200 * round;
-        }
-        break;
-
-      case 'EASY':
-        {
-          this.questXp = 50 * round;
-          this.questGold = 200 * round;
-        }
-        break;
-      case 'NORMAL':
-        {
-          this.questXp = 50 * round;
-          this.questGold = 100 * round;
-        }
-        break;
-      case 'HARD':
-        {
-          this.questXp = 100 * round;
-          this.questGold = 100 * round;
-        }
-        break;
-      case 'VERY HARD':
-        {
-          this.questXp = 150 * round;
-          this.questGold = 300 * round;
-        }
-        break;
-    }
 
     Quest newRandomQuest = new Quest(
       icon: 'quest',
@@ -203,8 +169,6 @@ class Quest {
       target: randomTarget,
       location: randomLocation,
       reward: randomReward,
-      questXp: this.questXp,
-      questGold: this.questGold,
     );
     return newRandomQuest;
   }
@@ -245,8 +209,6 @@ class Quest {
     String target,
     String location,
     String reward,
-    int questXp,
-    int questGold,
   }) {
     this.icon = icon;
     this.name = name;
@@ -255,7 +217,5 @@ class Quest {
     this.target = target;
     this.location = location;
     this.reward = reward;
-    this.questXp = questXp;
-    this.questGold = questGold;
   }
 }

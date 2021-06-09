@@ -4,6 +4,7 @@ import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/shop.dart';
 import 'character.dart';
+import '../shared/exceptions.dart';
 import 'characterList.dart';
 
 class Gm {
@@ -36,6 +37,12 @@ class Gm {
         secondaryColor: Colors.purple[100],
         tertiaryColor: Colors.purple[800]),
   ];
+
+  // void createPlayer(PlayerColor playerColor) {
+  //   Player newPlayer = Player(playerColor);
+
+  //   this.players.add(newPlayer);
+  // }
 
   void createPlayers() {
     if (this.players.isEmpty == true) {
@@ -160,20 +167,24 @@ class Gm {
   Story story = Story();
 
   int totalXp = 0;
-  int totalGold = 0;
-  void startQuest() {
+  void newStory() {
     checkPlayers();
-    this.totalXp = 0;
-    this.totalGold = 0;
+    if (numberPlayers < 1) {
+      throw new NoPlayersException();
+    }
+    this.story.newStory();
+
+    this.totalXp = this.story.settings.questXp * numberPlayers;
+  }
+
+  void startQuest() {
     this.story.acceptQuest();
-    this.totalXp = this.story.newQuest.questXp * this.numberPlayers;
-    this.totalGold = this.story.newQuest.questGold;
   }
 
   void finishQuest() {
     this.players.forEach((element) {
       if (element.characterFinished) {
-        element.gold += this.totalGold;
+        element.gold += this.story.settings.questGold;
         if (element.fame > 0) {
           element.gold += element.fame * 100;
         }
@@ -184,7 +195,7 @@ class Gm {
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
-              element.gold += this.totalGold;
+              element.gold += this.story.settings.questGold;
               if (element.fame > 0) {
                 element.gold += element.fame * 100;
               }
@@ -226,8 +237,6 @@ class Gm {
     }
 
     this.story.finishQuest();
-    this.totalGold = 0;
-    this.totalXp = 0;
   }
 
 //NPCS AND MONSTERS
@@ -288,6 +297,7 @@ class Gm {
   void characterLoot() {
     createRandomLoot(this.selectedCharacter.totalLoot);
     deleteCharacter();
+    this.loot = this.lootList.last;
   }
   // List<Npc> npcList = [];
 

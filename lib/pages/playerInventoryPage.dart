@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../models/game/item.dart';
-import '../models/player/exceptions.dart';
+import '../models/shared/exceptions.dart';
 import 'package:dsixv02app/models/player/player.dart';
 
 class InventoryPage extends StatefulWidget {
@@ -140,24 +140,27 @@ class _InventoryStatePage extends State<InventoryPage> {
   }
 
   List<Player> availablePlayers = [];
-
-  void giveItem(Item item, String buttonText) {
-    String giveText = 'Select the player you want to give the item to.';
-
+  void checkPlayers() {
     availablePlayers = [];
-
     widget.dsix.gm.players.forEach((element) {
-      if (element.characterFinished == true &&
-          element != widget.dsix.gm.getCurrentPlayer()) {
+      if (element.characterFinished) {
         availablePlayers.add(element);
       }
     });
+    availablePlayers.remove(widget.dsix.gm.getCurrentPlayer());
+  }
 
-    if (availablePlayers.isEmpty == true) {
-      giveText = 'There are no other players.';
+  void giveItem(Item item, Color primaryColor) {
+    try {
+      widget.dsix.gm.players
+          .singleWhere(
+              (element) => element.playerColor.primaryColor == primaryColor)
+          .receiveItem(item);
+    } on TooHeavyException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
     }
-
-    showAlertDialogGive(context, item, buttonText, giveText);
+    widget.dsix.gm.getCurrentPlayer().giveItem(item);
   }
 
   List<Item> availableItems = [];
@@ -553,7 +556,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                     onPressed: () {
                       Navigator.of(context).pop(true);
 
-                      giveItem(item, buttonText);
+                      checkPlayers();
+
+                      showAlertDialogGive(context, item);
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
@@ -881,8 +886,7 @@ class _InventoryStatePage extends State<InventoryPage> {
     );
   }
 
-  showAlertDialogGive(
-      BuildContext context, Item item, String buttonText, String giveText) {
+  showAlertDialogGive(BuildContext context, Item item) {
     showDialog(
       context: context,
       builder: (context) {
@@ -933,7 +937,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(35, 15, 35, 10),
                           child: Text(
-                            giveText,
+                            (availablePlayers.length > 0)
+                                ? 'Select a player:'
+                                : 'There are no other players.',
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               height: 1.25,
@@ -954,12 +960,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     const EdgeInsets.fromLTRB(30, 0, 30, 0),
                                 child: TextButton(
                                   onPressed: () {
-                                    availablePlayers[index]
-                                        .inventory
-                                        .add(item.copyItem());
-                                    widget.dsix.gm
-                                        .getCurrentPlayer()
-                                        .destroyItem(item, buttonText);
+                                    giveItem(
+                                        item,
+                                        availablePlayers[index]
+                                            .playerColor
+                                            .primaryColor);
                                     widget.refresh();
                                     Navigator.pop(context);
                                   },

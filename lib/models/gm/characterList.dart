@@ -73,7 +73,7 @@ class CharacterList {
     Character(
       icon: 'bird',
       image: 'undead',
-      name: 'GIAT BIRD',
+      name: 'GIANT BIRD',
       description: 'A giant bird.',
       baseHealth: 9,
       dice: 4,
@@ -106,10 +106,10 @@ class CharacterList {
           value: 0,
         ),
         CharacterSkill(
-          icon: 'hold',
-          name: 'HOLD', //FUTURE GRAB
+          icon: 'grab',
+          name: 'GRAB',
           skillType: 'pSkill',
-          description: 'Hold',
+          description: 'Grab',
           value: 0,
         ),
         CharacterSkill(
@@ -146,13 +146,13 @@ class CharacterList {
       pSkill: 2,
       mSkill: 0,
       possibleSkills: [
-        //     CharacterSkill(
-        //   icon: 'build',
-        //   name: 'BUILD',
-        //   skillType: 'pSkill',
-        //   description: 'Build',
-        //   value: 0,
-        // ),
+        CharacterSkill(
+          icon: 'build',
+          name: 'BUILD',
+          skillType: 'pSkill',
+          description: 'Build',
+          value: 0,
+        ),
         CharacterSkill(
           icon: 'strategy',
           name: 'STRATEGY',
@@ -175,10 +175,10 @@ class CharacterList {
           value: 0,
         ),
         CharacterSkill(
-          icon: 'splash',
-          name: 'SPLASH', //FUTURE EXPLOSION
+          icon: 'explode',
+          name: 'EXPLODE',
           skillType: 'pSkill',
-          description: 'Splash',
+          description: 'Explode',
           value: 0,
         ),
       ],
@@ -230,10 +230,10 @@ class CharacterList {
           value: 0,
         ),
         CharacterSkill(
-          icon: 'splash',
-          name: 'SPLASH', //FUTURE EXPLOSION
+          icon: 'explode',
+          name: 'EXPLODE',
           skillType: 'pSkill',
-          description: 'Splash',
+          description: 'Explode',
           value: 0,
         ),
         CharacterSkill(
@@ -252,13 +252,13 @@ class CharacterList {
         ),
       ],
       selectedSkills: [
-        //     CharacterSkill(
-        //   icon: 'build',
-        //   name: 'BUILD',
-        //   skillType: 'pSkill',
-        //   description: 'Build',
-        //   value: 0,
-        // ),
+        CharacterSkill(
+          icon: 'build',
+          name: 'BUILD',
+          skillType: 'pSkill',
+          description: 'Build',
+          value: 0,
+        ),
       ],
       baseLoot: 0.5,
       baseXp: 50,
@@ -449,10 +449,10 @@ class CharacterList {
           value: 0,
         ),
         CharacterSkill(
-          icon: 'hold',
-          name: 'HOLD', //FUTURE GRAB
+          icon: 'grab',
+          name: 'GRAB',
           skillType: 'pSkill',
-          description: 'Hold',
+          description: 'Grab',
           value: 0,
         ),
         CharacterSkill(
@@ -614,10 +614,10 @@ class CharacterList {
       mSkill: 0,
       possibleSkills: [
         CharacterSkill(
-          icon: 'hold',
-          name: 'HOLD', //FUTURE GRAB
+          icon: 'grab',
+          name: 'GRAB',
           skillType: 'pSkill',
-          description: 'Hold',
+          description: 'Grab',
           value: 0,
         ),
         CharacterSkill(
@@ -672,8 +672,8 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
-          icon: 'hide',
-          name: 'HIDE', //future camouflage
+          icon: 'camouflage',
+          name: 'CAMOUFLAGE',
           skillType: 'pSkill',
           description: 'Hide',
           value: 0,
@@ -780,10 +780,10 @@ class CharacterList {
           value: 0,
         ),
         CharacterSkill(
-          icon: 'hide',
-          name: 'HIDE', //future camouflage
+          icon: 'camouflage',
+          name: 'CAMOUFLAGE',
           skillType: 'pSkill',
-          description: 'Hide',
+          description: 'Camouflage',
           value: 0,
         ),
         CharacterSkill(
@@ -828,19 +828,19 @@ class CharacterList {
           value: 0,
         ),
         CharacterSkill(
-          icon: 'hold',
-          name: 'HOLD', //FUTURE GRAB
+          icon: 'grab',
+          name: 'GRAB',
           skillType: 'pSkill',
-          description: 'Hold',
+          description: 'Grab',
           value: 0,
         ),
-        // CharacterSkill(
-        //   icon: 'throw',
-        //   name: 'THROW',
-        //   skillType: 'pSkill',
-        //   description: '',
-        //   value: 0,
-        // ),
+        CharacterSkill(
+          icon: 'throw',
+          name: 'THROW',
+          skillType: 'pSkill',
+          description: '',
+          value: 0,
+        ),
         CharacterSkill(
           icon: 'swallow',
           name: 'SWALLOW',

@@ -8,14 +8,14 @@ import 'package:dsixv02app/models/gm/character.dart';
 import 'package:dsixv02app/models/gm/characterSkill.dart';
 
 class CharacterPage extends StatefulWidget {
+  final Function(String) alert;
+  final Function(int index) pageChanged;
   final Function() refresh;
   final Dsix dsix;
 
-  CharacterPage({
-    Key key,
-    this.dsix,
-    this.refresh,
-  }) : super(key: key);
+  CharacterPage(
+      {Key key, this.dsix, this.refresh, this.pageChanged, this.alert})
+      : super(key: key);
 
   static const String routeName = "/characterPage";
 
@@ -406,6 +406,9 @@ class _CharacterPageState extends State<CharacterPage> {
         onTap: () {
           setState(() {
             widget.dsix.gm.characterLoot();
+            _layout = 0;
+            widget.pageChanged(3);
+            widget.refresh();
           });
         },
         child: Padding(

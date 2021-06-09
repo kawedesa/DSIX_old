@@ -1,1 +1,21 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 314.5 314"><defs><style>.cls-1{fill:none;}.cls-2{fill:#231f20;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="a3d891e3-d1a8-45d9-8bb4-c816c9df960b"><g id="aab71d7e-7bf8-4474-9c42-a9921f90853b"><line class="cls-1" x2="314.5"/><line class="cls-1" x1="314.5" y1="314" y2="314"/></g></g></g><g id="pSkill"><g id="dig"><polygon class="cls-2" points="225.82 143.76 180.12 143.76 179.83 144.09 156.62 167.18 156.62 167.29 133.12 143.76 86.08 143.76 86.18 143.87 156 213.68 225.82 143.76"/><polygon class="cls-2" points="40.89 247.71 70.63 277.38 70.75 277.36 70.75 277.38 243.89 277.38 273.61 247.71 40.89 247.71"/><polygon class="cls-2" points="246.54 36.62 199.34 36.62 157.03 78.93 114.7 36.62 65.44 36.62 156.02 127.19 246.54 36.62"/></g></g></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 314.5 314" style="enable-background:new 0 0 314.5 314;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+	.st1{fill:#231F20;}
+</style>
+<g id="Layer_2_1_">
+	<g id="Layer_1-2">
+		<g id="a3d891e3-d1a8-45d9-8bb4-c816c9df960b">
+			<g id="aab71d7e-7bf8-4474-9c42-a9921f90853b">
+				<line class="st0" x1="0" y1="0" x2="314.5" y2="0"/>
+				<line class="st0" x1="314.5" y1="314" x2="0" y2="314"/>
+			</g>
+		</g>
+	</g>
+</g>
+<path class="st1" d="M208.3,17.5l-70.1,70.1l34.1,34.1L57.6,236.5l-13.3-13.3l-20.1,20.1l46.8,46.8L91,270l-13.3-13.3l114.8-114.8
+	l34.1,34.1l70.1-70.1L208.3,17.5z M226.3,151.3L163.1,89L178,74.5l-6.5,13.7l53.2,51.7l18.4-5L226.3,151.3z"/>
+</svg>

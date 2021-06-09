@@ -9,7 +9,7 @@ import '../models/player/playerAction.dart';
 import '../models/player/option.dart';
 
 import 'package:dsixv02app/models/game/dsix.dart';
-import '../models/player/exceptions.dart';
+import '../models/shared/exceptions.dart';
 
 class ActionPage extends StatefulWidget {
   final Function() refresh;

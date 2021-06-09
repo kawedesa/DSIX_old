@@ -6,12 +6,14 @@ import 'storySettingsList.dart';
 class Story {
 //SETTING
 
-  StorySettings story = StorySettings(
+  StorySettings settings = StorySettings(
     icon: 'normal',
     name: 'NORMAL',
     description: 'Normal.',
     fame: 1,
     numberOfQuests: 2,
+    questXp: 50,
+    questGold: 100,
   );
   List<StorySettings> storySettingsList = settingsList;
 
@@ -22,7 +24,7 @@ class Story {
       return;
     }
     this.currentSetting += value;
-    this.story = this.storySettingsList[currentSetting];
+    this.settings = this.storySettingsList[currentSetting];
   }
 
 //QUEST
@@ -47,8 +49,8 @@ class Story {
   }
 
   void newRandomQuest() {
-    for (int i = 0; i < this.story.numberOfQuests; i++) {
-      this.questList.add(newQuest.newRandomQuest(this.story.name, this.round));
+    for (int i = 0; i < this.settings.numberOfQuests; i++) {
+      this.questList.add(newQuest.newRandomQuest());
     }
   }
 
@@ -72,6 +74,8 @@ class Story {
 
   void newRound() {
     this.round++;
+    this.settings.questGold *= round;
+    this.settings.questXp *= round;
     newRandomQuest();
     this.newQuest = questList.first;
   }

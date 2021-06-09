@@ -1,29 +1,29 @@
 class NoAmmoException implements Exception {
-  String message;
+  String message = 'You have no ammunition.';
   String title = 'NO AMMO';
 
-  NoAmmoException(this.message);
+  NoAmmoException();
 }
 
 class NoWeaponException implements Exception {
-  String message = 'Buy a weapon!';
+  String message = 'Buy a weapon.';
   String title = 'NO WEAPON';
 
   NoWeaponException();
 }
 
 class NoGoldException implements Exception {
-  String message;
+  String message = 'You can\'t afford it.';
   String title = 'NO GOLD';
 
-  NoGoldException(this.message);
+  NoGoldException();
 }
 
 class TooHeavyException implements Exception {
-  String message;
+  String message = 'Too heavy.';
   String title = 'TOO HEAVY';
 
-  TooHeavyException(this.message);
+  TooHeavyException();
 }
 
 class MaxHpException implements Exception {
@@ -38,4 +38,11 @@ class MaxAmmoException implements Exception {
   String title = 'MAX AMMO';
 
   MaxAmmoException();
+}
+
+class NoPlayersException implements Exception {
+  String message = 'There are no players.';
+  String title = 'NO PLAYERS';
+
+  NoPlayersException();
 }

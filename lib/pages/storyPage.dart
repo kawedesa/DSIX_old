@@ -5,10 +5,11 @@ import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class StoryPage extends StatefulWidget {
+  final Function(String) alert;
   final Function() refresh;
   final Dsix dsix;
 
-  StoryPage({Key key, this.dsix, this.refresh}) : super(key: key);
+  StoryPage({Key key, this.dsix, this.refresh, this.alert}) : super(key: key);
 
   static const String routeName = "/npcPage";
 

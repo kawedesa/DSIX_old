@@ -7,7 +7,7 @@ import 'package:dsixv02app/models/player/playerRace.dart';
 import 'package:dsixv02app/models/player/option.dart';
 import 'package:dsixv02app/models/player/playerAction.dart';
 import 'package:dsixv02app/models/game/effect.dart';
-import 'exceptions.dart';
+import '../shared/exceptions.dart';
 import 'package:dsixv02app/models/player/bonus.dart';
 import 'package:dsixv02app/models/game/shop.dart';
 import 'package:dsixv02app/models/player/playerBackgroundList.dart';
@@ -112,7 +112,7 @@ class Player {
   List<Effect> effects = [];
 
   void chooseBackground(int index) {
-    this.gold = 500;
+    this.gold = 300;
     this.fame = 0;
     this.inventory.clear();
     this.currentWeight = 0;
@@ -122,7 +122,7 @@ class Player {
     this.playerBackground = availableBackgrounds[index];
 
     if (this.playerBackground.background == 'NOBLE') {
-      this.gold += 400; //GOLD
+      this.gold += 300; //GOLD
       this.fame = 1;
       this.effects.add(effectList.effectList[0]);
     }
@@ -397,13 +397,11 @@ class Player {
 
   void buyItem(Item item) {
     if (this.gold < item.value) {
-      throw new NoGoldException(
-          'You don\'t have enough gold to buy this item.');
+      throw new NoGoldException();
     }
 
     if (this.race.maxWeight - this.currentWeight < item.weight) {
-      throw new TooHeavyException(
-          'You are carrying too much weight and can\'t carry this item.');
+      throw new TooHeavyException();
     }
 
     this.gold -= item.value;
@@ -494,7 +492,7 @@ class Player {
           throw new MaxAmmoException();
         }
         if (this.gold < 50) {
-          throw new NoGoldException('You don\'t have enough gold for a refil.');
+          throw new NoGoldException();
         } else {
           item.uses = 5;
           this.gold -= 50;
@@ -850,6 +848,19 @@ class Player {
     this.inventory.remove(item);
   }
 
+  void receiveItem(Item item) {
+    if (item.weight + this.currentWeight > this.race.maxWeight) {
+      throw new TooHeavyException();
+    }
+    this.currentWeight += item.weight;
+    this.inventory.add(item);
+  }
+
+  void giveItem(Item item) {
+    this.currentWeight -= item.weight;
+    this.inventory.remove(item);
+  }
+
 //ACTION
 
   void action(Option option) {
@@ -909,7 +920,7 @@ class Player {
           return;
         }
       }
-      throw new NoAmmoException('Not enough ammo.');
+      throw new NoAmmoException();
     }
   }
 
@@ -1004,7 +1015,7 @@ class Player {
       increaseActionPoint(random);
     }
     this.playerColor.name =
-        '${Random().nextInt(10)}${Random().nextInt(10)}${Random().nextInt(10)}';
+        '${this.race.race} ${this.playerBackground.background}';
     this.characterFinished = true;
   }
 

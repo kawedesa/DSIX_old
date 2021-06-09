@@ -5,7 +5,7 @@ import '../models/game/item.dart';
 import '../models/game/shop.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../models/game/dsix.dart';
-import '../models/player/exceptions.dart';
+import '../models/shared/exceptions.dart';
 
 class ShopPage extends StatefulWidget {
   final Function() refresh;

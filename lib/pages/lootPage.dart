@@ -3,12 +3,16 @@ import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
 import 'package:dsixv02app/models/game/item.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:dsixv02app/models/gm/loot.dart';
+import '../models/shared/exceptions.dart';
+import 'package:dsixv02app/models/player/player.dart';
 
 class LootPage extends StatefulWidget {
+  final Function(String) alert;
   final Function() refresh;
   final Dsix dsix;
 
-  LootPage({Key key, this.dsix, this.refresh}) : super(key: key);
+  LootPage({Key key, this.dsix, this.refresh, this.alert}) : super(key: key);
 
   static const String routeName = "/npcPage";
 
@@ -31,6 +35,180 @@ class _LootPageState extends State<LootPage> {
   }
 
   List<String> ammoQuantity = [];
+
+  List<Player> availablePlayers = [];
+  void checkPlayers() {
+    availablePlayers = [];
+    widget.dsix.gm.players.forEach((element) {
+      if (element.characterFinished) {
+        availablePlayers.add(element);
+      }
+    });
+  }
+
+  void giveLoot(Loot loot, Color primaryColor) {
+    try {
+      widget.dsix.gm.players.forEach((player) {
+        if (player.playerColor.primaryColor == primaryColor) {
+          loot.itemList.forEach((item) {
+            player.receiveItem(item);
+          });
+        }
+      });
+    } on TooHeavyException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
+    }
+    widget.dsix.gm.deleteLoot();
+    _layoutIndex = 0;
+  }
+
+  showAlertDialogGive(BuildContext context, Loot loot) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.black,
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              content: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey[700],
+                    width: 2.5, //                   <--- border width here
+                  ),
+                ),
+                width: 300,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        color: Colors.grey[700],
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                          child: Center(
+                            child: Text(
+                              'GIVE ${loot.name}',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.3,
+                                fontSize: 25.0,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(35, 15, 35, 10),
+                          child: Text(
+                            (availablePlayers.length < 1)
+                                ? 'There are no players.'
+                                : 'Select a player:',
+                            textAlign: TextAlign.justify,
+                            style: TextStyle(
+                              height: 1.25,
+                              fontSize: 19,
+                              fontFamily: 'Calibri',
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        height: 50.0 * availablePlayers.length,
+                        child: ListView.builder(
+                            itemCount: availablePlayers.length,
+                            itemBuilder: (BuildContext context, int index) {
+                              return Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                child: TextButton(
+                                  onPressed: () {
+                                    giveLoot(
+                                        loot,
+                                        availablePlayers[index]
+                                            .playerColor
+                                            .primaryColor);
+
+                                    widget.refresh();
+                                    Navigator.pop(context);
+                                  },
+                                  style: TextButton.styleFrom(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                  ),
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.058,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: availablePlayers[index]
+                                            .playerColor
+                                            .primaryColor,
+                                        width:
+                                            2, //                   <--- border width here
+                                      ),
+                                    ),
+                                    child: Stack(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 10, 0),
+                                              child: Icon(
+                                                Icons.keyboard_arrow_right,
+                                                color: availablePlayers[index]
+                                                    .playerColor
+                                                    .primaryColor,
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            '${availablePlayers[index].playerColor.name}',
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.5,
+                                              fontFamily: 'Calibri',
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   void showItem(Item item) {
     ammoQuantity.clear();
@@ -576,6 +754,13 @@ class _LootPageState extends State<LootPage> {
                     itemCount: widget.dsix.gm.lootList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            checkPlayers();
+                            showAlertDialogGive(
+                                context, widget.dsix.gm.lootList[index]);
+                          });
+                        },
                         onTap: () {
                           setState(() {
                             _layoutIndex = 1;
@@ -730,6 +915,7 @@ class _LootPageState extends State<LootPage> {
                                 onTap: () {
                                   setState(() {
                                     widget.dsix.gm.deleteLoot();
+                                    _layoutIndex = 0;
                                   });
                                 },
                                 child: Icon(
