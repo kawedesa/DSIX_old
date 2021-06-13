@@ -96,7 +96,7 @@ class PlayerBackgroundList {
         ],
         [
           shop.rangedWeapons[6],
-          shop.resources[1],
+          shop.resources[4],
         ]),
     PlayerBackground(
         'medic',

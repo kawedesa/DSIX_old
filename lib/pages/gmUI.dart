@@ -301,7 +301,7 @@ class _GmUIState extends State<GmUI> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                       child: SvgPicture.asset(
-                        'assets/gm/npc/race/image/${character.image}.svg',
+                        'assets/gm/character/race/image/${character.image}.svg',
                         color: Colors.grey[700],
                       ),
                     ),
@@ -323,7 +323,7 @@ class _GmUIState extends State<GmUI> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/gm/npc/health.svg',
+                              'assets/gm/character/health.svg',
                               color: Colors.grey[700],
                               width: MediaQuery.of(context).size.width * 0.045,
                             ),
@@ -371,14 +371,14 @@ class _GmUIState extends State<GmUI> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/pArmor.svg',
+                              'assets/item/mDamage.svg',
                               color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.055,
+                              width: MediaQuery.of(context).size.width * 0.065,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${character.pArmor}',
+                                '${character.mDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -395,14 +395,14 @@ class _GmUIState extends State<GmUI> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/mDamage.svg',
+                              'assets/item/pArmor.svg',
                               color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.065,
+                              width: MediaQuery.of(context).size.width * 0.055,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${character.mDamage}',
+                                '${character.pArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -715,7 +715,7 @@ class _GmUIState extends State<GmUI> {
                                           CrossAxisAlignment.center,
                                       children: <Widget>[
                                         SvgPicture.asset(
-                                          'assets/gm/npc/loot.svg',
+                                          'assets/gm/character/loot.svg',
                                           color: Colors.grey[700],
                                           width: MediaQuery.of(context)
                                                   .size
@@ -745,7 +745,7 @@ class _GmUIState extends State<GmUI> {
                                           CrossAxisAlignment.center,
                                       children: <Widget>[
                                         SvgPicture.asset(
-                                          'assets/gm/npc/xp.svg',
+                                          'assets/gm/character/xp.svg',
                                           color: Colors.grey[700],
                                           width: MediaQuery.of(context)
                                                   .size
@@ -779,7 +779,6 @@ class _GmUIState extends State<GmUI> {
                                 onPressed: () {
                                   setState(() {
                                     widget.dsix.gm.confirmCharacter();
-
                                     refreshPage();
                                     Navigator.pop(context);
                                   });
@@ -892,7 +891,7 @@ class _GmUIState extends State<GmUI> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                       child: SvgPicture.asset(
-                        'assets/gm/npc/skill/${skill.skillType}/${skill.icon}.svg',
+                        'assets/gm/character/skill/${skill.skillType}/${skill.icon}.svg',
                         color: Colors.grey[400],
                       ),
                     ),
@@ -1040,80 +1039,77 @@ class _GmUIState extends State<GmUI> {
             ),
           ),
           actions: <Widget>[
-            Container(
-              width: MediaQuery.of(context).size.width * 0.5,
-              height: double.infinity,
-              child: Expanded(
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
-                  child: new Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: Row(
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/gm/players.svg',
+            Padding(
+              padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
+              child: Container(
+                width: MediaQuery.of(context).size.width * 0.5,
+                child: new Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    GestureDetector(
+                      onTap: () {},
+                      child: Row(
+                        children: <Widget>[
+                          SvgPicture.asset(
+                            'assets/gm/players.svg',
+                            color: Colors.white,
+                            width: MediaQuery.of(context).size.width * 0.08,
+                          ),
+                          Text(
+                            '${widget.dsix.gm.numberPlayers}',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1.1,
+                              fontSize: 25,
                               color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.08,
+                              letterSpacing: 2,
                             ),
-                            Text(
-                              '${widget.dsix.gm.numberPlayers}',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontFamily: 'Headline',
-                                height: 1.1,
-                                fontSize: 25,
-                                color: Colors.white,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      GestureDetector(
-                        onTap: () {},
-                        child: Row(
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/gm/xp.svg',
+                    ),
+                    GestureDetector(
+                      onTap: () {},
+                      child: Row(
+                        children: <Widget>[
+                          SvgPicture.asset(
+                            'assets/gm/xp.svg',
+                            color: Colors.white,
+                            width: MediaQuery.of(context).size.width * 0.08,
+                          ),
+                          Text(
+                            '${widget.dsix.gm.totalXp}',
+                            textAlign: TextAlign.left,
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1.1,
+                              fontSize: 25,
                               color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.08,
+                              letterSpacing: 2,
                             ),
-                            Text(
-                              '${widget.dsix.gm.totalXp}',
-                              textAlign: TextAlign.left,
-                              style: TextStyle(
-                                fontFamily: 'Headline',
-                                height: 1.1,
-                                fontSize: 25,
-                                color: Colors.white,
-                                letterSpacing: 2,
-                              ),
-                            ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
-                      Builder(
-                        builder: (BuildContext context) {
-                          return GestureDetector(
-                            onTap: () {
-                              ScaffoldMessenger.of(context)
-                                  .showSnackBar(displayAlert('NEW TURN'));
-                              widget.dsix.gm.newTurn();
-                            },
-                            child: SvgPicture.asset(
-                              'assets/player/action.svg',
-                              color: Colors.white,
-                              width: MediaQuery.of(context).size.width * 0.05,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
+                    ),
+                    Builder(
+                      builder: (BuildContext context) {
+                        return GestureDetector(
+                          onTap: () {
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(displayAlert('NEW TURN'));
+                            widget.dsix.gm.newTurn();
+                          },
+                          child: SvgPicture.asset(
+                            'assets/player/action.svg',
+                            color: Colors.white,
+                            width: MediaQuery.of(context).size.width * 0.05,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
                 ),
               ),
             )
@@ -1143,7 +1139,7 @@ class _GmUIState extends State<GmUI> {
                       },
                       tileColor: Colors.grey[700],
                       leading: SvgPicture.asset(
-                        'assets/gm/npc/race/icon/${widget.dsix.gm.availableCharacters[index].icon}.svg',
+                        'assets/gm/character/race/icon/${widget.dsix.gm.availableCharacters[index].icon}.svg',
                         color: Colors.black,
                         width: MediaQuery.of(context).size.width * 0.125,
                       ),
@@ -1200,7 +1196,7 @@ class _GmUIState extends State<GmUI> {
                           },
                           tileColor: Colors.grey[700],
                           leading: SvgPicture.asset(
-                            'assets/gm/npc/skill/${widget.dsix.gm.selectedCharacter.availableSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.availableSkills[index].icon}.svg',
+                            'assets/gm/character/skill/${widget.dsix.gm.selectedCharacter.availableSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.availableSkills[index].icon}.svg',
                             color: Colors.black,
                             width: MediaQuery.of(context).size.width * 0.1,
                           ),

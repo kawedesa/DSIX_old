@@ -66,11 +66,11 @@ flutter:
   - assets/gm/
   - assets/gm/settings/
   - assets/gm/story/quest/
-  - assets/gm/npc/
-  - assets/gm/npc/skill/pSkill/
-  - assets/gm/npc/skill/mSkill/
-  - assets/gm/npc/race/icon/
-  - assets/gm/npc/race/image/
+  - assets/gm/character/
+  - assets/gm/character/skill/pSkill/
+  - assets/gm/character/skill/mSkill/
+  - assets/gm/character/race/icon/
+  - assets/gm/character/race/image/
 
   
   fonts:

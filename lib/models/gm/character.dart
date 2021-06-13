@@ -26,8 +26,8 @@ class Character {
   int pArmor;
   int mDamage;
   int mArmor;
-  int pSkill;
-  int mSkill;
+  // int pSkill;
+  // int mSkill;
 
 //SKILLS
 
@@ -44,55 +44,40 @@ class Character {
   int totalXp;
   int baseXp;
 
-  void newCharacter() {
-    this.icon = 'character';
-    this.image = 'undead';
-    this.name = 'CHARACTER';
-    this.description = 'A character.';
-    this.baseHealth = 1;
-    this.dice = 1;
-    this.pDamage = 0;
-    this.pArmor = 0;
-    this.mDamage = 0;
-    this.mArmor = 0;
-    this.pSkill = 0;
-    this.mSkill = 0;
+  Character newCharacter() {
+    List<CharacterSkill> temp = [];
+
+    Character newCharacter = new Character(
+      icon: this.icon,
+      image: this.image,
+      name: this.name,
+      description: this.description,
+      baseHealth: this.baseHealth,
+      baseLoot: this.baseLoot,
+      baseXp: this.baseXp,
+      dice: this.dice,
+      pDamage: this.pDamage,
+      pArmor: this.pArmor,
+      mDamage: this.mDamage,
+      mArmor: this.mArmor,
+      possibleSkills: this.possibleSkills,
+      selectedSkills: this.selectedSkills,
+    );
+
+    temp = this.possibleSkills;
     this.possibleSkills = [];
-    this.availableSkills = [];
+    temp.forEach((element) {
+      this.possibleSkills.add(element.newSkill());
+    });
+
+    temp = this.selectedSkills;
     this.selectedSkills = [];
-    this.baseLoot = 0;
-    this.baseXp = 0;
-  }
+    temp.forEach((element) {
+      this.selectedSkills.add(element.newSkill());
+    });
 
-  void prepareCharacterNpc() {
-    this.maxHealth = this.baseHealth;
-    this.currentHealth = this.maxHealth;
-    this.totalLoot = this.baseLoot.toInt();
-    this.totalXp = this.baseXp;
-
-    for (int check = 0; check < this.pSkill; check++) {
-      selectedSkills.add(
-        CharacterSkill(
-          icon: 'pSkill',
-          name: 'ABILITY',
-          skillType: 'pSkill',
-          description: 'pSkill',
-          value: 0,
-        ),
-      );
-    }
-
-    for (int check = 0; check < this.mSkill; check++) {
-      selectedSkills.add(
-        CharacterSkill(
-          icon: 'mSkill',
-          name: 'SPELL',
-          skillType: 'mSkill',
-          description: 'mSkill',
-          value: 0,
-        ),
-      );
-    }
+    newCharacter.amount = 1;
+    return newCharacter;
   }
 
   void changeAmount(int value) {
@@ -106,11 +91,15 @@ class Character {
     }
 
     this.amount += value;
-    this.maxHealth += this.baseHealth * value;
-    this.currentHealth += this.baseHealth * value;
+    setHpAndXp();
+  }
 
-    this.totalXp += this.baseXp * value;
-    this.totalLoot += (this.baseLoot * value).toInt();
+  void setHpAndXp() {
+    this.maxHealth = this.baseHealth * this.amount;
+    this.currentHealth = this.baseHealth * this.amount;
+
+    this.totalXp = this.baseXp * this.amount;
+    this.totalLoot = (this.baseLoot * this.amount).toInt();
   }
 
   void setAmount(int value) {
@@ -118,14 +107,8 @@ class Character {
       this.amount = 1;
       return;
     }
-
     this.amount += value;
-
-    this.maxHealth = this.baseHealth * this.amount;
-    this.currentHealth = this.maxHealth;
-
-    this.totalXp = this.baseXp * this.amount;
-    this.totalLoot = (this.baseLoot * this.amount).toInt();
+    setHpAndXp();
   }
 
   String characterAction() {
@@ -211,8 +194,8 @@ class Character {
     int pArmor,
     int mDamage,
     int mArmor,
-    int pSkill,
-    int mSkill,
+    // int pSkill,
+    // int mSkill,
     List<CharacterSkill> possibleSkills,
     List<CharacterSkill> selectedSkills,
     double baseLoot,
@@ -230,8 +213,8 @@ class Character {
     this.mDamage = mDamage;
     this.mArmor = mArmor;
 
-    this.pSkill = pSkill;
-    this.mSkill = mSkill;
+    // this.pSkill = pSkill;
+    // this.mSkill = mSkill;
 
     this.possibleSkills = possibleSkills;
     this.selectedSkills = selectedSkills;

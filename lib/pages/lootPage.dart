@@ -21,7 +21,7 @@ class LootPage extends StatefulWidget {
 }
 
 class _LootPageState extends State<LootPage> {
-  int _layoutIndex = 1;
+  int _layoutIndex = 0;
   List<bool> lootSelection;
   int lootAmount;
 
@@ -37,33 +37,37 @@ class _LootPageState extends State<LootPage> {
   List<String> ammoQuantity = [];
 
   List<Player> availablePlayers = [];
-  void checkPlayers() {
+  void checkPlayers(Item item) {
+    try {
+      widget.dsix.gm.checkPlayers();
+    } on NoPlayersException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      Navigator.pop(context);
+      return;
+    }
+
     availablePlayers = [];
     widget.dsix.gm.players.forEach((element) {
       if (element.characterFinished) {
         availablePlayers.add(element);
       }
     });
+    showAlertDialogGive(context, item);
   }
 
-  void giveLoot(Loot loot, Color primaryColor) {
+  void giveLoot(Item item, Color primaryColor) {
     try {
-      widget.dsix.gm.players.forEach((player) {
-        if (player.playerColor.primaryColor == primaryColor) {
-          loot.itemList.forEach((item) {
-            player.receiveItem(item);
-          });
-        }
-      });
+      widget.dsix.gm.giveLoot(item, primaryColor);
     } on TooHeavyException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      Navigator.pop(context);
       return;
     }
-    widget.dsix.gm.deleteLoot();
-    _layoutIndex = 0;
+
+    Navigator.pop(context);
   }
 
-  showAlertDialogGive(BuildContext context, Loot loot) {
+  showAlertDialogGive(BuildContext context, Item item) {
     showDialog(
       context: context,
       builder: (context) {
@@ -91,7 +95,7 @@ class _LootPageState extends State<LootPage> {
                           padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                           child: Center(
                             child: Text(
-                              'GIVE ${loot.name}',
+                              'GIVE ${item.name}',
                               style: TextStyle(
                                 fontFamily: 'Headline',
                                 height: 1.3,
@@ -132,12 +136,13 @@ class _LootPageState extends State<LootPage> {
                                 child: TextButton(
                                   onPressed: () {
                                     giveLoot(
-                                        loot,
+                                        item,
                                         availablePlayers[index]
                                             .playerColor
                                             .primaryColor);
 
                                     widget.refresh();
+
                                     Navigator.pop(context);
                                   },
                                   style: TextButton.styleFrom(
@@ -456,6 +461,55 @@ class _LootPageState extends State<LootPage> {
                     ),
                   ),
                 ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                  child: GestureDetector(
+                    onTap: () {
+                      checkPlayers(item);
+                    },
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.058,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[700],
+                          width: 2, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: Colors.grey[700],
+                                  size: 20,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'GIVE',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -638,7 +692,7 @@ class _LootPageState extends State<LootPage> {
                                 onPressed: () {
                                   setState(() {
                                     widget.dsix.gm.createRandomLoot(lootAmount);
-                                    _layoutIndex = 1;
+
                                     widget.refresh();
                                     Navigator.pop(context);
                                   });
@@ -716,6 +770,12 @@ class _LootPageState extends State<LootPage> {
       }
     });
 
+    if (widget.dsix.gm.lootList.isEmpty) {
+      _layoutIndex = 0;
+    } else {
+      _layoutIndex = 1;
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -727,11 +787,7 @@ class _LootPageState extends State<LootPage> {
                 padding: const EdgeInsets.fromLTRB(18, 0, 0, 0),
                 child: GestureDetector(
                   onTap: () {
-                    setState(() {
-                      _layoutIndex = 0;
-
-                      widget.refresh();
-                    });
+                    setState(() {});
                   },
                   child: Container(
                     width: 23,
@@ -756,14 +812,13 @@ class _LootPageState extends State<LootPage> {
                       return GestureDetector(
                         onLongPress: () {
                           setState(() {
-                            checkPlayers();
-                            showAlertDialogGive(
-                                context, widget.dsix.gm.lootList[index]);
+                            // checkPlayers();
+                            // showAlertDialogGive(
+                            //     context, widget.dsix.gm.lootList[index]);
                           });
                         },
                         onTap: () {
                           setState(() {
-                            _layoutIndex = 1;
                             widget.dsix.gm.selectLoot(index);
                           });
                         },
@@ -915,7 +970,6 @@ class _LootPageState extends State<LootPage> {
                                 onTap: () {
                                   setState(() {
                                     widget.dsix.gm.deleteLoot();
-                                    _layoutIndex = 0;
                                   });
                                 },
                                 child: Icon(

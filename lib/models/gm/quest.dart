@@ -5,6 +5,7 @@ class Quest {
   String name = 'NEW QUEST';
   String questDescription =
       'Each quest should be unique, with their backstory. Double tap the text to edit it and write your own story.';
+  String character = '-';
   String objective = '-';
   String target = '-';
   String location = '-';
@@ -130,10 +131,10 @@ class Quest {
   List<String> rewardList = [
     'Gold',
     'Item',
-    'Information',
+    // 'Information',
     'Resources',
-    'Fame',
-    'Favor',
+    // 'Fame',
+    // 'Favor',
   ];
 
   Quest newQuest() {
@@ -151,6 +152,8 @@ class Quest {
   }
 
   Quest newRandomQuest() {
+    String randomCharacter =
+        '${characterList[Random().nextInt(characterList.length)]} ${backgroundList[Random().nextInt(backgroundList.length)]}';
     String randomObjective =
         '${objectiveList[Random().nextInt(objectiveList.length)]}';
     String randomTarget = (target == 'Person')
@@ -165,6 +168,7 @@ class Quest {
       name: randomObjective,
       questDescription:
           '$randomObjective a $randomTarget at the $randomLocation and you will get $randomReward.',
+      character: randomCharacter,
       objective: randomObjective,
       target: randomTarget,
       location: randomLocation,
@@ -205,6 +209,7 @@ class Quest {
     String icon,
     String name,
     String questDescription,
+    String character,
     String objective,
     String target,
     String location,
@@ -213,6 +218,7 @@ class Quest {
     this.icon = icon;
     this.name = name;
     this.questDescription = questDescription;
+    this.character = character;
     this.objective = objective;
     this.target = target;
     this.location = location;

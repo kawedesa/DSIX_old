@@ -9,9 +9,11 @@ import '../models/shared/exceptions.dart';
 
 class ShopPage extends StatefulWidget {
   final Function() refresh;
+  final Function(String) alert;
   final Dsix dsix;
 
-  const ShopPage({Key key, this.dsix, this.refresh}) : super(key: key);
+  const ShopPage({Key key, this.dsix, this.refresh, this.alert})
+      : super(key: key);
 
   @override
   _ShopPageState createState() => _ShopPageState();
@@ -360,62 +362,63 @@ class _ShopPageState extends State<ShopPage> {
 
                 Padding(
                   padding: const EdgeInsets.fromLTRB(30, 5, 30, 10),
-                  child: TextButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(true);
-                      buy(index);
-                    },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    ),
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          color: widget.dsix.gm
-                              .getCurrentPlayer()
-                              .playerColor
-                              .primaryColor,
-                          width: 2, //                   <--- border width here
+                  child: Builder(builder: (BuildContext context) {
+                    return GestureDetector(
+                      onTap: () {
+                        buy(index);
+                        Navigator.of(context).pop(true);
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.058,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: widget.dsix.gm
+                                .getCurrentPlayer()
+                                .playerColor
+                                .primaryColor,
+                            width:
+                                2, //                   <--- border width here
+                          ),
                         ),
-                      ),
-                      child: Stack(
-                        alignment: AlignmentDirectional.centerEnd,
-                        children: [
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
-                                child: Icon(
-                                  Icons.attach_money,
-                                  color: widget.dsix.gm
-                                      .getCurrentPlayer()
-                                      .playerColor
-                                      .primaryColor,
-                                  size: 20,
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerEnd,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                  child: Icon(
+                                    Icons.attach_money,
+                                    color: widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor,
+                                    size: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: Text(
+                                '${displayItems[index].value}',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
                                 ),
                               ),
-                            ],
-                          ),
-                          Center(
-                            child: Text(
-                              '${displayItems[index].value}',
-                              style: TextStyle(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                letterSpacing: 1.5,
-                                fontFamily: 'Calibri',
-                                color: Colors.white,
-                              ),
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ),
+                    );
+                  }),
                 ),
               ],
             ),
@@ -436,93 +439,14 @@ class _ShopPageState extends State<ShopPage> {
     try {
       widget.dsix.gm.getCurrentPlayer().buyItem(displayItems[index]);
     } on NoGoldException catch (e) {
-      exceptionTitle = e.title;
-      exceptionDescription = e.message;
-
-      showAlertDialogExceptions(context);
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
     } on TooHeavyException catch (e) {
-      exceptionTitle = e.title;
-      exceptionDescription = e.message;
-
-      showAlertDialogExceptions(context);
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
     }
 
     widget.refresh();
-  }
-
-  showAlertDialogExceptions(
-    BuildContext context,
-  ) {
-    AlertDialog alerta = AlertDialog(
-      backgroundColor: Colors.black,
-      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      content: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color:
-                    widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
-                width: 2.5, //                   <--- border width here
-              ),
-            ),
-            width: 300,
-            // height: 275,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                Container(
-                  color: widget.dsix.gm
-                      .getCurrentPlayer()
-                      .playerColor
-                      .primaryColor,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(30, 10, 30, 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        Text(
-                          exceptionTitle,
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 30.0,
-                            color: Colors.white,
-                            letterSpacing: 3,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(35, 15, 25, 20),
-                  child: Text(
-                    exceptionDescription,
-                    style: TextStyle(
-                      height: 1.25,
-                      fontSize: 19,
-                      fontFamily: 'Calibri',
-                      color: Colors.white,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return alerta;
-      },
-    );
   }
 
   @override

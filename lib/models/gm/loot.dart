@@ -17,7 +17,7 @@ class Loot {
     int min = rounds * 200;
 
     Loot newLoot = Loot().newLoot();
-    newLoot.itemList.add(this.shop.randomItemRange(min, max));
+    newLoot.itemList.add(this.shop.randomItemRange(min, max).copyItem());
     newLoot.name = newLoot.itemList.first.name;
     newLoot.icon = newLoot.itemList.first.icon;
     newLoot.lootDescription = 'Quest reward.';
@@ -26,14 +26,29 @@ class Loot {
   }
 
   Loot newLoot() {
-    Loot loot = new Loot(
+    Loot newLoot = new Loot(
       icon: 'loot',
       name: 'NEW LOOT',
       lootDescription:
           'Each loot should have an interesting orign. Like the sword of an old king or the artifacts of a powerful wizzard. Double tap this text to edit it and write your own description.',
+      itemList: [],
     );
 
-    return loot;
+    return newLoot;
+  }
+
+  Loot copyLoot() {
+    Loot newLoot = Loot(
+      icon: this.icon,
+      name: this.name,
+      lootDescription: this.lootDescription,
+      itemList: this.itemList,
+    );
+    return newLoot;
+  }
+
+  void deleteLoot(Item item) {
+    this.itemList.remove(item);
   }
 
   void randomLoot(int value) {
@@ -50,7 +65,7 @@ class Loot {
 
     int menuSelection;
     int randomItem;
-
+    this.itemList = [];
     while (value > 0) {
       menuSelection = Random().nextInt(shopMenu.length);
 
@@ -59,7 +74,7 @@ class Loot {
           randomItem = Random().nextInt(shop.lightWeapons.length);
 
           if (shop.lightWeapons[randomItem].value <= value) {
-            itemList.add(shop.lightWeapons[randomItem].copyItem());
+            this.itemList.add(shop.lightWeapons[randomItem].copyItem());
             value -= shop.lightWeapons[randomItem].value;
           }
 
@@ -69,7 +84,7 @@ class Loot {
           randomItem = Random().nextInt(shop.heavyWeapons.length);
 
           if (shop.heavyWeapons[randomItem].value <= value) {
-            itemList.add(shop.heavyWeapons[randomItem].copyItem());
+            this.itemList.add(shop.heavyWeapons[randomItem].copyItem());
             value -= shop.heavyWeapons[randomItem].value;
           }
 
@@ -79,7 +94,7 @@ class Loot {
           randomItem = Random().nextInt(shop.rangedWeapons.length);
 
           if (shop.rangedWeapons[randomItem].value <= value) {
-            itemList.add(shop.rangedWeapons[randomItem].copyItem());
+            this.itemList.add(shop.rangedWeapons[randomItem].copyItem());
             value -= shop.rangedWeapons[randomItem].value;
           }
 
@@ -89,7 +104,7 @@ class Loot {
           randomItem = Random().nextInt(shop.magicWeapons.length);
 
           if (shop.magicWeapons[randomItem].value <= value) {
-            itemList.add(shop.magicWeapons[randomItem].copyItem());
+            this.itemList.add(shop.magicWeapons[randomItem].copyItem());
             value -= shop.magicWeapons[randomItem].value;
           }
 
@@ -99,7 +114,7 @@ class Loot {
           randomItem = Random().nextInt(shop.armor.length);
 
           if (shop.armor[randomItem].value <= value) {
-            itemList.add(shop.armor[randomItem].copyItem());
+            this.itemList.add(shop.armor[randomItem].copyItem());
             value -= shop.armor[randomItem].value;
           }
 
@@ -109,7 +124,7 @@ class Loot {
           randomItem = Random().nextInt(shop.resources.length);
 
           if (shop.resources[randomItem].value <= value) {
-            itemList.add(shop.resources[randomItem].copyItem());
+            this.itemList.add(shop.resources[randomItem].copyItem());
             value -= shop.resources[randomItem].value;
           }
 
@@ -118,13 +133,11 @@ class Loot {
     }
   }
 
-  Loot({
-    String icon,
-    String name,
-    String lootDescription,
-  }) {
+  Loot(
+      {String icon, String name, String lootDescription, List<Item> itemList}) {
     this.icon = icon;
     this.name = name;
     this.lootDescription = lootDescription;
+    this.itemList = itemList;
   }
 }

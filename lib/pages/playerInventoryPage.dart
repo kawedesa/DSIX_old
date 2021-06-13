@@ -71,24 +71,14 @@ class _InventoryStatePage extends State<InventoryPage> {
     try {
       widget.dsix.gm.getCurrentPlayer().useOrEquip(item, buttonText);
     } on NoGoldException catch (e) {
-      // alertTitle = e.title;
-      // alertDescription = e.message;
-
-      // showAlertDialogAlert(context);
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
     } on MaxHpException catch (e) {
-      // alertTitle = e.title;
-      // alertDescription = e.message;
-      // showAlertDialogAlert(context);
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
     } on MaxAmmoException catch (e) {
-      // alertTitle = e.title;
-      // alertDescription = e.message;
-      // showAlertDialogAlert(context);
       Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
@@ -140,7 +130,7 @@ class _InventoryStatePage extends State<InventoryPage> {
   }
 
   List<Player> availablePlayers = [];
-  void checkPlayers() {
+  void checkPlayers(Item item) {
     availablePlayers = [];
     widget.dsix.gm.players.forEach((element) {
       if (element.characterFinished) {
@@ -148,6 +138,12 @@ class _InventoryStatePage extends State<InventoryPage> {
       }
     });
     availablePlayers.remove(widget.dsix.gm.getCurrentPlayer());
+    if (availablePlayers.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(widget.alert('NO OTHER PLAYERS'));
+    } else {
+      showAlertDialogGive(context, item);
+    }
   }
 
   void giveItem(Item item, Color primaryColor) {
@@ -167,16 +163,12 @@ class _InventoryStatePage extends State<InventoryPage> {
   void enchantItem(Item item) {
     String enchantText = 'Select an item to enchant.';
     availableItems = [];
-    widget.dsix.gm.getCurrentPlayer().inventory.forEach((element) {
-      if (element.itemClass != 'resource' &&
-          element.itemClass != 'thrownWeapon' &&
-          element.enchant < 3) {
-        availableItems.add(element);
-      }
-    });
-
-    if (availableItems.isEmpty == true) {
-      enchantText = 'There are no items available.';
+    try {
+      availableItems = widget.dsix.gm.getCurrentPlayer().enchant();
+    } on NoAvailableItemsException catch (e) {
+      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
     }
 
     showAlertDialogEnchant(context, item, enchantText);
@@ -556,9 +548,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     onPressed: () {
                       Navigator.of(context).pop(true);
 
-                      checkPlayers();
-
-                      showAlertDialogGive(context, item);
+                      checkPlayers(item);
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
@@ -1991,15 +1981,17 @@ class _InventoryStatePage extends State<InventoryPage> {
                   widget.dsix.gm.getCurrentPlayer().inventory.length, (index) {
                 return Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: TextButton(
-                    onPressed: () {
+                  child: GestureDetector(
+                    onLongPress: () {
+                      checkPlayers(
+                          widget.dsix.gm.getCurrentPlayer().inventory[index]);
+                    },
+                    onTap: () {
                       checkEquipped(
                           widget.dsix.gm.getCurrentPlayer().inventory[index],
                           'inventory');
                     },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.all(0),
-                    ),
+                    onDoubleTap: () {},
                     child: SvgPicture.asset(
                       'assets/item/${widget.dsix.gm.getCurrentPlayer().inventory[index].icon}.svg',
                       color: Colors.white,

@@ -19,8 +19,8 @@ class CharacterList {
       pArmor: 1,
       mDamage: 0,
       mArmor: 1,
-      pSkill: 2,
-      mSkill: 0,
+      // pSkill: 2,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'poison',
@@ -60,6 +60,20 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'climb',
           name: 'CLIMB',
           skillType: 'pSkill',
@@ -81,8 +95,8 @@ class CharacterList {
       pArmor: 0,
       mDamage: 0,
       mArmor: 0,
-      pSkill: 2,
-      mSkill: 0,
+      // pSkill: 2,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'bleed',
@@ -122,6 +136,20 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'fly',
           name: 'FLY',
           skillType: 'pSkill',
@@ -143,8 +171,8 @@ class CharacterList {
       pArmor: 2,
       mDamage: 0,
       mArmor: 0,
-      pSkill: 2,
-      mSkill: 0,
+      // pSkill: 2,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'build',
@@ -183,6 +211,20 @@ class CharacterList {
         ),
       ],
       selectedSkills: [
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
         CharacterSkill(
           icon: 'dig',
           name: 'DIG',
@@ -205,8 +247,8 @@ class CharacterList {
       pArmor: 2,
       mDamage: 0,
       mArmor: 0,
-      pSkill: 2,
-      mSkill: 0,
+      // pSkill: 2,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'strategy',
@@ -253,6 +295,20 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'build',
           name: 'BUILD',
           skillType: 'pSkill',
@@ -274,8 +330,8 @@ class CharacterList {
       pArmor: 2,
       mDamage: 4,
       mArmor: 0,
-      pSkill: 1,
-      mSkill: 1,
+      // pSkill: 1,
+      // mSkill: 1,
       possibleSkills: [
         CharacterSkill(
           icon: 'climb',
@@ -342,6 +398,20 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'mSkill',
+          name: 'SPELL',
+          skillType: 'mSkill',
+          description: 'mSkill',
+          value: 0,
+        ),
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'ritual',
           name: 'RITUAL',
           skillType: 'mSkill',
@@ -363,8 +433,8 @@ class CharacterList {
       pArmor: 3,
       mDamage: 4,
       mArmor: 2,
-      pSkill: 0,
-      mSkill: 1,
+      // pSkill: 0,
+      // mSkill: 1,
       possibleSkills: [
         CharacterSkill(
           icon: 'paralize',
@@ -403,6 +473,13 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'mSkill',
+          name: 'SPELL',
+          skillType: 'mSkill',
+          description: 'mSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'drain',
           name: 'DRAIN',
           skillType: 'mSkill',
@@ -424,8 +501,8 @@ class CharacterList {
       pArmor: 0,
       mDamage: 0,
       mArmor: 0,
-      pSkill: 1,
-      mSkill: 0,
+      // pSkill: 1,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'fast',
@@ -465,6 +542,13 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'strong',
           name: 'STRONG',
           skillType: 'pSkill',
@@ -486,8 +570,8 @@ class CharacterList {
       pArmor: 6,
       mDamage: 3,
       mArmor: 0,
-      pSkill: 0,
-      mSkill: 1,
+      // pSkill: 0,
+      // mSkill: 1,
       possibleSkills: [
         CharacterSkill(
           icon: 'illusion',
@@ -527,6 +611,13 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'mSkill',
+          name: 'SPELL',
+          skillType: 'mSkill',
+          description: 'mSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'heal',
           name: 'HEAL',
           skillType: 'mSkill',
@@ -548,8 +639,8 @@ class CharacterList {
       pArmor: 6,
       mDamage: 0,
       mArmor: 0,
-      pSkill: 1,
-      mSkill: 0,
+      // pSkill: 1,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'strategy',
@@ -589,6 +680,13 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'organized',
           name: 'ORGANIZED',
           skillType: 'pSkill',
@@ -610,8 +708,8 @@ class CharacterList {
       pArmor: 6,
       mDamage: 0,
       mArmor: 6,
-      pSkill: 3,
-      mSkill: 0,
+      // pSkill: 3,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'grab',
@@ -671,6 +769,27 @@ class CharacterList {
         ),
       ],
       selectedSkills: [
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
         CharacterSkill(
           icon: 'camouflage',
           name: 'CAMOUFLAGE',
@@ -755,8 +874,8 @@ class CharacterList {
       pArmor: 3,
       mDamage: 3,
       mArmor: 3,
-      pSkill: 1,
-      mSkill: 0,
+      // pSkill: 1,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'jump',
@@ -796,6 +915,13 @@ class CharacterList {
       ],
       selectedSkills: [
         CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
+        CharacterSkill(
           icon: 'perceptive',
           name: 'PERCEPTIVE',
           skillType: 'pSkill',
@@ -817,8 +943,8 @@ class CharacterList {
       pArmor: 0,
       mDamage: 0,
       mArmor: 0,
-      pSkill: 1,
-      mSkill: 0,
+      // pSkill: 1,
+      // mSkill: 0,
       possibleSkills: [
         CharacterSkill(
           icon: 'charge',
@@ -857,6 +983,13 @@ class CharacterList {
         ),
       ],
       selectedSkills: [
+        CharacterSkill(
+          icon: 'pSkill',
+          name: 'ABILITY',
+          skillType: 'pSkill',
+          description: 'pSkill',
+          value: 0,
+        ),
         CharacterSkill(
           icon: 'strong',
           name: 'STRONG',

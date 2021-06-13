@@ -6,6 +6,7 @@ import 'package:dsixv02app/models/game/shop.dart';
 import 'character.dart';
 import '../shared/exceptions.dart';
 import 'characterList.dart';
+import 'package:dsixv02app/models/game/item.dart';
 
 class Gm {
   // Available Players
@@ -119,6 +120,7 @@ class Gm {
         ]);
         break;
     }
+    checkPlayers();
   }
 
   void newRandomPlayer(int index) {
@@ -129,6 +131,7 @@ class Gm {
 // check Players
 
   int numberPlayers = 0;
+
   void checkPlayers() {
     this.numberPlayers = 0;
     this.players.forEach((element) {
@@ -136,6 +139,9 @@ class Gm {
         this.numberPlayers++;
       }
     });
+    if (this.numberPlayers < 1) {
+      throw new NoPlayersException();
+    }
   }
 
   // TURN
@@ -144,20 +150,24 @@ class Gm {
     this.players.forEach((element) {
       element.newTurn();
     });
+    throw new NewTurnException();
   }
 
   void checkTurn() {
+    checkPlayers();
+
     int check = 0;
-    this.players.forEach((element) {
-      if (element.endTurn) {
-        check++;
-      }
-      if (element.characterFinished == false) {
-        check++;
+    this.players.forEach((player) {
+      if (player.characterFinished) {
+        if (player.turn.contains(false)) {
+          return;
+        } else {
+          check++;
+        }
       }
     });
 
-    if (check == this.players.length) {
+    if (check == this.numberPlayers) {
       newTurn();
     }
   }
@@ -166,36 +176,42 @@ class Gm {
 
   Story story = Story();
 
+  void deleteStory() {
+    this.story.deleteStory();
+    this.loot.itemList = [];
+  }
+
   int totalXp = 0;
   void newStory() {
+    this.story.newStory();
+  }
+
+  void startQuest() {
     checkPlayers();
     if (numberPlayers < 1) {
       throw new NoPlayersException();
     }
-    this.story.newStory();
-
-    this.totalXp = this.story.settings.questXp * numberPlayers;
-  }
-
-  void startQuest() {
+    this.totalXp = this.story.settings.totalXp * numberPlayers;
     this.story.acceptQuest();
+    throw new AcceptQuestException();
   }
 
   void finishQuest() {
+    checkPlayers();
     this.players.forEach((element) {
       if (element.characterFinished) {
-        element.gold += this.story.settings.questGold;
+        element.gold += this.story.settings.totalGold;
         if (element.fame > 0) {
           element.gold += element.fame * 100;
         }
       }
     });
-    switch (this.story.newQuest.reward) {
+    switch (this.story.quest.reward) {
       case 'Gold':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
-              element.gold += this.story.settings.questGold;
+              element.gold += (this.story.settings.totalGold * 1.5).toInt();
               if (element.fame > 0) {
                 element.gold += element.fame * 100;
               }
@@ -205,7 +221,11 @@ class Gm {
         break;
       case 'Item':
         {
-          rewardItem();
+          this.players.forEach((element) {
+            if (element.characterFinished) {
+              rewardItem();
+            }
+          });
         }
         break;
       case 'Information':
@@ -224,19 +244,28 @@ class Gm {
           });
         }
         break;
-      case 'Fame':
-        {
-          this.players.forEach((element) {
-            element.fame++;
-          });
-        }
-        break;
-      case 'Favor':
-        {}
-        break;
+      // case 'Fame':
+      //   {
+      //     this.players.forEach((element) {
+      //       element.fame++;
+      //     });
+      //   }
+      //   break;
+      // case 'Favor':
+      //   {}
+      //   break;
     }
 
     this.story.finishQuest();
+    this.totalXp = 0;
+    throw new FinishQuestException();
+  }
+
+  void newRound() {
+    this.story.newRound();
+    this.lootList.clear();
+    this.characters.clear();
+    throw new NewRoundException();
   }
 
 //NPCS AND MONSTERS
@@ -252,8 +281,8 @@ class Gm {
     pArmor: 0,
     mDamage: 0,
     mArmor: 0,
-    pSkill: 0,
-    mSkill: 0,
+    // pSkill: 0,
+    // mSkill: 0,
     possibleSkills: [],
     selectedSkills: [],
     baseLoot: 0.25,
@@ -263,22 +292,26 @@ class Gm {
   List<Character> availableCharacters = [];
 
   void availableCharacter(String environment) {
-    availableCharacters = [];
+    this.availableCharacters = [];
 
     switch (environment) {
       case 'MOUNTAINS':
         {
-          this.characterList.mountain.forEach((element) {
-            this.availableCharacters.add(element);
-          });
+          this.availableCharacters = this.characterList.mountain;
         }
         break;
     }
   }
 
   void newCharacter(Character character) {
-    this.selectedCharacter = character;
-    this.selectedCharacter.prepareCharacterNpc();
+    this.selectedCharacter = character.newCharacter();
+    this.selectedCharacter.setHpAndXp();
+  }
+
+  void confirmCharacter() {
+    this.selectedCharacter.setHpAndXp();
+    this.characters.add(this.selectedCharacter);
+    this.selectedCharacter = this.characters.last;
   }
 
   void selectCharacter(int index) {
@@ -287,39 +320,25 @@ class Gm {
 
   void deleteCharacter() {
     this.characters.remove(this.selectedCharacter);
-    this.selectedCharacter.newCharacter();
-  }
-
-  void confirmCharacter() {
-    this.characters.add(this.selectedCharacter);
   }
 
   void characterLoot() {
     createRandomLoot(this.selectedCharacter.totalLoot);
     deleteCharacter();
-    this.loot = this.lootList.last;
   }
-  // List<Npc> npcList = [];
 
-  // int npcLayout = 0;
+  void giveLoot(Item item, Color primaryColor) {
+    this.players.forEach((player) {
+      if (player.playerColor.primaryColor == primaryColor) {
+        player.receiveItem(item.copyItem());
+      }
+    });
+    this.loot.itemList.remove(item);
 
-  // Npc selectedNpc = Npc(
-  //   icon: 'null',
-  //   image: 'goblin',
-  //   name: 'NPC',
-  //   description:
-  //       'An NPC is a character that you control. So pretty much eveyone besides the players. Click on the the buttons below to create a new NPC.',
-  // );
-
-  // List<Npc> npcTypeList = new NpcTypeList().npcType;
-
-  // void createNpc(Npc npc) {
-  //   Npc newNpc = npc.newNpc();
-
-  //   newNpc.prepareNpc();
-
-  //   this.npcList.add(newNpc);
-  // }
+    if (this.loot.itemList.isEmpty) {
+      this.deleteLoot();
+    }
+  }
 
 //LOOT
 
@@ -330,6 +349,7 @@ class Gm {
     name: 'NEW LOOT',
     lootDescription:
         'Each loot should have an interesting orign. Like the sword of an old king or the artifacts of a powerful wizzard. Double tap this text to edit it and write your own description.',
+    itemList: [],
   );
 
   List<Loot> lootList = [];
@@ -353,10 +373,13 @@ class Gm {
   }
 
   void createRandomLoot(int value) {
-    this.loot.newLoot();
-    this.loot.randomLoot(value);
-    this.loot.icon = this.loot.itemList.first.icon;
-    this.lootList.add(this.loot);
+    Loot newLoot = Loot();
+    newLoot.randomLoot(value);
+    newLoot.icon = newLoot.itemList.first.icon;
+    newLoot.name = newLoot.itemList.first.name;
+    newLoot.lootDescription = 'Droped by ${this.selectedCharacter.name}.';
+    this.lootList.add(newLoot.copyLoot());
+    this.loot = this.lootList.last;
   }
 
 //TURNS

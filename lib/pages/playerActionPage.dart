@@ -131,19 +131,17 @@ class _ActionPageState extends State<ActionPage> {
               {
                 itemList = [
                   'SWIM\n',
+                  'CLIMB\n',
+                  'JUMP\n',
                   'FLY\n',
                   'DIG\n',
                   'SPEED\n',
                   'PERCEPTION\n',
                   'STRENGH\n',
+                  'CAMOUFLAGE\n',
                   'THORNS\n',
-                  'RANGE\n',
                   'SWALLOW\n',
-                  'CLIMB\n',
-                  'RESISTANCE\n',
-                  'PROTECTION\n',
                   'POISON\n',
-                  'JUMP\n',
                 ];
                 showOutcome(option, numberDice);
               }

@@ -8,6 +8,7 @@ import 'playerShopPage.dart';
 import 'playerActionPage.dart';
 import 'playerHelpPage.dart';
 import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/shared/exceptions.dart';
 
 class PlayerUI extends StatefulWidget {
   final Dsix dsix;
@@ -21,6 +22,16 @@ class PlayerUI extends StatefulWidget {
 }
 
 class _PlayerUIState extends State<PlayerUI> {
+  void newTurn() {
+    try {
+      widget.dsix.gm.newTurn();
+    } on NewTurnException catch (e) {
+      refresh();
+      ScaffoldMessenger.of(context).showSnackBar(displayAlert(e.message));
+      return;
+    }
+  }
+
   showAlertDialogHealth(BuildContext context) {
     showDialog(
       context: context,
@@ -598,7 +609,11 @@ class _PlayerUIState extends State<PlayerUI> {
         CharacterPage(
           dsix: widget.dsix,
         ),
-        ShopPage(dsix: widget.dsix, refresh: refresh),
+        ShopPage(
+          dsix: widget.dsix,
+          refresh: refresh,
+          alert: displayAlert,
+        ),
         InventoryPage(
           dsix: widget.dsix,
           refresh: refresh,
@@ -707,9 +722,11 @@ class _PlayerUIState extends State<PlayerUI> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 0),
                   child: GestureDetector(
+                    onLongPress: () {
+                      newTurn();
+                    },
                     onTap: () {
-                      widget.dsix.gm.getCurrentPlayer().playerTurn();
-
+                      widget.dsix.gm.getCurrentPlayer().changeTurn(0);
                       turn = widget.dsix.gm.getCurrentPlayer().turn;
                       refresh();
                     },
@@ -728,8 +745,11 @@ class _PlayerUIState extends State<PlayerUI> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(2.5, 0, 15, 0),
                   child: GestureDetector(
+                    onLongPress: () {
+                      newTurn();
+                    },
                     onTap: () {
-                      widget.dsix.gm.getCurrentPlayer().playerTurn();
+                      widget.dsix.gm.getCurrentPlayer().changeTurn(1);
                       turn = widget.dsix.gm.getCurrentPlayer().turn;
                       refresh();
                     },

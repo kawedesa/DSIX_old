@@ -1,4 +1,5 @@
 import 'package:dsixv02app/models/gm/quest.dart';
+import 'package:dsixv02app/models/shared/exceptions.dart';
 
 import 'storySettings.dart';
 import 'storySettingsList.dart';
@@ -10,10 +11,11 @@ class Story {
     icon: 'normal',
     name: 'NORMAL',
     description: 'Normal.',
-    fame: 1,
     numberOfQuests: 2,
     questXp: 50,
+    totalXp: 50,
     questGold: 100,
+    totalGold: 100,
   );
   List<StorySettings> storySettingsList = settingsList;
 
@@ -29,55 +31,80 @@ class Story {
 
 //QUEST
 
+  List<Quest> finishedQuests = [];
+
   List<Quest> questList = [];
-  Quest newQuest = new Quest(
+  Quest quest = new Quest(
     icon: 'quest',
     name: 'NEW QUEST',
     questDescription:
         'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
+    character: '-',
     objective: '-',
     target: '-',
     location: '-',
     reward: '-',
   );
 
+  void deleteStory() {
+    this.round = 0;
+    this.settings = storySettingsList[2];
+    this.questList = [];
+    this.finishedQuests = [];
+  }
+
   int round = 0;
   void newStory() {
     this.round = 1;
-    newRandomQuest();
-    this.newQuest = questList.first;
+    for (int i = 0; i < this.settings.numberOfQuests; i++) {
+      newRandomQuest();
+    }
+    this.quest = questList.first;
+    throw new NewStoryException();
   }
 
   void newRandomQuest() {
-    for (int i = 0; i < this.settings.numberOfQuests; i++) {
-      this.questList.add(newQuest.newRandomQuest());
-    }
+    this.questList.add(quest.newRandomQuest());
+    this.quest = this.questList.last;
   }
 
   void selectQuest(int index) {
-    this.newQuest = questList[index];
+    this.quest = questList[index];
   }
 
   void acceptQuest() {
-    this.questList.removeWhere((element) => element != this.newQuest);
-    this.newQuest.onGoing = true;
+    this.questList.removeWhere((element) => element != this.quest);
+    this.quest.onGoing = true;
   }
 
-  void cancelQuest() {
-    questList.remove(this.newQuest);
+  void deleteQuest() {
+    questList.remove(this.quest);
+    if (questList.isNotEmpty) {
+      this.quest = this.questList.last;
+    }
   }
 
   void finishQuest() {
+    this.finishedQuests.add(questList[0]);
     questList.clear();
-    newRound();
   }
 
   void newRound() {
     this.round++;
-    this.settings.questGold *= round;
-    this.settings.questXp *= round;
-    newRandomQuest();
-    this.newQuest = questList.first;
+
+    int incGold = 0;
+    int incXp = 0;
+
+    incGold = this.settings.questGold * this.round;
+    incXp = this.settings.questXp * this.round;
+
+    this.settings.totalGold = incGold;
+    this.settings.totalXp = incXp;
+
+    for (int i = 0; i < this.settings.numberOfQuests; i++) {
+      newRandomQuest();
+    }
+    this.quest = questList.first;
   }
 
   Story();

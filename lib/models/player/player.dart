@@ -116,6 +116,7 @@ class Player {
     this.fame = 0;
     this.inventory.clear();
     this.currentWeight = 0;
+    this.effects = [];
 
     // ASSIGN BONUSES
 
@@ -502,6 +503,22 @@ class Player {
     }
   }
 
+  List<Item> enchant() {
+    List<Item> availableItems = [];
+    this.inventory.forEach((item) {
+      if (item.itemClass != 'resource' &&
+          item.itemClass != 'thrownWeapon' &&
+          item.enchant < 3) {
+        availableItems.add(item);
+      }
+    });
+
+    if (availableItems.isEmpty) {
+      throw new NoAvailableItemsException();
+    }
+    return availableItems;
+  }
+
   Item headEquip = Item(
     icon: 'head',
     name: '',
@@ -587,17 +604,33 @@ class Player {
     value: 0,
   );
 
-  void useOrEquip(Item item, String buttonText) {
-    if (item.inventorySpace == 'consumable') {
-      use(item);
-    } else if (buttonText == 'EQUIP') {
-      equip(item, buttonText);
-    } else {
-      unequip(item);
+  void useOrEquip(Item item, String useItem) {
+    switch (useItem) {
+      case 'ENCHANT':
+        {}
+        break;
+
+      case 'USE':
+        {
+          use(item);
+        }
+        break;
+
+      case 'EQUIP':
+        {
+          equip(item);
+        }
+        break;
+
+      case 'UNEQUIP':
+        {
+          unequip(item);
+        }
+        break;
     }
   }
 
-  void equip(Item item, String check) {
+  void equip(Item item) {
     this.mArmor += item.mArmor;
     this.pArmor += item.pArmor;
     this.mDamage += item.mDamage;
@@ -663,10 +696,6 @@ class Player {
 
   void unequip(Item item) {
     if (item.name == '') {
-      return;
-    }
-
-    if (item.itemClass == 'resource') {
       return;
     }
 
@@ -928,16 +957,14 @@ class Player {
 
 // PLAYER TURN
 
-  bool endTurn = false;
-
   List<bool> turn = [false, false];
 
   void newTurn() {
     turn = [false, false];
-    endTurn = false;
   }
 
   bool checkTurn() {
+    bool endTurn = false;
     if (turn.contains(false)) {
       endTurn = false;
     } else {
@@ -946,20 +973,29 @@ class Player {
     return endTurn;
   }
 
+  void changeTurn(int index) {
+    if (this.turn[index]) {
+      this.turn[index] = false;
+    } else {
+      this.turn[index] = true;
+    }
+  }
+
   void playerTurn() {
-    if (endTurn) {
+    if (this.turn.contains(false)) {
+      this.actionsTaken++;
+      this.checkEffects();
+
+      if (turn[0]) {
+        turn[1] = true;
+      } else {
+        turn[0] = true;
+      }
+
+      checkTurn();
+    } else {
       return;
     }
-    this.actionsTaken++;
-    this.checkEffects();
-
-    if (turn[0]) {
-      turn[1] = true;
-    } else {
-      turn[0] = true;
-    }
-
-    checkTurn();
   }
 
   void checkEffects() {

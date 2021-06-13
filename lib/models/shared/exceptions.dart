@@ -1,48 +1,77 @@
 class NoAmmoException implements Exception {
-  String message = 'You have no ammunition.';
-  String title = 'NO AMMO';
+  String message = 'NO AMMO';
 
   NoAmmoException();
 }
 
 class NoWeaponException implements Exception {
-  String message = 'Buy a weapon.';
-  String title = 'NO WEAPON';
+  String message = 'NO WEAPON';
 
   NoWeaponException();
 }
 
 class NoGoldException implements Exception {
-  String message = 'You can\'t afford it.';
-  String title = 'NO GOLD';
+  String message = 'TOO EXPENSIVE';
 
   NoGoldException();
 }
 
 class TooHeavyException implements Exception {
-  String message = 'Too heavy.';
-  String title = 'TOO HEAVY';
+  String message = 'TOO HEAVY';
 
   TooHeavyException();
 }
 
 class MaxHpException implements Exception {
-  String message = 'You are already at max HP.';
-  String title = 'MAX HP';
+  String message = 'LIFE IS FULL';
 
   MaxHpException();
 }
 
 class MaxAmmoException implements Exception {
-  String message = 'You are already loaded.';
-  String title = 'MAX AMMO';
+  String message = 'FULLY LOADED';
 
   MaxAmmoException();
 }
 
 class NoPlayersException implements Exception {
-  String message = 'There are no players.';
-  String title = 'NO PLAYERS';
+  String message = 'NO PLAYERS';
 
   NoPlayersException();
+}
+
+class NewRoundException implements Exception {
+  String message = 'NEW ROUND';
+
+  NewRoundException();
+}
+
+class NewStoryException implements Exception {
+  String message = 'NEW STORY';
+
+  NewStoryException();
+}
+
+class AcceptQuestException implements Exception {
+  String message = 'QUEST ACCEPTED';
+
+  AcceptQuestException();
+}
+
+class FinishQuestException implements Exception {
+  String message = 'QUEST FINISHED';
+
+  FinishQuestException();
+}
+
+class NewTurnException implements Exception {
+  String message = 'NEW TURN';
+
+  NewTurnException();
+}
+
+class NoAvailableItemsException implements Exception {
+  String message = 'NO AVAILABLE ITEMS';
+
+  NoAvailableItemsException();
 }

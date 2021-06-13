@@ -34,16 +34,7 @@ class _CharacterPageState extends State<CharacterPage> {
     Scaffold.of(context).openDrawer();
   }
 
-  // void selectNpc(int index) {
-  //   widget.dsix.gm.selectedCharacter = widget.dsix.gm.characters[index];
-  //   actionResult = 'Roll';
-  // }
-
-  // void deleteNpc() {
-  //   widget.dsix.gm.characters.remove(widget.dsix.gm.selectedCharacter);
-  // }
-
-  void npcAction() {
+  void characterAction() {
     if (actionResult != 'Roll') {
       actionResult = 'Roll';
       return;
@@ -257,7 +248,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                           CrossAxisAlignment.center,
                                       children: <Widget>[
                                         SvgPicture.asset(
-                                          'assets/gm/npc/loot.svg',
+                                          'assets/gm/character/loot.svg',
                                           color: Colors.grey[700],
                                           width: MediaQuery.of(context)
                                                   .size
@@ -287,7 +278,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                           CrossAxisAlignment.center,
                                       children: <Widget>[
                                         SvgPicture.asset(
-                                          'assets/gm/npc/xp.svg',
+                                          'assets/gm/character/xp.svg',
                                           color: Colors.grey[700],
                                           width: MediaQuery.of(context)
                                                   .size
@@ -322,6 +313,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                   setState(() {
                                     character.changeAmount(
                                         displayAmount - character.amount);
+
                                     widget.refresh();
                                     Navigator.pop(context);
                                   });
@@ -414,7 +406,7 @@ class _CharacterPageState extends State<CharacterPage> {
         child: Padding(
           padding: const EdgeInsets.fromLTRB(7, 0, 7, 5),
           child: SvgPicture.asset(
-            'assets/gm/npc/loot.svg',
+            'assets/gm/character/loot.svg',
             color: Colors.grey[700],
           ),
         ),
@@ -425,7 +417,7 @@ class _CharacterPageState extends State<CharacterPage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
             child: SvgPicture.asset(
-              'assets/gm/npc/health.svg',
+              'assets/gm/character/health.svg',
               color: Colors.grey[700],
             ),
           ),
@@ -501,7 +493,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           height: 35,
                           width: 35,
                           child: SvgPicture.asset(
-                            'assets/gm/npc/race/icon/${widget.dsix.gm.characters[index].icon}.svg',
+                            'assets/gm/character/race/icon/${widget.dsix.gm.characters[index].icon}.svg',
                             color: characterSelection[index]
                                 ? Colors.grey[400]
                                 : Colors.grey[700],
@@ -535,7 +527,7 @@ class _CharacterPageState extends State<CharacterPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'NPC',
+                      'CHARACTER',
                       style: TextStyle(
                         fontFamily: 'Headline',
                         height: 1.3,
@@ -547,7 +539,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Text(
-                        'An NPC is a character that you control. So pretty much eveyone besides the players. Click on the the buttons below to create a new NPC.',
+                        'Each environment can host a lot of different characters. Create a character by clicking on the buttons below.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           height: 1.3,
@@ -659,7 +651,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                               CrossAxisAlignment.center,
                                           children: <Widget>[
                                             SvgPicture.asset(
-                                              'assets/gm/npc/loot.svg',
+                                              'assets/gm/character/loot.svg',
                                               color: Colors.grey[700],
                                               width: MediaQuery.of(context)
                                                       .size
@@ -693,7 +685,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                                 CrossAxisAlignment.center,
                                             children: <Widget>[
                                               SvgPicture.asset(
-                                                'assets/gm/npc/xp.svg',
+                                                'assets/gm/character/xp.svg',
                                                 color: Colors.grey[700],
                                                 width: MediaQuery.of(context)
                                                         .size
@@ -749,7 +741,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                       padding: const EdgeInsets.fromLTRB(
                                           10, 20, 10, 0),
                                       child: SvgPicture.asset(
-                                        'assets/gm/npc/race/image/${widget.dsix.gm.selectedCharacter.image}.svg',
+                                        'assets/gm/character/race/image/${widget.dsix.gm.selectedCharacter.image}.svg',
                                         color: Colors.grey[700],
                                       ),
                                     ),
@@ -810,7 +802,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: <Widget>[
                               SvgPicture.asset(
-                                'assets/gm/npc/race/icon/${widget.dsix.gm.selectedCharacter.icon}.svg',
+                                'assets/gm/character/race/icon/${widget.dsix.gm.selectedCharacter.icon}.svg',
                                 color: Colors.grey[700],
                                 width: MediaQuery.of(context).size.width * 0.06,
                               ),
@@ -859,14 +851,14 @@ class _CharacterPageState extends State<CharacterPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/pArmor.svg',
+                              'assets/item/mDamage.svg',
                               color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.055,
+                              width: MediaQuery.of(context).size.width * 0.065,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${widget.dsix.gm.selectedCharacter.pArmor}',
+                                '${widget.dsix.gm.selectedCharacter.mDamage}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -883,14 +875,14 @@ class _CharacterPageState extends State<CharacterPage> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: <Widget>[
                             SvgPicture.asset(
-                              'assets/item/mDamage.svg',
+                              'assets/item/pArmor.svg',
                               color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.065,
+                              width: MediaQuery.of(context).size.width * 0.055,
                             ),
                             Padding(
                               padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
                               child: Text(
-                                '${widget.dsix.gm.selectedCharacter.mDamage}',
+                                '${widget.dsix.gm.selectedCharacter.pArmor}',
                                 style: TextStyle(
                                   fontFamily: 'Headline',
                                   height: 1,
@@ -1045,7 +1037,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                   },
                                   child: Center(
                                     child: SvgPicture.asset(
-                                      'assets/gm/npc/skill/${widget.dsix.gm.selectedCharacter.selectedSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.selectedSkills[index].icon}.svg',
+                                      'assets/gm/character/skill/${widget.dsix.gm.selectedCharacter.selectedSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.selectedSkills[index].icon}.svg',
                                       color: Colors.grey[400],
                                       width: MediaQuery.of(context).size.width *
                                           0.1,
@@ -1066,7 +1058,7 @@ class _CharacterPageState extends State<CharacterPage> {
                         child: GestureDetector(
                           onTap: () {
                             setState(() {
-                              npcAction();
+                              characterAction();
                             });
                           },
                           child: Container(
