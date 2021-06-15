@@ -1,4 +1,4 @@
-import '../game/item.dart';
+import '../shared/item.dart';
 import 'bonus.dart';
 
 class PlayerBackground {

@@ -1,10 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
-import '../models/game/item.dart';
-import '../models/game/shop.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
+import '../models/shared/item.dart';
+import '../models/shared/shop.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../models/game/dsix.dart';
+import '../models/dsix/dsix.dart';
 import '../models/shared/exceptions.dart';
 
 class ShopPage extends StatefulWidget {
@@ -444,9 +444,11 @@ class _ShopPageState extends State<ShopPage> {
     } on TooHeavyException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
+    } on BuyException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      widget.refresh();
+      return;
     }
-
-    widget.refresh();
   }
 
   @override

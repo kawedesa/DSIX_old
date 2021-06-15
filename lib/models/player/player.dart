@@ -1,18 +1,18 @@
 import 'dart:math';
 import 'package:dsixv02app/models/player/playerRaceList.dart';
-import 'package:dsixv02app/models/game/item.dart';
+import 'package:dsixv02app/models/shared/item.dart';
 import 'package:dsixv02app/models/player/playerBackground.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/player/playerRace.dart';
 import 'package:dsixv02app/models/player/option.dart';
 import 'package:dsixv02app/models/player/playerAction.dart';
-import 'package:dsixv02app/models/game/effect.dart';
+import 'package:dsixv02app/models/player/effect.dart';
 import '../shared/exceptions.dart';
 import 'package:dsixv02app/models/player/bonus.dart';
-import 'package:dsixv02app/models/game/shop.dart';
+import 'package:dsixv02app/models/shared/shop.dart';
 import 'package:dsixv02app/models/player/playerBackgroundList.dart';
 import 'package:dsixv02app/models/player/playerSkillList.dart';
-import 'package:dsixv02app/models/game/effectList.dart';
+import 'package:dsixv02app/models/player/effectList.dart';
 
 class PlayerColor {
   String name;
@@ -108,7 +108,7 @@ class Player {
   int fame;
   int gold;
   EffectList effectList = EffectList();
-
+  Effect effect = Effect();
   List<Effect> effects = [];
 
   void chooseBackground(int index) {
@@ -125,7 +125,7 @@ class Player {
     if (this.playerBackground.background == 'NOBLE') {
       this.gold += 300; //GOLD
       this.fame = 1;
-      this.effects.add(effectList.effectList[0]);
+      this.effects.add(effectList.permanent[0].copyEffect());
     }
 
     for (Item item in this.playerBackground.bonusItem) {
@@ -157,29 +157,29 @@ class Player {
     PlayerAction(
       'attack',
       'ATTACK',
-      'You attack a target or try to hold it down.',
+      'You try to attack or grapple a target.',
       [
         Option(
             'PUNCH',
-            'You punch the target with your bare fists, trying to knock them out.',
-            'You deal a lot of damage.',
+            'You punch the target with your fists.',
+            'You hit in a weak spot.',
             'You hit the target.',
-            'You miss the target and open your guard.',
+            'You miss and open your guard.',
             'DAMAGE',
             true),
         Option(
             'WEAPON',
             'You attack the target with your weapon, trying to bring them down.',
-            'You deal a lot of damage.',
+            'You hit in a weak spot.',
             'You hit the target.',
-            'You miss the target.',
+            'You miss and open your guard.',
             'DAMAGE',
             true),
         Option(
             'GRAPPLE',
             'You try to grapple the target, holding them down.',
             'You hold them in place and they are unable to move.',
-            'You hold them, but they can still move a little.',
+            'You hold one of their arms or legs.',
             'They escape your grasp.',
             'HOLD',
             false),
@@ -193,7 +193,7 @@ class Player {
       [
         Option(
             'DEFEND',
-            'You face the danger, raise your shield and brace for impact. ',
+            'You try to protect.',
             'You protect a lot of damage.',
             'You protect some damage.',
             'You can\'t raise your guard in time and take full damage.',
@@ -201,18 +201,18 @@ class Player {
             true),
         Option(
             'RESIST',
-            'You cast an enchantment that defends yourself and others around you.',
+            'You try to resist.',
             'You resist a lot of damage.',
             'You resist some damage.',
             'You can\'t defend in time and take full damage.',
-            'PROTECT',
+            'RESIST',
             true),
         Option(
             'HELP',
-            'You help someone, making it easier for them to succeed.',
+            'You try to help.',
             'You give them a real advantage.',
             'You make things easier for them.',
-            'You get in the way and make things harder for them.',
+            'You make things harder for them.',
             'HELP',
             false),
       ],
@@ -221,36 +221,28 @@ class Player {
     PlayerAction(
       'look',
       'LOOK',
-      'You look around and search for things.',
+      'You look around and notice things.',
       [
         Option(
             'RESOURCES',
-            'You search for something useful, like potions, food, and resources.',
-            'You find loot and gold.',
-            'You find loot.',
+            'You search for something useful.',
+            'You find resources and gold.',
+            'You find resources.',
             'You find something bad',
             'RESOURCES',
             true),
         Option(
             'INFORMATION',
-            'You look around and try to gather more information.',
+            'You try to gather information.',
             'You gather meaningful information.',
             'You gather information, but it costs you.',
             'You find something bad.',
             'INFORMATION',
             false),
-        // Option(
-        //     'DANGER',
-        //     'You search for signs of danger, trying to prevent an encounter.',
-        //     'You spot danger before it becomes a problem.',
-        //     'You spot danger coming your way.',
-        //     'You are exposed to a hidden danger.',
-        //     '',
-        //     0),
         Option(
-            'PLACE',
-            'You try to gather more information about your surroundings.',
-            'You find a hidden passage, door or secrete.',
+            'SECRETE',
+            'You try to find a hidden door or chest.',
+            'You find a secrete.',
             'You find a secrete, but it\'s blocked.',
             'You find something bad',
             'SECRETE',
@@ -265,23 +257,23 @@ class Player {
       [
         Option(
             'TRADE',
-            'You try to strike a deal on your favor.',
+            'You try to strike a deal.',
             'They accept your offer.',
-            'They accept, but ask for more in return.',
+            'They ask for more.',
             'The deal is off and they dislike you.',
             'DEAL',
             false),
         Option(
             'INFORMATION',
-            'You talk to someone and try to gather meaningful information.',
-            'You receive valuable information.',
-            'They will share what they know, but ask for something in return.',
+            'You try to gather information.',
+            'You gather information.',
+            'You gather information, but at a cost.',
             'You receive bad news.',
             'INFORMATION',
             false),
         Option(
             'CONVINCE',
-            'You convince people to follow your lead or see things your way.',
+            'You try to change people\'s minds.',
             'You change their minds.',
             'They see your point, but ask for something in return.',
             'They are offended and dislike you.',
@@ -301,51 +293,39 @@ class Player {
     PlayerAction(
       'move',
       'MOVE',
-      'You move around, hide or try to escape.',
+      'You climb, swim, hide or try to escape.',
       [
         Option(
             'DODGE',
-            'You dodge and take no damage.',
+            'You try to get out of the way.',
             'You dodge and take no damage.',
             'You take half damage.',
-            'You can\'t dodge and take full damage.',
+            'You take full damage.',
             'AVOID',
             false),
         Option(
             'ESCAPE',
-            'You release your shackles, run away from danger or free yourself from a tough situation.',
-            'You escape without trouble.',
+            'You try to escape from a tough situation.',
+            'You escape.',
             'You escape, but call unwanted attention.',
             'You can\'t escape.',
             'ESCAPE',
             false),
-        Option(
-            'HIDE',
-            'You avoid being seen by someone or sneak pass some guards.',
-            'You are hidden.',
-            'You are noticed.',
-            'You are exposed.',
-            'HIDE',
-            false),
+        Option('HIDE', 'You try to hide.', 'You are hidden.',
+            'You are noticed.', 'You are exposed.', 'HIDE', false),
         Option(
             'JUMP',
-            'You jump over a gap, try to reach for something or pass over an obstacle.',
+            'You try to jump over an obstacle.',
             'You land where you wanted.',
             'You land somewhere close.',
             'You stumble and fail.',
             'JUMP',
             false),
-        Option(
-            'CLIMB',
-            'You climb a wall, a rope or the back of a giant.',
-            'You have no trouble.',
-            'You face some difficulty.',
-            'You slide and fall.',
-            'CLIMB',
-            false),
+        Option('CLIMB', 'You try to climb.', 'You have no trouble.',
+            'You face some difficulty.', 'You slide and fall.', 'CLIMB', false),
         Option(
             'SWIM',
-            'You swim, dive or hold your breath under water.',
+            'You try to swim.',
             'You have no trouble.',
             'You face some difficulty.',
             'You can\'t stay afloat.',
@@ -409,6 +389,50 @@ class Player {
     this.currentWeight += item.weight;
 
     this.inventory.add(item.copyItem());
+    throw new BuyException(message: '- \$${item.value}');
+  }
+
+  void sellItem(Item item) {
+    if (item.action == 'UNEQUIP') {
+      unequip(item);
+    }
+
+    this.gold += item.value ~/ 2;
+    this.currentWeight -= item.weight;
+    this.inventory.remove(item);
+    throw new SellException(message: '+ \$${item.value ~/ 2}');
+  }
+
+  void destroyItem(Item item) {
+    if (item.action == 'UNEQUIP') {
+      unequip(item);
+    }
+
+    this.currentWeight -= item.weight;
+    this.inventory.remove(item);
+  }
+
+  void receiveItem(Item item) {
+    if (item.weight + this.currentWeight > this.race.maxWeight) {
+      throw new TooHeavyException();
+    }
+    this.currentWeight += item.weight;
+    this.inventory.add(item);
+  }
+
+  void giveItem(Item item) {
+    this.currentWeight -= item.weight;
+    this.inventory.remove(item);
+  }
+
+  void healPlayer(int value) {
+    if (this.currentHealth + value > this.race.maxHealth) {
+      this.currentHealth = this.race.maxHealth;
+      throw new MaxHpException();
+    } else {
+      this.currentHealth += value;
+      throw new HealException(message: '$value');
+    }
   }
 
   void use(Item item) {
@@ -417,28 +441,23 @@ class Player {
         if (this.currentHealth == this.race.maxHealth) {
           throw new MaxHpException();
         }
-        this.currentHealth += Random().nextInt(2) + 1;
-        if (this.currentHealth > this.race.maxHealth) {
-          this.currentHealth = this.race.maxHealth;
-        }
         this.inventory.remove(item);
         playerTurn();
+        int randomNumber = Random().nextInt(2) + 1;
+
+        healPlayer(randomNumber);
+
         break;
 
       case 'FOOD':
         if (this.currentHealth == this.race.maxHealth) {
           throw new MaxHpException();
         }
-        this.currentHealth += Random().nextInt(5) + 1;
-        if (this.currentHealth > this.race.maxHealth) {
-          this.currentHealth = this.race.maxHealth;
-        }
         this.inventory.remove(item);
         playerTurn();
-        break;
+        int randomNumber = Random().nextInt(5) + 1;
 
-      case 'MAGIC RUNE':
-        this.inventory.remove(item);
+        healPlayer(randomNumber);
 
         break;
 
@@ -446,67 +465,64 @@ class Player {
         if (this.currentHealth == this.race.maxHealth) {
           throw new MaxHpException();
         }
-        this.currentHealth += Random().nextInt(7) + 6;
-        if (this.currentHealth > this.race.maxHealth) {
-          this.currentHealth = this.race.maxHealth;
-        }
         this.inventory.remove(item);
         playerTurn();
+        int randomNumber = Random().nextInt(7) + 3;
+
+        healPlayer(randomNumber);
+
         break;
+
       case 'RESISTANCE POTION':
-        this.effects.add(effectList.effectList[1]);
+        playerTurn();
+        this.effects.add(effectList.temporary[1].copyEffect());
         this.mArmor += 3;
         this.inventory.remove(item);
-        playerTurn();
+
+        throw new UseItemException(message: '${item.name}');
         break;
       case 'KEY':
         this.inventory.remove(item);
         playerTurn();
+        throw new UseItemException(message: '${item.name}');
         break;
       case 'BOOK':
         this.inventory.remove(item);
         playerTurn();
+        throw new UseItemException(message: '${item.name}');
         break;
       case 'HERBS':
         this.inventory.remove(item);
         playerTurn();
+        throw new UseItemException(message: '${item.name}');
         break;
       case 'TOOL':
         this.inventory.remove(item);
         playerTurn();
+        throw new UseItemException(message: '${item.name}');
         break;
       case 'WARD':
         this.inventory.remove(item);
         playerTurn();
+        throw new UseItemException(message: '${item.name}');
         break;
       case 'ANTIDOTE':
         this.effects.forEach((element) {
-          element.duration = 0;
+          if (element.typeOfEffect == 'TEMPORARY') {
+            element.duration = 0;
+          }
         });
-        this.checkEffects();
-
         this.inventory.remove(item);
         playerTurn();
-        break;
-      case 'AMMO':
-        if (item.uses > 4) {
-          throw new MaxAmmoException();
-        }
-        if (this.gold < 50) {
-          throw new NoGoldException();
-        } else {
-          item.uses = 5;
-          this.gold -= 50;
-        }
-
+        throw new UseItemException(message: '${item.name}');
         break;
     }
   }
 
-  List<Item> enchant() {
+  List<Item> availableItemsForEnchant() {
     List<Item> availableItems = [];
     this.inventory.forEach((item) {
-      if (item.itemClass != 'resource' &&
+      if (item.inventorySpace != 'consumable' &&
           item.itemClass != 'thrownWeapon' &&
           item.enchant < 3) {
         availableItems.add(item);
@@ -519,100 +535,56 @@ class Player {
     return availableItems;
   }
 
-  Item headEquip = Item(
-    icon: 'head',
-    name: '',
-    itemClass: '',
-    inventorySpace: '',
-    description: '',
-    pDamage: 0,
-    pArmor: 0,
-    mDamage: 0,
-    mArmor: 0,
-    weight: 0,
-    uses: 0,
-    value: 0,
-  );
-  Item bodyEquip = Item(
-    icon: 'body',
-    name: '',
-    itemClass: '',
-    inventorySpace: '',
-    description: '',
-    pDamage: 0,
-    pArmor: 0,
-    mDamage: 0,
-    mArmor: 0,
-    weight: 0,
-    uses: 0,
-    value: 0,
-  );
-  Item mainHandEquip = Item(
-    icon: 'mainHand',
-    name: '',
-    itemClass: '',
-    inventorySpace: '',
-    description: '',
-    pDamage: 0,
-    pArmor: 0,
-    mDamage: 0,
-    mArmor: 0,
-    weight: 0,
-    uses: 0,
-    value: 0,
-  );
-  Item offHandEquip = Item(
-    icon: 'offHand',
-    name: '',
-    itemClass: '',
-    inventorySpace: '',
-    description: '',
-    pDamage: 0,
-    pArmor: 0,
-    mDamage: 0,
-    mArmor: 0,
-    weight: 0,
-    uses: 0,
-    value: 0,
-  );
-  Item handsEquip = Item(
-    icon: 'hands',
-    name: '',
-    itemClass: '',
-    inventorySpace: '',
-    description: '',
-    pDamage: 0,
-    pArmor: 0,
-    mDamage: 0,
-    mArmor: 0,
-    weight: 0,
-    uses: 0,
-    value: 0,
-  );
-  Item feetEquip = Item(
-    icon: 'feet',
-    name: '',
-    itemClass: '',
-    inventorySpace: '',
-    description: '',
-    pDamage: 0,
-    pArmor: 0,
-    mDamage: 0,
-    mArmor: 0,
-    weight: 0,
-    uses: 0,
-    value: 0,
-  );
+  void restock(Item item) {
+    if (item.uses > 4) {
+      throw new MaxAmmoException();
+    }
+    if (this.gold < 50) {
+      throw new NoGoldException();
+    } else {
+      item.uses = 5;
+      this.gold -= 50;
+      throw new RestockException();
+    }
+  }
 
-  void useOrEquip(Item item, String useItem) {
-    switch (useItem) {
+  void enchant(Item item) {
+    item.enchant++;
+    item.value += 600;
+
+    if (item.itemClass == 'armor') {
+      item.mArmor++;
+    } else {
+      item.mDamage++;
+    }
+  }
+
+  void useOrEquip(Item item) {
+    switch (item.action) {
       case 'ENCHANT':
-        {}
+        {
+          throw new EnchantException();
+        }
         break;
 
       case 'USE':
         {
           use(item);
+        }
+        break;
+      case 'EAT':
+        {
+          use(item);
+        }
+        break;
+      case 'DRINK':
+        {
+          use(item);
+        }
+        break;
+      case 'RESTOCK':
+        {
+          restock(item);
         }
         break;
 
@@ -631,6 +603,7 @@ class Player {
   }
 
   void equip(Item item) {
+    item.action = 'UNEQUIP';
     this.mArmor += item.mArmor;
     this.pArmor += item.pArmor;
     this.mDamage += item.mDamage;
@@ -698,6 +671,8 @@ class Player {
     if (item.name == '') {
       return;
     }
+
+    item.action = 'EQUIP';
 
     if (item.inventorySpace == '2hand') {
       this.mArmor -= item.mArmor;
@@ -858,37 +833,90 @@ class Player {
     }
   }
 
-  void sellItem(Item item, String equipOrUnequip) {
-    if (equipOrUnequip == 'UNEQUIP') {
-      unequip(item);
-    }
-
-    this.gold += item.value ~/ 2;
-    this.currentWeight -= item.weight;
-    this.inventory.remove(item);
-  }
-
-  void destroyItem(Item item, String equipOrUnequip) {
-    if (equipOrUnequip == 'UNEQUIP') {
-      unequip(item);
-    }
-
-    this.currentWeight -= item.weight;
-    this.inventory.remove(item);
-  }
-
-  void receiveItem(Item item) {
-    if (item.weight + this.currentWeight > this.race.maxWeight) {
-      throw new TooHeavyException();
-    }
-    this.currentWeight += item.weight;
-    this.inventory.add(item);
-  }
-
-  void giveItem(Item item) {
-    this.currentWeight -= item.weight;
-    this.inventory.remove(item);
-  }
+  Item headEquip = Item(
+    icon: 'head',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
+  );
+  Item bodyEquip = Item(
+    icon: 'body',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
+  );
+  Item mainHandEquip = Item(
+    icon: 'mainHand',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
+  );
+  Item offHandEquip = Item(
+    icon: 'offHand',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
+  );
+  Item handsEquip = Item(
+    icon: 'hands',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
+  );
+  Item feetEquip = Item(
+    icon: 'feet',
+    name: '',
+    itemClass: '',
+    inventorySpace: '',
+    description: '',
+    pDamage: 0,
+    pArmor: 0,
+    mDamage: 0,
+    mArmor: 0,
+    weight: 0,
+    uses: 0,
+    value: 0,
+  );
 
 //ACTION
 
@@ -909,14 +937,14 @@ class Player {
     if (this.mainHandEquip.itemClass == 'thrownWeapon') {
       this.mainHandEquip.uses--;
       if (this.mainHandEquip.uses < 1) {
-        destroyItem(this.mainHandEquip, 'UNEQUIP');
+        destroyItem(this.mainHandEquip);
       }
     }
 
     if (this.offHandEquip.itemClass == 'thrownWeapon') {
       this.offHandEquip.uses--;
       if (this.offHandEquip.uses < 1) {
-        destroyItem(this.mainHandEquip, 'UNEQUIP');
+        destroyItem(this.mainHandEquip);
       }
     }
 
@@ -952,8 +980,6 @@ class Player {
       throw new NoAmmoException();
     }
   }
-
-//EFFECTS
 
 // PLAYER TURN
 
@@ -998,32 +1024,41 @@ class Player {
     }
   }
 
+  void selectEffect(int index) {
+    this.effect = this.effects[index].copyEffect();
+  }
+
   void checkEffects() {
     if (this.effects.isEmpty == true) {
       return;
     }
 
+    List<Effect> currentEffects = [];
+
     this.effects.forEach((element) {
-      if (element.duration > 10) {
+      if (element.typeOfEffect == 'PERMANENT') {
         return;
       }
+
       element.duration--;
-    });
 
-    this.effects.forEach((element) {
-      if (element.duration > 0) {
-        return;
-      }
-      switch (element.name) {
-        case 'MAGIC RESISTANCE':
-          {
-            this.mArmor -= 3;
-          }
-          break;
+      if (element.duration < 1) {
+        switch (element.name) {
+          case 'MAGIC RESISTANCE':
+            {
+              this.mArmor -= 3;
+              currentEffects.add(element);
+            }
+            break;
+        }
       }
     });
 
-    this.effects.removeWhere((element) => element.duration < 1);
+    if (currentEffects.isNotEmpty) {
+      currentEffects.forEach((element) {
+        this.effects.remove(element);
+      });
+    }
   }
 
   List<String> resources(int numberDice) {

@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:dsixv02app/models/gm/character.dart';
@@ -539,7 +539,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Text(
-                        'Each environment can host a lot of different characters. Create a character by clicking on the buttons below.',
+                        'The world is filled with unique characters. Create a new character by clicking on the buttons below.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           height: 1.3,

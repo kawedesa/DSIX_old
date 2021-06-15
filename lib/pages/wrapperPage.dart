@@ -3,7 +3,7 @@ import 'package:dsixv02app/pages/homePage.dart';
 import 'package:provider/provider.dart';
 import 'authenticatePage.dart';
 
-import 'package:dsixv02app/models/dsixUser.dart';
+import 'package:dsixv02app/models/dsix/dsixUser.dart';
 
 class WrapperPage extends StatelessWidget {
   @override

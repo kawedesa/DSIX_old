@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:dsixv02app/models/game/effect.dart';
 
 class CharacterPage extends StatefulWidget {
   final Dsix dsix;
@@ -21,17 +20,9 @@ class _CharacterPageState extends State<CharacterPage> {
     Navigator.of(context).pop(true);
   }
 
-  String alertTitle;
-  String alertDuration;
-  String alertDescription;
-
   void showEffect(int index) {
-    alertTitle =
-        '${widget.dsix.gm.getCurrentPlayer().effects[index].name}: ${widget.dsix.gm.getCurrentPlayer().effects[index].value}';
-    alertDescription =
-        widget.dsix.gm.getCurrentPlayer().effects[index].description;
-    alertDuration =
-        '${widget.dsix.gm.getCurrentPlayer().effects[index].duration}';
+    widget.dsix.gm.getCurrentPlayer().selectEffect(index);
+
     showAlertDialogAlert(context);
   }
 
@@ -70,7 +61,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          alertTitle,
+                          widget.dsix.gm.getCurrentPlayer().effect.name,
                           style: TextStyle(
                             fontFamily: 'Headline',
                             height: 1.3,
@@ -94,17 +85,30 @@ class _CharacterPageState extends State<CharacterPage> {
                         fontFamily: 'Calibri',
                         color: Colors.white,
                       ),
-                      children: <TextSpan>[
-                        TextSpan(text: '$alertDescription Turns left: '),
-                        TextSpan(
-                            text: alertDuration,
-                            style: new TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: widget.dsix.gm
-                                    .getCurrentPlayer()
-                                    .playerColor
-                                    .primaryColor)),
-                      ],
+                      children: (widget.dsix.gm
+                                  .getCurrentPlayer()
+                                  .effect
+                                  .typeOfEffect ==
+                              'PERMANENT')
+                          ? <TextSpan>[
+                              TextSpan(
+                                  text:
+                                      '${widget.dsix.gm.getCurrentPlayer().effect.description}'),
+                            ]
+                          : <TextSpan>[
+                              TextSpan(
+                                  text:
+                                      '${widget.dsix.gm.getCurrentPlayer().effect.description} Turns left: '),
+                              TextSpan(
+                                  text:
+                                      '${widget.dsix.gm.getCurrentPlayer().effect.duration}',
+                                  style: new TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      color: widget.dsix.gm
+                                          .getCurrentPlayer()
+                                          .playerColor
+                                          .primaryColor)),
+                            ],
                     ),
                   ),
                 ),

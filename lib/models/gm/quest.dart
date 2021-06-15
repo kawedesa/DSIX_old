@@ -12,7 +12,7 @@ class Quest {
   String reward = '-';
   // int questXp = 0;
   // int questGold = 0;
-  int questFame = 0;
+  // int questFame = 0;
   bool onGoing = false;
 
   List<String> characterList = [
@@ -143,10 +143,12 @@ class Quest {
       name: 'NEW QUEST',
       questDescription:
           'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
+      character: '-',
       objective: '-',
       target: '-',
       location: '-',
       reward: '-',
+      onGoing: false,
     );
     return newQuest;
   }
@@ -173,6 +175,7 @@ class Quest {
       target: randomTarget,
       location: randomLocation,
       reward: randomReward,
+      onGoing: false,
     );
     return newRandomQuest;
   }
@@ -214,6 +217,7 @@ class Quest {
     String target,
     String location,
     String reward,
+    bool onGoing,
   }) {
     this.icon = icon;
     this.name = name;
@@ -223,5 +227,6 @@ class Quest {
     this.target = target;
     this.location = location;
     this.reward = reward;
+    this.onGoing = onGoing;
   }
 }

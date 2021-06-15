@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:dsixv02app/models/shared/exceptions.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -44,6 +44,11 @@ class _SettingsPageState extends State<SettingsPage> {
     try {
       widget.dsix.gm.newRound();
     } on NewRoundException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+
+      widget.refresh();
+      return;
+    } on OnGoingQuestException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
 
       widget.refresh();
@@ -407,7 +412,7 @@ class _SettingsPageState extends State<SettingsPage> {
                         shrinkWrap: true,
                         physics: AlwaysScrollableScrollPhysics(),
                         scrollDirection: Axis.vertical,
-                        itemCount: widget.dsix.gm.story.finishedQuests.length,
+                        itemCount: widget.dsix.gm.story.situationList.length,
                         itemBuilder: (BuildContext context, int index) {
                           return Column(
                             children: [
@@ -417,7 +422,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                 child: ListTile(
                                   onTap: () {},
                                   title: Text(
-                                    '${widget.dsix.gm.story.finishedQuests[index].name}',
+                                    'SITUATION:',
                                     style: TextStyle(
                                       fontFamily: 'Headliner',
                                       height: 1.5,
@@ -427,7 +432,7 @@ class _SettingsPageState extends State<SettingsPage> {
                                     ),
                                   ),
                                   trailing: Text(
-                                    '${widget.dsix.gm.story.finishedQuests[index].reward}',
+                                    '${widget.dsix.gm.story.situationList[index].name}',
                                     style: TextStyle(
                                       height: 1.5,
                                       fontSize: 18,

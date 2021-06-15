@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
-import 'package:dsixv02app/models/game/item.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
+import 'package:dsixv02app/models/shared/item.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:dsixv02app/models/gm/loot.dart';
 import '../models/shared/exceptions.dart';

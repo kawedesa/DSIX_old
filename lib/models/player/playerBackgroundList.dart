@@ -1,5 +1,5 @@
 import 'package:dsixv02app/models/player/playerBackground.dart';
-import 'package:dsixv02app/models/game/shop.dart';
+import 'package:dsixv02app/models/shared/shop.dart';
 import 'package:dsixv02app/models/player/bonus.dart';
 
 Shop shop = new Shop();

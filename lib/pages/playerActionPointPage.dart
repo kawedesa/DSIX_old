@@ -2,7 +2,7 @@ import 'playerUI.dart';
 import '../models/player/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../models/player/playerAction.dart';
 

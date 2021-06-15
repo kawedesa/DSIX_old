@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'playersPage.dart';
 
-import 'storyPage.dart';
-import 'lootPage.dart';
-import 'settingsPage.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
-import 'characterPage.dart';
+import 'gmQuestPage.dart';
+import 'gmLootPage.dart';
+import 'gmStoryPage.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
+import 'gmCharacterPage.dart';
 import 'package:dsixv02app/models/gm/character.dart';
 import 'package:dsixv02app/models/gm/characterSkill.dart';
 

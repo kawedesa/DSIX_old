@@ -2,11 +2,11 @@ import 'loot.dart';
 import 'story.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/shop.dart';
+import 'package:dsixv02app/models/shared/shop.dart';
 import 'character.dart';
 import '../shared/exceptions.dart';
 import 'characterList.dart';
-import 'package:dsixv02app/models/game/item.dart';
+import 'package:dsixv02app/models/shared/item.dart';
 
 class Gm {
   // Available Players
@@ -263,6 +263,7 @@ class Gm {
 
   void newRound() {
     this.story.newRound();
+    this.totalXp = 0;
     this.lootList.clear();
     this.characters.clear();
     throw new NewRoundException();

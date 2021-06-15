@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../models/game/item.dart';
+import '../models/shared/item.dart';
 import '../models/shared/exceptions.dart';
 import 'package:dsixv02app/models/player/player.dart';
 
@@ -26,7 +26,7 @@ class _InventoryStatePage extends State<InventoryPage> {
   Color bodyColor;
   List<String> ammoQuantity = [];
   List<String> enchantQuantity = [];
-  String buttonText;
+  String action;
 
   void checkColor() {
     if (widget.dsix.gm.getCurrentPlayer().mainHandEquip.name == '') {
@@ -67,30 +67,47 @@ class _InventoryStatePage extends State<InventoryPage> {
     }
   }
 
-  void useOrEquip(Item item, String buttonText) {
+  void useOrEquip(Item item) {
     try {
-      widget.dsix.gm.getCurrentPlayer().useOrEquip(item, buttonText);
+      widget.dsix.gm.getCurrentPlayer().useOrEquip(item);
     } on NoGoldException catch (e) {
-      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
     } on MaxHpException catch (e) {
-      Navigator.pop(context);
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
+    } on HealException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
     } on MaxAmmoException catch (e) {
-      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
+    } on EnchantException {
+      enchantItem(item);
+      return;
+    } on RestockException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
+    } on UseItemException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+
       return;
     }
 
     checkColor();
-
-    widget.refresh();
-    Navigator.of(context).pop(true);
   }
 
-  void checkEquipped(Item item, String inventorySpace) {
+  void sellItem(Item item) {
+    try {
+      widget.dsix.gm.getCurrentPlayer().sellItem(item);
+    } on SellException catch (e) {
+      checkColor();
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
+    }
+  }
+
+  void checkEquipped(Item item) {
     if (item.name == '') {
       return;
     }
@@ -109,24 +126,7 @@ class _InventoryStatePage extends State<InventoryPage> {
         ammoQuantity.add('ammo');
       }
     }
-
-    if (inventorySpace != 'inventory') {
-      buttonText = 'UNEQUIP';
-    } else {
-      if (item.inventorySpace == 'consumable') {
-        if (item.name == 'AMMO') {
-          buttonText = 'REFIL';
-        } else if (item.name == 'MAGIC RUNE') {
-          buttonText = 'ENCHANT';
-        } else {
-          buttonText = 'USE';
-        }
-      } else {
-        buttonText = 'EQUIP';
-      }
-    }
-
-    showAlertDialogItemDetail(context, item, buttonText);
+    showAlertDialogItemDetail(context, item);
   }
 
   List<Player> availablePlayers = [];
@@ -161,21 +161,20 @@ class _InventoryStatePage extends State<InventoryPage> {
 
   List<Item> availableItems = [];
   void enchantItem(Item item) {
-    String enchantText = 'Select an item to enchant.';
     availableItems = [];
     try {
-      availableItems = widget.dsix.gm.getCurrentPlayer().enchant();
+      availableItems =
+          widget.dsix.gm.getCurrentPlayer().availableItemsForEnchant();
     } on NoAvailableItemsException catch (e) {
-      Navigator.pop(context);
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+
       return;
     }
 
-    showAlertDialogEnchant(context, item, enchantText);
+    showAlertDialogEnchant(context, item);
   }
 
-  showAlertDialogItemDetail(
-      BuildContext context, Item item, String buttonText) {
+  showAlertDialogItemDetail(BuildContext context, Item item) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -228,8 +227,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         child: GestureDetector(
                           onTap: () {
                             Navigator.of(context).pop(true);
-                            showAlertDialogDestroyItem(
-                                context, item, buttonText);
+                            showAlertDialogDestroyItem(context, item);
                           },
                           child: Icon(
                             Icons.clear,
@@ -483,11 +481,12 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 5, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      if (buttonText == 'ENCHANT') {
-                        enchantItem(item);
-                      } else {
-                        useOrEquip(item, buttonText);
-                      }
+                      Navigator.pop(context);
+                      //HERE
+                      useOrEquip(
+                        item,
+                      );
+                      widget.refresh();
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -526,7 +525,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                           Center(
                             child: Text(
-                              buttonText,
+                              item.action,
                               style: TextStyle(
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold,
@@ -607,7 +606,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
-                      showAlertDialogSellItem(context, item, buttonText);
+                      showAlertDialogSellItem(context, item);
                     },
                     style: TextButton.styleFrom(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
@@ -676,7 +675,7 @@ class _InventoryStatePage extends State<InventoryPage> {
     );
   }
 
-  showAlertDialogSellItem(BuildContext context, Item item, String buttonText) {
+  showAlertDialogSellItem(BuildContext context, Item item) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -744,10 +743,8 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      widget.dsix.gm
-                          .getCurrentPlayer()
-                          .sellItem(item, buttonText);
-                      checkColor();
+                      sellItem(item);
+
                       widget.refresh();
                       Navigator.of(context).pop(true);
                     },
@@ -1028,7 +1025,7 @@ class _InventoryStatePage extends State<InventoryPage> {
     );
   }
 
-  showAlertDialogEnchant(BuildContext context, Item item, String enchantText) {
+  showAlertDialogEnchant(BuildContext context, Item item) {
     showDialog(
       context: context,
       builder: (context) {
@@ -1079,7 +1076,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(35, 15, 35, 10),
                           child: Text(
-                            enchantText,
+                            'Select an item to enchant.',
                             textAlign: TextAlign.justify,
                             style: TextStyle(
                               height: 1.25,
@@ -1100,20 +1097,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     const EdgeInsets.fromLTRB(30, 0, 30, 0),
                                 child: TextButton(
                                   onPressed: () {
-                                    availableItems[index].enchant++;
-                                    availableItems[index].value += 600;
-
-                                    if (availableItems[index].itemClass ==
-                                        'armor') {
-                                      availableItems[index].mArmor++;
-                                    } else {
-                                      availableItems[index].mDamage++;
-                                    }
                                     widget.dsix.gm
                                         .getCurrentPlayer()
-                                        .destroyItem(item, 'ENCHANT');
+                                        .enchant(availableItems[index]);
+                                    widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .destroyItem(item);
                                     widget.refresh();
-                                    Navigator.pop(context);
+
                                     Navigator.pop(context);
                                   },
                                   style: TextButton.styleFrom(
@@ -1188,8 +1179,7 @@ class _InventoryStatePage extends State<InventoryPage> {
     );
   }
 
-  showAlertDialogDestroyItem(
-      BuildContext context, Item item, String buttonText) {
+  showAlertDialogDestroyItem(BuildContext context, Item item) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -1256,9 +1246,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
                   child: TextButton(
                     onPressed: () {
-                      widget.dsix.gm
-                          .getCurrentPlayer()
-                          .destroyItem(item, buttonText);
+                      widget.dsix.gm.getCurrentPlayer().destroyItem(item);
                       checkColor();
                       widget.refresh();
                       Navigator.of(context).pop(true);
@@ -1791,19 +1779,25 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 1.5, //                   <--- border width here
                           ),
                         ),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(10),
-                          ),
-                          onPressed: () {
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            useOrEquip(
+                              widget.dsix.gm.getCurrentPlayer().mainHandEquip,
+                            );
+
+                            widget.refresh();
+                          },
+                          onTap: () {
                             checkEquipped(
                               widget.dsix.gm.getCurrentPlayer().mainHandEquip,
-                              'mainHand',
                             );
                           },
-                          child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.gm.getCurrentPlayer().mainHandEquip.icon}.svg',
-                            color: mainHandColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              'assets/item/${widget.dsix.gm.getCurrentPlayer().mainHandEquip.icon}.svg',
+                              color: mainHandColor,
+                            ),
                           ),
                         ),
                       ),
@@ -1820,19 +1814,24 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 1.5, //                   <--- border width here
                           ),
                         ),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(10),
-                          ),
-                          onPressed: () {
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            useOrEquip(
+                              widget.dsix.gm.getCurrentPlayer().handsEquip,
+                            );
+                            widget.refresh();
+                          },
+                          onTap: () {
                             checkEquipped(
                               widget.dsix.gm.getCurrentPlayer().handsEquip,
-                              'hands',
                             );
                           },
-                          child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.gm.getCurrentPlayer().handsEquip.icon}.svg',
-                            color: handsColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              'assets/item/${widget.dsix.gm.getCurrentPlayer().handsEquip.icon}.svg',
+                              color: handsColor,
+                            ),
                           ),
                         ),
                       ),
@@ -1854,19 +1853,24 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 1.5, //                   <--- border width here
                           ),
                         ),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(10),
-                          ),
-                          onPressed: () {
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            useOrEquip(
+                              widget.dsix.gm.getCurrentPlayer().headEquip,
+                            );
+                            widget.refresh();
+                          },
+                          onTap: () {
                             checkEquipped(
                               widget.dsix.gm.getCurrentPlayer().headEquip,
-                              'head',
                             );
                           },
-                          child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.gm.getCurrentPlayer().headEquip.icon}.svg',
-                            color: headColor,
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              'assets/item/${widget.dsix.gm.getCurrentPlayer().headEquip.icon}.svg',
+                              color: headColor,
+                            ),
                           ),
                         ),
                       ),
@@ -1883,18 +1887,24 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 1.5, //                   <--- border width here
                           ),
                         ),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(3),
-                          ),
-                          onPressed: () {
-                            checkEquipped(
-                                widget.dsix.gm.getCurrentPlayer().bodyEquip,
-                                'body');
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            useOrEquip(
+                              widget.dsix.gm.getCurrentPlayer().bodyEquip,
+                            );
+                            widget.refresh();
                           },
-                          child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.gm.getCurrentPlayer().bodyEquip.icon}.svg',
-                            color: bodyColor,
+                          onTap: () {
+                            checkEquipped(
+                              widget.dsix.gm.getCurrentPlayer().bodyEquip,
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              'assets/item/${widget.dsix.gm.getCurrentPlayer().bodyEquip.icon}.svg',
+                              color: bodyColor,
+                            ),
                           ),
                         ),
                       ),
@@ -1916,18 +1926,24 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 1.5, //                   <--- border width here
                           ),
                         ),
-                        child: TextButton(
-                          onPressed: () {
-                            checkEquipped(
-                                widget.dsix.gm.getCurrentPlayer().offHandEquip,
-                                'offHand');
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            useOrEquip(
+                              widget.dsix.gm.getCurrentPlayer().offHandEquip,
+                            );
+                            widget.refresh();
                           },
-                          style: TextButton.styleFrom(
+                          onTap: () {
+                            checkEquipped(
+                              widget.dsix.gm.getCurrentPlayer().offHandEquip,
+                            );
+                          },
+                          child: Padding(
                             padding: const EdgeInsets.all(10),
-                          ),
-                          child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.gm.getCurrentPlayer().offHandEquip.icon}.svg',
-                            color: offHandColor,
+                            child: SvgPicture.asset(
+                              'assets/item/${widget.dsix.gm.getCurrentPlayer().offHandEquip.icon}.svg',
+                              color: offHandColor,
+                            ),
                           ),
                         ),
                       ),
@@ -1944,18 +1960,24 @@ class _InventoryStatePage extends State<InventoryPage> {
                                 1.5, //                   <--- border width here
                           ),
                         ),
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(10),
-                          ),
-                          onPressed: () {
-                            checkEquipped(
-                                widget.dsix.gm.getCurrentPlayer().feetEquip,
-                                'feet');
+                        child: GestureDetector(
+                          onDoubleTap: () {
+                            useOrEquip(
+                              widget.dsix.gm.getCurrentPlayer().feetEquip,
+                            );
+                            widget.refresh();
                           },
-                          child: SvgPicture.asset(
-                            'assets/item/${widget.dsix.gm.getCurrentPlayer().feetEquip.icon}.svg',
-                            color: feetColor,
+                          onTap: () {
+                            checkEquipped(
+                              widget.dsix.gm.getCurrentPlayer().feetEquip,
+                            );
+                          },
+                          child: Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: SvgPicture.asset(
+                              'assets/item/${widget.dsix.gm.getCurrentPlayer().feetEquip.icon}.svg',
+                              color: feetColor,
+                            ),
                           ),
                         ),
                       ),
@@ -1988,10 +2010,15 @@ class _InventoryStatePage extends State<InventoryPage> {
                     },
                     onTap: () {
                       checkEquipped(
-                          widget.dsix.gm.getCurrentPlayer().inventory[index],
-                          'inventory');
+                        widget.dsix.gm.getCurrentPlayer().inventory[index],
+                      );
                     },
-                    onDoubleTap: () {},
+                    onDoubleTap: () {
+                      useOrEquip(
+                        widget.dsix.gm.getCurrentPlayer().inventory[index],
+                      );
+                      widget.refresh();
+                    },
                     child: SvgPicture.asset(
                       'assets/item/${widget.dsix.gm.getCurrentPlayer().inventory[index].icon}.svg',
                       color: Colors.white,

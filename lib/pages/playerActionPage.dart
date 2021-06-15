@@ -1,14 +1,14 @@
 import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:dsixv02app/models/game/dice.dart';
+import 'package:dsixv02app/models/shared/dice.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../models/player/playerAction.dart';
 import '../models/player/option.dart';
 
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import '../models/shared/exceptions.dart';
 
 class ActionPage extends StatefulWidget {
@@ -49,8 +49,14 @@ class _ActionPageState extends State<ActionPage> {
   List<String> itemList = [];
 
   void checkAction(Option option, int numberDice) {
-    widget.dsix.gm.checkTurn();
-    widget.refresh();
+    try {
+      widget.dsix.gm.checkTurn();
+    } on NewTurnException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      widget.refresh();
+      return;
+    }
+
     if (widget.dsix.gm.getCurrentPlayer().checkTurn()) {
       ScaffoldMessenger.of(context)
           .showSnackBar(widget.alert('Wait for the next turn'));
@@ -81,6 +87,7 @@ class _ActionPageState extends State<ActionPage> {
     button = Container();
     bonus = displayedAction.value;
     resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
+    rollSwitcher = true;
     showAlertDialogAction(context, option);
   }
 
@@ -127,7 +134,7 @@ class _ActionPageState extends State<ActionPage> {
               }
               break;
 
-            case 'MORPH':
+            case 'TRANSFORM':
               {
                 itemList = [
                   'SWIM\n',
@@ -167,18 +174,6 @@ class _ActionPageState extends State<ActionPage> {
               }
               break;
 
-            case 'STRIKE':
-              {
-                bonus = widget.dsix.gm.getCurrentPlayer().mDamage;
-                newRoll(option, numberDice);
-              }
-              break;
-            case 'BARRIER':
-              {
-                bonus = widget.dsix.gm.getCurrentPlayer().mArmor;
-                newRoll(option, numberDice);
-              }
-              break;
             case 'ENHANCE':
               {
                 itemList = [
@@ -296,8 +291,11 @@ class _ActionPageState extends State<ActionPage> {
     title = option.outcome;
     button = Container();
     resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
+    rollSwitcher = true;
     showAlertDialogAction(context, option);
   }
+
+  bool rollSwitcher = true;
 
   void checkResult(List<Dice> dice, Option option) {
     for (int check = 0; check < diceList.length; check++) {
@@ -305,7 +303,7 @@ class _ActionPageState extends State<ActionPage> {
         return;
       }
     }
-
+    rollSwitcher = false;
     int partialResult = 0;
     int totalResult = 0;
 
@@ -316,6 +314,8 @@ class _ActionPageState extends State<ActionPage> {
     totalResult = partialResult + bonus;
     displaySum = '$partialResult + $bonus = $totalResult';
 
+//FIRST ROLL
+
     if (option.firstRoll) {
       widget.dsix.gm.getCurrentPlayer().action(option);
 
@@ -325,26 +325,46 @@ class _ActionPageState extends State<ActionPage> {
         textSize = 1.25;
         resultText = option.fail;
         option.newRoll = false;
-      } else if (totalResult > 9) {
-        resultColor = Colors.green;
-        title = 'SUCCESS';
-
-        if (option.newRoll) {
-          option.newRoll = false;
-          decideOutcome(option, 2);
-          return;
-        }
-        textSize = 1.25;
-        resultText = option.success;
-      } else {
-        resultColor = Colors.green;
-        title = 'HALF SUCCESS';
-        if (option.newRoll) {
-          option.newRoll = false;
-          decideOutcome(option, 1);
-          return;
-        }
+        return;
       }
+
+      switch (option.newRoll) {
+        case true:
+          {
+            if (totalResult > 9) {
+              resultColor = Colors.green;
+              title = 'SUCCESS';
+
+              option.newRoll = false;
+              decideOutcome(option, 2);
+            } else {
+              resultColor = Colors.green;
+              title = 'HALF SUCCESS';
+
+              option.newRoll = false;
+              decideOutcome(option, 1);
+            }
+          }
+          break;
+        case false:
+          {
+            if (totalResult > 9) {
+              resultColor = Colors.green;
+              title = 'SUCCESS';
+              textSize = 1.25;
+              resultText = option.success;
+            } else {
+              resultColor = Colors.green;
+              title = 'HALF SUCCESS';
+              textSize = 1.25;
+              resultText = option.halfSuccess;
+            }
+          }
+          break;
+      }
+
+//OTHER TURNS
+
     } else {
       textSize = 1.25;
       if (totalResult > 9) {
@@ -427,7 +447,10 @@ class _ActionPageState extends State<ActionPage> {
                                             onPressed: () {
                                               setState(() {
                                                 diceList[index].rollDice();
-                                                checkResult(diceList, option);
+                                                (rollSwitcher)
+                                                    ? checkResult(
+                                                        diceList, option)
+                                                    : widget.refresh();
                                               });
                                               widget.refresh();
                                             },

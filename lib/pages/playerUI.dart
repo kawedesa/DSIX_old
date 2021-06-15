@@ -7,7 +7,7 @@ import 'playerCharacterPage.dart';
 import 'playerShopPage.dart';
 import 'playerActionPage.dart';
 import 'playerHelpPage.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:dsixv02app/models/shared/exceptions.dart';
 
 class PlayerUI extends StatefulWidget {

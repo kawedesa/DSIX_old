@@ -1,5 +1,5 @@
-import 'package:dsixv02app/models/game/item.dart';
-import 'package:dsixv02app/models/game/shop.dart';
+import 'package:dsixv02app/models/shared/item.dart';
+import 'package:dsixv02app/models/shared/shop.dart';
 import 'dart:math';
 
 class Loot {

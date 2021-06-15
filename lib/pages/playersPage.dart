@@ -5,7 +5,7 @@ import 'playerRacePage.dart';
 import 'gmUI.dart';
 
 import 'playerUI.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 
 class PlayersPage extends StatefulWidget {
   final Dsix dsix;

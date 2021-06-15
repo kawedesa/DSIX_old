@@ -1,6 +1,7 @@
 import 'package:dsixv02app/models/gm/quest.dart';
 import 'package:dsixv02app/models/shared/exceptions.dart';
-
+import 'situation.dart';
+import 'situationList.dart';
 import 'storySettings.dart';
 import 'storySettingsList.dart';
 
@@ -11,7 +12,7 @@ class Story {
     icon: 'normal',
     name: 'NORMAL',
     description: 'Normal.',
-    numberOfQuests: 2,
+    numberOfQuests: 3,
     questXp: 50,
     totalXp: 50,
     questGold: 100,
@@ -29,6 +30,19 @@ class Story {
     this.settings = this.storySettingsList[currentSetting];
   }
 
+//SITUATION
+
+  Situation situation = Situation();
+
+  SituationList possibleSituations = SituationList();
+
+  List<Situation> situationList = [];
+
+  void newSituation() {
+    this.situation = this.possibleSituations.newRandomSituation();
+    this.situationList.add(this.situation.copySituation());
+  }
+
 //QUEST
 
   List<Quest> finishedQuests = [];
@@ -44,18 +58,26 @@ class Story {
     target: '-',
     location: '-',
     reward: '-',
+    onGoing: false,
   );
 
   void deleteStory() {
     this.round = 0;
-    this.settings = storySettingsList[2];
+    this.settings = this.storySettingsList[2];
     this.questList = [];
     this.finishedQuests = [];
+    this.situationList = [];
   }
 
   int round = 0;
   void newStory() {
     this.round = 1;
+//NUMBER OF SITUATIONS
+    for (int i = 0; i < 2; i++) {
+      newSituation();
+    }
+
+//NUMBER OF QUESTS
     for (int i = 0; i < this.settings.numberOfQuests; i++) {
       newRandomQuest();
     }
@@ -82,14 +104,22 @@ class Story {
     if (questList.isNotEmpty) {
       this.quest = this.questList.last;
     }
+    this.quest = this.quest.newQuest();
   }
 
   void finishQuest() {
     this.finishedQuests.add(questList[0]);
-    questList.clear();
+    this.questList.clear();
+    this.quest = this.quest.newQuest();
   }
 
   void newRound() {
+    if (this.quest.onGoing) {
+      throw new OnGoingQuestException();
+    }
+    if (this.questList.isNotEmpty) {
+      throw new OnGoingQuestException();
+    }
     this.round++;
 
     int incGold = 0;
@@ -100,6 +130,12 @@ class Story {
 
     this.settings.totalGold = incGold;
     this.settings.totalXp = incXp;
+
+    //ADD SITUATION
+
+    newSituation();
+
+    //ADD QUEST
 
     for (int i = 0; i < this.settings.numberOfQuests; i++) {
       newRandomQuest();

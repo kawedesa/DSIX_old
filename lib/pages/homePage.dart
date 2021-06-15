@@ -2,7 +2,7 @@ import 'package:dsixv02app/models/service/auth.dart';
 import 'package:flutter/material.dart';
 import 'playersPage.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/models/game/dsix.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HomePage extends StatefulWidget {

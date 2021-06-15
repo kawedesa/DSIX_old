@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/dsixUser.dart';
+import 'package:dsixv02app/models/dsix/dsixUser.dart';
 import 'package:dsixv02app/models/service/auth.dart';
 import 'package:dsixv02app/models/shared/loading.dart';
 import 'package:flutter/material.dart';

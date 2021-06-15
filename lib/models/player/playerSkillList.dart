@@ -9,11 +9,11 @@ class PlayerSkillList {
       'You morph into a animal of similar size  and gain new abilities.',
       [
         Option(
-            'MORPH',
+            'TRANSFORM',
             'Your body and belongings morph into a new shape.',
             'Choose two abilities',
             'Choose one ability',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'ABILITY',
             true),
       ],
@@ -29,7 +29,7 @@ class PlayerSkillList {
             'You make everyone in a large area around you see, hear, smell, taste or feel anything you want.',
             'Choose two senses',
             'Choose one sense',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'SENSES',
             true),
       ],
@@ -45,7 +45,7 @@ class PlayerSkillList {
             'It burns everything in a small area.',
             'You hit the mark.',
             'It lands close.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'DAMAGE',
             true),
         Option(
@@ -53,7 +53,7 @@ class PlayerSkillList {
             'It creates a thick cloud over a medium area.',
             'You hit the mark.',
             'It lands close.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'SMOKE',
             false),
         Option(
@@ -61,7 +61,7 @@ class PlayerSkillList {
             'It freezes everything in a small area.',
             'You hit the mark.',
             'It lands close.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'FREEZE',
             false),
       ],
@@ -77,7 +77,7 @@ class PlayerSkillList {
             'You create a hole.',
             'You dig a deep hole in a area around you.',
             'You dig a shallow around you.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'DIG',
             false),
         Option(
@@ -85,7 +85,7 @@ class PlayerSkillList {
             'You hold someone.',
             'You hold them completly.',
             'You hold one of their arms or legs. ',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'HOLD',
             false),
         Option(
@@ -93,7 +93,7 @@ class PlayerSkillList {
             'You build a simple structure.',
             'Your structure is stable.',
             'Your structure is unstable.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'BUILD',
             false),
         Option(
@@ -101,7 +101,7 @@ class PlayerSkillList {
             'You destroy an object or structure.',
             'You destroy the target.',
             'You make it weaker. ',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'DESTROY',
             false),
       ],
@@ -117,7 +117,7 @@ class PlayerSkillList {
             'Your body and voice changes to mach the person of your choice.',
             'The transformation is perfect.',
             'The transformation is incomplete and your voice remains the same.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'TRANSFORM',
             false)
       ],
@@ -133,7 +133,7 @@ class PlayerSkillList {
             'You make them see through walls, hear whispers or track a scent from far away.',
             'Choose two senses.',
             'Choose one sense.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'SENSES',
             true),
         Option(
@@ -141,7 +141,7 @@ class PlayerSkillList {
             'You make them blind, deaf or numb.',
             'Choose two senses.',
             'Choose one sense.',
-            'You fail and something bad happens.',
+            'Something bad happens.',
             'SENSES',
             true)
       ],

@@ -11,21 +11,28 @@ class NoWeaponException implements Exception {
 }
 
 class NoGoldException implements Exception {
-  String message = 'TOO EXPENSIVE';
+  String message = 'IT\'S TOO EXPENSIVE';
 
   NoGoldException();
 }
 
 class TooHeavyException implements Exception {
-  String message = 'TOO HEAVY';
+  String message = 'IT\'S TOO HEAVY';
 
   TooHeavyException();
 }
 
 class MaxHpException implements Exception {
-  String message = 'LIFE IS FULL';
+  String message = 'YOUR LIFE IS FULL';
 
   MaxHpException();
+}
+
+class HealException implements Exception {
+  String message = '';
+  HealException({String message}) {
+    this.message = message;
+  }
 }
 
 class MaxAmmoException implements Exception {
@@ -44,6 +51,12 @@ class NewRoundException implements Exception {
   String message = 'NEW ROUND';
 
   NewRoundException();
+}
+
+class OnGoingQuestException implements Exception {
+  String message = 'FINISH A QUEST FIRST ';
+
+  OnGoingQuestException();
 }
 
 class NewStoryException implements Exception {
@@ -74,4 +87,35 @@ class NoAvailableItemsException implements Exception {
   String message = 'NO AVAILABLE ITEMS';
 
   NoAvailableItemsException();
+}
+
+class EnchantException implements Exception {
+  EnchantException();
+}
+
+class UseItemException implements Exception {
+  String message = '';
+  UseItemException({String message}) {
+    this.message = message;
+  }
+}
+
+class RestockException implements Exception {
+  String message = 'AMMO RESTOCKED';
+
+  RestockException();
+}
+
+class BuyException implements Exception {
+  String message = '';
+  BuyException({String message}) {
+    this.message = message;
+  }
+}
+
+class SellException implements Exception {
+  String message = '';
+  SellException({String message}) {
+    this.message = message;
+  }
 }

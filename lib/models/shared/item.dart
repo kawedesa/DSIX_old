@@ -3,6 +3,7 @@ class Item {
   String name;
   String itemClass;
   String inventorySpace;
+  String action;
   String description;
   int pDamage;
   int pArmor;
@@ -18,6 +19,7 @@ class Item {
     String name,
     String itemClass,
     String inventorySpace,
+    String action,
     String description,
     int pDamage,
     int pArmor,
@@ -32,6 +34,7 @@ class Item {
     this.name = name;
     this.itemClass = itemClass;
     this.inventorySpace = inventorySpace;
+    this.action = action;
     this.description = description;
     this.pDamage = pDamage;
     this.pArmor = pArmor;
@@ -49,6 +52,7 @@ class Item {
       name: this.name,
       itemClass: this.itemClass,
       inventorySpace: this.inventorySpace,
+      action: action,
       description: this.description,
       pDamage: this.pDamage,
       pArmor: this.pArmor,
