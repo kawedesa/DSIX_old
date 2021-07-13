@@ -54,15 +54,15 @@ flutter:
 
   assets:
 
-  - assets/player/
   - assets/ui/
+  - assets/player/
   - assets/player/race/
   - assets/player/background/
-  - assets/animation/
+  - assets/player/effect/
   - assets/player/action/
   - assets/item/
   - assets/logo/
-  - assets/effect/
+  - assets/animation/
   - assets/gm/
   - assets/gm/settings/
   - assets/gm/story/quest/

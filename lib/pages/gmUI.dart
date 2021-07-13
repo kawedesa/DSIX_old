@@ -253,7 +253,104 @@ class _GmUIState extends State<GmUI> {
     );
   }
 
-  // final globalScaffoldKey = GlobalKey<ScaffoldState>();
+  showAlertDialogXp(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.black,
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              content: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: Colors.grey[700],
+                    width: 1.5, //                   <--- border width here
+                  ),
+                ),
+                width: 100,
+                height: 250,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Container(
+                      color: Colors.grey[700],
+                      width: double.infinity,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: <Widget>[
+                            Text(
+                              'AVAILABLE XP',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.3,
+                                fontSize: 30.0,
+                                color: Colors.white,
+                                letterSpacing: 3,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(35, 25, 35, 10),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  widget.dsix.gm.changeXp(25);
+                                });
+                                refreshPage();
+                              },
+                              child: Icon(
+                                Icons.keyboard_arrow_up,
+                                color: Colors.white,
+                                size: 32,
+                              )),
+                          Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              '${widget.dsix.gm.totalXp}',
+                              style: TextStyle(
+                                height: 1.25,
+                                fontSize: 50,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  widget.dsix.gm.changeXp(-25);
+                                });
+                                refreshPage();
+                              },
+                              child: Icon(
+                                Icons.keyboard_arrow_down,
+                                color: Colors.white,
+                                size: 32,
+                              )),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
+  }
 
   showAlertDialogChooseCharacter(BuildContext context, Character character) {
     AlertDialog alerta = AlertDialog(
@@ -475,8 +572,7 @@ class _GmUIState extends State<GmUI> {
                         Navigator.pop(context);
                         Navigator.pop(context);
 
-                        showAlertDialogAmount(
-                            context, widget.dsix.gm.selectedCharacter);
+                        showAlertDialogAmount(context);
                       });
                     },
                     style: TextButton.styleFrom(
@@ -541,7 +637,7 @@ class _GmUIState extends State<GmUI> {
     );
   }
 
-  showAlertDialogAmount(BuildContext context, Character character) {
+  showAlertDialogAmount(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -599,7 +695,8 @@ class _GmUIState extends State<GmUI> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            character.setAmount(-5);
+                                            widget.dsix.gm
+                                                .chooseCharacterAmount(-5);
                                           });
                                         },
                                         child: Align(
@@ -631,7 +728,9 @@ class _GmUIState extends State<GmUI> {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    character.setAmount(1);
+                                                    widget.dsix.gm
+                                                        .chooseCharacterAmount(
+                                                            1);
                                                   });
                                                 },
                                                 child: Icon(
@@ -646,7 +745,7 @@ class _GmUIState extends State<GmUI> {
                                                 // color: Colors.white,
                                                 child: Center(
                                                   child: Text(
-                                                    '${character.amount}',
+                                                    '${widget.dsix.gm.selectedCharacter.amount}',
                                                     style: TextStyle(
                                                       fontFamily: 'Headline',
                                                       height: 1.3,
@@ -660,7 +759,9 @@ class _GmUIState extends State<GmUI> {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    character.setAmount(-1);
+                                                    widget.dsix.gm
+                                                        .chooseCharacterAmount(
+                                                            -1);
                                                   });
                                                 },
                                                 child: Icon(
@@ -680,7 +781,8 @@ class _GmUIState extends State<GmUI> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            character.setAmount(5);
+                                            widget.dsix.gm
+                                                .chooseCharacterAmount(5);
                                           });
                                         },
                                         child: Align(
@@ -726,7 +828,7 @@ class _GmUIState extends State<GmUI> {
                                           padding: const EdgeInsets.fromLTRB(
                                               10, 0, 3, 0),
                                           child: Text(
-                                            '${character.totalLoot}',
+                                            '${widget.dsix.gm.selectedCharacter.totalLoot}',
                                             style: TextStyle(
                                               fontFamily: 'Headline',
                                               height: 1,
@@ -756,7 +858,7 @@ class _GmUIState extends State<GmUI> {
                                           padding: const EdgeInsets.fromLTRB(
                                               10, 0, 3, 0),
                                           child: Text(
-                                            '${character.totalXp}',
+                                            '${widget.dsix.gm.selectedCharacter.totalXp}',
                                             style: TextStyle(
                                               fontFamily: 'Headline',
                                               height: 1,
@@ -1071,7 +1173,9 @@ class _GmUIState extends State<GmUI> {
                       ),
                     ),
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        showAlertDialogXp(context);
+                      },
                       child: Row(
                         children: <Widget>[
                           SvgPicture.asset(
@@ -1117,55 +1221,60 @@ class _GmUIState extends State<GmUI> {
       drawerEnableOpenDragGesture: false,
       endDrawerEnableOpenDragGesture: false,
       drawer: Container(
+        //CONTROL SIZE
         width: MediaQuery.of(context).size.width * 0.65,
         child: Drawer(
-          child: ListView.builder(
-              itemCount: widget.dsix.gm.availableCharacters.length,
-              itemBuilder: (BuildContext context, int index) {
-                return Column(
-                  children: [
-                    Divider(
-                      height: 0,
-                      thickness: 2,
-                      color: Colors.black,
-                    ),
-                    ListTile(
-                      onTap: () {
-                        setState(() {
-                          // Navigator.pop(context);
-                          showAlertDialogChooseCharacter(context,
-                              widget.dsix.gm.availableCharacters[index]);
-                        });
-                      },
-                      tileColor: Colors.grey[700],
-                      leading: SvgPicture.asset(
-                        'assets/gm/character/race/icon/${widget.dsix.gm.availableCharacters[index].icon}.svg',
+          child: Container(
+            //CONTROL COLOR (Has to be separate. Size and color)
+            color: Colors.grey[700],
+            child: ListView.builder(
+                itemCount: widget.dsix.gm.availableCharacters.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      Divider(
+                        height: 0,
+                        thickness: 2,
                         color: Colors.black,
-                        width: MediaQuery.of(context).size.width * 0.125,
                       ),
-                      title: Text(
-                        '${widget.dsix.gm.availableCharacters[index].name}',
-                        style: TextStyle(
-                          fontFamily: 'Headline',
-                          height: 1,
-                          fontSize: 21,
+                      ListTile(
+                        onTap: () {
+                          setState(() {
+                            // Navigator.pop(context);
+                            showAlertDialogChooseCharacter(context,
+                                widget.dsix.gm.availableCharacters[index]);
+                          });
+                        },
+                        tileColor: Colors.grey[700],
+                        leading: SvgPicture.asset(
+                          'assets/gm/character/race/icon/${widget.dsix.gm.availableCharacters[index].icon}.svg',
                           color: Colors.black,
-                          letterSpacing: 1.5,
+                          width: MediaQuery.of(context).size.width * 0.125,
+                        ),
+                        title: Text(
+                          '${widget.dsix.gm.availableCharacters[index].name}',
+                          style: TextStyle(
+                            fontFamily: 'Headline',
+                            height: 1,
+                            fontSize: 21,
+                            color: Colors.black,
+                            letterSpacing: 1.5,
+                          ),
+                        ),
+                        subtitle: Text(
+                          'XP: ${widget.dsix.gm.availableCharacters[index].baseXp}',
+                          style: TextStyle(
+                            height: 1.3,
+                            fontSize: 14,
+                            fontFamily: 'Calibri',
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                      subtitle: Text(
-                        'XP: ${widget.dsix.gm.availableCharacters[index].baseXp}',
-                        style: TextStyle(
-                          height: 1.3,
-                          fontSize: 14,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }),
+                    ],
+                  );
+                }),
+          ),
         ),
       ),
       endDrawer: Container(

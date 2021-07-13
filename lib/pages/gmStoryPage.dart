@@ -270,187 +270,173 @@ class _SettingsPageState extends State<SettingsPage> {
               ],
             ),
             Container(
-              height: MediaQuery.of(context).size.height * 0.67,
+              height: MediaQuery.of(context).size.height * 0.678,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Expanded(
-                    flex: 1,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.6,
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    Text(
-                                      '${widget.dsix.gm.story.settings.name}',
-                                      style: TextStyle(
-                                        fontFamily: 'Headline',
-                                        height: 1.3,
-                                        fontSize: 45,
-                                        color: Colors.grey[700],
-                                        letterSpacing: 2,
+                  Row(
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.6,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    '${widget.dsix.gm.story.settings.name}',
+                                    style: TextStyle(
+                                      fontFamily: 'Headline',
+                                      height: 1.3,
+                                      fontSize: 45,
+                                      color: Colors.grey[700],
+                                      letterSpacing: 2,
+                                    ),
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                    child: GestureDetector(
+                                      onLongPress: () {
+                                        widget.dsix.gm.deleteStory();
+                                        _layout = 0;
+                                        widget.refresh();
+                                      },
+                                      child: Icon(
+                                        Icons.clear,
+                                        color: Colors.red,
+                                        size: 40,
                                       ),
                                     ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          0, 10, 0, 0),
-                                      child: GestureDetector(
-                                        onLongPress: () {
-                                          widget.dsix.gm.deleteStory();
-                                          _layout = 0;
-                                          widget.refresh();
-                                        },
-                                        child: Icon(
-                                          Icons.clear,
-                                          color: Colors.red,
-                                          size: 40,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Text(
+                                '${widget.dsix.gm.story.settings.description}',
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  height: 1.3,
+                                  fontSize: 18,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
                                 ),
                               ),
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                child: Text(
-                                  '${widget.dsix.gm.story.settings.description}',
-                                  textAlign: TextAlign.justify,
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                              child: GestureDetector(
+                                onTap: () {
+                                  newRound();
+                                },
+                                child: Container(
+                                  height: MediaQuery.of(context).size.height *
+                                      0.058,
+                                  width: double.infinity,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey[700],
+                                      width:
+                                          2, //                   <--- border width here
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    alignment: AlignmentDirectional.centerEnd,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 10, 0),
+                                            child: Icon(
+                                              Icons.check,
+                                              color: Colors.grey[700],
+                                              size: 20,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'NEW TURN',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.5,
+                                            fontFamily: 'Calibri',
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.2,
+                      ),
+                    ],
+                  ),
+                  ListView.builder(
+                      shrinkWrap: true,
+                      physics: AlwaysScrollableScrollPhysics(),
+                      scrollDirection: Axis.vertical,
+                      itemCount: widget.dsix.gm.story.situationList.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Column(
+                          children: [
+                            Divider(
+                              height: 0,
+                              thickness: 2,
+                              color: Colors.grey[700],
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                              child: ListTile(
+                                onTap: () {},
+                                title: Text(
+                                  'SITUATION:',
                                   style: TextStyle(
-                                    height: 1.3,
+                                    fontFamily: 'Headliner',
+                                    height: 1.5,
+                                    fontSize: 20.0,
+                                    color: Colors.grey[300],
+                                    letterSpacing: 2.5,
+                                  ),
+                                ),
+                                trailing: Text(
+                                  '${widget.dsix.gm.story.situationList[index].name}',
+                                  style: TextStyle(
+                                    height: 1.5,
                                     fontSize: 18,
                                     fontFamily: 'Calibri',
                                     color: Colors.white,
                                   ),
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    newRound();
-                                  },
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.058,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: Colors.grey[700],
-                                        width:
-                                            2, //                   <--- border width here
-                                      ),
-                                    ),
-                                    child: Stack(
-                                      alignment: AlignmentDirectional.centerEnd,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 0, 10, 0),
-                                              child: Icon(
-                                                Icons.check,
-                                                color: Colors.grey[700],
-                                                size: 20,
-                                              ),
-                                            ),
-                                          ],
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            'NEW TURN',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 1.5,
-                                              fontFamily: 'Calibri',
-                                              color: Colors.white,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.2,
-                        ),
-                      ],
-                    ),
-                  ),
-                  Divider(
-                    height: 0,
-                    thickness: 2,
-                    color: Colors.grey[700],
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: ListView.builder(
-                        shrinkWrap: true,
-                        physics: AlwaysScrollableScrollPhysics(),
-                        scrollDirection: Axis.vertical,
-                        itemCount: widget.dsix.gm.story.situationList.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return Column(
-                            children: [
-                              Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                                child: ListTile(
-                                  onTap: () {},
-                                  title: Text(
-                                    'SITUATION:',
-                                    style: TextStyle(
-                                      fontFamily: 'Headliner',
-                                      height: 1.5,
-                                      fontSize: 20.0,
-                                      color: Colors.grey[300],
-                                      letterSpacing: 2.5,
-                                    ),
-                                  ),
-                                  trailing: Text(
-                                    '${widget.dsix.gm.story.situationList[index].name}',
-                                    style: TextStyle(
-                                      height: 1.5,
-                                      fontSize: 18,
-                                      fontFamily: 'Calibri',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Divider(
-                                height: 0,
-                                thickness: 2,
-                                color: Colors.grey[700],
-                              ),
-                            ],
-                          );
-                        }),
-                  ),
+                            ),
+                          ],
+                        );
+                      }),
                 ],
               ),
             ),

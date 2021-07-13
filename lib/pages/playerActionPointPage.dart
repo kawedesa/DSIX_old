@@ -19,14 +19,16 @@ class PlayerAttributePage extends StatefulWidget {
 
 class _PlayerAttributePageState extends State<PlayerAttributePage> {
   PlayerAction displayedAction = PlayerAction(
-    'action',
-    'ACTION',
-    'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
-    [
+    icon: 'action',
+    name: 'ACTION',
+    description:
+        'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
+    option: [
       Option('OPTIONS', 'Each action has different options to choose from.', '',
           '', '', '', false)
     ],
-    0,
+    value: 0,
+    bonus: 0,
   );
 
   int indexAction = 1;

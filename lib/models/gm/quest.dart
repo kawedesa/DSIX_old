@@ -129,11 +129,11 @@ class Quest {
   ];
 
   List<String> rewardList = [
-    'Gold',
-    'Item',
+    'GOLD',
+    'ITEM',
     // 'Information',
-    'Resources',
-    // 'Fame',
+    'RESOURCES',
+    'FAME',
     // 'Favor',
   ];
 

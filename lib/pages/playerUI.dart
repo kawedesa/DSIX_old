@@ -91,17 +91,9 @@ class _PlayerUIState extends State<PlayerUI> {
                           GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  if (widget.dsix.gm
-                                          .getCurrentPlayer()
-                                          .currentHealth <
-                                      widget.dsix.gm
-                                          .getCurrentPlayer()
-                                          .race
-                                          .maxHealth) {
-                                    widget.dsix.gm
-                                        .getCurrentPlayer()
-                                        .currentHealth += 1;
-                                  }
+                                  widget.dsix.gm
+                                      .getCurrentPlayer()
+                                      .changeHealth(1);
                                 });
                                 refresh();
                               },
@@ -125,14 +117,9 @@ class _PlayerUIState extends State<PlayerUI> {
                           GestureDetector(
                               onTap: () {
                                 setState(() {
-                                  if (widget.dsix.gm
-                                          .getCurrentPlayer()
-                                          .currentHealth >
-                                      0) {
-                                    widget.dsix.gm
-                                        .getCurrentPlayer()
-                                        .currentHealth -= 1;
-                                  }
+                                  widget.dsix.gm
+                                      .getCurrentPlayer()
+                                      .changeHealth(-1);
                                 });
                                 refresh();
                               },
@@ -727,6 +714,7 @@ class _PlayerUIState extends State<PlayerUI> {
                     },
                     onTap: () {
                       widget.dsix.gm.getCurrentPlayer().changeTurn(0);
+
                       turn = widget.dsix.gm.getCurrentPlayer().turn;
                       refresh();
                     },
@@ -750,6 +738,7 @@ class _PlayerUIState extends State<PlayerUI> {
                     },
                     onTap: () {
                       widget.dsix.gm.getCurrentPlayer().changeTurn(1);
+
                       turn = widget.dsix.gm.getCurrentPlayer().turn;
                       refresh();
                     },

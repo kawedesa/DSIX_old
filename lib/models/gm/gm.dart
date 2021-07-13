@@ -186,6 +186,8 @@ class Gm {
     this.story.newStory();
   }
 
+//QUESTS
+
   void startQuest() {
     checkPlayers();
     if (numberPlayers < 1) {
@@ -207,7 +209,7 @@ class Gm {
       }
     });
     switch (this.story.quest.reward) {
-      case 'Gold':
+      case 'GOLD':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
@@ -219,7 +221,7 @@ class Gm {
           });
         }
         break;
-      case 'Item':
+      case 'ITEM':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
@@ -228,10 +230,10 @@ class Gm {
           });
         }
         break;
-      case 'Information':
-        {}
-        break;
-      case 'Resources':
+      // case 'INFORMATION':
+      //   {}
+      //   break;
+      case 'RESOURCES':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
@@ -244,13 +246,13 @@ class Gm {
           });
         }
         break;
-      // case 'Fame':
-      //   {
-      //     this.players.forEach((element) {
-      //       element.fame++;
-      //     });
-      //   }
-      //   break;
+      case 'FAME':
+        {
+          this.players.forEach((element) {
+            element.newPermanentEffect('FAME');
+          });
+        }
+        break;
       // case 'Favor':
       //   {}
       //   break;
@@ -267,6 +269,17 @@ class Gm {
     this.lootList.clear();
     this.characters.clear();
     throw new NewRoundException();
+  }
+
+//MANAGING XP
+
+  void changeXp(int value) {
+    if (this.totalXp + value < 1) {
+      this.totalXp = 0;
+      return;
+    }
+
+    this.totalXp += value;
   }
 
 //NPCS AND MONSTERS
@@ -298,9 +311,26 @@ class Gm {
     switch (environment) {
       case 'MOUNTAINS':
         {
-          this.availableCharacters = this.characterList.mountain;
+          this.characterList.mountain.forEach((element) {
+            if (element.baseXp <= this.totalXp) {
+              this.availableCharacters.add(element);
+            }
+          });
         }
         break;
+      case 'SWAMP':
+        {
+          this.characterList.swamp.forEach((element) {
+            if (element.baseXp <= this.totalXp) {
+              this.availableCharacters.add(element);
+            }
+          });
+        }
+        break;
+    }
+
+    if (this.availableCharacters.isEmpty) {
+      throw new NoXpException();
     }
   }
 
@@ -309,10 +339,26 @@ class Gm {
     this.selectedCharacter.setHpAndXp();
   }
 
+  void chooseCharacterAmount(int value) {
+    if ((this.selectedCharacter.amount + value) *
+            this.selectedCharacter.baseXp >
+        this.totalXp) {
+      return;
+    }
+    if ((this.selectedCharacter.amount + value) *
+            this.selectedCharacter.baseXp <
+        1) {
+      return;
+    }
+
+    this.selectedCharacter.changeAmount(value);
+  }
+
   void confirmCharacter() {
     this.selectedCharacter.setHpAndXp();
     this.characters.add(this.selectedCharacter);
     this.selectedCharacter = this.characters.last;
+    this.totalXp -= this.selectedCharacter.totalXp;
   }
 
   void selectCharacter(int index) {
@@ -326,6 +372,7 @@ class Gm {
   void characterLoot() {
     createRandomLoot(this.selectedCharacter.totalLoot);
     deleteCharacter();
+    throw new NewLootException();
   }
 
   void giveLoot(Item item, Color primaryColor) {

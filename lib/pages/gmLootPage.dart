@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:dsixv02app/models/shared/item.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:dsixv02app/models/gm/loot.dart';
+
 import '../models/shared/exceptions.dart';
 import 'package:dsixv02app/models/player/player.dart';
 
@@ -14,7 +14,7 @@ class LootPage extends StatefulWidget {
 
   LootPage({Key key, this.dsix, this.refresh, this.alert}) : super(key: key);
 
-  static const String routeName = "/npcPage";
+  static const String routeName = "/lootPage";
 
   @override
   _LootPageState createState() => new _LootPageState();

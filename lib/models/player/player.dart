@@ -105,8 +105,8 @@ class Player {
   int pArmor = 0;
   int mArmor = 0;
 
-  int fame;
-  int gold;
+  int fame = 0;
+  int gold = 0;
   EffectList effectList = EffectList();
   Effect effect = Effect();
   List<Effect> effects = [];
@@ -124,8 +124,8 @@ class Player {
 
     if (this.playerBackground.background == 'NOBLE') {
       this.gold += 300; //GOLD
-      this.fame = 1;
-      this.effects.add(effectList.permanent[0].copyEffect());
+
+      newPermanentEffect('FAME');
     }
 
     for (Item item in this.playerBackground.bonusItem) {
@@ -145,20 +145,22 @@ class Player {
 
   List<PlayerAction> playerAction = [
     PlayerAction(
-      'action',
-      'ACTION',
-      'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
-      [
+      icon: 'action',
+      name: 'ACTION',
+      description:
+          'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
+      option: [
         Option('OPTIONS', 'Each action has different options to choose from.',
             '', '', '', '', false)
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'attack',
-      'ATTACK',
-      'You try to attack or grapple a target.',
-      [
+      icon: 'attack',
+      name: 'ATTACK',
+      description: 'You try to attack or grapple a target.',
+      option: [
         Option(
             'PUNCH',
             'You punch the target with your fists.',
@@ -184,13 +186,14 @@ class Player {
             'HOLD',
             false),
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'defend',
-      'DEFEND',
-      'You protect yourself or others around you.',
-      [
+      icon: 'defend',
+      name: 'DEFEND',
+      description: 'You protect yourself or others around you.',
+      option: [
         Option(
             'DEFEND',
             'You try to protect.',
@@ -216,13 +219,14 @@ class Player {
             'HELP',
             false),
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'look',
-      'LOOK',
-      'You look around and notice things.',
-      [
+      icon: 'look',
+      name: 'LOOK',
+      description: 'You look around and notice things.',
+      option: [
         Option(
             'RESOURCES',
             'You search for something useful.',
@@ -248,13 +252,14 @@ class Player {
             'SECRETE',
             false)
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'talk',
-      'TALK',
-      'You talk to someone that can understand you.',
-      [
+      icon: 'talk',
+      name: 'TALK',
+      description: 'You talk to someone that can understand you.',
+      option: [
         Option(
             'TRADE',
             'You try to strike a deal.',
@@ -285,16 +290,17 @@ class Player {
             'Everyone loves your performance and becomes friendly.',
             'Some people enjoy your performance and become friendly.',
             'They think you suck and are mean to you.',
-            'PERFORM',
+            'ENTERTAIN',
             false),
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'move',
-      'MOVE',
-      'You climb, swim, hide or try to escape.',
-      [
+      icon: 'move',
+      name: 'MOVE',
+      description: 'You climb, swim, hide or try to escape.',
+      option: [
         Option(
             'DODGE',
             'You try to get out of the way.',
@@ -332,17 +338,20 @@ class Player {
             'SWIM',
             false)
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'skill',
-      'SKILL',
-      'This is your special move and what you are known for. Choose your skill by clicking on the icons above.',
-      [
+      icon: 'skill',
+      name: 'SKILL',
+      description:
+          'This is your special move and what you are known for. Choose your skill by clicking on the icons above.',
+      option: [
         Option('OPTIONS', 'Each skill has different options to choose from.',
             'Success.', 'Half Success.', 'Fail.', 'OPTIONS', false)
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
   ];
 
@@ -371,6 +380,31 @@ class Player {
     if (this.playerAction[index].value != this.race.actionPoints[index]) {
       this.playerAction[index].value--;
       this.playerAction[0].value++;
+    }
+  }
+
+//HEAL PLAYERS
+
+  void changeHealth(int value) {
+    if (this.currentHealth + value > this.race.maxHealth) {
+      this.currentHealth = this.race.maxHealth;
+      return;
+    }
+    if (this.currentHealth + value < 1) {
+      this.currentHealth = 0;
+      return;
+    }
+
+    this.currentHealth += value;
+  }
+
+  void healPlayer(int value) {
+    if (this.currentHealth + value > this.race.maxHealth) {
+      this.currentHealth = this.race.maxHealth;
+      throw new MaxHpException();
+    } else {
+      this.currentHealth += value;
+      throw new HealException(message: '$value');
     }
   }
 
@@ -425,16 +459,6 @@ class Player {
     this.inventory.remove(item);
   }
 
-  void healPlayer(int value) {
-    if (this.currentHealth + value > this.race.maxHealth) {
-      this.currentHealth = this.race.maxHealth;
-      throw new MaxHpException();
-    } else {
-      this.currentHealth += value;
-      throw new HealException(message: '$value');
-    }
-  }
-
   void use(Item item) {
     switch (item.name) {
       case 'BANDAGES':
@@ -475,8 +499,8 @@ class Player {
 
       case 'RESISTANCE POTION':
         playerTurn();
-        this.effects.add(effectList.temporary[1].copyEffect());
-        this.mArmor += 3;
+        newTemporaryEffect('MAGIC RESISTANCE', 3);
+
         this.inventory.remove(item);
 
         throw new UseItemException(message: '${item.name}');
@@ -507,13 +531,16 @@ class Player {
         throw new UseItemException(message: '${item.name}');
         break;
       case 'ANTIDOTE':
+        playerTurn();
+
         this.effects.forEach((element) {
           if (element.typeOfEffect == 'TEMPORARY') {
             element.duration = 0;
           }
         });
+        checkEffects();
         this.inventory.remove(item);
-        playerTurn();
+
         throw new UseItemException(message: '${item.name}');
         break;
     }
@@ -965,6 +992,23 @@ class Player {
     }
   }
 
+//FIND RESOURCES
+  List<String> resources(int numberDice) {
+    List<String> lootList = [];
+
+    if (numberDice > 1) {
+      int randomGold = (Random().nextInt(4) + 1) * 25;
+      this.gold += randomGold;
+      lootList.add('\$ $randomGold');
+    }
+
+    int loot = Random().nextInt(shop.resources.length);
+    inventory.add(shop.resources[loot]);
+
+    lootList.add('${shop.resources[loot].name}');
+    return lootList;
+  }
+
   void checkWeapon() {
     if (this.mainHandEquip.name == '' && this.offHandEquip.name == '') {
       throw new NoWeaponException();
@@ -1003,13 +1047,14 @@ class Player {
     if (this.turn[index]) {
       this.turn[index] = false;
     } else {
-      this.turn[index] = true;
+      this.playerTurn();
     }
   }
 
   void playerTurn() {
     if (this.turn.contains(false)) {
       this.actionsTaken++;
+      this.runEffects();
       this.checkEffects();
 
       if (turn[0]) {
@@ -1024,8 +1069,105 @@ class Player {
     }
   }
 
+// EFFECTS
+
+  void newPermanentEffect(String name) {
+    switch (name) {
+      case 'FAME':
+        {
+          this.fame++;
+        }
+        break;
+    }
+
+    this.effects.add(this.effectList.newPermanentEffect(name).copyEffect());
+  }
+
+  void removePermanentEffect(String name) {
+    List<Effect> currentEffects = [];
+
+    switch (name) {
+      case 'FAME':
+        {
+          this.fame--;
+        }
+        break;
+    }
+    currentEffects
+        .add(this.effects.lastWhere((element) => element.name == name));
+    currentEffects.forEach((element) {
+      this.effects.remove(element);
+    });
+  }
+
+  void newTemporaryEffect(String name, int duration) {
+    switch (name) {
+      case 'MAGIC RESISTANCE':
+        {
+          this.mArmor += 3;
+        }
+        break;
+      case 'FAST':
+        {
+          this.playerAction[5].value++;
+        }
+        break;
+      case 'STRONG':
+        {
+          this.playerAction[1].value++;
+        }
+        break;
+      case 'PERCEPTIVE':
+        {
+          this.playerAction[3].value++;
+        }
+        break;
+    }
+
+    this
+        .effects
+        .add(this.effectList.newTemporaryEffect(name, duration).copyEffect());
+  }
+
+  void removeTemporaryEffect(Effect effect) {
+    switch (effect.name) {
+      case 'MAGIC RESISTANCE':
+        {
+          this.mArmor -= 3;
+        }
+        break;
+      case 'FAST':
+        {
+          this.playerAction[5].value--;
+        }
+        break;
+      case 'STRONG':
+        {
+          this.playerAction[1].value--;
+        }
+        break;
+      case 'PERCEPTIVE':
+        {
+          this.playerAction[3].value--;
+        }
+        break;
+    }
+  }
+
   void selectEffect(int index) {
     this.effect = this.effects[index].copyEffect();
+  }
+
+  void runEffects() {
+    if (this.effects.isEmpty == true) {
+      return;
+    }
+    this.effects.forEach((element) {
+      if (element.typeOfEffect == 'PERMANENT') {
+        return;
+      }
+      element.duration--;
+    });
   }
 
   void checkEffects() {
@@ -1040,17 +1182,9 @@ class Player {
         return;
       }
 
-      element.duration--;
-
       if (element.duration < 1) {
-        switch (element.name) {
-          case 'MAGIC RESISTANCE':
-            {
-              this.mArmor -= 3;
-              currentEffects.add(element);
-            }
-            break;
-        }
+        removeTemporaryEffect(element);
+        currentEffects.add(element);
       }
     });
 
@@ -1061,21 +1195,38 @@ class Player {
     }
   }
 
-  List<String> resources(int numberDice) {
-    List<String> lootList = [];
+  void checkSkillEffects(List<String> itemList) {
+    List<Effect> deleteEffects = [];
 
-    if (numberDice > 1) {
-      int randomGold = (Random().nextInt(4) + 1) * 25;
-      this.gold += randomGold;
-      lootList.add('\$ $randomGold');
+    this.effects.forEach((effect) {
+      if (effect.typeOfEffect == 'PERMANENT') {
+        return;
+      }
+
+      itemList.forEach((item) {
+        if (item == effect.name) {
+          removeTemporaryEffect(effect);
+          deleteEffects.add(effect);
+        }
+      });
+    });
+
+    if (deleteEffects.isNotEmpty) {
+      deleteEffects.forEach((element) {
+        this.effects.remove(element);
+      });
     }
-
-    int loot = Random().nextInt(shop.resources.length);
-    inventory.add(shop.resources[loot]);
-
-    lootList.add('${shop.resources[loot].name}');
-    return lootList;
   }
+
+  void changeFame(int value) {
+    if (this.fame + value < 1) {
+      removePermanentEffect('FAME');
+
+      return;
+    }
+  }
+
+//CREATE RANDOM PLAYER
 
   void createRandomPlayer() {
     chooseRace(Random().nextInt(this.availableRaces.length));

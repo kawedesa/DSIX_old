@@ -907,7 +907,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                           child: Center(
                             child: Text(
-                              'GIVE ${item.name}',
+                              'SELECT A PLAYER',
                               style: TextStyle(
                                 fontFamily: 'Headline',
                                 height: 1.3,
@@ -919,100 +919,87 @@ class _InventoryStatePage extends State<InventoryPage> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(35, 15, 35, 10),
-                          child: Text(
-                            (availablePlayers.length > 0)
-                                ? 'Select a player:'
-                                : 'There are no other players.',
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              height: 1.25,
-                              fontSize: 19,
-                              fontFamily: 'Calibri',
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50.0 * availablePlayers.length,
-                        child: ListView.builder(
-                            itemCount: availablePlayers.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                                child: TextButton(
-                                  onPressed: () {
-                                    giveItem(
-                                        item,
-                                        availablePlayers[index]
-                                            .playerColor
-                                            .primaryColor);
-                                    widget.refresh();
-                                    Navigator.pop(context);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                  ),
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.058,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: availablePlayers[index]
-                                            .playerColor
-                                            .primaryColor,
-                                        width:
-                                            2, //                   <--- border width here
-                                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Container(
+                          height: 50.0 * availablePlayers.length,
+                          child: ListView.builder(
+                              itemCount: availablePlayers.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      giveItem(
+                                          item,
+                                          availablePlayers[index]
+                                              .playerColor
+                                              .primaryColor);
+                                      widget.refresh();
+                                      Navigator.pop(context);
+                                    },
+                                    style: TextButton.styleFrom(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 5),
                                     ),
-                                    child: Stack(
-                                      alignment: AlignmentDirectional.centerEnd,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 0, 10, 0),
-                                              child: Icon(
-                                                Icons.keyboard_arrow_right,
-                                                color: availablePlayers[index]
-                                                    .playerColor
-                                                    .primaryColor,
-                                                size: 20,
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.058,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: availablePlayers[index]
+                                              .playerColor
+                                              .primaryColor,
+                                          width:
+                                              2, //                   <--- border width here
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        alignment:
+                                            AlignmentDirectional.centerEnd,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 0, 10, 0),
+                                                child: Icon(
+                                                  Icons.keyboard_arrow_right,
+                                                  color: availablePlayers[index]
+                                                      .playerColor
+                                                      .primaryColor,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              '${availablePlayers[index].playerColor.name}',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 1.5,
+                                                fontFamily: 'Calibri',
+                                                color: Colors.white,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            '${availablePlayers[index].playerColor.name}',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 1.5,
-                                              fontFamily: 'Calibri',
-                                              color: Colors.white,
-                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
                       ),
                     ],
                   ),

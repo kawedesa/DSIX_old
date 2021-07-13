@@ -2,7 +2,7 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/shared/dice.dart';
-
+import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import '../models/player/playerAction.dart';
@@ -25,11 +25,12 @@ class ActionPage extends StatefulWidget {
 
 class _ActionPageState extends State<ActionPage> {
   PlayerAction displayedAction = PlayerAction(
-    'action',
-    'ACTION',
-    'These are the actions your character can make in the game. Each one will have a different outcome depending on your luck.',
-    [],
-    0,
+    icon: 'action',
+    name: 'ACTION',
+    description:
+        'These are the actions your character can make in the game. Each one will have a different outcome depending on your luck.',
+    option: [],
+    value: 0,
   );
 
   Widget button;
@@ -85,10 +86,164 @@ class _ActionPageState extends State<ActionPage> {
     displaySum = '';
     resultText = '';
     button = Container();
-    bonus = displayedAction.value;
+    bonus = displayedAction.value + displayedAction.bonus;
     resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
     rollSwitcher = true;
     showAlertDialogAction(context, option);
+  }
+
+  Player selectedPlayer;
+  List<Player> availablePlayers = [];
+  void chooseTarget(Option option) {
+    availablePlayers = [];
+    widget.dsix.gm.players.forEach((element) {
+      if (element.characterFinished) {
+        availablePlayers.add(element);
+      }
+    });
+
+    if (option.name == 'HELP') {
+      availablePlayers.remove(widget.dsix.gm.getCurrentPlayer());
+    }
+
+    if (availablePlayers.isEmpty) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(widget.alert('NO OTHER PLAYERS'));
+    } else {
+      showAlertDialogChooseTarget(context);
+    }
+  }
+
+  showAlertDialogChooseTarget(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              backgroundColor: Colors.black,
+              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              content: Container(
+                decoration: BoxDecoration(
+                  border: Border.all(
+                    color: widget.dsix.gm
+                        .getCurrentPlayer()
+                        .playerColor
+                        .primaryColor,
+                    width: 2.5, //                   <--- border width here
+                  ),
+                ),
+                width: 300,
+                child: Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      Container(
+                        color: widget.dsix.gm
+                            .getCurrentPlayer()
+                            .playerColor
+                            .primaryColor,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                          child: Center(
+                            child: Text(
+                              'CHOOSE A TARGET',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1.3,
+                                fontSize: 25.0,
+                                color: Colors.white,
+                                letterSpacing: 2,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+                        child: Container(
+                          height: 50.0 * availablePlayers.length,
+                          child: ListView.builder(
+                              itemCount: availablePlayers.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(30, 0, 30, 5),
+                                  child: GestureDetector(
+                                    onTap: () {
+                                      selectedPlayer = availablePlayers[index];
+                                      applyOutcomeToTarget();
+                                      widget.refresh();
+                                      Navigator.pop(context);
+                                    },
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.058,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: availablePlayers[index]
+                                              .playerColor
+                                              .primaryColor,
+                                          width:
+                                              2, //                   <--- border width here
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        alignment:
+                                            AlignmentDirectional.centerEnd,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 0, 10, 0),
+                                                child: Icon(
+                                                  Icons.keyboard_arrow_right,
+                                                  color: availablePlayers[index]
+                                                      .playerColor
+                                                      .primaryColor,
+                                                  size: 20,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              '${availablePlayers[index].playerColor.name}',
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 1.5,
+                                                fontFamily: 'Calibri',
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                );
+                              }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    );
   }
 
   void decideOutcome(Option option, int numberDice) {
@@ -134,35 +289,32 @@ class _ActionPageState extends State<ActionPage> {
               }
               break;
 
-            case 'TRANSFORM':
+            case 'MORPH':
               {
                 itemList = [
-                  'SWIM\n',
-                  'CLIMB\n',
-                  'JUMP\n',
-                  'FLY\n',
-                  'DIG\n',
-                  'SPEED\n',
-                  'PERCEPTION\n',
-                  'STRENGH\n',
-                  'CAMOUFLAGE\n',
-                  'THORNS\n',
-                  'SWALLOW\n',
-                  'POISON\n',
+                  'SWIM',
+                  'CLIMB',
+                  'JUMP',
+                  'FLY',
+                  'DIG',
+                  'FAST',
+                  'PERCEPTIVE',
+                  'STRONG',
+                  'CAMOUFLAGE',
+                  'THORN',
+                  'SWALLOW',
+                  'POISON',
                 ];
+
+                widget.dsix.gm.getCurrentPlayer().checkSkillEffects(itemList);
+
                 showOutcome(option, numberDice);
               }
               break;
 
             case 'ILLUSION':
               {
-                itemList = [
-                  'SIGHT\n',
-                  'HEARING\n',
-                  'TOUCH\n',
-                  'SMELL\n',
-                  'TASTE\n'
-                ];
+                itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
                 showOutcome(option, numberDice);
               }
               break;
@@ -176,26 +328,23 @@ class _ActionPageState extends State<ActionPage> {
 
             case 'ENHANCE':
               {
-                itemList = [
-                  'SIGHT\n',
-                  'HEARING\n',
-                  'TOUCH\n',
-                  'SMELL\n',
-                  'TASTE\n'
-                ];
+                itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
+
                 showOutcome(option, numberDice);
               }
               break;
             case 'REMOVE':
               {
-                itemList = [
-                  'SIGHT\n',
-                  'HEARING\n',
-                  'TOUCH\n',
-                  'SMELL\n',
-                  'TASTE\n'
-                ];
+                itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
 
+                showOutcome(option, numberDice);
+              }
+              break;
+
+            case 'TRANSFORM':
+              {
+                itemList = ['APPEARANCE', 'VOICE'];
+                widget.dsix.gm.getCurrentPlayer().checkSkillEffects(itemList);
                 showOutcome(option, numberDice);
               }
               break;
@@ -265,19 +414,37 @@ class _ActionPageState extends State<ActionPage> {
   }
 
   int outcomeNumberOptions;
-  void chooseOutcome(Option option, int numberDice, int index) {
-    if (outcomeNumberOptions > 0) {
+  void selectOutcome(Option option, int numberDice, int index) {
+    if (outcomeNumberOptions < 1) {
       if (outcomeList[index]) {
         outcomeNumberOptions++;
         outcomeList[index] = false;
-      } else {
-        outcomeNumberOptions--;
-        outcomeList[index] = true;
       }
+      return;
+    }
+
+    if (outcomeList[index]) {
+      outcomeNumberOptions++;
+      outcomeList[index] = false;
     } else {
-      if (outcomeList[index]) {
-        outcomeNumberOptions++;
-        outcomeList[index] = false;
+      outcomeNumberOptions--;
+      outcomeList[index] = true;
+    }
+  }
+
+  void chooseOutcome(Option option) {
+    if (option.name == 'ENHANCE' || option.name == 'REMOVE') {
+      chooseTarget(option);
+    } else {
+      selectedPlayer = widget.dsix.gm.getCurrentPlayer();
+      applyOutcomeToTarget();
+    }
+  }
+
+  void applyOutcomeToTarget() {
+    for (int i = 0; i < itemList.length; i++) {
+      if (outcomeList[i]) {
+        selectedPlayer.newTemporaryEffect(itemList[i], 3);
       }
     }
   }
@@ -641,7 +808,7 @@ class _ActionPageState extends State<ActionPage> {
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            chooseOutcome(option,
+                                            selectOutcome(option,
                                                 outcomeNumberOptions, index);
                                           });
                                         },
@@ -702,6 +869,8 @@ class _ActionPageState extends State<ActionPage> {
                             onTap: () {
                               setState(() {
                                 Navigator.pop(context);
+                                chooseOutcome(option);
+                                widget.refresh();
                               });
                             },
                             child: Container(

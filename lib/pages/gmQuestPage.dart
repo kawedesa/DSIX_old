@@ -235,11 +235,12 @@ class _StoryPageState extends State<StoryPage> {
                   ],
                 ),
               ),
-              Column(
-                children: [
-                  Expanded(
-                    flex: 1,
-                    child: Row(
+              Container(
+                height: MediaQuery.of(context).size.height * 0.678,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
                       children: [
                         Container(
                           width: MediaQuery.of(context).size.width * 0.2,
@@ -357,7 +358,7 @@ class _StoryPageState extends State<StoryPage> {
                                                   ),
                                                 )
                                               : Text(
-                                                  'ACCEPT',
+                                                  '${widget.dsix.gm.story.quest.reward}',
                                                   style: TextStyle(
                                                     fontSize: 14,
                                                     fontWeight: FontWeight.bold,
@@ -380,19 +381,16 @@ class _StoryPageState extends State<StoryPage> {
                         ),
                       ],
                     ),
-                  ),
-                  Divider(
-                    height: 0,
-                    thickness: 2,
-                    color: Colors.grey[700],
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: ListView(
+                    ListView(
                       shrinkWrap: true,
                       physics: AlwaysScrollableScrollPhysics(),
                       scrollDirection: Axis.vertical,
                       children: [
+                        Divider(
+                          height: 2,
+                          thickness: 2,
+                          color: Colors.grey[700],
+                        ),
                         Padding(
                           padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: ListTile(
@@ -532,46 +530,46 @@ class _StoryPageState extends State<StoryPage> {
                             ),
                           ),
                         ),
-                        Divider(
-                          height: 0,
-                          thickness: 2,
-                          color: Colors.grey[700],
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                          child: ListTile(
-                            onTap: () {
-                              setState(() {
-                                widget.dsix.gm.story.quest
-                                    .chooseQuest('reward');
-                                widget.refresh();
-                              });
-                            },
-                            title: Text(
-                              'Reward:',
-                              style: TextStyle(
-                                fontFamily: 'Headliner',
-                                height: 1.5,
-                                fontSize: 20.0,
-                                color: Colors.grey[300],
-                                letterSpacing: 2.5,
-                              ),
-                            ),
-                            trailing: Text(
-                              widget.dsix.gm.story.quest.reward,
-                              style: TextStyle(
-                                height: 1.5,
-                                fontSize: 18,
-                                fontFamily: 'Calibri',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
+                        // Divider(
+                        //   height: 0,
+                        //   thickness: 2,
+                        //   color: Colors.grey[700],
+                        // ),
+                        // Padding(
+                        //   padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        //   child: ListTile(
+                        //     onTap: () {
+                        //       setState(() {
+                        //         widget.dsix.gm.story.quest
+                        //             .chooseQuest('reward');
+                        //         widget.refresh();
+                        //       });
+                        //     },
+                        //     title: Text(
+                        //       'Reward:',
+                        //       style: TextStyle(
+                        //         fontFamily: 'Headliner',
+                        //         height: 1.5,
+                        //         fontSize: 20.0,
+                        //         color: Colors.grey[300],
+                        //         letterSpacing: 2.5,
+                        //       ),
+                        //     ),
+                        //     trailing: Text(
+                        //       widget.dsix.gm.story.quest.reward,
+                        //       style: TextStyle(
+                        //         height: 1.5,
+                        //         fontSize: 18,
+                        //         fontFamily: 'Calibri',
+                        //         color: Colors.white,
+                        //       ),
+                        //     ),
+                        //   ),
+                        // ),
                       ],
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

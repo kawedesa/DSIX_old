@@ -4,12 +4,13 @@ import 'package:dsixv02app/models/player/playerAction.dart';
 class PlayerSkillList {
   List<PlayerAction> skills = [
     PlayerAction(
-      'metamorphosis',
-      'METAMORPHOSIS',
-      'You morph into a animal of similar size  and gain new abilities.',
-      [
+      icon: 'metamorphosis',
+      name: 'METAMORPHOSIS',
+      description:
+          'You morph into a animal of similar size  and gain new abilities.',
+      option: [
         Option(
-            'TRANSFORM',
+            'MORPH',
             'Your body and belongings morph into a new shape.',
             'Choose two abilities',
             'Choose one ability',
@@ -17,13 +18,14 @@ class PlayerSkillList {
             'ABILITY',
             true),
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'illusion',
-      'ILLUSION',
-      'You create an illusion that tricks people\'s senses.',
-      [
+      icon: 'illusion',
+      name: 'ILLUSION',
+      description: 'You create an illusion that tricks people\'s senses.',
+      option: [
         Option(
             'ILLUSION',
             'You make everyone in a large area around you see, hear, smell, taste or feel anything you want.',
@@ -33,13 +35,15 @@ class PlayerSkillList {
             'SENSES',
             true),
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'bomber',
-      'BOMBER',
-      'You throw a bomb that explodes on impact and causes different effects.',
-      [
+      icon: 'bomber',
+      name: 'BOMBER',
+      description:
+          'You throw a bomb that explodes on impact and causes different effects.',
+      option: [
         Option(
             'FIRE BOMB',
             'It burns everything in a small area.',
@@ -65,13 +69,14 @@ class PlayerSkillList {
             'FREEZE',
             false),
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'earthlist',
-      'EARTHLIST',
-      'You can change the environment around you.',
-      [
+      icon: 'earthlist',
+      name: 'EARTHLIST',
+      description: 'You can change the environment around you.',
+      option: [
         Option(
             'DIG',
             'You create a hole.',
@@ -105,29 +110,33 @@ class PlayerSkillList {
             'DESTROY',
             false),
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'faceshifter',
-      'FACESHIFTER',
-      'You transform into another person, changing your voice and appearance.',
-      [
+      icon: 'faceshifter',
+      name: 'FACESHIFTER',
+      description:
+          'You transform into another person, changing your voice and appearance.',
+      option: [
         Option(
             'TRANSFORM',
             'Your body and voice changes to mach the person of your choice.',
-            'The transformation is perfect.',
-            'The transformation is incomplete and your voice remains the same.',
+            'Choose two options.',
+            'Choose one option.',
             'Something bad happens.',
             'TRANSFORM',
-            false)
+            true)
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
     PlayerAction(
-      'alterSenses',
-      'ALTER SENSES',
-      'You can bless or curse anyone you touch. Enhancing or taking away their senses.',
-      [
+      icon: 'alterSenses',
+      name: 'ALTER SENSES',
+      description:
+          'You can bless or curse anyone you touch. Enhancing or taking away their senses.',
+      option: [
         Option(
             'ENHANCE',
             'You make them see through walls, hear whispers or track a scent from far away.',
@@ -145,7 +154,8 @@ class PlayerSkillList {
             'SENSES',
             true)
       ],
-      0,
+      value: 0,
+      bonus: 0,
     ),
 
     //OLD SKILLS

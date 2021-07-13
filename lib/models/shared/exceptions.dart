@@ -1,3 +1,5 @@
+//PLAYER EXCEPTION
+
 class NoAmmoException implements Exception {
   String message = 'NO AMMO';
 
@@ -41,6 +43,45 @@ class MaxAmmoException implements Exception {
   MaxAmmoException();
 }
 
+class NoAvailableItemsException implements Exception {
+  String message = 'NO AVAILABLE ITEMS';
+
+  NoAvailableItemsException();
+}
+
+class EnchantException implements Exception {
+  EnchantException();
+}
+
+class UseItemException implements Exception {
+  String message = '';
+  UseItemException({String message}) {
+    this.message = message;
+  }
+}
+
+class RestockException implements Exception {
+  String message = 'AMMO RESTOCKED';
+
+  RestockException();
+}
+
+class BuyException implements Exception {
+  String message = '';
+  BuyException({String message}) {
+    this.message = message;
+  }
+}
+
+class SellException implements Exception {
+  String message = '';
+  SellException({String message}) {
+    this.message = message;
+  }
+}
+
+//GM EXCEPTION
+
 class NoPlayersException implements Exception {
   String message = 'NO PLAYERS';
 
@@ -83,39 +124,14 @@ class NewTurnException implements Exception {
   NewTurnException();
 }
 
-class NoAvailableItemsException implements Exception {
-  String message = 'NO AVAILABLE ITEMS';
+class NoXpException implements Exception {
+  String message = 'NOT ENOUGHT XP';
 
-  NoAvailableItemsException();
+  NoXpException();
 }
 
-class EnchantException implements Exception {
-  EnchantException();
-}
+class NewLootException implements Exception {
+  String message = 'NEW LOOT';
 
-class UseItemException implements Exception {
-  String message = '';
-  UseItemException({String message}) {
-    this.message = message;
-  }
-}
-
-class RestockException implements Exception {
-  String message = 'AMMO RESTOCKED';
-
-  RestockException();
-}
-
-class BuyException implements Exception {
-  String message = '';
-  BuyException({String message}) {
-    this.message = message;
-  }
-}
-
-class SellException implements Exception {
-  String message = '';
-  SellException({String message}) {
-    this.message = message;
-  }
+  NewLootException();
 }

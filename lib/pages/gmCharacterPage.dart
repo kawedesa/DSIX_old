@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
-import 'package:dsixv02app/models/gm/character.dart';
+import 'package:dsixv02app/models/shared/exceptions.dart';
 
 import 'package:dsixv02app/models/gm/characterSkill.dart';
 
@@ -29,7 +28,13 @@ class _CharacterPageState extends State<CharacterPage> {
   List<bool> characterSelection;
 
   void newCharacter(String environment) {
-    widget.dsix.gm.availableCharacter(environment);
+    try {
+      widget.dsix.gm.availableCharacter(environment);
+    } on NoXpException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+      return;
+    }
+
     widget.refresh();
     Scaffold.of(context).openDrawer();
   }
@@ -55,26 +60,9 @@ class _CharacterPageState extends State<CharacterPage> {
     Scaffold.of(context).openEndDrawer();
   }
 
-  Widget _healthToLoot;
+  Widget _healthOrLoot;
 
-  int displayAmount;
-  int displayXp;
-  int displayLoot;
-
-  void changeAmount(int value) {
-    if (displayAmount + value < 1) {
-      displayAmount = 0;
-      return;
-    }
-
-    displayAmount += value;
-
-    displayXp = widget.dsix.gm.selectedCharacter.baseXp * displayAmount;
-    displayLoot =
-        (widget.dsix.gm.selectedCharacter.baseLoot * displayAmount).toInt();
-  }
-
-  showAlertDialogAmount(BuildContext context, Character character) {
+  showAlertDialogAmount(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -132,7 +120,8 @@ class _CharacterPageState extends State<CharacterPage> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            changeAmount(-5);
+                                            widget.dsix.gm
+                                                .chooseCharacterAmount(-5);
                                           });
                                         },
                                         child: Align(
@@ -164,7 +153,9 @@ class _CharacterPageState extends State<CharacterPage> {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    changeAmount(1);
+                                                    widget.dsix.gm
+                                                        .chooseCharacterAmount(
+                                                            1);
                                                   });
                                                 },
                                                 child: Icon(
@@ -179,7 +170,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                                 // color: Colors.white,
                                                 child: Center(
                                                   child: Text(
-                                                    '$displayAmount',
+                                                    '${widget.dsix.gm.selectedCharacter.amount}',
                                                     style: TextStyle(
                                                       fontFamily: 'Headline',
                                                       height: 1.3,
@@ -193,7 +184,9 @@ class _CharacterPageState extends State<CharacterPage> {
                                               GestureDetector(
                                                 onTap: () {
                                                   setState(() {
-                                                    changeAmount(-1);
+                                                    widget.dsix.gm
+                                                        .chooseCharacterAmount(
+                                                            -1);
                                                   });
                                                 },
                                                 child: Icon(
@@ -213,7 +206,8 @@ class _CharacterPageState extends State<CharacterPage> {
                                       child: GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            changeAmount(5);
+                                            widget.dsix.gm
+                                                .chooseCharacterAmount(5);
                                           });
                                         },
                                         child: Align(
@@ -259,7 +253,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                           padding: const EdgeInsets.fromLTRB(
                                               10, 0, 3, 0),
                                           child: Text(
-                                            '$displayLoot',
+                                            '${widget.dsix.gm.selectedCharacter.totalLoot}',
                                             style: TextStyle(
                                               fontFamily: 'Headline',
                                               height: 1,
@@ -289,7 +283,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                           padding: const EdgeInsets.fromLTRB(
                                               10, 0, 3, 0),
                                           child: Text(
-                                            '$displayXp',
+                                            '${widget.dsix.gm.selectedCharacter.totalXp}',
                                             style: TextStyle(
                                               fontFamily: 'Headline',
                                               height: 1,
@@ -311,9 +305,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                 ),
                                 onPressed: () {
                                   setState(() {
-                                    character.changeAmount(
-                                        displayAmount - character.amount);
-
+                                    widget.dsix.gm.confirmCharacter();
                                     widget.refresh();
                                     Navigator.pop(context);
                                   });
@@ -382,25 +374,23 @@ class _CharacterPageState extends State<CharacterPage> {
 
   @override
   Widget build(BuildContext context) {
-    //LAYOUT
-
-    // if (widget.dsix.gm.characters.isEmpty) {
-    //   _layout = 0;
-    // } else {
-    //   _layout = 1;
-    // }
-
-    //HEALTH TO LOOT
+    //HEALTH OR LOOT
 
     if (widget.dsix.gm.selectedCharacter.currentHealth < 1 &&
         widget.dsix.gm.selectedCharacter.totalLoot > 0) {
-      _healthToLoot = GestureDetector(
+      _healthOrLoot = GestureDetector(
         onTap: () {
           setState(() {
-            widget.dsix.gm.characterLoot();
-            _layout = 0;
-            widget.pageChanged(3);
-            widget.refresh();
+            try {
+              widget.dsix.gm.characterLoot();
+            } on NewLootException catch (e) {
+              ScaffoldMessenger.of(context)
+                  .showSnackBar(widget.alert(e.message));
+              _layout = 0;
+              widget.pageChanged(3);
+              widget.refresh();
+              return;
+            }
           });
         },
         child: Padding(
@@ -412,7 +402,7 @@ class _CharacterPageState extends State<CharacterPage> {
         ),
       );
     } else {
-      _healthToLoot = Stack(
+      _healthOrLoot = Stack(
         children: [
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
@@ -587,6 +577,57 @@ class _CharacterPageState extends State<CharacterPage> {
                             Center(
                               child: Text(
                                 'MOUNTAINS',
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      ),
+                      onPressed: () {
+                        newCharacter('SWAMP');
+                      },
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.058,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[700],
+                            width:
+                                2, //                   <--- border width here
+                          ),
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerEnd,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                  child: Icon(
+                                    Icons.check,
+                                    color: Colors.grey[700],
+                                    size: 20,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: Text(
+                                'SWAMP',
                                 style: TextStyle(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -788,14 +829,13 @@ class _CharacterPageState extends State<CharacterPage> {
                       children: <Widget>[
                         GestureDetector(
                           onTap: () {
-                            displayAmount =
-                                widget.dsix.gm.selectedCharacter.amount;
-                            displayXp =
-                                widget.dsix.gm.selectedCharacter.totalXp;
-                            displayLoot =
-                                widget.dsix.gm.selectedCharacter.totalLoot;
-                            showAlertDialogAmount(
-                                context, widget.dsix.gm.selectedCharacter);
+                            // displayAmount =
+                            //     widget.dsix.gm.selectedCharacter.amount;
+                            // displayXp =
+                            //     widget.dsix.gm.selectedCharacter.totalXp;
+                            // displayLoot =
+                            //     widget.dsix.gm.selectedCharacter.totalLoot;
+                            showAlertDialogAmount(context);
                           },
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.start,
@@ -970,7 +1010,7 @@ class _CharacterPageState extends State<CharacterPage> {
                                         Animation<double> animation) =>
                                     ScaleTransition(
                                         child: child, scale: animation),
-                                child: _healthToLoot,
+                                child: _healthOrLoot,
                               ),
                             ),
                           ),

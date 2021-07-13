@@ -6,13 +6,21 @@ class PlayerAction {
   String description;
   List<Option> option;
   int value;
+  int bonus;
   // bool focus;
 
   PlayerAction(
-    this.icon,
-    this.name,
-    this.description,
-    this.option,
-    this.value,
-  );
+      {String icon,
+      String name,
+      String description,
+      List<Option> option,
+      int value,
+      int bonus}) {
+    this.icon = icon;
+    this.name = name;
+    this.description = description;
+    this.option = option;
+    this.value = value;
+    this.bonus = bonus;
+  }
 }

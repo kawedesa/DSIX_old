@@ -3,8 +3,7 @@ class Effect {
   String name;
   String description;
   String typeOfEffect;
-  int value;
-  int duration;
+  int duration = 0;
 
   Effect({
     String icon,
@@ -18,7 +17,6 @@ class Effect {
     this.name = name;
     this.description = description;
     this.typeOfEffect = typeOfEffect;
-    this.value = value;
     this.duration = duration;
   }
 
@@ -28,7 +26,6 @@ class Effect {
       name: this.name,
       description: this.description,
       typeOfEffect: this.typeOfEffect,
-      value: this.value,
       duration: this.duration,
     );
 

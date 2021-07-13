@@ -369,7 +369,7 @@ class _CharacterPageState extends State<CharacterPage> {
                             showEffect(index);
                           },
                           child: SvgPicture.asset(
-                            'assets/effect/${widget.dsix.gm.getCurrentPlayer().effects[index].icon}.svg',
+                            'assets/player/effect/${widget.dsix.gm.getCurrentPlayer().effects[index].icon}.svg',
                             color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
