@@ -8,27 +8,19 @@ import 'storySettingsList.dart';
 class Story {
 //SETTING
 
-  StorySettings settings = StorySettings(
-    icon: 'normal',
-    name: 'NORMAL',
-    description: 'Normal.',
-    numberOfQuests: 3,
-    questXp: 50,
-    totalXp: 50,
-    questGold: 100,
-    totalGold: 100,
-  );
+  StorySettings settings = StorySettings().defaultSettings();
+
   List<StorySettings> storySettingsList = settingsList;
 
-  int currentSetting = 2;
-  void chooseDifficulty(int value) {
-    if (currentSetting + value == storySettingsList.length ||
-        currentSetting + value < 0) {
-      return;
-    }
-    this.currentSetting += value;
-    this.settings = this.storySettingsList[currentSetting];
-  }
+  // int currentSetting = 2;
+  // void chooseDifficulty(int value) {
+  //   if (currentSetting + value == storySettingsList.length ||
+  //       currentSetting + value < 0) {
+  //     return;
+  //   }
+  //   this.currentSetting += value;
+  //   this.settings = this.storySettingsList[currentSetting];
+  // }
 
 //SITUATION
 
@@ -57,90 +49,51 @@ class Story {
     objective: '-',
     target: '-',
     location: '-',
-    reward: '-',
     onGoing: false,
   );
 
   void deleteStory() {
     this.round = 0;
-    this.settings = this.storySettingsList[2];
+    this.settings = this.settings.defaultSettings();
+    this.quest = this.quest.newQuest();
     this.questList = [];
     this.finishedQuests = [];
     this.situationList = [];
   }
 
+  //NEW STORY
+
   int round = 0;
-  void newStory() {
+  void newStory(int players) {
     this.round = 1;
-//NUMBER OF SITUATIONS
-    for (int i = 0; i < 2; i++) {
-      newSituation();
-    }
+    newQuest(players);
+  }
 
-//NUMBER OF QUESTS
+  void newQuest(int players) {
+    questList = [];
+
     for (int i = 0; i < this.settings.numberOfQuests; i++) {
-      newRandomQuest();
+      this.questList.add(quest.newRandomQuest(this.settings.questXp * players));
     }
-    this.quest = questList.first;
-    throw new NewStoryException();
   }
 
-  void newRandomQuest() {
-    this.questList.add(quest.newRandomQuest());
-    this.quest = this.questList.last;
-  }
-
-  void selectQuest(int index) {
+  void chooseQuest(int index) {
     this.quest = questList[index];
   }
 
-  void acceptQuest() {
-    this.questList.removeWhere((element) => element != this.quest);
-    this.quest.onGoing = true;
-  }
-
-  void deleteQuest() {
-    questList.remove(this.quest);
-    if (questList.isNotEmpty) {
-      this.quest = this.questList.last;
-    }
-    this.quest = this.quest.newQuest();
-  }
-
   void finishQuest() {
-    this.finishedQuests.add(questList[0]);
+    this.finishedQuests.add(this.quest);
     this.questList.clear();
-    this.quest = this.quest.newQuest();
   }
 
-  void newRound() {
-    if (this.quest.onGoing) {
-      throw new OnGoingQuestException();
-    }
-    if (this.questList.isNotEmpty) {
-      throw new OnGoingQuestException();
-    }
+  void newRound(int players) {
     this.round++;
 
-    int incGold = 0;
-    int incXp = 0;
-
-    incGold = this.settings.questGold * this.round;
-    incXp = this.settings.questXp * this.round;
-
-    this.settings.totalGold = incGold;
-    this.settings.totalXp = incXp;
-
-    //ADD SITUATION
-
-    newSituation();
+    this.settings.questGold = this.settings.addGold * round;
+    this.settings.questXp = this.settings.addXp * round;
 
     //ADD QUEST
-
-    for (int i = 0; i < this.settings.numberOfQuests; i++) {
-      newRandomQuest();
-    }
-    this.quest = questList.first;
+    newQuest(players);
   }
 
   Story();

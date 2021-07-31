@@ -769,14 +769,14 @@ class _PlayerUIState extends State<PlayerUI> {
                         '${widget.dsix.gm.getCurrentPlayer().currentHealth}',
                         textAlign: TextAlign.left,
                         style: TextStyle(
-                          fontFamily: 'Headline',
-                          height: 1.1,
-                          fontSize: 25,
+                          fontFamily: 'Santana',
+                          height: 1,
+                          fontSize: 30,
                           color: widget.dsix.gm
                               .getCurrentPlayer()
                               .playerColor
                               .secondaryColor,
-                          letterSpacing: 2,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ],
@@ -793,20 +793,20 @@ class _PlayerUIState extends State<PlayerUI> {
                         SvgPicture.asset(
                           'assets/player/money.svg',
                           color: Colors.white,
-                          width: MediaQuery.of(context).size.width * 0.055,
+                          width: MediaQuery.of(context).size.width * 0.065,
                         ),
                         Text(
                           '${widget.dsix.gm.getCurrentPlayer().gold}',
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.1,
-                            fontSize: 25,
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 30,
                             color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .secondaryColor,
-                            letterSpacing: 2,
+                            letterSpacing: 1.2,
                           ),
                         ),
                       ],
@@ -834,14 +834,14 @@ class _PlayerUIState extends State<PlayerUI> {
                             '${widget.dsix.gm.getCurrentPlayer().currentWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              fontFamily: 'Headline',
-                              height: 1.1,
-                              fontSize: 20.0,
+                              fontFamily: 'Santana',
+                              height: 1,
+                              fontSize: 25,
                               color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .secondaryColor,
-                              letterSpacing: 2,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ),
@@ -849,15 +849,14 @@ class _PlayerUIState extends State<PlayerUI> {
                           '/',
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.1,
-                            fontSize: 23.0,
-                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 25,
                             color: widget.dsix.gm
                                 .getCurrentPlayer()
                                 .playerColor
                                 .secondaryColor,
-                            letterSpacing: 2,
+                            letterSpacing: 1.2,
                           ),
                         ),
                         Padding(
@@ -866,14 +865,14 @@ class _PlayerUIState extends State<PlayerUI> {
                             '${widget.dsix.gm.getCurrentPlayer().race.maxWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              fontFamily: 'Headline',
-                              height: 1.1,
-                              fontSize: 20.0,
+                              fontFamily: 'Santana',
+                              height: 1,
+                              fontSize: 25,
                               color: widget.dsix.gm
                                   .getCurrentPlayer()
                                   .playerColor
                                   .secondaryColor,
-                              letterSpacing: 2,
+                              letterSpacing: 1.2,
                             ),
                           ),
                         ),

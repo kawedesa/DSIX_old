@@ -85,3 +85,7 @@ flutter:
   - family: Headliner
     fonts:
     - asset: fonts/HeadlinerNo.45.ttf
+
+  - family: Santana
+    fonts:
+    - asset: fonts/Santana_RegularCondensed.ttf

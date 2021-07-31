@@ -7,20 +7,20 @@ import 'package:flutter_svg/flutter_svg.dart';
 import '../models/shared/exceptions.dart';
 import 'package:dsixv02app/models/player/player.dart';
 
-class LootPage extends StatefulWidget {
+class ScenePage extends StatefulWidget {
   final Function(String) alert;
   final Function() refresh;
   final Dsix dsix;
 
-  LootPage({Key key, this.dsix, this.refresh, this.alert}) : super(key: key);
+  ScenePage({Key key, this.dsix, this.refresh, this.alert}) : super(key: key);
 
-  static const String routeName = "/lootPage";
+  static const String routeName = "/scenePage";
 
   @override
-  _LootPageState createState() => new _LootPageState();
+  _ScenePageState createState() => new _ScenePageState();
 }
 
-class _LootPageState extends State<LootPage> {
+class _ScenePageState extends State<ScenePage> {
   int _layoutIndex = 0;
   List<bool> lootSelection;
   int lootAmount;
@@ -852,7 +852,7 @@ class _LootPageState extends State<LootPage> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'LOOT',
+                      'SCENE',
                       style: TextStyle(
                         fontFamily: 'Headline',
                         height: 1.3,
@@ -864,7 +864,7 @@ class _LootPageState extends State<LootPage> {
                     Padding(
                       padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                       child: Text(
-                        'These are the spoils of war, the shimmer in the dark and the glitter amongst the rubble. This are the rewards the players get after defeating an enemy, finding a secret room or overcoming a challenge.',
+                        'Scenes and descriptions.',
                         textAlign: TextAlign.justify,
                         style: TextStyle(
                           height: 1.3,
@@ -878,12 +878,7 @@ class _LootPageState extends State<LootPage> {
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       ),
-                      onPressed: () {
-                        lootAmount = 1;
-                        showAlertDialogLoot(context);
-
-                        widget.refresh();
-                      },
+                      onPressed: () {},
                       child: Container(
                         height: MediaQuery.of(context).size.height * 0.08,
                         width: double.infinity,
@@ -915,7 +910,107 @@ class _LootPageState extends State<LootPage> {
                             ),
                             Center(
                               child: Text(
-                                'LOOT',
+                                'SCENE',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      ),
+                      onPressed: () {},
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.08,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[700],
+                            width:
+                                2, //                   <--- border width here
+                          ),
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerEnd,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                  child: SvgPicture.asset(
+                                    'assets/ui/help.svg',
+                                    color: Colors.grey[700],
+                                    width: MediaQuery.of(context).size.width *
+                                        0.04,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: Text(
+                                'DESCRIPTION',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 1.5,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    TextButton(
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      ),
+                      onPressed: () {},
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.08,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey[700],
+                            width:
+                                2, //                   <--- border width here
+                          ),
+                        ),
+                        child: Stack(
+                          alignment: AlignmentDirectional.centerEnd,
+                          children: [
+                            Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                  child: SvgPicture.asset(
+                                    'assets/ui/help.svg',
+                                    color: Colors.grey[700],
+                                    width: MediaQuery.of(context).size.width *
+                                        0.04,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Center(
+                              child: Text(
+                                'OBSTACLE',
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,

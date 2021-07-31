@@ -14,7 +14,7 @@ class PlayerBackgroundList {
           Bonus(
             'GOLD',
             'gold',
-            'You are rich! So you get an extra \$400 gold.',
+            'You are rich and get an extra \$300 gold.',
           ),
           Bonus(
             'FAME',

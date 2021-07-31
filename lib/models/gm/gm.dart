@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'loot.dart';
 import 'story.dart';
 import 'package:dsixv02app/models/player/player.dart';
@@ -5,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/shared/shop.dart';
 import 'character.dart';
 import '../shared/exceptions.dart';
-import 'characterList.dart';
+import 'locationList.dart';
 import 'package:dsixv02app/models/shared/item.dart';
 
 class Gm {
@@ -179,41 +181,75 @@ class Gm {
   void deleteStory() {
     this.story.deleteStory();
     this.loot.itemList = [];
+    this.totalXp = 0;
   }
 
-  int totalXp = 0;
   void newStory() {
-    this.story.newStory();
-  }
-
-//QUESTS
-
-  void startQuest() {
     checkPlayers();
     if (numberPlayers < 1) {
       throw new NoPlayersException();
     }
-    this.totalXp = this.story.settings.totalXp * numberPlayers;
-    this.story.acceptQuest();
-    throw new AcceptQuestException();
+    this.story.newStory(numberPlayers);
   }
+
+  void newQuest() {
+    checkPlayers();
+    if (numberPlayers < 1) {
+      throw new NoPlayersException();
+    }
+    this.story.newQuest(numberPlayers);
+  }
+
+  void chooseQuest(int index) {
+    this.story.chooseQuest(index);
+
+    this.totalXp = 0;
+    this.story.quest.threatList.forEach((element) {});
+
+    throw new NewStoryException();
+  }
+
+//QUESTS
 
   void finishQuest() {
     checkPlayers();
     this.players.forEach((element) {
       if (element.characterFinished) {
-        element.gold += this.story.settings.totalGold;
+        element.gold += this.story.settings.questGold;
         if (element.fame > 0) {
           element.gold += element.fame * 100;
         }
       }
     });
-    switch (this.story.quest.reward) {
+
+    this.story.finishQuest();
+  }
+
+  List<String> randomReward() {
+    List<String> possibleRewards = [
+      'GOLD',
+      'ITEM',
+      'RESOURCES',
+      'FAME',
+    ];
+
+    List<String> randomRewards = [];
+
+    for (int i = 0; i < 3; i++) {
+      int randomNumber = Random().nextInt(possibleRewards.length);
+      randomRewards.add(possibleRewards[randomNumber]);
+    }
+
+    return randomRewards;
+  }
+
+  void chooseReward(String reward) {
+    switch (reward) {
       case 'GOLD':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
-              element.gold += (this.story.settings.totalGold * 1.5).toInt();
+              element.gold += (this.story.settings.questGold * 1.5).toInt();
               if (element.fame > 0) {
                 element.gold += element.fame * 100;
               }
@@ -237,11 +273,7 @@ class Gm {
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
-              int availableWeight =
-                  element.race.maxWeight - element.currentWeight;
-              if (availableWeight > 0) {
-                element.inventory.add(this.shop.randomResource());
-              }
+              element.inventory.add(this.shop.randomResourceRange(100, 600));
             }
           });
         }
@@ -257,22 +289,15 @@ class Gm {
       //   {}
       //   break;
     }
-
-    this.story.finishQuest();
-    this.totalXp = 0;
-    throw new FinishQuestException();
   }
 
   void newRound() {
-    this.story.newRound();
-    this.totalXp = 0;
-    this.lootList.clear();
-    this.characters.clear();
-    throw new NewRoundException();
+    checkPlayers();
+    this.story.newRound(numberPlayers);
   }
 
 //MANAGING XP
-
+  int totalXp = 0;
   void changeXp(int value) {
     if (this.totalXp + value < 1) {
       this.totalXp = 0;
@@ -283,7 +308,7 @@ class Gm {
   }
 
 //NPCS AND MONSTERS
-  CharacterList characterList = CharacterList();
+  LocationList locationList = LocationList();
   Character selectedCharacter = Character(
     icon: 'undead',
     image: 'undead',
@@ -302,25 +327,25 @@ class Gm {
     baseLoot: 0.25,
     baseXp: 25,
   );
-  List<Character> characters = [];
+
   List<Character> availableCharacters = [];
 
   void availableCharacter(String environment) {
     this.availableCharacters = [];
 
     switch (environment) {
-      case 'MOUNTAINS':
+      case 'Mountain':
         {
-          this.characterList.mountain.forEach((element) {
+          this.locationList.locations[0].characters.forEach((element) {
             if (element.baseXp <= this.totalXp) {
               this.availableCharacters.add(element);
             }
           });
         }
         break;
-      case 'SWAMP':
+      case 'Swamp':
         {
-          this.characterList.swamp.forEach((element) {
+          this.locationList.locations[1].characters.forEach((element) {
             if (element.baseXp <= this.totalXp) {
               this.availableCharacters.add(element);
             }
@@ -356,21 +381,31 @@ class Gm {
 
   void confirmCharacter() {
     this.selectedCharacter.setHpAndXp();
-    this.characters.add(this.selectedCharacter);
-    this.selectedCharacter = this.characters.last;
+    this.story.quest.threatList.add(this.selectedCharacter);
+    this.selectedCharacter = this.story.quest.threatList.last;
     this.totalXp -= this.selectedCharacter.totalXp;
   }
 
   void selectCharacter(int index) {
-    this.selectedCharacter = this.characters[index];
+    this.selectedCharacter = this.story.quest.threatList[index];
   }
 
   void deleteCharacter() {
-    this.characters.remove(this.selectedCharacter);
+    this.story.quest.threatList.remove(this.selectedCharacter);
+    if (this.story.quest.threatList.isNotEmpty) {
+      this.selectedCharacter = this.story.quest.threatList.last;
+    } else {
+      this.selectedCharacter = this.selectedCharacter.newCharacter();
+    }
+  }
+
+  void refundCharacter() {
+    this.totalXp += this.selectedCharacter.totalXp;
+    this.deleteCharacter();
   }
 
   void characterLoot() {
-    createRandomLoot(this.selectedCharacter.totalLoot);
+    createRandomCharacterLoot(this.selectedCharacter.totalLoot);
     deleteCharacter();
     throw new NewLootException();
   }
@@ -420,12 +455,17 @@ class Gm {
     }
   }
 
+  void createRandomCharacterLoot(int value) {
+    createRandomLoot(value);
+    this.loot.lootDescription = 'Droped by ${this.selectedCharacter.name}.';
+  }
+
   void createRandomLoot(int value) {
     Loot newLoot = Loot();
     newLoot.randomLoot(value);
     newLoot.icon = newLoot.itemList.first.icon;
     newLoot.name = newLoot.itemList.first.name;
-    newLoot.lootDescription = 'Droped by ${this.selectedCharacter.name}.';
+    newLoot.lootDescription = 'Random Loot';
     this.lootList.add(newLoot.copyLoot());
     this.loot = this.lootList.last;
   }

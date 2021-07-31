@@ -189,7 +189,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                 width: 2.5, //                   <--- border width here
               ),
             ),
-            width: 300,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -206,11 +206,12 @@ class _InventoryStatePage extends State<InventoryPage> {
                       child: Text(
                         '${item.name}',
                         style: TextStyle(
-                          fontFamily: 'Headline',
-                          height: 1.3,
-                          fontSize: 25.0,
+                          fontFamily: 'Santana',
+                          height: 1,
+                          fontSize: 25,
                           color: Colors.white,
-                          letterSpacing: 2,
+                          fontWeight: FontWeight.bold,
+                          letterSpacing: 3,
                         ),
                       ),
                     ),
@@ -222,23 +223,23 @@ class _InventoryStatePage extends State<InventoryPage> {
                     height: 200,
                     width: double.infinity,
                     child: Stack(children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(260, 5, 0, 0),
-                        child: GestureDetector(
-                          onTap: () {
-                            Navigator.of(context).pop(true);
-                            showAlertDialogDestroyItem(context, item);
-                          },
-                          child: Icon(
-                            Icons.clear,
-                            color: widget.dsix.gm
-                                .getCurrentPlayer()
-                                .playerColor
-                                .primaryColor,
-                            size: 30,
-                          ),
-                        ),
-                      ),
+                      // Padding(
+                      //   padding: const EdgeInsets.fromLTRB(260, 5, 0, 0),
+                      //   child: GestureDetector(
+                      //     onTap: () {
+                      //       Navigator.of(context).pop(true);
+                      //       showAlertDialogDestroyItem(context, item);
+                      //     },
+                      //     child: Icon(
+                      //       Icons.clear,
+                      //       color: widget.dsix.gm
+                      //           .getCurrentPlayer()
+                      //           .playerColor
+                      //           .primaryColor,
+                      //       size: 30,
+                      //     ),
+                      //   ),
+                      // ),
                       Padding(
                         padding: const EdgeInsets.all(15),
                         child: Container(
@@ -305,180 +306,210 @@ class _InventoryStatePage extends State<InventoryPage> {
                 ),
 
                 SizedBox(
-                  height: 30,
+                  height: MediaQuery.of(context).size.height * 0.05,
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/pDamage.svg',
-                              color: widget.dsix.gm
-                                  .getCurrentPlayer()
-                                  .playerColor
-                                  .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${item.pDamage}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
+                    padding: const EdgeInsets.fromLTRB(15, 3, 15, 10),
+                    child: (item.inventorySpace == 'consumable')
+                        ? Container(
+                            width: double.infinity,
+                            child: Text(
+                              item.description,
+                              textAlign: TextAlign.center,
+                              style: TextStyle(
+                                height: 1.2,
+                                fontSize: 16,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
                               ),
                             ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/mDamage.svg',
-                              color: widget.dsix.gm
-                                  .getCurrentPlayer()
-                                  .playerColor
-                                  .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.065,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${item.mDamage}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
+                          )
+                        : Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: <Widget>[
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    'assets/item/pDamage.svg',
+                                    color: widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.055,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                                    child: Text(
+                                      '${item.pDamage}',
+                                      style: TextStyle(
+                                        fontFamily: 'Santana',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        letterSpacing: 3,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/pArmor.svg',
-                              color: widget.dsix.gm
-                                  .getCurrentPlayer()
-                                  .playerColor
-                                  .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${item.pArmor}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    'assets/item/mDamage.svg',
+                                    color: widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.065,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                                    child: Text(
+                                      '${item.mDamage}',
+                                      style: TextStyle(
+                                        fontFamily: 'Santana',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        letterSpacing: 3,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/mArmor.svg',
-                              color: widget.dsix.gm
-                                  .getCurrentPlayer()
-                                  .playerColor
-                                  .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${item.mArmor}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    'assets/item/pArmor.svg',
+                                    color: widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.055,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                                    child: Text(
+                                      '${item.pArmor}',
+                                      style: TextStyle(
+                                        fontFamily: 'Santana',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        letterSpacing: 3,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/weight.svg',
-                              color: widget.dsix.gm
-                                  .getCurrentPlayer()
-                                  .playerColor
-                                  .primaryColor,
-                              width: MediaQuery.of(context).size.width * 0.045,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                              child: Text(
-                                '${item.weight}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    'assets/item/mArmor.svg',
+                                    color: widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.055,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                                    child: Text(
+                                      '${item.mArmor}',
+                                      style: TextStyle(
+                                        fontFamily: 'Santana',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        letterSpacing: 3,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: <Widget>[
+                                  SvgPicture.asset(
+                                    'assets/item/weight.svg',
+                                    color: widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .playerColor
+                                        .primaryColor,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.04,
+                                  ),
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                                    child: Text(
+                                      '${item.weight}',
+                                      style: TextStyle(
+                                        fontFamily: 'Santana',
+                                        fontWeight: FontWeight.bold,
+                                        height: 1,
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                        letterSpacing: 3,
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                   ),
                 ),
 
                 Divider(
                   thickness: 2,
+                  height: 0,
                   color: widget.dsix.gm
                       .getCurrentPlayer()
                       .playerColor
                       .primaryColor,
                 ),
 
-                Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
-                    child: Text(
-                      item.description,
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 19,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   child: Padding(
+                //     padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
+                //     child: Text(
+                //       item.description,
+                //       textAlign: TextAlign.justify,
+                //       style: TextStyle(
+                //         height: 1.25,
+                //         fontSize: 19,
+                //         fontFamily: 'Calibri',
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       Navigator.pop(context);
@@ -492,7 +523,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -500,7 +531,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
-                          width: 2, //                   <--- border width here
+                          width: 1, //                   <--- border width here
                         ),
                       ),
                       child: Stack(
@@ -511,14 +542,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.check,
                                   color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -527,7 +558,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               item.action,
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -542,7 +573,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                 ),
 
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
@@ -550,10 +581,10 @@ class _InventoryStatePage extends State<InventoryPage> {
                       checkPlayers(item);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -561,7 +592,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
-                          width: 2, //                   <--- border width here
+                          width: 1, //                   <--- border width here
                         ),
                       ),
                       child: Stack(
@@ -572,14 +603,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.keyboard_arrow_right,
                                   color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -588,7 +619,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               'GIVE',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -602,17 +633,17 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
                       showAlertDialogSellItem(context, item);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -620,7 +651,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
-                          width: 2, //                   <--- border width here
+                          width: 1, //                   <--- border width here
                         ),
                       ),
                       child: Stack(
@@ -631,14 +662,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.attach_money,
                                   color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -647,7 +678,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               'SELL',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -708,13 +739,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          '${item.name}',
+                          'SELL FOR \$${item.value ~/ 2}',
                           style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 25.0,
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 25,
                             color: Colors.white,
-                            letterSpacing: 2,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
                           ),
                         ),
                       ],
@@ -722,25 +754,25 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ), //ITEM NAME
 
-                Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
-                    child: Text(
-                      'The item will be sold for \$${item.value ~/ 2}. Are you sure about that?',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 19,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   child: Padding(
+                //     padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
+                //     child: Text(
+                //       'The item will be sold for \$${item.value ~/ 2}. Are you sure about that?',
+                //       textAlign: TextAlign.justify,
+                //       style: TextStyle(
+                //         height: 1.25,
+                //         fontSize: 19,
+                //         fontFamily: 'Calibri',
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       sellItem(item);
@@ -749,10 +781,10 @@ class _InventoryStatePage extends State<InventoryPage> {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -771,14 +803,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.check,
                                   color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -787,7 +819,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               'CONFIRM',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -801,16 +833,16 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -829,7 +861,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.clear,
                                   color: widget.dsix.gm
@@ -845,7 +877,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               'CANCEL',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -892,7 +924,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                     width: 2.5, //                   <--- border width here
                   ),
                 ),
-                width: 300,
+                width: MediaQuery.of(context).size.width * 0.7,
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -909,26 +941,29 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               'SELECT A PLAYER',
                               style: TextStyle(
-                                fontFamily: 'Headline',
-                                height: 1.3,
-                                fontSize: 25.0,
+                                fontFamily: 'Santana',
+                                height: 1,
+                                fontSize: 25,
                                 color: Colors.white,
-                                letterSpacing: 2,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 3,
                               ),
                             ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                         child: Container(
-                          height: 50.0 * availablePlayers.length,
+                          height: MediaQuery.of(context).size.height *
+                              0.08 *
+                              availablePlayers.length,
                           child: ListView.builder(
                               itemCount: availablePlayers.length,
                               itemBuilder: (BuildContext context, int index) {
                                 return Padding(
                                   padding:
-                                      const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   child: TextButton(
                                     onPressed: () {
                                       giveItem(
@@ -941,12 +976,12 @@ class _InventoryStatePage extends State<InventoryPage> {
                                     },
                                     style: TextButton.styleFrom(
                                       padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     ),
                                     child: Container(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                              0.058,
+                                              0.08,
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         border: Border.all(
@@ -954,7 +989,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                               .playerColor
                                               .primaryColor,
                                           width:
-                                              2, //                   <--- border width here
+                                              3, //                   <--- border width here
                                         ),
                                       ),
                                       child: Stack(
@@ -970,13 +1005,13 @@ class _InventoryStatePage extends State<InventoryPage> {
                                               Padding(
                                                 padding:
                                                     const EdgeInsets.fromLTRB(
-                                                        0, 0, 10, 0),
+                                                        0, 0, 15, 0),
                                                 child: Icon(
                                                   Icons.keyboard_arrow_right,
                                                   color: availablePlayers[index]
                                                       .playerColor
                                                       .primaryColor,
-                                                  size: 20,
+                                                  size: 25,
                                                 ),
                                               ),
                                             ],
@@ -985,7 +1020,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                                             child: Text(
                                               '${availablePlayers[index].playerColor.name}',
                                               style: TextStyle(
-                                                fontSize: 14,
+                                                fontSize: 16,
                                                 fontWeight: FontWeight.bold,
                                                 letterSpacing: 1.5,
                                                 fontFamily: 'Calibri',
@@ -1181,7 +1216,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                 width: 2.5, //                   <--- border width here
               ),
             ),
-            width: 300,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -1198,13 +1233,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
-                          '${item.name}',
+                          'DESTROY ITEM?',
                           style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 25.0,
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 25,
                             color: Colors.white,
-                            letterSpacing: 2,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
                           ),
                         ),
                       ],
@@ -1212,25 +1248,25 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ), //ITEM NAME
 
-                Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
-                    child: Text(
-                      'The item will be destroyed!',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 19,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   child: Padding(
+                //     padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
+                //     child: Text(
+                //       'The item will be destroyed!',
+                //       textAlign: TextAlign.justify,
+                //       style: TextStyle(
+                //         height: 1.25,
+                //         fontSize: 19,
+                //         fontFamily: 'Calibri',
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       widget.dsix.gm.getCurrentPlayer().destroyItem(item);
@@ -1239,10 +1275,10 @@ class _InventoryStatePage extends State<InventoryPage> {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -1261,14 +1297,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.check,
                                   color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -1277,7 +1313,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               'CONFIRM',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -1291,16 +1327,16 @@ class _InventoryStatePage extends State<InventoryPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 10),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -1319,14 +1355,14 @@ class _InventoryStatePage extends State<InventoryPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.clear,
                                   color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -1335,7 +1371,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                             child: Text(
                               'CANCEL',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -1580,10 +1616,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                       child: Text(
                         '${widget.dsix.gm.getCurrentPlayer().pDamage}',
                         style: TextStyle(
-                          fontFamily: 'Headline',
+                          fontFamily: 'Santana',
                           height: 1,
-                          fontSize: 23,
+                          fontSize: 25,
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                           letterSpacing: 3,
                         ),
                       ),
@@ -1607,10 +1644,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                       child: Text(
                         '${widget.dsix.gm.getCurrentPlayer().mDamage}',
                         style: TextStyle(
-                          fontFamily: 'Headline',
+                          fontFamily: 'Santana',
                           height: 1,
-                          fontSize: 23.0,
+                          fontSize: 25.0,
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                           letterSpacing: 3,
                         ),
                       ),
@@ -1634,10 +1672,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                       child: Text(
                         '${widget.dsix.gm.getCurrentPlayer().pArmor}',
                         style: TextStyle(
-                          fontFamily: 'Headline',
+                          fontFamily: 'Santana',
                           height: 1,
-                          fontSize: 23.0,
+                          fontSize: 25.0,
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                           letterSpacing: 3,
                         ),
                       ),
@@ -1661,10 +1700,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                       child: Text(
                         '${widget.dsix.gm.getCurrentPlayer().mArmor}',
                         style: TextStyle(
-                          fontFamily: 'Headline',
+                          fontFamily: 'Santana',
                           height: 1,
-                          fontSize: 23.0,
+                          fontSize: 25.0,
                           color: Colors.white,
+                          fontWeight: FontWeight.bold,
                           letterSpacing: 3,
                         ),
                       ),
@@ -1695,10 +1735,11 @@ class _InventoryStatePage extends State<InventoryPage> {
                             '${widget.dsix.gm.getCurrentPlayer().currentWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              fontFamily: 'Headline',
+                              fontFamily: 'Santana',
                               height: 1.1,
                               fontSize: 20.0,
                               color: Colors.white,
+                              fontWeight: FontWeight.bold,
                               letterSpacing: 2,
                             ),
                           ),
@@ -1707,7 +1748,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                           '/',
                           textAlign: TextAlign.left,
                           style: TextStyle(
-                            fontFamily: 'Headline',
+                            fontFamily: 'Santana',
                             height: 1.1,
                             fontSize: 23.0,
                             fontWeight: FontWeight.bold,
@@ -1721,9 +1762,10 @@ class _InventoryStatePage extends State<InventoryPage> {
                             '${widget.dsix.gm.getCurrentPlayer().race.maxWeight}',
                             textAlign: TextAlign.left,
                             style: TextStyle(
-                              fontFamily: 'Headline',
+                              fontFamily: 'Santana',
                               height: 1.1,
                               fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
                               color: Colors.white,
                               letterSpacing: 2,
                             ),
@@ -1992,7 +2034,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: GestureDetector(
                     onLongPress: () {
-                      checkPlayers(
+                      showAlertDialogDestroyItem(context,
                           widget.dsix.gm.getCurrentPlayer().inventory[index]);
                     },
                     onTap: () {

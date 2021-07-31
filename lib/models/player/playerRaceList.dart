@@ -79,7 +79,7 @@ class PlayerRaceList {
           Bonus(
             'VICIOUS  ',
             'attack',
-            'You are evil and love hurting others. Sometimes even yourself.',
+            'You are evil and don\'t care about anyone.',
           ),
           Bonus(
             'QUICK FEET  ',

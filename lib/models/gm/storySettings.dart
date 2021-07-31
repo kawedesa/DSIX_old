@@ -4,10 +4,27 @@ class StorySettings {
   String description;
 
   int numberOfQuests;
+
   int questXp;
-  int totalXp = 0;
+  int addXp;
+
   int questGold;
-  int totalGold = 0;
+  int addGold;
+
+  StorySettings defaultSettings() {
+    StorySettings newSettings = new StorySettings(
+      icon: 'normal',
+      name: 'NORMAL',
+      description: 'Normal.',
+      numberOfQuests: 3,
+      questXp: 50,
+      addXp: 50,
+      questGold: 100,
+      addGold: 100,
+    );
+
+    return newSettings;
+  }
 
   StorySettings({
     String icon,
@@ -15,9 +32,9 @@ class StorySettings {
     String description,
     int numberOfQuests,
     int questXp,
-    int totalXp,
+    int addXp,
     int questGold,
-    int totalGold,
+    int addGold,
   }) {
     this.icon = icon;
     this.name = name;
@@ -25,8 +42,9 @@ class StorySettings {
 
     this.numberOfQuests = numberOfQuests;
     this.questXp = questXp;
-    this.totalXp = totalXp;
+    this.addXp = addXp;
+
     this.questGold = questGold;
-    this.totalGold = totalGold;
+    this.addGold = addGold;
   }
 }

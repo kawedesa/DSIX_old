@@ -40,12 +40,21 @@ class Shop {
     return [];
   }
 
-  Item randomResource() {
-    int randomNumber = Random().nextInt(this.resources.length);
+  Item randomResourceRange(int min, int max) {
+    int randomNumber = 0;
+    bool itemNotFound = true;
 
-    Item newResource = this.resources[randomNumber];
+    while (itemNotFound) {
+      randomNumber = Random().nextInt(this.resources.length);
 
-    return newResource;
+      if (this.resources[randomNumber].value <= max &&
+          this.resources[randomNumber].value >= min) {
+        itemNotFound = false;
+        return this.resources[randomNumber];
+      }
+    }
+
+    return null;
   }
 
   Item randomItemRange(int min, int max) {
@@ -555,7 +564,7 @@ class Shop {
       itemClass: 'rangedWeapon',
       inventorySpace: '2hand',
       action: 'EQUIP',
-      description: 'A bow thats arrows really far.',
+      description: 'A bow that shoots arrows really far.',
       pDamage: 4,
       pArmor: 0,
       mDamage: 0,
@@ -1125,7 +1134,7 @@ class Shop {
       itemClass: 'resource',
       inventorySpace: 'consumable',
       action: 'USE',
-      description: 'Stops bleeding and heals a little.',
+      description: 'Stops bleeding.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
@@ -1141,7 +1150,7 @@ class Shop {
       itemClass: 'resource',
       inventorySpace: 'consumable',
       action: 'USE',
-      description: 'Removes poisons and diseases.',
+      description: 'Stops poisons.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
@@ -1157,7 +1166,7 @@ class Shop {
       itemClass: 'resource',
       inventorySpace: 'consumable',
       action: 'USE',
-      description: 'Answers one of your questions.',
+      description: 'Answers one question.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
@@ -1173,12 +1182,12 @@ class Shop {
       itemClass: 'resource',
       inventorySpace: 'consumable',
       action: 'USE',
-      description: 'Any ordinary tool, like a hammer or rope.',
+      description: 'Any simple tool.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
       mArmor: 0,
-      weight: 1,
+      weight: 0,
       uses: 1,
       value: 100,
       enchant: 0,
@@ -1189,7 +1198,7 @@ class Shop {
       itemClass: 'ammo',
       inventorySpace: 'consumable',
       action: 'RESTOCK',
-      description: 'Anything you can shoot or fire.',
+      description: 'Anything you can shoot.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
@@ -1205,12 +1214,12 @@ class Shop {
       itemClass: 'resource',
       inventorySpace: 'consumable',
       action: 'EAT',
-      description: 'Anything you can eat.',
+      description: 'Heals you a little.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
       mArmor: 0,
-      weight: 1,
+      weight: 0,
       uses: 1,
       value: 100,
       enchant: 0,
@@ -1221,7 +1230,7 @@ class Shop {
       itemClass: 'resource',
       inventorySpace: 'consumable',
       action: 'USE',
-      description: 'Opens something that is locked.',
+      description: 'Unlocks anything.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
@@ -1258,7 +1267,7 @@ class Shop {
       pArmor: 0,
       mDamage: 0,
       mArmor: 0,
-      weight: 1,
+      weight: 0,
       uses: 1,
       value: 100,
       enchant: 0,
@@ -1269,7 +1278,7 @@ class Shop {
       itemClass: 'potion',
       inventorySpace: 'consumable',
       action: 'DRINK',
-      description: 'It gives you magic resistance.',
+      description: 'Gives you magic resistance.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
@@ -1285,7 +1294,7 @@ class Shop {
       itemClass: 'potion',
       inventorySpace: 'consumable',
       action: 'DRINK',
-      description: 'Restores a lot of your life back.',
+      description: 'Heals you a lot.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,
@@ -1301,7 +1310,7 @@ class Shop {
       itemClass: 'magicRune',
       inventorySpace: 'consumable',
       action: 'ENCHANT',
-      description: 'A rune with magic powers.',
+      description: 'Enchants your gear.',
       pDamage: 0,
       pArmor: 0,
       mDamage: 0,

@@ -2,8 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'playersPage.dart';
-
-import 'gmQuestPage.dart';
+import 'package:dsixv02app/pages/gmScenePage.dart';
 import 'gmLootPage.dart';
 import 'gmStoryPage.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
@@ -33,60 +32,22 @@ class _GmUIState extends State<GmUI> {
   int bottomSelectedIndex = 0;
   String pageTitle = 'STORY';
 
-  void pageChanged(int index) {
-    setState(() {
-      bottomSelectedIndex = index;
-      switch (index) {
-        case 0:
-          {
-            pageTitle = 'SETTINGS';
-          }
-          break;
-        case 1:
-          {
-            pageTitle = 'STORY';
-          }
-          break;
-        case 2:
-          {
-            pageTitle = 'NPC';
-          }
-          break;
-        case 3:
-          {
-            pageTitle = 'LOOT';
-          }
-          break;
-        case 4:
-          {
-            pageTitle = 'ACTION';
-          }
-          break;
-        case 5:
-          {
-            pageTitle = 'MAP';
-          }
-          break;
-      }
-    });
-  }
-
   void bottomTapped(int index) {
     setState(() {
       switch (index) {
         case 0:
           {
-            pageTitle = 'SETTINGS';
+            pageTitle = 'STORY';
           }
           break;
         case 1:
           {
-            pageTitle = 'STORY';
+            pageTitle = 'SCENE';
           }
           break;
         case 2:
           {
-            pageTitle = 'NPC';
+            pageTitle = 'CHARACTER';
           }
           break;
         case 3:
@@ -105,9 +66,13 @@ class _GmUIState extends State<GmUI> {
           }
           break;
       }
-      bottomSelectedIndex = index;
-      pageController.animateToPage(index,
-          duration: Duration(milliseconds: 500), curve: Curves.ease);
+      if (widget.dsix.gm.story.round < 1) {
+        bottomSelectedIndex = 0;
+      } else {
+        bottomSelectedIndex = index;
+        pageController.animateToPage(index,
+            duration: Duration(milliseconds: 500), curve: Curves.ease);
+      }
     });
   }
 
@@ -115,42 +80,48 @@ class _GmUIState extends State<GmUI> {
     return [
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
-          'assets/gm/settings.svg',
-          color: Colors.white,
-          width: MediaQuery.of(context).size.width * 0.085,
-        ),
-        icon: new SvgPicture.asset(
-          'assets/gm/settings.svg',
-          color: Colors.grey[600],
-          width: MediaQuery.of(context).size.width * 0.075,
-        ),
-        label: 'SETTINGS',
-      ),
-      BottomNavigationBarItem(
-        activeIcon: new SvgPicture.asset(
           'assets/gm/story.svg',
           color: Colors.white,
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         icon: new SvgPicture.asset(
           'assets/gm/story.svg',
-          color: Colors.grey[600],
+          color: (widget.dsix.gm.story.round < 1)
+              ? Colors.grey[800]
+              : Colors.grey[600],
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         label: 'STORY',
       ),
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
+          'assets/gm/scene.svg',
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width * 0.075,
+        ),
+        icon: new SvgPicture.asset(
+          'assets/gm/scene.svg',
+          color: (widget.dsix.gm.story.round < 1)
+              ? Colors.grey[900]
+              : Colors.grey[600],
+          width: MediaQuery.of(context).size.width * 0.065,
+        ),
+        label: 'SCENE',
+      ),
+      BottomNavigationBarItem(
+        activeIcon: new SvgPicture.asset(
           'assets/gm/npc.svg',
           color: Colors.white,
           width: MediaQuery.of(context).size.width * 0.085,
         ),
         icon: new SvgPicture.asset(
           'assets/gm/npc.svg',
-          color: Colors.grey[600],
+          color: (widget.dsix.gm.story.round < 1)
+              ? Colors.grey[900]
+              : Colors.grey[600],
           width: MediaQuery.of(context).size.width * 0.085,
         ),
-        label: 'NPC',
+        label: 'CHARACTER',
       ),
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
@@ -160,7 +131,9 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/gm/loot.svg',
-          color: Colors.grey[600],
+          color: (widget.dsix.gm.story.round < 1)
+              ? Colors.grey[900]
+              : Colors.grey[600],
           width: MediaQuery.of(context).size.width * 0.085,
         ),
         label: 'LOOT',
@@ -173,10 +146,12 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/player/action.svg',
-          color: Colors.grey[600],
+          color: (widget.dsix.gm.story.round < 1)
+              ? Colors.grey[900]
+              : Colors.grey[600],
           width: MediaQuery.of(context).size.width * 0.065,
         ),
-        label: '',
+        label: 'ACTION',
       ),
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
@@ -186,10 +161,12 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/player/map.svg',
-          color: Colors.grey[600],
+          color: (widget.dsix.gm.story.round < 1)
+              ? Colors.grey[900]
+              : Colors.grey[600],
           width: MediaQuery.of(context).size.width * 0.1,
         ),
-        label: '',
+        label: 'MAP',
       ),
     ];
   }
@@ -202,25 +179,19 @@ class _GmUIState extends State<GmUI> {
   Widget buildPageView() {
     return PageView(
       controller: pageController,
-      onPageChanged: (index) {
-        pageChanged(index);
-      },
+      physics: (widget.dsix.gm.story.round < 1)
+          ? NeverScrollableScrollPhysics()
+          : AlwaysScrollableScrollPhysics(),
       children: <Widget>[
-        SettingsPage(
-          dsix: widget.dsix,
-          refresh: refreshPage,
-          pageChanged: bottomTapped,
-          alert: displayAlert,
-        ),
         StoryPage(
           dsix: widget.dsix,
           refresh: refreshPage,
           alert: displayAlert,
         ),
+        ScenePage(dsix: widget.dsix, refresh: refreshPage),
         CharacterPage(
           dsix: widget.dsix,
           refresh: refreshPage,
-          pageChanged: bottomTapped,
           alert: displayAlert,
         ),
         LootPage(
@@ -228,7 +199,7 @@ class _GmUIState extends State<GmUI> {
           refresh: refreshPage,
           alert: displayAlert,
         ),
-        CharacterPage(dsix: widget.dsix, refresh: refreshPage),
+        ScenePage(dsix: widget.dsix, refresh: refreshPage),
         CharacterPage(dsix: widget.dsix, refresh: refreshPage),
       ],
     );
@@ -366,25 +337,25 @@ class _GmUIState extends State<GmUI> {
                 width: 2.5, //                   <--- border width here
               ),
             ),
-            width: 300,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
-              mainAxisAlignment: MainAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Container(
                   color: Colors.grey[700],
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
+                    padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
                     child: Center(
                       child: Text(
                         '${character.name}',
                         style: TextStyle(
-                          fontFamily: 'Headline',
-                          height: 1.3,
-                          fontSize: 25.0,
+                          fontFamily: 'Santana',
+                          height: 1,
+                          fontSize: 33,
                           color: Colors.white,
-                          letterSpacing: 2,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ),
@@ -393,7 +364,7 @@ class _GmUIState extends State<GmUI> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: SizedBox(
-                    height: 200,
+                    height: MediaQuery.of(context).size.height * 0.4,
                     width: double.infinity,
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
@@ -411,7 +382,7 @@ class _GmUIState extends State<GmUI> {
                   height: 30,
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
+                    padding: const EdgeInsets.fromLTRB(20, 3, 20, 10),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
@@ -541,31 +512,34 @@ class _GmUIState extends State<GmUI> {
                 ),
 
                 Divider(
+                  height: 0,
                   thickness: 2,
                   color: Colors.grey[700],
                 ),
 
-                Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
-                    child: Text(
-                      '${character.description}',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 19,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // OLD DESCRIPTION
+
+                // Container(
+                //   width: double.infinity,
+                //   child: Padding(
+                //     padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
+                //     child: Text(
+                //       '${character.description}',
+                //       textAlign: TextAlign.justify,
+                //       style: TextStyle(
+                //         height: 1.25,
+                //         fontSize: 19,
+                //         fontFamily: 'Calibri',
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 10),
-                  child: TextButton(
-                    onPressed: () {
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: GestureDetector(
+                    onTap: () {
                       setState(() {
                         widget.dsix.gm.newCharacter(character);
 
@@ -575,16 +549,13 @@ class _GmUIState extends State<GmUI> {
                         showAlertDialogAmount(context);
                       });
                     },
-                    style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.grey[400],
-                          width: 2, //                   <--- border width here
+                          color: Colors.grey[700],
+                          width: 1, //                   <--- border width here
                         ),
                       ),
                       child: Stack(
@@ -595,11 +566,11 @@ class _GmUIState extends State<GmUI> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                                 child: Icon(
                                   Icons.check,
-                                  color: Colors.grey[400],
-                                  size: 20,
+                                  color: Colors.grey[700],
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -608,7 +579,7 @@ class _GmUIState extends State<GmUI> {
                             child: Text(
                               'CHOOSE',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -653,7 +624,7 @@ class _GmUIState extends State<GmUI> {
                     width: 2.5, //                   <--- border width here
                   ),
                 ),
-                width: 300,
+                width: MediaQuery.of(context).size.width * 0.7,
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -662,16 +633,16 @@ class _GmUIState extends State<GmUI> {
                       Container(
                         color: Colors.grey[700],
                         child: Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+                          padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
                           child: Center(
                             child: Text(
                               'HOW MANY?',
                               style: TextStyle(
-                                fontFamily: 'Headline',
-                                height: 1.3,
-                                fontSize: 25.0,
+                                fontFamily: 'Santana',
+                                height: 1,
+                                fontSize: 33,
                                 color: Colors.white,
-                                letterSpacing: 2,
+                                letterSpacing: 1.2,
                               ),
                             ),
                           ),
@@ -682,124 +653,78 @@ class _GmUIState extends State<GmUI> {
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
                           child: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      flex: 1,
-                                      child: GestureDetector(
+                                padding:
+                                    const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.15,
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      GestureDetector(
                                         onTap: () {
                                           setState(() {
                                             widget.dsix.gm
-                                                .chooseCharacterAmount(-5);
+                                                .chooseCharacterAmount(-1);
                                           });
                                         },
-                                        child: Align(
-                                          alignment: Alignment.centerRight,
-                                          child: Text(
-                                            '- 5',
-                                            style: TextStyle(
-                                              fontFamily: 'Headline',
-                                              fontSize: 20.0,
-                                              color: Colors.white,
-                                              letterSpacing: 2,
-                                            ),
-                                          ),
+                                        child: SvgPicture.asset(
+                                          'assets/ui/arrowLeft.svg',
+                                          color: Colors.white,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.08,
                                         ),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 3,
-                                      child: Padding(
+                                      Padding(
                                         padding: const EdgeInsets.fromLTRB(
                                             10, 0, 10, 0),
                                         child: Center(
                                             child: Container(
-                                          height: 125,
-                                          child: Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    widget.dsix.gm
-                                                        .chooseCharacterAmount(
-                                                            1);
-                                                  });
-                                                },
-                                                child: Icon(
-                                                  Icons.keyboard_arrow_up,
-                                                  color: Colors.white,
-                                                  size: 35,
+                                          // height: 125,
+                                          child: Container(
+                                            // width: 100,
+                                            // height: 100,
+                                            // color: Colors.white,
+                                            child: Center(
+                                              child: Text(
+                                                '${widget.dsix.gm.selectedCharacter.amount}',
+                                                style: TextStyle(
+                                                  fontFamily: 'Headline',
+                                                  height: 1,
+                                                  fontSize: 50.0,
+                                                  color: Colors.grey[700],
+                                                  letterSpacing: 2,
                                                 ),
                                               ),
-                                              Container(
-                                                // width: 100,
-                                                // height: 100,
-                                                // color: Colors.white,
-                                                child: Center(
-                                                  child: Text(
-                                                    '${widget.dsix.gm.selectedCharacter.amount}',
-                                                    style: TextStyle(
-                                                      fontFamily: 'Headline',
-                                                      height: 1.3,
-                                                      fontSize: 35.0,
-                                                      color: Colors.grey[700],
-                                                      letterSpacing: 2,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    widget.dsix.gm
-                                                        .chooseCharacterAmount(
-                                                            -1);
-                                                  });
-                                                },
-                                                child: Icon(
-                                                  Icons.keyboard_arrow_down,
-                                                  color: Colors.white,
-                                                  size: 35,
-                                                ),
-                                              ),
-                                            ],
+                                            ),
                                           ),
                                           // color: Colors.red,
                                         )),
                                       ),
-                                    ),
-                                    Expanded(
-                                      flex: 1,
-                                      child: GestureDetector(
+                                      GestureDetector(
                                         onTap: () {
                                           setState(() {
                                             widget.dsix.gm
-                                                .chooseCharacterAmount(5);
+                                                .chooseCharacterAmount(1);
                                           });
                                         },
-                                        child: Align(
-                                          alignment: Alignment.centerLeft,
-                                          child: Text(
-                                            '+ 5',
-                                            style: TextStyle(
-                                              fontFamily: 'Headline',
-                                              fontSize: 20.0,
-                                              color: Colors.white,
-                                              letterSpacing: 2,
-                                            ),
-                                          ),
+                                        child: SvgPicture.asset(
+                                          'assets/ui/arrowRight.svg',
+                                          color: Colors.white,
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.08,
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
                               Padding(
@@ -822,7 +747,7 @@ class _GmUIState extends State<GmUI> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.065,
+                                              0.07,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
@@ -830,9 +755,9 @@ class _GmUIState extends State<GmUI> {
                                           child: Text(
                                             '${widget.dsix.gm.selectedCharacter.totalLoot}',
                                             style: TextStyle(
-                                              fontFamily: 'Headline',
+                                              fontFamily: 'Santana',
                                               height: 1,
-                                              fontSize: 15,
+                                              fontSize: 30,
                                               color: Colors.white,
                                               letterSpacing: 3,
                                             ),
@@ -852,7 +777,7 @@ class _GmUIState extends State<GmUI> {
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.065,
+                                              0.08,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
@@ -860,9 +785,9 @@ class _GmUIState extends State<GmUI> {
                                           child: Text(
                                             '${widget.dsix.gm.selectedCharacter.totalXp}',
                                             style: TextStyle(
-                                              fontFamily: 'Headline',
+                                              fontFamily: 'Santana',
                                               height: 1,
-                                              fontSize: 15,
+                                              fontSize: 30,
                                               color: Colors.white,
                                               letterSpacing: 3,
                                             ),
@@ -873,62 +798,63 @@ class _GmUIState extends State<GmUI> {
                                   ],
                                 ),
                               ),
-                              TextButton(
-                                style: TextButton.styleFrom(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                                ),
-                                onPressed: () {
-                                  setState(() {
-                                    widget.dsix.gm.confirmCharacter();
-                                    refreshPage();
-                                    Navigator.pop(context);
-                                  });
-                                },
-                                child: Container(
-                                  height: MediaQuery.of(context).size.height *
-                                      0.058,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: Colors.grey[400],
-                                      width:
-                                          2, //                   <--- border width here
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 15, 0, 20),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      widget.dsix.gm.confirmCharacter();
+                                      refreshPage();
+                                      Navigator.pop(context);
+                                    });
+                                  },
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.08,
+                                    width: double.infinity,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.grey[700],
+                                        width:
+                                            2, //                   <--- border width here
+                                      ),
                                     ),
-                                  ),
-                                  child: Stack(
-                                    alignment: AlignmentDirectional.centerEnd,
-                                    children: [
-                                      Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: const EdgeInsets.fromLTRB(
-                                                0, 0, 10, 0),
-                                            child: Icon(
-                                              Icons.check,
-                                              color: Colors.grey[400],
-                                              size: 20,
+                                    child: Stack(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 20, 0),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: Colors.grey[700],
+                                                size: 20,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            'CONFIRM',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.5,
+                                              fontFamily: 'Calibri',
+                                              color: Colors.white,
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                      Center(
-                                        child: Text(
-                                          'CONFIRM',
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            fontWeight: FontWeight.bold,
-                                            letterSpacing: 1.5,
-                                            fontFamily: 'Calibri',
-                                            color: Colors.white,
-                                          ),
                                         ),
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
@@ -1129,17 +1055,6 @@ class _GmUIState extends State<GmUI> {
           ),
           titleSpacing: 10,
           backgroundColor: Colors.grey[900],
-          title: new Text(
-            '$pageTitle',
-            textAlign: TextAlign.left,
-            style: TextStyle(
-              fontFamily: 'Headline',
-              height: 1.3,
-              fontSize: 24.0,
-              color: Colors.grey[600],
-              letterSpacing: 2,
-            ),
-          ),
           actions: <Widget>[
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
@@ -1222,7 +1137,7 @@ class _GmUIState extends State<GmUI> {
       endDrawerEnableOpenDragGesture: false,
       drawer: Container(
         //CONTROL SIZE
-        width: MediaQuery.of(context).size.width * 0.65,
+        width: MediaQuery.of(context).size.width * 0.70,
         child: Drawer(
           child: Container(
             //CONTROL COLOR (Has to be separate. Size and color)
@@ -1237,37 +1152,40 @@ class _GmUIState extends State<GmUI> {
                         thickness: 2,
                         color: Colors.black,
                       ),
-                      ListTile(
-                        onTap: () {
-                          setState(() {
-                            // Navigator.pop(context);
-                            showAlertDialogChooseCharacter(context,
-                                widget.dsix.gm.availableCharacters[index]);
-                          });
-                        },
-                        tileColor: Colors.grey[700],
-                        leading: SvgPicture.asset(
-                          'assets/gm/character/race/icon/${widget.dsix.gm.availableCharacters[index].icon}.svg',
-                          color: Colors.black,
-                          width: MediaQuery.of(context).size.width * 0.125,
-                        ),
-                        title: Text(
-                          '${widget.dsix.gm.availableCharacters[index].name}',
-                          style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1,
-                            fontSize: 21,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 7),
+                        child: ListTile(
+                          onTap: () {
+                            setState(() {
+                              // Navigator.pop(context);
+                              showAlertDialogChooseCharacter(context,
+                                  widget.dsix.gm.availableCharacters[index]);
+                            });
+                          },
+                          tileColor: Colors.grey[700],
+                          leading: SvgPicture.asset(
+                            'assets/gm/character/race/icon/${widget.dsix.gm.availableCharacters[index].icon}.svg',
                             color: Colors.black,
-                            letterSpacing: 1.5,
+                            width: MediaQuery.of(context).size.width * 0.125,
                           ),
-                        ),
-                        subtitle: Text(
-                          'XP: ${widget.dsix.gm.availableCharacters[index].baseXp}',
-                          style: TextStyle(
-                            height: 1.3,
-                            fontSize: 14,
-                            fontFamily: 'Calibri',
-                            color: Colors.white,
+                          title: Text(
+                            '${widget.dsix.gm.availableCharacters[index].name}',
+                            style: TextStyle(
+                              fontFamily: 'Santana',
+                              height: 1.4,
+                              fontSize: 29,
+                              color: Colors.black,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                          subtitle: Text(
+                            'XP: ${widget.dsix.gm.availableCharacters[index].baseXp}',
+                            style: TextStyle(
+                              height: 1,
+                              fontSize: 14,
+                              fontFamily: 'Calibri',
+                              color: Colors.white,
+                            ),
                           ),
                         ),
                       ),
@@ -1331,12 +1249,6 @@ class _GmUIState extends State<GmUI> {
         child: buildPageView(),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        selectedLabelStyle: TextStyle(
-          color: Colors.grey[600],
-        ),
-        unselectedLabelStyle: TextStyle(
-          color: Colors.grey[600],
-        ),
         type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
         showUnselectedLabels: false,

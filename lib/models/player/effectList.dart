@@ -15,7 +15,7 @@ class EffectList {
     Effect(
       icon: 'fame',
       name: 'FAME',
-      description: 'You are famous and get an extra \$100 per quest.',
+      description: 'You are famous and get extra gold per quest.',
       typeOfEffect: 'PERMANENT',
     ),
   ];
@@ -109,9 +109,9 @@ class EffectList {
     ),
 
     Effect(
-      icon: 'strong',
-      name: 'STRONG',
-      description: 'You are strong and can lift heavy things.',
+      icon: 'powerful',
+      name: 'POWERFUL',
+      description: 'You more powerful.',
       typeOfEffect: 'TEMPORARY',
       value: 0,
       duration: 0,

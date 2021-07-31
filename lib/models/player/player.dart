@@ -192,7 +192,7 @@ class Player {
     PlayerAction(
       icon: 'defend',
       name: 'DEFEND',
-      description: 'You protect yourself or others around you.',
+      description: 'You protect yourself and others.',
       option: [
         Option(
             'DEFEND',
@@ -243,14 +243,14 @@ class Player {
             'You find something bad.',
             'INFORMATION',
             false),
-        Option(
-            'SECRETE',
-            'You try to find a hidden door or chest.',
-            'You find a secrete.',
-            'You find a secrete, but it\'s blocked.',
-            'You find something bad',
-            'SECRETE',
-            false)
+        // Option(
+        //     'SECRETE',
+        //     'You try to find a hidden door or chest.',
+        //     'You find a secrete.',
+        //     'You find a secrete, but it\'s blocked.',
+        //     'You find something bad',
+        //     'SECRETE',
+        //     false)
       ],
       value: 0,
       bonus: 0,
@@ -993,19 +993,32 @@ class Player {
   }
 
 //FIND RESOURCES
-  List<String> resources(int numberDice) {
-    List<String> lootList = [];
+
+  List<Item> resources(int numberDice) {
+    List<Item> lootList = [];
 
     if (numberDice > 1) {
-      int randomGold = (Random().nextInt(4) + 1) * 25;
-      this.gold += randomGold;
-      lootList.add('\$ $randomGold');
+//10+
+
+      for (int i = 0; i < 3; i++) {
+        lootList.add(shop.randomResourceRange(100, 300));
+      }
+    } else {
+//9-7
+      for (int i = 0; i < 3; i++) {
+        lootList.add(shop.randomResourceRange(100, 100));
+      }
     }
+    // if (numberDice > 1) {
+    //   int randomGold = (Random().nextInt(4) + 1) * 25;
+    //   this.gold += randomGold;
+    //   lootList.add('\$ $randomGold');
+    // }
 
-    int loot = Random().nextInt(shop.resources.length);
-    inventory.add(shop.resources[loot]);
+    // int loot = Random().nextInt(shop.resources.length);
+    // inventory.add(shop.resources[loot]);
 
-    lootList.add('${shop.resources[loot].name}');
+    // lootList.add('${shop.resources[loot].name}');
     return lootList;
   }
 
@@ -1112,7 +1125,7 @@ class Player {
           this.playerAction[5].value++;
         }
         break;
-      case 'STRONG':
+      case 'POWERFUL':
         {
           this.playerAction[1].value++;
         }
@@ -1141,7 +1154,7 @@ class Player {
           this.playerAction[5].value--;
         }
         break;
-      case 'STRONG':
+      case 'POWERFUL':
         {
           this.playerAction[1].value--;
         }

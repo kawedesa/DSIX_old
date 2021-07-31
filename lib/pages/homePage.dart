@@ -46,8 +46,8 @@ class _HomePageState extends State<HomePage> {
           Padding(
             padding: const EdgeInsets.fromLTRB(0, 0, 0, 50),
             child: Container(
-              width: MediaQuery.of(context).size.width * 0.6,
-              height: MediaQuery.of(context).size.width * 0.6,
+              width: MediaQuery.of(context).size.width * 0.64,
+              height: MediaQuery.of(context).size.width * 0.64,
               child: SvgPicture.asset(
                 'assets/logo/logo.svg',
                 color: Colors.grey[500],
@@ -65,8 +65,8 @@ class _HomePageState extends State<HomePage> {
                 Navigator.of(context).push(_createRoute());
               },
               child: Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                width: MediaQuery.of(context).size.width * 0.62,
+                height: MediaQuery.of(context).size.height * 0.1,
+                width: MediaQuery.of(context).size.width * 0.65,
                 decoration: BoxDecoration(
                   border: Border.all(
                     color: Colors.grey[600],
@@ -110,61 +110,61 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-            child: TextButton(
-              style: TextButton.styleFrom(
-                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-              ),
-              onPressed: () async {
-                await _auth.signOut();
-              },
-              child: Container(
-                height: MediaQuery.of(context).size.height * 0.08,
-                width: MediaQuery.of(context).size.width * 0.62,
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey[600],
-                    width: 2.5, //                   <--- border width here
-                  ),
-                ),
-                child: Stack(
-                  alignment: AlignmentDirectional.centerEnd,
-                  children: [
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Padding(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                          child: Icon(
-                            Icons.keyboard_arrow_right,
-                            color: Colors.grey[600],
-                            size: 30,
-                          ),
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                      child: Center(
-                        child: Text(
-                          'SIGN OUT',
-                          style: TextStyle(
-                            fontSize: 15,
-                            fontWeight: FontWeight.bold,
-                            letterSpacing: 1.5,
-                            fontFamily: 'Calibri',
-                            color: Colors.grey[600],
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+          // Padding(
+          //   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          //   child: TextButton(
+          //     style: TextButton.styleFrom(
+          //       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          //     ),
+          //     onPressed: () async {
+          //       await _auth.signOut();
+          //     },
+          //     child: Container(
+          //       height: MediaQuery.of(context).size.height * 0.08,
+          //       width: MediaQuery.of(context).size.width * 0.62,
+          //       decoration: BoxDecoration(
+          //         border: Border.all(
+          //           color: Colors.grey[600],
+          //           width: 2.5, //                   <--- border width here
+          //         ),
+          //       ),
+          //       child: Stack(
+          //         alignment: AlignmentDirectional.centerEnd,
+          //         children: [
+          //           Column(
+          //             mainAxisAlignment: MainAxisAlignment.center,
+          //             crossAxisAlignment: CrossAxisAlignment.start,
+          //             children: <Widget>[
+          //               Padding(
+          //                 padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+          //                 child: Icon(
+          //                   Icons.keyboard_arrow_right,
+          //                   color: Colors.grey[600],
+          //                   size: 30,
+          //                 ),
+          //               ),
+          //             ],
+          //           ),
+          //           Padding(
+          //             padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+          //             child: Center(
+          //               child: Text(
+          //                 'SIGN OUT',
+          //                 style: TextStyle(
+          //                   fontSize: 15,
+          //                   fontWeight: FontWeight.bold,
+          //                   letterSpacing: 1.5,
+          //                   fontFamily: 'Calibri',
+          //                   color: Colors.grey[600],
+          //                 ),
+          //               ),
+          //             ),
+          //           ),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
+          // ),
         ],
       ),
     );

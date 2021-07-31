@@ -122,7 +122,7 @@ class _PlayersPageState extends State<PlayersPage> {
                 width: 2.5, //                   <--- border width here
               ),
             ),
-            width: 300,
+            width: MediaQuery.of(context).size.width * 0.7,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -141,11 +141,12 @@ class _PlayersPageState extends State<PlayersPage> {
                         Text(
                           'DELETE PLAYER',
                           style: TextStyle(
-                            fontFamily: 'Headline',
-                            height: 1.3,
-                            fontSize: 25.0,
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 25,
                             color: Colors.white,
-                            letterSpacing: 2,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
                           ),
                         ),
                       ],
@@ -153,25 +154,25 @@ class _PlayersPageState extends State<PlayersPage> {
                   ),
                 ), //ITEM NAME
 
-                Container(
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
-                    child: Text(
-                      'This player will be deleted! Are you sure you want to continue?',
-                      textAlign: TextAlign.justify,
-                      style: TextStyle(
-                        height: 1.25,
-                        fontSize: 19,
-                        fontFamily: 'Calibri',
-                        color: Colors.white,
-                      ),
-                    ),
-                  ),
-                ),
+                // Container(
+                //   width: double.infinity,
+                //   child: Padding(
+                //     padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
+                //     child: Text(
+                //       'This player will be deleted! Are you sure you want to continue?',
+                //       textAlign: TextAlign.justify,
+                //       style: TextStyle(
+                //         height: 1.25,
+                //         fontSize: 19,
+                //         fontFamily: 'Calibri',
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       setState(() {
@@ -180,10 +181,10 @@ class _PlayersPageState extends State<PlayersPage> {
                       });
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -209,7 +210,7 @@ class _PlayersPageState extends State<PlayersPage> {
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -218,7 +219,7 @@ class _PlayersPageState extends State<PlayersPage> {
                             child: Text(
                               'CONFIRM',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -232,16 +233,16 @@ class _PlayersPageState extends State<PlayersPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 0, 30, 15),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       Navigator.of(context).pop(true);
                     },
                     style: TextButton.styleFrom(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
@@ -260,14 +261,14 @@ class _PlayersPageState extends State<PlayersPage> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                                 child: Icon(
                                   Icons.clear,
                                   color: widget.dsix.gm
                                       .getCurrentPlayer()
                                       .playerColor
                                       .primaryColor,
-                                  size: 20,
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -276,7 +277,189 @@ class _PlayersPageState extends State<PlayersPage> {
                             child: Text(
                               'CANCEL',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
+  showAlertDialogDeleteStory(BuildContext context) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey[700],
+                width: 2.5, //                   <--- border width here
+              ),
+            ),
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color: Colors.grey[700],
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'DELETE CAMPAIGN',
+                          style: TextStyle(
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 25,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ), //ITEM NAME
+
+                // Container(
+                //   width: double.infinity,
+                //   child: Padding(
+                //     padding: const EdgeInsets.fromLTRB(35, 15, 35, 20),
+                //     child: Text(
+                //       'This player will be deleted! Are you sure you want to continue?',
+                //       textAlign: TextAlign.justify,
+                //       style: TextStyle(
+                //         height: 1.25,
+                //         fontSize: 19,
+                //         fontFamily: 'Calibri',
+                //         color: Colors.white,
+                //       ),
+                //     ),
+                //   ),
+                // ),
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        widget.dsix.gm.deleteStory();
+                        Navigator.of(context).pop(true);
+                      });
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[700],
+                          width: 1, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.grey[700],
+                                  size: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'CONFIRM',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[700],
+                          width: 1, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                child: Icon(
+                                  Icons.clear,
+                                  color: Colors.grey[700],
+                                  size: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'CANCEL',
+                              style: TextStyle(
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -322,21 +505,21 @@ class _PlayersPageState extends State<PlayersPage> {
         backgroundColor: Colors.grey[900],
         centerTitle: true,
         title: new Text(
-          'Choose your Player',
+          'CHOOSE YOUR PLAYER',
           textAlign: TextAlign.left,
           style: TextStyle(
-            fontFamily: 'Headline',
-            height: 1.1,
-            fontSize: 25.0,
-            color: Colors.grey[600],
-            letterSpacing: 2,
+            fontFamily: 'Santana',
+            height: 1,
+            fontSize: 30,
+            color: Colors.grey[400],
+            letterSpacing: 1.2,
           ),
         ),
       ),
       body: new SafeArea(
         child: Center(
           child: Container(
-            width: MediaQuery.of(context).size.width * 0.62,
+            width: MediaQuery.of(context).size.width * 0.65,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -346,7 +529,7 @@ class _PlayersPageState extends State<PlayersPage> {
                   itemCount: widget.dsix.gm.players.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 10),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: GestureDetector(
                         onLongPress: () {
                           widget.dsix.gm.setCurrentPlayer(index);
@@ -361,7 +544,7 @@ class _PlayersPageState extends State<PlayersPage> {
                           checkPlayer();
                         },
                         child: Container(
-                          height: MediaQuery.of(context).size.height * 0.08,
+                          height: MediaQuery.of(context).size.height * 0.1,
                           decoration: BoxDecoration(
                             border: Border.all(
                               color: widget.dsix.gm.players[index].playerColor
@@ -413,12 +596,15 @@ class _PlayersPageState extends State<PlayersPage> {
                   },
                 ),
                 GestureDetector(
+                  onLongPress: () {
+                    showAlertDialogDeleteStory(context);
+                  },
                   onTap: () {
                     Navigator.of(context).push(_createRouteGmUI());
                   },
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.08,
-                    width: MediaQuery.of(context).size.width * 0.62,
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    width: MediaQuery.of(context).size.width * 0.65,
                     decoration: BoxDecoration(
                       border: Border.all(
                         color: Colors.grey[600],

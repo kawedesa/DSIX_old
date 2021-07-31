@@ -1,4 +1,8 @@
 import 'dart:math';
+import 'package:dsixv02app/models/gm/character.dart';
+import 'package:dsixv02app/models/gm/location.dart';
+
+import 'locationList.dart';
 
 class Quest {
   String icon = 'quest';
@@ -9,63 +13,64 @@ class Quest {
   String objective = '-';
   String target = '-';
   String location = '-';
-  String reward = '-';
-  // int questXp = 0;
-  // int questGold = 0;
-  // int questFame = 0;
+  String threat = '-';
+  List<Character> threatList = [];
+
   bool onGoing = false;
 
-  List<String> characterList = [
-    'Human',
-    'Dwarf',
-    'Orc',
-    'Elf',
-    'Dark elf',
-    'Goblin',
-    'Gnome',
-    'Halfling',
-    // 'Beast',
-  ];
+  LocationList locations = LocationList();
 
-  List<String> genderList = [
-    'Female',
-    'Male',
-  ];
+  // List<String> characterList = [
+  //   'Human',
+  //   'Dwarf',
+  //   'Orc',
+  //   'Elf',
+  //   'Dark elf',
+  //   'Goblin',
+  //   'Gnome',
+  //   'Halfling',
+  //   // 'Beast',
+  // ];
+
+  // List<String> genderList = [
+  //   'Female',
+  //   'Male',
+  // ];
 
   List<String> backgroundList = [
-    'Merchant',
-    'Noble',
-    'Spy',
+    // 'Merchant',
+    // 'Noble',
+    // 'Spy',
     'Prisoner',
-    'Pirate',
+    // 'Pirate',
     'Medic',
     'Worker',
-    'Chef',
+    // 'Chef',
     'Mercenary',
-    'Detective',
-    'Artist',
+    // 'Detective',
+    // 'Artist',
     'Wizard',
     'Student',
     'Traveler',
     'Hunter',
     'Assassin',
     'Thief',
-    'Scientist',
-    'Lawyer',
-    'Farmer',
-    'Tailor',
+    // 'Scientist',
+    // 'Lawyer',
+    // 'Farmer',
+    // 'Tailor',
     'Gladiator',
-    'Sailor',
-    'Innkeeper',
-    'Stablehand',
+    // 'Sailor',
+    // 'Innkeeper',
+    // 'Stablehand',
     'Soldier',
-    'Politician',
-    'Bureaucrat',
+    // 'Politician',
+    // 'Bureaucrat',
     'Shaman',
-    'Homeless',
-    'Knight',
-    'Monk',
-    'Gardener',
+    // 'Homeless',
+    // 'Knight',
+    // 'Monk',
+    // 'Gardener',
   ];
 
   List<String> objectiveList = [
@@ -94,39 +99,29 @@ class Quest {
     // 'Investigate',
   ];
 
-  List<String> targetList = [
-    'Person',
-    'Beast',
-    'Insect',
-    'Group',
-    'Machine',
-    'Place',
-    'Item',
-  ];
-
-  List<String> locationList = [
-    'Arena',
-    'Bar',
-    'Ruins',
-    'Fort',
-    'Library',
-    'Jail',
-    'Ship',
-    'Sewers',
-    'Cemitery',
-    'Farm',
-    'Mine',
-    'Market',
-    'Wilderness',
-    'Factory',
-    'Caravan',
-    'Slum',
-    'Cassino',
-    'Bank',
-    'Port',
-    'Court',
-    'Cave',
-  ];
+  // List<String> locationList = [
+  //   'Arena',
+  //   // 'Bar',
+  //   'Ruins',
+  //   'Fort',
+  //   // 'Library',
+  //   // 'Jail',
+  //   // 'Ship',
+  //   'Sewers',
+  //   'Cemitery',
+  //   'Farm',
+  //   'Mine',
+  //   // 'Market',
+  //   'Wilderness',
+  //   // 'Factory',
+  //   // 'Caravan',
+  //   // 'Slum',
+  //   // 'Cassino',
+  //   // 'Bank',
+  //   // 'Port',
+  //   // 'Court',
+  //   'Cave',
+  // ];
 
   List<String> rewardList = [
     'GOLD',
@@ -147,66 +142,81 @@ class Quest {
       objective: '-',
       target: '-',
       location: '-',
-      reward: '-',
       onGoing: false,
     );
     return newQuest;
   }
 
-  Quest newRandomQuest() {
+  Quest newRandomQuest(int xp) {
+    Location randomLocation =
+        locations.locations[Random().nextInt(locations.locations.length)];
+
+    int totalXp = xp;
+
+    List<Character> randomThreat = [];
+
+    while (totalXp > 0) {
+      Character randomCharacter = randomLocation
+          .characters[Random().nextInt(randomLocation.characters.length)]
+          .newCharacter();
+
+      if (randomCharacter.baseXp <= totalXp) {
+        randomCharacter.totalXp = randomCharacter.baseXp;
+        randomCharacter.totalLoot = (randomCharacter.baseLoot).toInt();
+        randomCharacter.maxHealth = randomCharacter.baseHealth;
+        randomCharacter.currentHealth = randomCharacter.maxHealth;
+        randomThreat.add(randomCharacter);
+        totalXp -= randomCharacter.baseXp;
+      }
+    }
+
     String randomCharacter =
-        '${characterList[Random().nextInt(characterList.length)]} ${backgroundList[Random().nextInt(backgroundList.length)]}';
+        '${backgroundList[Random().nextInt(backgroundList.length)]}';
     String randomObjective =
         '${objectiveList[Random().nextInt(objectiveList.length)]}';
     String randomTarget = (target == 'Person')
-        ? '${characterList[Random().nextInt(characterList.length)]} ${backgroundList[Random().nextInt(backgroundList.length)]}'
-        : 'Group of ${characterList[Random().nextInt(characterList.length)]} ${backgroundList[Random().nextInt(backgroundList.length)]}s';
-    String randomLocation =
-        '${locationList[Random().nextInt(locationList.length)]}';
-    String randomReward = '${rewardList[Random().nextInt(rewardList.length)]}';
+        ? '${backgroundList[Random().nextInt(backgroundList.length)]}'
+        : 'Group of ${backgroundList[Random().nextInt(backgroundList.length)]}s';
 
     Quest newRandomQuest = new Quest(
       icon: 'quest',
       name: randomObjective,
       questDescription:
-          '$randomObjective a $randomTarget at the $randomLocation and you will get $randomReward.',
+          '$randomObjective a $randomTarget at the ${randomLocation.name}.',
       character: randomCharacter,
       objective: randomObjective,
       target: randomTarget,
-      location: randomLocation,
-      reward: randomReward,
+      location: randomLocation.name,
+      threat: randomThreat.last.name,
+      threatList: randomThreat,
       onGoing: false,
     );
     return newRandomQuest;
   }
 
-  void chooseQuest(String category) {
-    switch (category) {
-      case 'objective':
-        this.objective = objectiveList[Random().nextInt(objectiveList.length)];
-        break;
+  // void chooseQuest(String category) {
+  //   switch (category) {
+  //     case 'objective':
+  //       this.objective = objectiveList[Random().nextInt(objectiveList.length)];
+  //       break;
 
-      case 'target':
-        this.target = targetList[Random().nextInt(targetList.length)];
-        if (target == 'Person') {
-          this.target =
-              '${characterList[Random().nextInt(characterList.length)]} ${backgroundList[Random().nextInt(backgroundList.length)]}';
-        } else if (target == 'Group') {
-          this.target =
-              'Group of ${characterList[Random().nextInt(characterList.length)]} \n${backgroundList[Random().nextInt(backgroundList.length)]}s';
-        }
+  //     case 'target':
+  //       this.target = targetList[Random().nextInt(targetList.length)];
+  //       if (target == 'Person') {
+  //         this.target =
+  //             '${backgroundList[Random().nextInt(backgroundList.length)]}';
+  //       } else if (target == 'Group') {
+  //         this.target =
+  //             'Group of ${backgroundList[Random().nextInt(backgroundList.length)]}s';
+  //       }
 
-        break;
+  //       break;
 
-      case 'location':
-        this.location = locationList[Random().nextInt(locationList.length)];
-        break;
-
-      case 'reward':
-        this.reward = rewardList[Random().nextInt(rewardList.length)];
-        break;
-    }
-  }
+  //     case 'location':
+  //       this.location = locationList[Random().nextInt(locationList.length)];
+  //       break;
+  //   }
+  // }
 
   Quest({
     String icon,
@@ -216,7 +226,8 @@ class Quest {
     String objective,
     String target,
     String location,
-    String reward,
+    String threat,
+    List<Character> threatList,
     bool onGoing,
   }) {
     this.icon = icon;
@@ -226,7 +237,8 @@ class Quest {
     this.objective = objective;
     this.target = target;
     this.location = location;
-    this.reward = reward;
+    this.threat = threat;
+    this.threatList = threatList;
     this.onGoing = onGoing;
   }
 }

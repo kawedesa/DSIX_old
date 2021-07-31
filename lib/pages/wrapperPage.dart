@@ -11,10 +11,12 @@ class WrapperPage extends StatelessWidget {
     final user = Provider.of<DsixUser>(context);
 
     // return hope or authenticate widget
-    if (user == null) {
-      return AuthenticatePage();
-    } else {
-      return HomePage();
-    }
+    // if (user == null) {
+    //   return AuthenticatePage();
+    // } else {
+    //   return HomePage();
+    // }
+
+    return HomePage();
   }
 }

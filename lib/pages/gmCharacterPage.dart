@@ -387,7 +387,7 @@ class _CharacterPageState extends State<CharacterPage> {
               ScaffoldMessenger.of(context)
                   .showSnackBar(widget.alert(e.message));
               _layout = 0;
-              widget.pageChanged(3);
+
               widget.refresh();
               return;
             }
@@ -428,13 +428,18 @@ class _CharacterPageState extends State<CharacterPage> {
 
 //NPC SELECTION
     characterSelection = [];
-    widget.dsix.gm.characters.forEach((element) {
+
+    widget.dsix.gm.story.quest.threatList.forEach((element) {
       if (element == widget.dsix.gm.selectedCharacter) {
         characterSelection.add(true);
       } else {
         characterSelection.add(false);
       }
     });
+
+    if (widget.dsix.gm.story.quest.threatList.isEmpty) {
+      _layout = 0;
+    }
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -470,9 +475,16 @@ class _CharacterPageState extends State<CharacterPage> {
                     physics: ScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
-                    itemCount: widget.dsix.gm.characters.length,
+                    itemCount: widget.dsix.gm.story.quest.threatList.length,
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            widget.dsix.gm.selectCharacter(index);
+                            widget.dsix.gm.refundCharacter();
+                            widget.refresh();
+                          });
+                        },
                         onTap: () {
                           setState(() {
                             widget.dsix.gm.selectCharacter(index);
@@ -483,7 +495,7 @@ class _CharacterPageState extends State<CharacterPage> {
                           height: 35,
                           width: 35,
                           child: SvgPicture.asset(
-                            'assets/gm/character/race/icon/${widget.dsix.gm.characters[index].icon}.svg',
+                            'assets/gm/character/race/icon/${widget.dsix.gm.story.quest.threatList[index].icon}.svg',
                             color: characterSelection[index]
                                 ? Colors.grey[400]
                                 : Colors.grey[700],
@@ -539,108 +551,70 @@ class _CharacterPageState extends State<CharacterPage> {
                         ),
                       ),
                     ),
-                    TextButton(
-                      style: TextButton.styleFrom(
+                    ListView.builder(
+                        shrinkWrap: true,
                         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      ),
-                      onPressed: () {
-                        newCharacter('MOUNTAINS');
-                      },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.058,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey[700],
-                            width:
-                                2, //                   <--- border width here
-                          ),
-                        ),
-                        child: Stack(
-                          alignment: AlignmentDirectional.centerEnd,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.grey[700],
-                                    size: 20,
-                                  ),
-                                ),
-                              ],
+                        itemCount: widget.dsix.gm.locationList.locations.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return TextButton(
+                            style: TextButton.styleFrom(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                             ),
-                            Center(
-                              child: Text(
-                                'MOUNTAINS',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.5,
-                                  fontFamily: 'Calibri',
-                                  color: Colors.white,
+                            onPressed: () {
+                              newCharacter(
+                                  '${widget.dsix.gm.locationList.locations[index].name}');
+                            },
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.08,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: Colors.grey[700],
+                                  width:
+                                      2, //                   <--- border width here
                                 ),
                               ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      ),
-                      onPressed: () {
-                        newCharacter('SWAMP');
-                      },
-                      child: Container(
-                        height: MediaQuery.of(context).size.height * 0.058,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey[700],
-                            width:
-                                2, //                   <--- border width here
-                          ),
-                        ),
-                        child: Stack(
-                          alignment: AlignmentDirectional.centerEnd,
-                          children: [
-                            Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 10, 0),
-                                  child: Icon(
-                                    Icons.check,
-                                    color: Colors.grey[700],
-                                    size: 20,
+                              child: Stack(
+                                alignment: AlignmentDirectional.centerEnd,
+                                children: [
+                                  Column(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: const EdgeInsets.fromLTRB(
+                                            0, 0, 15, 0),
+                                        child: SvgPicture.asset(
+                                          'assets/ui/help.svg',
+                                          color: Colors.grey[700],
+                                          width: MediaQuery.of(context)
+                                                  .size
+                                                  .width *
+                                              0.04,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ),
-                              ],
-                            ),
-                            Center(
-                              child: Text(
-                                'SWAMP',
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: 1.5,
-                                  fontFamily: 'Calibri',
-                                  color: Colors.white,
-                                ),
+                                  Center(
+                                    child: Text(
+                                      widget.dsix.gm.locationList
+                                          .locations[index].name
+                                          .toUpperCase(),
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold,
+                                        letterSpacing: 1.5,
+                                        fontFamily: 'Calibri',
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
-                          ],
-                        ),
-                      ),
-                    ),
+                          );
+                        }),
                   ],
                 ),
               ),
@@ -787,24 +761,24 @@ class _CharacterPageState extends State<CharacterPage> {
                                       ),
                                     ),
                                   ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                    child: GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          widget.dsix.gm.deleteCharacter();
-                                          _layout = 0;
-                                          widget.refresh();
-                                        });
-                                      },
-                                      child: Icon(
-                                        Icons.clear,
-                                        color: Colors.red,
-                                        size: 30,
-                                      ),
-                                    ),
-                                  ),
+                                  // Padding(
+                                  //   padding:
+                                  //       const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                                  //   child: GestureDetector(
+                                  //     onTap: () {
+                                  //       setState(() {
+                                  //         widget.dsix.gm.deleteCharacter();
+                                  //         _layout = 0;
+                                  //         widget.refresh();
+                                  //       });
+                                  //     },
+                                  //     child: Icon(
+                                  //       Icons.clear,
+                                  //       color: Colors.red,
+                                  //       size: 30,
+                                  //     ),
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                             ),

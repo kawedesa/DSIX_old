@@ -24,7 +24,7 @@ class PlayerSkillList {
     PlayerAction(
       icon: 'illusion',
       name: 'ILLUSION',
-      description: 'You create an illusion that tricks people\'s senses.',
+      description: 'You create an illusion that tricks people\'s minds.',
       option: [
         Option(
             'ILLUSION',
@@ -42,7 +42,7 @@ class PlayerSkillList {
       icon: 'bomber',
       name: 'BOMBER',
       description:
-          'You throw a bomb that explodes on impact and causes different effects.',
+          'You create a bomb that causes different effects on explosion.',
       option: [
         Option(
             'FIRE BOMB',
@@ -75,7 +75,7 @@ class PlayerSkillList {
     PlayerAction(
       icon: 'earthlist',
       name: 'EARTHLIST',
-      description: 'You can change the environment around you.',
+      description: 'You control the ground around you.',
       option: [
         Option(
             'DIG',
@@ -116,8 +116,7 @@ class PlayerSkillList {
     PlayerAction(
       icon: 'faceshifter',
       name: 'FACESHIFTER',
-      description:
-          'You transform into another person, changing your voice and appearance.',
+      description: 'You change your voice and appearance.',
       option: [
         Option(
             'TRANSFORM',
@@ -135,7 +134,7 @@ class PlayerSkillList {
       icon: 'alterSenses',
       name: 'ALTER SENSES',
       description:
-          'You can bless or curse anyone you touch. Enhancing or taking away their senses.',
+          'You bless or curse anyone you touch. Enhancing or taking away their senses.',
       option: [
         Option(
             'ENHANCE',
