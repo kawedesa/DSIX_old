@@ -330,6 +330,7 @@ class _StoryPageState extends State<StoryPage> {
   }
 
   void chooseReward(String reward) {
+    widget.dsix.gm.finishQuest();
     widget.dsix.gm.chooseReward(reward);
     widget.dsix.gm.newRound();
     Navigator.pop(context);
@@ -339,7 +340,6 @@ class _StoryPageState extends State<StoryPage> {
   }
 
   void finishQuest() {
-    widget.dsix.gm.finishQuest();
     Navigator.pop(context);
     possibleRewards = widget.dsix.gm.randomReward();
     showAlertDialogChooseReward(context);

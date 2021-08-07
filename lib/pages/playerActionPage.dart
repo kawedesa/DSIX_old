@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/shared/dice.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-
+import 'dart:math';
 import '../models/player/playerAction.dart';
 import '../models/player/option.dart';
 import 'package:dsixv02app/models/shared/item.dart';
@@ -94,163 +94,166 @@ class _ActionPageState extends State<ActionPage> {
   }
 
   Player selectedPlayer;
-  List<Player> availablePlayers = [];
-  void chooseTarget(Option option) {
-    availablePlayers = [];
-    widget.dsix.gm.players.forEach((element) {
-      if (element.characterFinished) {
-        availablePlayers.add(element);
-      }
-    });
 
-    if (option.name == 'HELP') {
-      availablePlayers.remove(widget.dsix.gm.getCurrentPlayer());
-    }
+//ESCOLHA DE TARGET PELO PLAYER. DESATIVADO POR NÃO TER INTEGRAÇÃO ENTRE OS CELULARES
 
-    if (availablePlayers.isEmpty) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(widget.alert('NO OTHER PLAYERS'));
-    } else {
-      showAlertDialogChooseTarget(context);
-    }
-  }
+  // List<Player> availablePlayers = [];
+  // void chooseTarget(Option option) {
+  //   availablePlayers = [];
+  //   widget.dsix.gm.players.forEach((element) {
+  //     if (element.characterFinished) {
+  //       availablePlayers.add(element);
+  //     }
+  //   });
 
-  showAlertDialogChooseTarget(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: Colors.black,
-              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              content: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: widget.dsix.gm
-                        .getCurrentPlayer()
-                        .playerColor
-                        .primaryColor,
-                    width: 2.5, //                   <--- border width here
-                  ),
-                ),
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Container(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      Container(
-                        color: widget.dsix.gm
-                            .getCurrentPlayer()
-                            .playerColor
-                            .primaryColor,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-                          child: Center(
-                            child: Text(
-                              'CHOOSE A TARGET',
-                              style: TextStyle(
-                                fontFamily: 'Santana',
-                                height: 1,
-                                fontSize: 30,
-                                color: widget.dsix.gm
-                                    .getCurrentPlayer()
-                                    .playerColor
-                                    .secondaryColor,
-                                letterSpacing: 1.2,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        child: Container(
-                          height: MediaQuery.of(context).size.height *
-                              0.08 *
-                              availablePlayers.length,
-                          child: ListView.builder(
-                              itemCount: availablePlayers.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return Padding(
-                                  padding:
-                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      selectedPlayer = availablePlayers[index];
-                                      applyOutcomeToTarget();
-                                      widget.refresh();
-                                      Navigator.pop(context);
-                                    },
-                                    child: Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                              0.08,
-                                      width: double.infinity,
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: availablePlayers[index]
-                                              .playerColor
-                                              .primaryColor,
-                                          width:
-                                              3, //                   <--- border width here
-                                        ),
-                                      ),
-                                      child: Stack(
-                                        alignment:
-                                            AlignmentDirectional.centerEnd,
-                                        children: [
-                                          Column(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: <Widget>[
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        0, 0, 15, 0),
-                                                child: Icon(
-                                                  Icons.keyboard_arrow_right,
-                                                  color: availablePlayers[index]
-                                                      .playerColor
-                                                      .primaryColor,
-                                                  size: 25,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                          Center(
-                                            child: Text(
-                                              '${availablePlayers[index].playerColor.name}',
-                                              style: TextStyle(
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold,
-                                                letterSpacing: 1.5,
-                                                fontFamily: 'Calibri',
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              }),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
+  //   if (option.name == 'HELP') {
+  //     availablePlayers.remove(widget.dsix.gm.getCurrentPlayer());
+  //   }
+
+  //   if (availablePlayers.isEmpty) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(widget.alert('NO OTHER PLAYERS'));
+  //   } else {
+  //     showAlertDialogChooseTarget(context);
+  //   }
+  // }
+
+  // showAlertDialogChooseTarget(BuildContext context) {
+  //   showDialog(
+  //     context: context,
+  //     builder: (context) {
+  //       return StatefulBuilder(
+  //         builder: (context, setState) {
+  //           return AlertDialog(
+  //             backgroundColor: Colors.black,
+  //             contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+  //             content: Container(
+  //               decoration: BoxDecoration(
+  //                 border: Border.all(
+  //                   color: widget.dsix.gm
+  //                       .getCurrentPlayer()
+  //                       .playerColor
+  //                       .primaryColor,
+  //                   width: 2.5, //                   <--- border width here
+  //                 ),
+  //               ),
+  //               width: MediaQuery.of(context).size.width * 0.7,
+  //               child: Container(
+  //                 child: Column(
+  //                   mainAxisAlignment: MainAxisAlignment.start,
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: <Widget>[
+  //                     Container(
+  //                       color: widget.dsix.gm
+  //                           .getCurrentPlayer()
+  //                           .playerColor
+  //                           .primaryColor,
+  //                       child: Padding(
+  //                         padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
+  //                         child: Center(
+  //                           child: Text(
+  //                             'CHOOSE A TARGET',
+  //                             style: TextStyle(
+  //                               fontFamily: 'Santana',
+  //                               height: 1,
+  //                               fontSize: 30,
+  //                               color: widget.dsix.gm
+  //                                   .getCurrentPlayer()
+  //                                   .playerColor
+  //                                   .secondaryColor,
+  //                               letterSpacing: 1.2,
+  //                             ),
+  //                           ),
+  //                         ),
+  //                       ),
+  //                     ),
+  //                     Padding(
+  //                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+  //                       child: Container(
+  //                         height: MediaQuery.of(context).size.height *
+  //                             0.08 *
+  //                             availablePlayers.length,
+  //                         child: ListView.builder(
+  //                             itemCount: availablePlayers.length,
+  //                             itemBuilder: (BuildContext context, int index) {
+  //                               return Padding(
+  //                                 padding:
+  //                                     const EdgeInsets.fromLTRB(0, 0, 0, 0),
+  //                                 child: GestureDetector(
+  //                                   onTap: () {
+  //                                     selectedPlayer = availablePlayers[index];
+  //                                     applyOutcomeToTarget();
+  //                                     widget.refresh();
+  //                                     Navigator.pop(context);
+  //                                   },
+  //                                   child: Container(
+  //                                     height:
+  //                                         MediaQuery.of(context).size.height *
+  //                                             0.08,
+  //                                     width: double.infinity,
+  //                                     decoration: BoxDecoration(
+  //                                       border: Border.all(
+  //                                         color: availablePlayers[index]
+  //                                             .playerColor
+  //                                             .primaryColor,
+  //                                         width:
+  //                                             3, //                   <--- border width here
+  //                                       ),
+  //                                     ),
+  //                                     child: Stack(
+  //                                       alignment:
+  //                                           AlignmentDirectional.centerEnd,
+  //                                       children: [
+  //                                         Column(
+  //                                           mainAxisAlignment:
+  //                                               MainAxisAlignment.center,
+  //                                           crossAxisAlignment:
+  //                                               CrossAxisAlignment.start,
+  //                                           children: <Widget>[
+  //                                             Padding(
+  //                                               padding:
+  //                                                   const EdgeInsets.fromLTRB(
+  //                                                       0, 0, 15, 0),
+  //                                               child: Icon(
+  //                                                 Icons.keyboard_arrow_right,
+  //                                                 color: availablePlayers[index]
+  //                                                     .playerColor
+  //                                                     .primaryColor,
+  //                                                 size: 25,
+  //                                               ),
+  //                                             ),
+  //                                           ],
+  //                                         ),
+  //                                         Center(
+  //                                           child: Text(
+  //                                             '${availablePlayers[index].playerColor.name}',
+  //                                             style: TextStyle(
+  //                                               fontSize: 16,
+  //                                               fontWeight: FontWeight.bold,
+  //                                               letterSpacing: 1.5,
+  //                                               fontFamily: 'Calibri',
+  //                                               color: Colors.white,
+  //                                             ),
+  //                                           ),
+  //                                         ),
+  //                                       ],
+  //                                     ),
+  //                                   ),
+  //                                 ),
+  //                               );
+  //                             }),
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ),
+  //           );
+  //         },
+  //       );
+  //     },
+  //   );
+  // }
 
   void decideOutcome(Option option, int numberDice) {
     bonus = 0;
@@ -303,6 +306,7 @@ class _ActionPageState extends State<ActionPage> {
 
             case 'MORPH':
               {
+                //RESET EFFECTS
                 itemList = [
                   'FLY',
                   'FAST',
@@ -319,6 +323,7 @@ class _ActionPageState extends State<ActionPage> {
                 ];
                 widget.dsix.gm.getCurrentPlayer().checkSkillEffects(itemList);
 
+                //SET NEW EFFECTS
                 if (numberDice > 1) {
                   //10+
                   itemList = [
@@ -361,14 +366,27 @@ class _ActionPageState extends State<ActionPage> {
 
             case 'ENHANCE':
               {
-                itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
-
+                if (numberDice > 1) {
+                  //10+
+                  itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
+                } else {
+                  //7-9
+                  itemList = ['HEARING', 'SMELL', 'TASTE'];
+                }
+                numberDice = 1;
                 showOutcome(option, numberDice);
               }
               break;
             case 'REMOVE':
               {
-                itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
+                if (numberDice > 1) {
+                  //10+
+                  itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
+                } else {
+                  //7-9
+                  itemList = ['HEARING', 'SMELL', 'TASTE'];
+                }
+                numberDice = 1;
 
                 showOutcome(option, numberDice);
               }
@@ -463,31 +481,33 @@ class _ActionPageState extends State<ActionPage> {
       switch (option.name) {
         case 'ENHANCE':
           {
-            chooseTarget(option);
+            selectedPlayer = widget.dsix.gm.getCurrentPlayer();
+            applyOutcomeToTarget(2);
           }
           break;
         case 'REMOVE':
           {
-            chooseTarget(option);
+            selectedPlayer = widget.dsix.gm.getCurrentPlayer();
+            applyOutcomeToTarget(2);
           }
           break;
 
         case 'TRANSFORM':
           {
             selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget();
+            applyOutcomeToTarget(3);
           }
           break;
         case 'ILLUSION':
           {
             selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget();
+            applyOutcomeToTarget(3);
           }
           break;
         case 'MORPH':
           {
             selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget();
+            applyOutcomeToTarget(3);
           }
           break;
 
@@ -518,10 +538,10 @@ class _ActionPageState extends State<ActionPage> {
   //   }
   // }
 
-  void applyOutcomeToTarget() {
+  void applyOutcomeToTarget(int numberOfActions) {
     for (int i = 0; i < itemList.length; i++) {
       if (outcomeList[i]) {
-        selectedPlayer.newTemporaryEffect(itemList[i], 3);
+        selectedPlayer.newTemporaryEffect(itemList[i], numberOfActions);
       }
     }
     widget.refresh();
@@ -568,7 +588,8 @@ class _ActionPageState extends State<ActionPage> {
         resultColor = Colors.red;
         title = 'FAIL';
         textSize = 1.25;
-        resultText = option.fail;
+        resultText =
+            '${option.fail} ${option.failOutcome[Random().nextInt(option.failOutcome.length)]}';
         option.newRoll = false;
         return;
       }

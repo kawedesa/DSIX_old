@@ -151,7 +151,7 @@ class Player {
           'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
       option: [
         Option('OPTIONS', 'Each action has different options to choose from.',
-            '', '', '', '', false)
+            '', '', '', [], '', false)
       ],
       value: 0,
       bonus: 0,
@@ -166,7 +166,11 @@ class Player {
             'You punch the target with your fists.',
             'You hit in a weak spot.',
             'You hit the target.',
-            'You miss and open your guard.',
+            'You miss and',
+            [
+              'the enemy takes an action.',
+              'drop something from your inventory',
+            ],
             'DAMAGE',
             true),
         Option(
@@ -174,7 +178,11 @@ class Player {
             'You attack the target with your weapon, trying to bring them down.',
             'You hit in a weak spot.',
             'You hit the target.',
-            'You miss and open your guard.',
+            'You miss and',
+            [
+              'the enemy takes an action.',
+              'drop something from your inventory',
+            ],
             'DAMAGE',
             true),
         Option(
@@ -182,7 +190,11 @@ class Player {
             'You try to grapple the target, holding them down.',
             'You hold them in place and they are unable to move.',
             'You hold one of their arms or legs.',
-            'They escape your grasp.',
+            'They escape and',
+            [
+              'hold you down.',
+              'take an action.',
+            ],
             'HOLD',
             false),
       ],
@@ -199,7 +211,8 @@ class Player {
             'You try to protect.',
             'You protect a lot of damage.',
             'You protect some damage.',
-            'You can\'t raise your guard in time and take full damage.',
+            'You take damage and',
+            ['get stunned.', 'drop something from your inventory.'],
             'PROTECT',
             true),
         Option(
@@ -207,7 +220,8 @@ class Player {
             'You try to resist.',
             'You resist a lot of damage.',
             'You resist some damage.',
-            'You can\'t defend in time and take full damage.',
+            'You take damage and',
+            ['get stunned.', 'drop something from your inventory.'],
             'RESIST',
             true),
         Option(
@@ -215,7 +229,8 @@ class Player {
             'You try to help.',
             'You give them a real advantage.',
             'You make things easier for them.',
-            'You make things harder for them.',
+            'You get on their way and',
+            ['hurt yourself.', 'drop something from their inventory.'],
             'HELP',
             false),
       ],
@@ -232,7 +247,11 @@ class Player {
             'You search for something useful.',
             'You find resources and gold.',
             'You find resources.',
-            'You find something bad',
+            'You don\'t find anything useful and',
+            [
+              'notice a new threat.',
+              'notice a new obstacle.',
+            ],
             'RESOURCES',
             true),
         Option(
@@ -240,7 +259,11 @@ class Player {
             'You try to gather information.',
             'You gather meaningful information.',
             'You gather information, but it costs you.',
-            'You find something bad.',
+            'You don\'t find anything useful and',
+            [
+              'notice a new threat.',
+              'notice a new obstacle.',
+            ],
             'INFORMATION',
             false),
         // Option(
@@ -265,7 +288,8 @@ class Player {
             'You try to strike a deal.',
             'They accept your offer.',
             'They ask for more.',
-            'The deal is off and they dislike you.',
+            'The deal is off and',
+            ['the enemy takes an action.', 'the enemy calls for backup.'],
             'DEAL',
             false),
         Option(
@@ -273,7 +297,8 @@ class Player {
             'You try to gather information.',
             'You gather information.',
             'You gather information, but at a cost.',
-            'You receive bad news.',
+            'You don\'t learn anything and',
+            ['the enemy takes an action.', 'the enemy calls for backup.'],
             'INFORMATION',
             false),
         Option(
@@ -281,7 +306,8 @@ class Player {
             'You try to change people\'s minds.',
             'You change their minds.',
             'They see your point, but ask for something in return.',
-            'They are offended and dislike you.',
+            'You can\'t change their minds and',
+            ['the enemy takes an action.', 'the enemy calls for backup.'],
             '',
             false),
         Option(
@@ -289,7 +315,11 @@ class Player {
             'You entertain people around you.',
             'Everyone loves your performance and becomes friendly.',
             'Some people enjoy your performance and become friendly.',
-            'They think you suck and are mean to you.',
+            'You make a mistake and',
+            [
+              'people make fun of you.',
+              'people are offended by your performance.'
+            ],
             'ENTERTAIN',
             false),
       ],
@@ -306,7 +336,8 @@ class Player {
             'You try to get out of the way.',
             'You dodge and take no damage.',
             'You take half damage.',
-            'You take full damage.',
+            'You take damage and',
+            ['get stunned.', 'drop something from your inventory.'],
             'AVOID',
             false),
         Option(
@@ -314,27 +345,53 @@ class Player {
             'You try to escape from a tough situation.',
             'You escape.',
             'You escape, but call unwanted attention.',
-            'You can\'t escape.',
+            'You can\'t escape and',
+            [
+              'the enemy takes an action.',
+              'drop something from your inventory.'
+            ],
             'ESCAPE',
             false),
-        Option('HIDE', 'You try to hide.', 'You are hidden.',
-            'You are noticed.', 'You are exposed.', 'HIDE', false),
+        Option(
+            'HIDE',
+            'You try to hide.',
+            'You are hidden.',
+            'You are noticed.',
+            'You are exposed and',
+            ['the enemy takes an action.', 'everyone focus on you.'],
+            'HIDE',
+            false),
         Option(
             'JUMP',
             'You try to jump over an obstacle.',
             'You land where you wanted.',
             'You land somewhere close.',
-            'You stumble and fail.',
+            'You trip and',
+            ['land in a bad place.', 'hurt your yourself on the landing.'],
             'JUMP',
             false),
-        Option('CLIMB', 'You try to climb.', 'You have no trouble.',
-            'You face some difficulty.', 'You slide and fall.', 'CLIMB', false),
+        Option(
+            'CLIMB',
+            'You try to climb.',
+            'You have no trouble.',
+            'You face some difficulty.',
+            'You fall and',
+            [
+              'drop something from your inventory.',
+              'hurt your yourself on the landing.'
+            ],
+            'CLIMB',
+            false),
         Option(
             'SWIM',
             'You try to swim.',
             'You have no trouble.',
             'You face some difficulty.',
-            'You can\'t stay afloat.',
+            'You can\'t stay afloat and',
+            [
+              'drink some water.',
+              'drop something from your inventory.',
+            ],
             'SWIM',
             false)
       ],
@@ -348,7 +405,7 @@ class Player {
           'This is your special move and what you are known for. Choose your skill by clicking on the icons above.',
       option: [
         Option('OPTIONS', 'Each skill has different options to choose from.',
-            'Success.', 'Half Success.', 'Fail.', 'OPTIONS', false)
+            'Success.', 'Half Success.', 'Fail.', [], 'OPTIONS', false)
       ],
       value: 0,
       bonus: 0,
@@ -462,15 +519,9 @@ class Player {
   void use(Item item) {
     switch (item.name) {
       case 'BANDAGES':
-        if (this.currentHealth == this.race.maxHealth) {
-          throw new MaxHpException();
-        }
         this.inventory.remove(item);
         playerTurn();
-        int randomNumber = Random().nextInt(2) + 1;
-
-        healPlayer(randomNumber);
-
+        throw new UseItemException(message: '${item.name}');
         break;
 
       case 'FOOD':
@@ -479,7 +530,7 @@ class Player {
         }
         this.inventory.remove(item);
         playerTurn();
-        int randomNumber = Random().nextInt(5) + 1;
+        int randomNumber = Random().nextInt(3) + 1;
 
         healPlayer(randomNumber);
 

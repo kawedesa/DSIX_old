@@ -14,7 +14,11 @@ class PlayerSkillList {
             'Your body and belongings morph into a new shape.',
             'Choose two abilities',
             'Choose one ability',
-            'Something bad happens.',
+            'You fail and',
+            [
+              'transform into a useless creature.',
+              'drop someting from the inventory.'
+            ],
             'ABILITY',
             true),
       ],
@@ -31,7 +35,8 @@ class PlayerSkillList {
             'You make everyone in a large area around you see, hear, smell, taste or feel anything you want.',
             'Choose two senses',
             'Choose one sense',
-            'Something bad happens.',
+            'You fail and',
+            ['everyone see through your illusion.', 'make a loud noise.'],
             'SENSES',
             true),
       ],
@@ -49,7 +54,11 @@ class PlayerSkillList {
             'It burns everything in a small area.',
             'You hit the mark.',
             'It lands close.',
-            'Something bad happens.',
+            'You miss and',
+            [
+              'it lands on your feet.',
+              'the enemy takes an action.',
+            ],
             'DAMAGE',
             true),
         Option(
@@ -57,7 +66,11 @@ class PlayerSkillList {
             'It creates a thick cloud over a medium area.',
             'You hit the mark.',
             'It lands close.',
-            'Something bad happens.',
+            'You miss and',
+            [
+              'it lands on your feet.',
+              'the enemy takes an action.',
+            ],
             'SMOKE',
             false),
         Option(
@@ -65,7 +78,11 @@ class PlayerSkillList {
             'It freezes everything in a small area.',
             'You hit the mark.',
             'It lands close.',
-            'Something bad happens.',
+            'You miss and',
+            [
+              'it lands on your feet.',
+              'the enemy takes an action.',
+            ],
             'FREEZE',
             false),
       ],
@@ -82,7 +99,8 @@ class PlayerSkillList {
             'You create a hole.',
             'You dig a deep hole in a area around you.',
             'You dig a shallow around you.',
-            'Something bad happens.',
+            'You loose control and',
+            ['get stuck.', 'puts one of your friends in a hole.'],
             'DIG',
             false),
         Option(
@@ -90,7 +108,8 @@ class PlayerSkillList {
             'You hold someone.',
             'You hold them completly.',
             'You hold one of their arms or legs. ',
-            'Something bad happens.',
+            'You loose control and ',
+            ['get stuck.', 'hold one of your friends.'],
             'HOLD',
             false),
         Option(
@@ -98,7 +117,11 @@ class PlayerSkillList {
             'You build a simple structure.',
             'Your structure is stable.',
             'Your structure is unstable.',
-            'Something bad happens.',
+            'You fail and',
+            [
+              'the enemy takes as action.',
+              'build something different than expected.'
+            ],
             'BUILD',
             false),
         Option(
@@ -106,7 +129,11 @@ class PlayerSkillList {
             'You destroy an object or structure.',
             'You destroy the target.',
             'You make it weaker. ',
-            'Something bad happens.',
+            'You fail and',
+            [
+              'the enemy takes as action.',
+              'destroy something different than expected.'
+            ],
             'DESTROY',
             false),
       ],
@@ -123,7 +150,8 @@ class PlayerSkillList {
             'Your body and voice changes to mach the person of your choice.',
             'Choose two options.',
             'Choose one option.',
-            'Something bad happens.',
+            'You fail and',
+            ['become someone completly different.', 'make a loud noise.'],
             'TRANSFORM',
             true)
       ],
@@ -141,7 +169,8 @@ class PlayerSkillList {
             'You make them see through walls, hear whispers or track a scent from far away.',
             'Choose two senses.',
             'Choose one sense.',
-            'Something bad happens.',
+            'You loose control and',
+            ['blind the person you touch.', 'stun the person you touch.'],
             'SENSES',
             true),
         Option(
@@ -149,7 +178,8 @@ class PlayerSkillList {
             'You make them blind, deaf or numb.',
             'Choose two senses.',
             'Choose one sense.',
-            'Something bad happens.',
+            'You loose control and',
+            ['blind yourself.', 'the enemy takes an action.'],
             'SENSES',
             true)
       ],

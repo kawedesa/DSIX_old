@@ -372,6 +372,173 @@ class _CharacterPageState extends State<CharacterPage> {
     );
   }
 
+  showAlertDialogDeleteCharacter(BuildContext context, int index) {
+    AlertDialog alerta = AlertDialog(
+      backgroundColor: Colors.black,
+      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+      content: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: Colors.grey[700],
+                width: 2.5, //                   <--- border width here
+              ),
+            ),
+            width: MediaQuery.of(context).size.width * 0.7,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Container(
+                  color: Colors.grey[700],
+                  width: double.infinity,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'DELETE CHARACTER?',
+                          style: TextStyle(
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 25,
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ), //ITEM NAME
+
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: TextButton(
+                    onPressed: () {
+                      setState(() {
+                        widget.dsix.gm.selectCharacter(index);
+                        widget.dsix.gm.refundCharacter();
+                        widget.refresh();
+                        Navigator.of(context).pop(true);
+                      });
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[700],
+                          width: 1, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 0),
+                                child: Icon(
+                                  Icons.check,
+                                  color: Colors.grey[700],
+                                  size: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'CONFIRM',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(true);
+                    },
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    ),
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 0.08,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        border: Border.all(
+                          color: Colors.grey[700],
+                          width: 1, //                   <--- border width here
+                        ),
+                      ),
+                      child: Stack(
+                        alignment: AlignmentDirectional.centerEnd,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                                child: Icon(
+                                  Icons.clear,
+                                  color: Colors.grey[700],
+                                  size: 25,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Center(
+                            child: Text(
+                              'CANCEL',
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 1.5,
+                                fontFamily: 'Calibri',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alerta;
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     //HEALTH OR LOOT
@@ -480,9 +647,7 @@ class _CharacterPageState extends State<CharacterPage> {
                       return GestureDetector(
                         onLongPress: () {
                           setState(() {
-                            widget.dsix.gm.selectCharacter(index);
-                            widget.dsix.gm.refundCharacter();
-                            widget.refresh();
+                            showAlertDialogDeleteCharacter(context, index);
                           });
                         },
                         onTap: () {

@@ -11,7 +11,7 @@ class PlayerRaceList {
         maxHealth: 12,
         maxWeight: 12,
         actionPoints: [
-          2,
+          3,
           1,
           1,
           1,
@@ -34,7 +34,7 @@ class PlayerRaceList {
         maxHealth: 12,
         maxWeight: 16,
         actionPoints: [
-          3,
+          5,
           1,
           0,
           0,
@@ -67,7 +67,7 @@ class PlayerRaceList {
         maxHealth: 12,
         maxWeight: 8,
         actionPoints: [
-          3,
+          5,
           1,
           0,
           0,
@@ -100,7 +100,7 @@ class PlayerRaceList {
         maxHealth: 16,
         maxWeight: 12,
         actionPoints: [
-          3,
+          5,
           0,
           1,
           -1,
@@ -128,7 +128,7 @@ class PlayerRaceList {
         maxHealth: 12,
         maxWeight: 12,
         actionPoints: [
-          3,
+          5,
           -1,
           0,
           1,
@@ -158,10 +158,10 @@ class PlayerRaceList {
         race: 'ELF',
         description:
             'Elves have quick reflexes and sharp senses, making them very agile and precise.',
-        maxHealth: 16,
+        maxHealth: 12,
         maxWeight: 12,
         actionPoints: [
-          3,
+          5,
           0,
           -1,
           1,

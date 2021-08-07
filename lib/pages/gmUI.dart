@@ -240,77 +240,111 @@ class _GmUIState extends State<GmUI> {
                     width: 1.5, //                   <--- border width here
                   ),
                 ),
-                width: 100,
-                height: 250,
+                width: MediaQuery.of(context).size.width * 0.7,
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                     Container(
                       color: Colors.grey[700],
-                      width: double.infinity,
                       child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Text(
-                              'AVAILABLE XP',
-                              style: TextStyle(
-                                fontFamily: 'Headline',
-                                height: 1.3,
-                                fontSize: 30.0,
-                                color: Colors.white,
-                                letterSpacing: 3,
+                        padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
+                        child: Center(
+                          child: Text(
+                            'AVAILABLE XP',
+                            style: TextStyle(
+                              fontFamily: 'Santana',
+                              height: 1,
+                              fontSize: 33,
+                              color: Colors.white,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                    Container(
+                      // color: Colors.pink,
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
+                              child: Container(
+                                height:
+                                    MediaQuery.of(context).size.height * 0.2,
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          widget.dsix.gm.changeXp(-25);
+                                          refreshPage();
+                                        });
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/ui/arrowLeft.svg',
+                                        color: Colors.white,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.08,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.fromLTRB(
+                                          10, 0, 10, 0),
+                                      child: Center(
+                                          child: Container(
+                                        // height: 125,
+                                        child: Container(
+                                          // width: 100,
+                                          // height: 100,
+                                          // color: Colors.white,
+                                          child: Center(
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  '${widget.dsix.gm.totalXp}',
+                                                  style: TextStyle(
+                                                    fontFamily: 'Headline',
+                                                    height: 1,
+                                                    fontSize: 50.0,
+                                                    color: Colors.grey[700],
+                                                    letterSpacing: 2,
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        // color: Colors.red,
+                                      )),
+                                    ),
+                                    GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          widget.dsix.gm.changeXp(25);
+                                          refreshPage();
+                                        });
+                                      },
+                                      child: SvgPicture.asset(
+                                        'assets/ui/arrowRight.svg',
+                                        color: Colors.white,
+                                        width:
+                                            MediaQuery.of(context).size.width *
+                                                0.08,
+                                      ),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ],
                         ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(35, 25, 35, 10),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: <Widget>[
-                          GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  widget.dsix.gm.changeXp(25);
-                                });
-                                refreshPage();
-                              },
-                              child: Icon(
-                                Icons.keyboard_arrow_up,
-                                color: Colors.white,
-                                size: 32,
-                              )),
-                          Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Text(
-                              '${widget.dsix.gm.totalXp}',
-                              style: TextStyle(
-                                height: 1.25,
-                                fontSize: 50,
-                                fontFamily: 'Calibri',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  widget.dsix.gm.changeXp(-25);
-                                });
-                                refreshPage();
-                              },
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.white,
-                                size: 32,
-                              )),
-                        ],
                       ),
                     ),
                   ],
@@ -349,7 +383,7 @@ class _GmUIState extends State<GmUI> {
                     padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
                     child: Center(
                       child: Text(
-                        '${character.name}',
+                        '${character.name}'.toUpperCase(),
                         style: TextStyle(
                           fontFamily: 'Santana',
                           height: 1,
@@ -1169,7 +1203,8 @@ class _GmUIState extends State<GmUI> {
                             width: MediaQuery.of(context).size.width * 0.125,
                           ),
                           title: Text(
-                            '${widget.dsix.gm.availableCharacters[index].name}',
+                            '${widget.dsix.gm.availableCharacters[index].name}'
+                                .toUpperCase(),
                             style: TextStyle(
                               fontFamily: 'Santana',
                               height: 1.4,

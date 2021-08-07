@@ -3,7 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'playerRacePage.dart';
 import 'gmUI.dart';
-
+import 'package:dsixv02app/models/shared/exceptions.dart';
 import 'playerUI.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 
@@ -176,8 +176,11 @@ class _PlayersPageState extends State<PlayersPage> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        widget.dsix.gm.deleteCurrentPlayer(index);
-                        Navigator.of(context).pop(true);
+                        try {
+                          widget.dsix.gm.deleteCurrentPlayer(index);
+                        } on NoPlayersException catch (e) {
+                          Navigator.of(context).pop(true);
+                        }
                       });
                     },
                     style: TextButton.styleFrom(
@@ -532,8 +535,8 @@ class _PlayersPageState extends State<PlayersPage> {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: GestureDetector(
                         onLongPress: () {
-                          widget.dsix.gm.setCurrentPlayer(index);
                           setState(() {
+                            widget.dsix.gm.setCurrentPlayer(index);
                             (widget.dsix.gm.players[index].characterFinished)
                                 ? showAlertDialogDeletePlayer(context, index)
                                 : widget.dsix.gm.newRandomPlayer(index);
@@ -597,7 +600,9 @@ class _PlayersPageState extends State<PlayersPage> {
                 ),
                 GestureDetector(
                   onLongPress: () {
-                    showAlertDialogDeleteStory(context);
+                    setState(() {
+                      showAlertDialogDeleteStory(context);
+                    });
                   },
                   onTap: () {
                     Navigator.of(context).push(_createRouteGmUI());

@@ -75,6 +75,7 @@ class Story {
     for (int i = 0; i < this.settings.numberOfQuests; i++) {
       this.questList.add(quest.newRandomQuest(this.settings.questXp * players));
     }
+    this.quest = this.questList.last;
   }
 
   void chooseQuest(int index) {

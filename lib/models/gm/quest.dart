@@ -38,35 +38,42 @@ class Quest {
   // ];
 
   List<String> backgroundList = [
+    'Merchant',
+    'Nobleman',
+    'Soldier',
+    'Student',
+    'Traveler',
+    'Worker',
+    'Wizzard',
     // 'Merchant',
     // 'Noble',
     // 'Spy',
-    'Prisoner',
+    // 'Prisoner',
     // 'Pirate',
-    'Medic',
-    'Worker',
+    // 'Medic',
+    // 'Worker',
     // 'Chef',
-    'Mercenary',
+    // 'Mercenary',
     // 'Detective',
     // 'Artist',
-    'Wizard',
-    'Student',
-    'Traveler',
-    'Hunter',
-    'Assassin',
-    'Thief',
+    // 'Wizard',
+    // 'Student',
+    // 'Traveler',
+    // 'Hunter',
+    // 'Assassin',
+    // 'Thief',
     // 'Scientist',
     // 'Lawyer',
     // 'Farmer',
     // 'Tailor',
-    'Gladiator',
+    // 'Gladiator',
     // 'Sailor',
     // 'Innkeeper',
     // 'Stablehand',
-    'Soldier',
+    // 'Soldier',
     // 'Politician',
     // 'Bureaucrat',
-    'Shaman',
+    // 'Shaman',
     // 'Homeless',
     // 'Knight',
     // 'Monk',
@@ -74,19 +81,28 @@ class Quest {
   ];
 
   List<String> objectiveList = [
-    'Hunt',
-    'Destroy',
-    'Deliver',
-    'Steal',
     'Capture',
-    'Find',
+    'Control',
+    'Destroy',
+    'Hunt',
+    'Kill',
     'Protect',
     'Save',
-    'Learn',
-    'Avenge',
-    'Control',
-    'Report',
-    'Fight',
+    'Steal',
+
+    // 'Hunt',
+    // 'Destroy',
+    // 'Deliver',
+    // 'Steal',
+    // 'Capture',
+    // 'Find',
+    // 'Protect',
+    // 'Save',
+    // 'Learn',
+    // 'Avenge',
+    // 'Control',
+    // 'Report',
+    // 'Fight',
 
     // 'Create',
     // 'Flee',
@@ -154,19 +170,52 @@ class Quest {
     int totalXp = xp;
 
     List<Character> randomThreat = [];
-
+    bool check = true;
     while (totalXp > 0) {
+      check = true;
       Character randomCharacter = randomLocation
           .characters[Random().nextInt(randomLocation.characters.length)]
           .newCharacter();
-
+      //Check random character XP
       if (randomCharacter.baseXp <= totalXp) {
-        randomCharacter.totalXp = randomCharacter.baseXp;
-        randomCharacter.totalLoot = (randomCharacter.baseLoot).toInt();
-        randomCharacter.maxHealth = randomCharacter.baseHealth;
-        randomCharacter.currentHealth = randomCharacter.maxHealth;
-        randomThreat.add(randomCharacter);
-        totalXp -= randomCharacter.baseXp;
+        //Check to see if it's the first character to be added
+        if (randomThreat.isEmpty) {
+          randomCharacter.totalXp = randomCharacter.baseXp;
+          randomCharacter.totalLoot = (randomCharacter.baseLoot).toInt();
+          randomCharacter.maxHealth = randomCharacter.baseHealth;
+          randomCharacter.currentHealth = randomCharacter.maxHealth;
+          randomThreat.add(randomCharacter);
+          totalXp -= randomCharacter.baseXp;
+        } else {
+          //Loop to see if the character already exists and I can put more of them together on the same pack
+          while (check) {
+            randomThreat.forEach((element) {
+              if (element.name == randomCharacter.name &&
+                  element.totalXp < 100) {
+                element.amount++;
+                //change Health
+                element.maxHealth += randomCharacter.baseHealth;
+                element.currentHealth = element.maxHealth;
+                //change Xp
+                element.totalXp += randomCharacter.baseXp;
+                //change Loot
+                element.totalLoot = (element.baseLoot * element.amount).toInt();
+                totalXp -= randomCharacter.baseXp;
+                check = false;
+              }
+            });
+            if (check) {
+              //Add new character if it's not equal to any other character
+              randomCharacter.totalXp = randomCharacter.baseXp;
+              randomCharacter.totalLoot = (randomCharacter.baseLoot).toInt();
+              randomCharacter.maxHealth = randomCharacter.baseHealth;
+              randomCharacter.currentHealth = randomCharacter.maxHealth;
+              randomThreat.add(randomCharacter);
+              totalXp -= randomCharacter.baseXp;
+              check = false;
+            } //If
+          } //While
+        }
       }
     }
 
@@ -174,9 +223,103 @@ class Quest {
         '${backgroundList[Random().nextInt(backgroundList.length)]}';
     String randomObjective =
         '${objectiveList[Random().nextInt(objectiveList.length)]}';
-    String randomTarget = (target == 'Person')
-        ? '${backgroundList[Random().nextInt(backgroundList.length)]}'
-        : 'Group of ${backgroundList[Random().nextInt(backgroundList.length)]}s';
+
+    String randomTarget;
+
+    switch (randomObjective) {
+      case 'Capture':
+        {
+          int XP = 0;
+          randomThreat.forEach((element) {
+            if (element.totalXp > XP) {
+              XP = element.totalXp;
+              randomTarget = element.name;
+            }
+          });
+        }
+        break;
+      case 'Control':
+        {
+          List<String> possibleTarget = [
+            'Camp',
+            'Tomb',
+            'Outpost',
+            'Fort',
+            'Altar',
+            'Machine',
+          ];
+          randomTarget =
+              possibleTarget[Random().nextInt(possibleTarget.length)];
+        }
+        break;
+      case 'Destroy':
+        {
+          List<String> possibleTarget = [
+            'Item',
+            'Bridge',
+            'Wall',
+            'Altar',
+            'Evidence',
+            'Machine',
+          ];
+          randomTarget =
+              possibleTarget[Random().nextInt(possibleTarget.length)];
+        }
+        break;
+      case 'Hunt':
+        {
+          int XP = 0;
+          randomThreat.forEach((element) {
+            if (element.totalXp > XP) {
+              XP = element.totalXp;
+              randomTarget = element.name;
+            }
+          });
+        }
+        break;
+      case 'Kill':
+        {
+          int XP = 0;
+          randomThreat.forEach((element) {
+            if (element.totalXp > XP) {
+              XP = element.totalXp;
+              randomTarget = element.name;
+            }
+          });
+        }
+        break;
+      case 'Protect':
+        {
+          randomTarget =
+              backgroundList[Random().nextInt(backgroundList.length)];
+        }
+        break;
+      case 'Save':
+        {
+          randomTarget =
+              backgroundList[Random().nextInt(backgroundList.length)];
+        }
+        break;
+      case 'Steal':
+        {
+          List<String> possibleTarget = [
+            'Item',
+            'Creature',
+            'Weapon',
+            'Tool',
+            'Technology',
+            'Equipment',
+          ];
+
+          randomTarget =
+              possibleTarget[Random().nextInt(possibleTarget.length)];
+        }
+        break;
+    }
+
+    // String randomTarget = (target == 'Person')
+    //     ? '${backgroundList[Random().nextInt(backgroundList.length)]}'
+    //     : 'Group of ${backgroundList[Random().nextInt(backgroundList.length)]}s';
 
     Quest newRandomQuest = new Quest(
       icon: 'quest',
