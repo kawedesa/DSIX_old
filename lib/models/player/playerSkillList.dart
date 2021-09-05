@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/player/option.dart';
+import 'package:dsixv02app/models/player/newOption.dart';
 import 'package:dsixv02app/models/player/playerAction.dart';
 
 class PlayerSkillList {
@@ -10,17 +10,9 @@ class PlayerSkillList {
           'You morph into a animal of similar size  and gain new abilities.',
       option: [
         Option(
-            'MORPH',
-            'Your body and belongings morph into a new shape.',
-            'Choose two abilities',
-            'Choose one ability',
-            'You fail and',
-            [
-              'transform into a useless creature.',
-              'drop someting from the inventory.'
-            ],
-            'ABILITY',
-            true),
+            name: 'MORPH',
+            description: 'Your body and belongings morph into a new shape.',
+            value: 0),
       ],
       value: 0,
       bonus: 0,
@@ -31,14 +23,10 @@ class PlayerSkillList {
       description: 'You create an illusion that tricks people\'s minds.',
       option: [
         Option(
-            'ILLUSION',
-            'You make everyone in a large area around you see, hear, smell, taste or feel anything you want.',
-            'Choose two senses',
-            'Choose one sense',
-            'You fail and',
-            ['everyone see through your illusion.', 'make a loud noise.'],
-            'SENSES',
-            true),
+            name: 'ILLUSION',
+            description:
+                'You make everyone in a large area around you see, hear, smell, taste or feel anything you want.',
+            value: 0),
       ],
       value: 0,
       bonus: 0,
@@ -50,41 +38,20 @@ class PlayerSkillList {
           'You create a bomb that causes different effects on explosion.',
       option: [
         Option(
-            'FIRE BOMB',
-            'It burns everything in a small area.',
-            'You hit the mark.',
-            'It lands close.',
-            'You miss and',
-            [
-              'it lands on your feet.',
-              'the enemy takes an action.',
-            ],
-            'DAMAGE',
-            true),
+          name: 'FIRE BOMB',
+          description: 'It explodes on impact.',
+          value: 0,
+        ),
         Option(
-            'SMOKE BOMB',
-            'It creates a thick cloud over a medium area.',
-            'You hit the mark.',
-            'It lands close.',
-            'You miss and',
-            [
-              'it lands on your feet.',
-              'the enemy takes an action.',
-            ],
-            'SMOKE',
-            false),
+          name: 'SMOKE BOMB',
+          description: 'It creates a thick cloud of smoke.',
+          value: 0,
+        ),
         Option(
-            'ICE BOMB',
-            'It freezes everything in a small area.',
-            'You hit the mark.',
-            'It lands close.',
-            'You miss and',
-            [
-              'it lands on your feet.',
-              'the enemy takes an action.',
-            ],
-            'FREEZE',
-            false),
+          name: 'ICE BOMB',
+          description: 'It freezes anything it touches.',
+          value: 0,
+        ),
       ],
       value: 0,
       bonus: 0,
@@ -94,48 +61,16 @@ class PlayerSkillList {
       name: 'EARTHLIST',
       description: 'You control the ground around you.',
       option: [
+        Option(name: 'DIG', description: 'You create a hole.', value: 0),
+        Option(name: 'HOLD', description: 'You hold someone.', value: 0),
         Option(
-            'DIG',
-            'You create a hole.',
-            'You dig a deep hole in a area around you.',
-            'You dig a shallow around you.',
-            'You loose control and',
-            ['get stuck.', 'puts one of your friends in a hole.'],
-            'DIG',
-            false),
+            name: 'BUILD',
+            description: 'You build a simple structure.',
+            value: 0),
         Option(
-            'HOLD',
-            'You hold someone.',
-            'You hold them completly.',
-            'You hold one of their arms or legs. ',
-            'You loose control and ',
-            ['get stuck.', 'hold one of your friends.'],
-            'HOLD',
-            false),
-        Option(
-            'BUILD',
-            'You build a simple structure.',
-            'Your structure is stable.',
-            'Your structure is unstable.',
-            'You fail and',
-            [
-              'the enemy takes as action.',
-              'build something different than expected.'
-            ],
-            'BUILD',
-            false),
-        Option(
-            'DESTROY',
-            'You destroy an object or structure.',
-            'You destroy the target.',
-            'You make it weaker. ',
-            'You fail and',
-            [
-              'the enemy takes as action.',
-              'destroy something different than expected.'
-            ],
-            'DESTROY',
-            false),
+            name: 'DESTROY',
+            description: 'You destroy an object or structure.',
+            value: 0),
       ],
       value: 0,
       bonus: 0,
@@ -146,14 +81,10 @@ class PlayerSkillList {
       description: 'You change your voice and appearance.',
       option: [
         Option(
-            'TRANSFORM',
-            'Your body and voice changes to mach the person of your choice.',
-            'Choose two options.',
-            'Choose one option.',
-            'You fail and',
-            ['become someone completly different.', 'make a loud noise.'],
-            'TRANSFORM',
-            true)
+            name: 'TRANSFORM',
+            description:
+                'Your body and voice changes to mach the person of your choice.',
+            value: 0)
       ],
       value: 0,
       bonus: 0,
@@ -165,23 +96,14 @@ class PlayerSkillList {
           'You bless or curse anyone you touch. Enhancing or taking away their senses.',
       option: [
         Option(
-            'ENHANCE',
-            'You make them see through walls, hear whispers or track a scent from far away.',
-            'Choose two senses.',
-            'Choose one sense.',
-            'You loose control and',
-            ['blind the person you touch.', 'stun the person you touch.'],
-            'SENSES',
-            true),
+            name: 'ENHANCE',
+            description:
+                'You make them see through walls, hear whispers or track a scent from far away.',
+            value: 0),
         Option(
-            'REMOVE',
-            'You make them blind, deaf or numb.',
-            'Choose two senses.',
-            'Choose one sense.',
-            'You loose control and',
-            ['blind yourself.', 'the enemy takes an action.'],
-            'SENSES',
-            true)
+            name: 'CURSE',
+            description: 'You make them blind, deaf or numb.',
+            value: 0)
       ],
       value: 0,
       bonus: 0,

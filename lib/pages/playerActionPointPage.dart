@@ -1,5 +1,5 @@
 import 'playerUI.dart';
-import '../models/player/option.dart';
+import '../models/player/newOption.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
@@ -24,8 +24,11 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
     description:
         'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
     option: [
-      Option('OPTIONS', 'Each action has different options to choose from.', '',
-          '', '', [], '', false)
+      Option(
+        name: 'OPTIONS',
+        description: 'Each action has different options to choose from.',
+        value: 0,
+      )
     ],
     value: 0,
     bonus: 0,
@@ -119,9 +122,11 @@ class _PlayerAttributePageState extends State<PlayerAttributePage> {
   final myController = TextEditingController();
 
   void confirm() {
-    widget.dsix.gm.getCurrentPlayer().playerColor.name = myController.text;
+    widget.dsix.gm.getCurrentPlayer().finishCharacter(myController.text);
 
-    widget.dsix.gm.getCurrentPlayer().characterFinished = true;
+    // widget.dsix.gm.getCurrentPlayer().playerColor.name = myController.text;
+
+    // widget.dsix.gm.getCurrentPlayer().characterFinished = true;
     widget.dsix.gm.checkPlayers();
 
     Navigator.push(

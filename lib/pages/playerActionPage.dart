@@ -6,10 +6,11 @@ import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:math';
 import '../models/player/playerAction.dart';
-import '../models/player/option.dart';
+import '../models/player/newOption.dart';
 import 'package:dsixv02app/models/shared/item.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import '../models/shared/exceptions.dart';
+import 'package:dsixv02app/models/player/result.dart';
 
 class ActionPage extends StatefulWidget {
   final Function() refresh;
@@ -38,19 +39,15 @@ class _ActionPageState extends State<ActionPage> {
   Dice die = Dice('Roll', 1);
   List<Dice> diceList;
 
-  Color resultColor;
-
-  double textSize;
-  Function(Option option, int numberDice) outcome;
   List<bool> actionSelection;
-  int bonus = 0;
   String displaySum = '';
   String title;
-  String resultText;
-  List<String> itemList = [];
-  List<Item> availableLoot = [];
 
-  void checkAction(Option option, int numberDice) {
+  Color resultColor = Colors.black;
+  Widget outcomeWidget = Container();
+  Widget actionButton = Container();
+
+  void takeAction(Option option) {
     try {
       widget.dsix.gm.checkTurn();
     } on NewTurnException catch (e) {
@@ -66,9 +63,7 @@ class _ActionPageState extends State<ActionPage> {
     }
 
     try {
-      if (option.name == 'WEAPON') {
-        widget.dsix.gm.getCurrentPlayer().checkWeapon();
-      }
+      widget.dsix.gm.getCurrentPlayer().action(option);
     } on NoAmmoException catch (e) {
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       return;
@@ -77,572 +72,316 @@ class _ActionPageState extends State<ActionPage> {
       return;
     }
 
+    outcomeWidget = Container();
+    actionButton = Container();
+    displaySum = '';
+    title = option.name;
+    resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
+
     diceList = [];
-    for (int i = 0; i < numberDice; i++) {
+    for (int i = 0; i < 2; i++) {
       diceList.add(die.newDie());
     }
 
-    title = option.name;
-    textSize = 0;
-    displaySum = '';
-    resultText = '';
-    button = Container();
-    bonus = displayedAction.value + displayedAction.bonus;
-    resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
-    rollSwitcher = true;
-    showAlertDialogAction(context, option);
-  }
-
-  Player selectedPlayer;
-
-//ESCOLHA DE TARGET PELO PLAYER. DESATIVADO POR NÃO TER INTEGRAÇÃO ENTRE OS CELULARES
-
-  // List<Player> availablePlayers = [];
-  // void chooseTarget(Option option) {
-  //   availablePlayers = [];
-  //   widget.dsix.gm.players.forEach((element) {
-  //     if (element.characterFinished) {
-  //       availablePlayers.add(element);
-  //     }
-  //   });
-
-  //   if (option.name == 'HELP') {
-  //     availablePlayers.remove(widget.dsix.gm.getCurrentPlayer());
-  //   }
-
-  //   if (availablePlayers.isEmpty) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(widget.alert('NO OTHER PLAYERS'));
-  //   } else {
-  //     showAlertDialogChooseTarget(context);
-  //   }
-  // }
-
-  // showAlertDialogChooseTarget(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) {
-  //       return StatefulBuilder(
-  //         builder: (context, setState) {
-  //           return AlertDialog(
-  //             backgroundColor: Colors.black,
-  //             contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-  //             content: Container(
-  //               decoration: BoxDecoration(
-  //                 border: Border.all(
-  //                   color: widget.dsix.gm
-  //                       .getCurrentPlayer()
-  //                       .playerColor
-  //                       .primaryColor,
-  //                   width: 2.5, //                   <--- border width here
-  //                 ),
-  //               ),
-  //               width: MediaQuery.of(context).size.width * 0.7,
-  //               child: Container(
-  //                 child: Column(
-  //                   mainAxisAlignment: MainAxisAlignment.start,
-  //                   mainAxisSize: MainAxisSize.min,
-  //                   children: <Widget>[
-  //                     Container(
-  //                       color: widget.dsix.gm
-  //                           .getCurrentPlayer()
-  //                           .playerColor
-  //                           .primaryColor,
-  //                       child: Padding(
-  //                         padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-  //                         child: Center(
-  //                           child: Text(
-  //                             'CHOOSE A TARGET',
-  //                             style: TextStyle(
-  //                               fontFamily: 'Santana',
-  //                               height: 1,
-  //                               fontSize: 30,
-  //                               color: widget.dsix.gm
-  //                                   .getCurrentPlayer()
-  //                                   .playerColor
-  //                                   .secondaryColor,
-  //                               letterSpacing: 1.2,
-  //                             ),
-  //                           ),
-  //                         ),
-  //                       ),
-  //                     ),
-  //                     Padding(
-  //                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-  //                       child: Container(
-  //                         height: MediaQuery.of(context).size.height *
-  //                             0.08 *
-  //                             availablePlayers.length,
-  //                         child: ListView.builder(
-  //                             itemCount: availablePlayers.length,
-  //                             itemBuilder: (BuildContext context, int index) {
-  //                               return Padding(
-  //                                 padding:
-  //                                     const EdgeInsets.fromLTRB(0, 0, 0, 0),
-  //                                 child: GestureDetector(
-  //                                   onTap: () {
-  //                                     selectedPlayer = availablePlayers[index];
-  //                                     applyOutcomeToTarget();
-  //                                     widget.refresh();
-  //                                     Navigator.pop(context);
-  //                                   },
-  //                                   child: Container(
-  //                                     height:
-  //                                         MediaQuery.of(context).size.height *
-  //                                             0.08,
-  //                                     width: double.infinity,
-  //                                     decoration: BoxDecoration(
-  //                                       border: Border.all(
-  //                                         color: availablePlayers[index]
-  //                                             .playerColor
-  //                                             .primaryColor,
-  //                                         width:
-  //                                             3, //                   <--- border width here
-  //                                       ),
-  //                                     ),
-  //                                     child: Stack(
-  //                                       alignment:
-  //                                           AlignmentDirectional.centerEnd,
-  //                                       children: [
-  //                                         Column(
-  //                                           mainAxisAlignment:
-  //                                               MainAxisAlignment.center,
-  //                                           crossAxisAlignment:
-  //                                               CrossAxisAlignment.start,
-  //                                           children: <Widget>[
-  //                                             Padding(
-  //                                               padding:
-  //                                                   const EdgeInsets.fromLTRB(
-  //                                                       0, 0, 15, 0),
-  //                                               child: Icon(
-  //                                                 Icons.keyboard_arrow_right,
-  //                                                 color: availablePlayers[index]
-  //                                                     .playerColor
-  //                                                     .primaryColor,
-  //                                                 size: 25,
-  //                                               ),
-  //                                             ),
-  //                                           ],
-  //                                         ),
-  //                                         Center(
-  //                                           child: Text(
-  //                                             '${availablePlayers[index].playerColor.name}',
-  //                                             style: TextStyle(
-  //                                               fontSize: 16,
-  //                                               fontWeight: FontWeight.bold,
-  //                                               letterSpacing: 1.5,
-  //                                               fontFamily: 'Calibri',
-  //                                               color: Colors.white,
-  //                                             ),
-  //                                           ),
-  //                                         ),
-  //                                       ],
-  //                                     ),
-  //                                   ),
-  //                                 ),
-  //                               );
-  //                             }),
-  //                       ),
-  //                     ),
-  //                   ],
-  //                 ),
-  //               ),
-  //             ),
-  //           );
-  //         },
-  //       );
-  //     },
-  //   );
-  // }
-
-  void decideOutcome(Option option, int numberDice) {
-    bonus = 0;
-    button = GestureDetector(
-      onTap: () {
-        setState(() {
-          Navigator.pop(context);
-          switch (option.name) {
-            case 'PUNCH':
-              {
-                newRoll(option, numberDice);
-              }
-              break;
-
-            case 'WEAPON':
-              {
-                bonus = widget.dsix.gm.getCurrentPlayer().pDamage;
-                bonus += widget.dsix.gm.getCurrentPlayer().mDamage;
-                newRoll(option, numberDice);
-              }
-              break;
-
-            case 'DEFEND':
-              {
-                bonus = widget.dsix.gm.getCurrentPlayer().pArmor;
-                newRoll(option, numberDice);
-              }
-              break;
-
-            case 'RESIST':
-              {
-                bonus = widget.dsix.gm.getCurrentPlayer().mArmor;
-                newRoll(option, numberDice);
-              }
-              break;
-
-            case 'RESOURCES':
-              {
-                availableLoot = [];
-                itemList = [];
-                availableLoot =
-                    widget.dsix.gm.getCurrentPlayer().resources(numberDice);
-                availableLoot.forEach((element) {
-                  itemList.add(element.name);
-                });
-
-                showOutcome(option, numberDice);
-              }
-              break;
-
-            case 'MORPH':
-              {
-                //RESET EFFECTS
-                itemList = [
-                  'FLY',
-                  'FAST',
-                  'PERCEPTIVE',
-                  'POWERFUL',
-                  'CAMOUFLAGE',
-                  'SWALLOW',
-                  'SWIM',
-                  'CLIMB',
-                  'JUMP',
-                  'DIG',
-                  'THORN',
-                  'POISON',
-                ];
-                widget.dsix.gm.getCurrentPlayer().checkSkillEffects(itemList);
-
-                //SET NEW EFFECTS
-                if (numberDice > 1) {
-                  //10+
-                  itemList = [
-                    'FLY',
-                    'FAST',
-                    'PERCEPTIVE',
-                    'POWERFUL',
-                    'CAMOUFLAGE',
-                    'SWALLOW',
-                  ];
-                } else {
-                  //0-7
-                  itemList = [
-                    'SWIM',
-                    'CLIMB',
-                    'JUMP',
-                    'DIG',
-                    'THORN',
-                    'POISON',
-                  ];
-                }
-
-                showOutcome(option, numberDice);
-              }
-              break;
-
-            case 'ILLUSION':
-              {
-                itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
-                showOutcome(option, numberDice);
-              }
-              break;
-
-            case 'FIRE BOMB':
-              {
-                bonus = widget.dsix.gm.getCurrentPlayer().mDamage;
-                newRoll(option, numberDice);
-              }
-              break;
-
-            case 'ENHANCE':
-              {
-                if (numberDice > 1) {
-                  //10+
-                  itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
-                } else {
-                  //7-9
-                  itemList = ['HEARING', 'SMELL', 'TASTE'];
-                }
-                numberDice = 1;
-                showOutcome(option, numberDice);
-              }
-              break;
-            case 'REMOVE':
-              {
-                if (numberDice > 1) {
-                  //10+
-                  itemList = ['SIGHT', 'HEARING', 'TOUCH', 'SMELL', 'TASTE'];
-                } else {
-                  //7-9
-                  itemList = ['HEARING', 'SMELL', 'TASTE'];
-                }
-                numberDice = 1;
-
-                showOutcome(option, numberDice);
-              }
-              break;
-
-            case 'TRANSFORM':
-              {
-                itemList = ['APPEARANCE', 'VOICE'];
-                widget.dsix.gm.getCurrentPlayer().checkSkillEffects(itemList);
-                showOutcome(option, numberDice);
-              }
-              break;
-          }
-          widget.refresh();
-        });
-      },
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.08,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: Colors.green,
-            width: 2, //                   <--- border width here
-          ),
-        ),
-        child: Stack(
-          alignment: AlignmentDirectional.centerEnd,
-          children: [
-            Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                  child: SvgPicture.asset(
-                    'assets/ui/action.svg',
-                    color: Colors.green,
-                    width: MediaQuery.of(context).size.width * 0.04,
-                  ),
-                ),
-              ],
-            ),
-            Center(
-              child: Text(
-                option.outcome,
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 1.5,
-                  fontFamily: 'Calibri',
-                  color: Colors.white,
+    switch (widget.dsix.gm.getCurrentPlayer().result.outcomeType) {
+      case '2D6':
+        {
+          outcomeWidget = GestureDetector(
+            onTap: () {
+              setState(() {
+                Navigator.pop(context);
+                secondRoll(2);
+                widget.refresh();
+              });
+            },
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.green,
+                  width: 2, //                   <--- border width here
                 ),
               ),
+              child: Stack(
+                alignment: AlignmentDirectional.centerEnd,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: SvgPicture.asset(
+                          'assets/ui/action.svg',
+                          color: Colors.green,
+                          width: MediaQuery.of(context).size.width * 0.04,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Center(
+                    child: Text(
+                      widget.dsix.gm.getCurrentPlayer().result.outcomeAction,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                        fontFamily: 'Calibri',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        }
+        break;
+
+      case '1D6':
+        {
+          outcomeWidget = GestureDetector(
+            onTap: () {
+              setState(() {
+                Navigator.pop(context);
+                secondRoll(1);
+                widget.refresh();
+              });
+            },
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.green,
+                  width: 2, //                   <--- border width here
+                ),
+              ),
+              child: Stack(
+                alignment: AlignmentDirectional.centerEnd,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: SvgPicture.asset(
+                          'assets/ui/action.svg',
+                          color: Colors.green,
+                          width: MediaQuery.of(context).size.width * 0.04,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Center(
+                    child: Text(
+                      widget.dsix.gm.getCurrentPlayer().result.outcomeAction,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                        fontFamily: 'Calibri',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        break;
+
+      case 'TEXT':
+        {
+          outcomeWidget = Text(
+            widget.dsix.gm.getCurrentPlayer().result.outcomeText,
+            textAlign: TextAlign.justify,
+            style: TextStyle(
+              fontSize: 19,
+              fontFamily: 'Calibri',
+              color: Colors.white,
+            ),
+          );
+        }
+        break;
+
+      case 'OPTIONS':
+        {
+          outcomeWidget = GestureDetector(
+            onTap: () {
+              setState(() {
+                Navigator.pop(context);
+                showAlertDialogOptions(context);
+                widget.refresh();
+              });
+            },
+            child: Container(
+              height: MediaQuery.of(context).size.height * 0.08,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.green,
+                  width: 2, //                   <--- border width here
+                ),
+              ),
+              child: Stack(
+                alignment: AlignmentDirectional.centerEnd,
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
+                        child: SvgPicture.asset(
+                          'assets/ui/action.svg',
+                          color: Colors.green,
+                          width: MediaQuery.of(context).size.width * 0.04,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Center(
+                    child: Text(
+                      widget.dsix.gm.getCurrentPlayer().result.outcomeAction,
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: 1.5,
+                        fontFamily: 'Calibri',
+                        color: Colors.white,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        }
+        break;
+    }
+
+    showAlertDialogAction(context);
+  }
+
+  void rollDice(int diceIndex) {
+    diceList[diceIndex].dice =
+        '${widget.dsix.gm.getCurrentPlayer().result.diceResult[diceIndex]}';
+    diceList[diceIndex].animationLines = 0;
+
+    int diceChecker = 0;
+
+    diceList.forEach((element) {
+      if (element.dice == 'Roll') {
+        diceChecker++;
+      }
+    });
+
+    if (diceChecker == 0) {
+      showResult();
+    }
+  }
+
+  void showResult() {
+    title = widget.dsix.gm.getCurrentPlayer().result.outcomeTitle;
+    displaySum = widget.dsix.gm.getCurrentPlayer().result.sum;
+    actionButton = outcomeWidget;
+    resultColor = widget.dsix.gm.getCurrentPlayer().result.color;
+  }
+
+  void secondRoll(int numberDice) {
+    widget.dsix.gm.getCurrentPlayer().secondRoll(numberDice);
+    outcomeWidget = Text(
+      widget.dsix.gm.getCurrentPlayer().result.outcomeText,
+      textAlign: TextAlign.justify,
+      style: TextStyle(
+        fontSize: 19,
+        fontFamily: 'Calibri',
+        color: Colors.white,
       ),
     );
-  }
+    actionButton = Container();
+    displaySum = '';
+    title = widget.dsix.gm.getCurrentPlayer().result.outcomeAction;
+    resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
 
-  List<bool> outcomeList;
-  void showOutcome(Option option, int numberDice) {
-    outcomeList = [];
-    itemList.forEach((element) {
-      outcomeList.add(false);
-    });
-    textSize = 1.25;
-    if (numberDice > 1) {
-      resultText = option.success;
-      outcomeNumberOptions = 2;
-    } else {
-      resultText = option.halfSuccess;
-      outcomeNumberOptions = 1;
-    }
-    showAlertDialogOutcome(context, option);
-  }
-
-  int outcomeNumberOptions;
-
-  void selectOutcome(Option option, int numberDice, int index) {
-    if (outcomeList[index]) {
-      outcomeList[index] = false;
-      outcomeNumberOptions++;
-    } else {
-      outcomeList[index] = true;
-      outcomeNumberOptions--;
-    }
-
-    if (outcomeNumberOptions < 1) {
-      Navigator.pop(context);
-
-      switch (option.name) {
-        case 'ENHANCE':
-          {
-            selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget(2);
-          }
-          break;
-        case 'REMOVE':
-          {
-            selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget(2);
-          }
-          break;
-
-        case 'TRANSFORM':
-          {
-            selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget(3);
-          }
-          break;
-        case 'ILLUSION':
-          {
-            selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget(3);
-          }
-          break;
-        case 'MORPH':
-          {
-            selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-            applyOutcomeToTarget(3);
-          }
-          break;
-
-        case 'RESOURCES':
-          {
-            for (int i = 0; i < outcomeList.length; i++) {
-              if (outcomeList[i]) {
-                widget.dsix.gm
-                    .getCurrentPlayer()
-                    .inventory
-                    .add(availableLoot[i]);
-              }
-            }
-          }
-          break;
-      }
-
-      return;
-    }
-  }
-
-  // void chooseOutcome(Option option) {
-  //   if (option.name == 'ENHANCE' || option.name == 'REMOVE') {
-  //     chooseTarget(option);
-  //   } else {
-  //     selectedPlayer = widget.dsix.gm.getCurrentPlayer();
-  //     applyOutcomeToTarget();
-  //   }
-  // }
-
-  void applyOutcomeToTarget(int numberOfActions) {
-    for (int i = 0; i < itemList.length; i++) {
-      if (outcomeList[i]) {
-        selectedPlayer.newTemporaryEffect(itemList[i], numberOfActions);
-      }
-    }
-    widget.refresh();
-  }
-
-  void newRoll(Option option, int numberDice) {
     diceList = [];
     for (int i = 0; i < numberDice; i++) {
       diceList.add(die.newDie());
     }
-    displaySum = '';
-    title = option.outcome;
-    button = Container();
-    resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
-    rollSwitcher = true;
-    showAlertDialogAction(context, option);
+
+    showAlertDialogAction(context);
   }
 
-  bool rollSwitcher = true;
-
-  void checkResult(List<Dice> dice, Option option) {
-    for (int check = 0; check < diceList.length; check++) {
-      if (diceList[check].dice == 'Roll') {
-        return;
-      }
-    }
-    rollSwitcher = false;
-    int partialResult = 0;
-    int totalResult = 0;
-
-    diceList.forEach((element) {
-      partialResult += int.parse(element.dice);
-    });
-
-    totalResult = partialResult + bonus;
-    displaySum = '$partialResult + $bonus = $totalResult';
-
-//FIRST ROLL
-
-    if (option.firstRoll) {
-      widget.dsix.gm.getCurrentPlayer().action(option);
-
-      if (totalResult < 7) {
-        resultColor = Colors.red;
-        title = 'FAIL';
-        textSize = 1.25;
-        resultText =
-            '${option.fail} ${option.failOutcome[Random().nextInt(option.failOutcome.length)]}';
-        option.newRoll = false;
-        return;
-      }
-
-      switch (option.newRoll) {
-        case true:
-          {
-            if (totalResult > 9) {
-              resultColor = Colors.green;
-              title = 'SUCCESS';
-
-              option.newRoll = false;
-              decideOutcome(option, 2);
-            } else {
-              resultColor = Colors.green;
-              title = 'HALF SUCCESS';
-
-              option.newRoll = false;
-              decideOutcome(option, 1);
-            }
-          }
-          break;
-        case false:
-          {
-            if (totalResult > 9) {
-              resultColor = Colors.green;
-              title = 'SUCCESS';
-              textSize = 1.25;
-              resultText = option.success;
-            } else {
-              resultColor = Colors.green;
-              title = 'HALF SUCCESS';
-              textSize = 1.25;
-              resultText = option.halfSuccess;
-            }
-          }
-          break;
-      }
-
-//OTHER TURNS
-
+  void selectOutcome(int index) {
+    if (widget.dsix.gm
+        .getCurrentPlayer()
+        .result
+        .outcomeOptions[index]
+        .selected) {
+      widget.dsix.gm.getCurrentPlayer().result.outcomeOptions[index].selected =
+          false;
+      widget.dsix.gm.getCurrentPlayer().result.outcomeValue++;
     } else {
-      textSize = 1.25;
-      if (totalResult > 9) {
-        resultText = option.success;
-      } else {
-        resultText = option.halfSuccess;
-      }
+      widget.dsix.gm.getCurrentPlayer().result.outcomeOptions[index].selected =
+          true;
+      widget.dsix.gm.getCurrentPlayer().result.outcomeValue--;
+    }
+
+    if (widget.dsix.gm.getCurrentPlayer().result.outcomeValue < 1) {
+      widget.dsix.gm.getCurrentPlayer().chooseOutcome();
+      Navigator.pop(context);
     }
   }
+
+  // void checkAction(Option option, int numberDice) {
+  //   try {
+  //     widget.dsix.gm.checkTurn();
+  //   } on NewTurnException catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+  //     widget.refresh();
+  //     return;
+  //   }
+
+  //   if (widget.dsix.gm.getCurrentPlayer().checkTurn()) {
+  //     ScaffoldMessenger.of(context)
+  //         .showSnackBar(widget.alert('Wait for the next turn'));
+  //     return;
+  //   }
+
+  //   try {
+  //     if (option.name == 'WEAPON') {
+  //       widget.dsix.gm.getCurrentPlayer().checkWeapon();
+  //     }
+  //   } on NoAmmoException catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+  //     return;
+  //   } on NoWeaponException catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
+  //     return;
+  //   }
+
+  //   diceList = [];
+  //   for (int i = 0; i < numberDice; i++) {
+  //     diceList.add(die.newDie());
+  //   }
+
+  //   title = option.name;
+  //   textSize = 0;
+  //   displaySum = '';
+  //   resultText = '';
+  //   button = Container();
+  //   bonus = displayedAction.value + displayedAction.bonus;
+  //   resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
+  //   rollSwitcher = true;
+  //   showAlertDialogAction(context, option);
+  // }
 
 // NEW DICE ROLL MENU
-  showAlertDialogAction(BuildContext context, Option option) {
+  showAlertDialogAction(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -662,7 +401,6 @@ class _ActionPageState extends State<ActionPage> {
                       ),
                     ),
                     width: MediaQuery.of(context).size.width * 0.7,
-                    // width: 200 + 50 * (diceList.length).toDouble(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
@@ -714,11 +452,7 @@ class _ActionPageState extends State<ActionPage> {
                                             ),
                                             onPressed: () {
                                               setState(() {
-                                                diceList[index].rollDice();
-                                                (rollSwitcher)
-                                                    ? checkResult(
-                                                        diceList, option)
-                                                    : widget.refresh();
+                                                rollDice(index);
                                               });
                                               widget.refresh();
                                             },
@@ -780,23 +514,7 @@ class _ActionPageState extends State<ActionPage> {
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Center(
-                                      child: Text(
-                                        resultText,
-                                        textAlign: TextAlign.justify,
-                                        style: TextStyle(
-                                          height: textSize,
-                                          fontSize: 19,
-                                          fontFamily: 'Calibri',
-                                          color: Colors.white,
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding:
-                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                                      child: button,
-                                    ),
+                                    Center(child: actionButton),
                                   ],
                                 ),
                               ),
@@ -815,9 +533,9 @@ class _ActionPageState extends State<ActionPage> {
     );
   }
 
-//THIS SHOWS THE SECONDROLL
+//THIS SHOWS THE OPTIONS
 
-  showAlertDialogOutcome(BuildContext context, Option option) {
+  showAlertDialogOptions(BuildContext context) {
     showDialog(
       context: context,
       builder: (context) {
@@ -856,7 +574,7 @@ class _ActionPageState extends State<ActionPage> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
                                 Text(
-                                  '${option.outcome}',
+                                  '${widget.dsix.gm.getCurrentPlayer().result.outcomeAction}',
                                   style: TextStyle(
                                     fontFamily: 'Santana',
                                     height: 1,
@@ -869,19 +587,7 @@ class _ActionPageState extends State<ActionPage> {
                             ),
                           ),
                         ),
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(35, 15, 35, 15),
-                        //   child: Text(
-                        //     resultText,
-                        //     textAlign: TextAlign.justify,
-                        //     style: TextStyle(
-                        //       height: textSize,
-                        //       fontSize: 19,
-                        //       fontFamily: 'Calibri',
-                        //       color: Colors.white,
-                        //     ),
-                        //   ),
-                        // ),
+
                         Divider(
                           height: 0,
                           thickness: 2,
@@ -893,14 +599,27 @@ class _ActionPageState extends State<ActionPage> {
                         Padding(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           child: Container(
-                            height: (itemList.length < 6)
+                            height: (widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .result
+                                        .outcomeOptions
+                                        .length <
+                                    6)
                                 ? MediaQuery.of(context).size.height *
                                     0.08 *
-                                    itemList.length
+                                    widget.dsix.gm
+                                        .getCurrentPlayer()
+                                        .result
+                                        .outcomeOptions
+                                        .length
                                 : MediaQuery.of(context).size.height * 0.08 * 6,
                             child: ListView.builder(
                                 shrinkWrap: true,
-                                itemCount: itemList.length,
+                                itemCount: widget.dsix.gm
+                                    .getCurrentPlayer()
+                                    .result
+                                    .outcomeOptions
+                                    .length,
                                 itemBuilder: (BuildContext context, int index) {
                                   return Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -908,8 +627,7 @@ class _ActionPageState extends State<ActionPage> {
                                       GestureDetector(
                                         onTap: () {
                                           setState(() {
-                                            selectOutcome(option,
-                                                outcomeNumberOptions, index);
+                                            selectOutcome(index);
                                           });
                                         },
                                         child: Container(
@@ -918,7 +636,11 @@ class _ActionPageState extends State<ActionPage> {
                                                   .size
                                                   .height *
                                               0.08,
-                                          color: outcomeList[index]
+                                          color: (widget.dsix.gm
+                                                  .getCurrentPlayer()
+                                                  .result
+                                                  .outcomeOptions[index]
+                                                  .selected)
                                               ? widget.dsix.gm
                                                   .getCurrentPlayer()
                                                   .playerColor
@@ -929,7 +651,7 @@ class _ActionPageState extends State<ActionPage> {
                                                 0, 7.5, 0, 0),
                                             child: Center(
                                               child: Text(
-                                                '${itemList[index]}',
+                                                '${widget.dsix.gm.getCurrentPlayer().result.outcomeOptions[index].name}',
                                                 style: TextStyle(
                                                   fontSize: 16,
                                                   fontWeight: FontWeight.bold,
@@ -1165,8 +887,10 @@ class _ActionPageState extends State<ActionPage> {
                     itemBuilder: (BuildContext context, int index) {
                       return GestureDetector(
                         onTap: () {
-                          checkAction(
-                              displayedAction.option[index].copyOption(), 2);
+                          takeAction(
+                              displayedAction.option[index].copyOption());
+                          // checkAction(
+                          //     displayedAction.option[index].copyOption(), 2);
                         },
                         child: Padding(
                           padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),

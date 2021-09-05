@@ -4,7 +4,7 @@ import 'package:dsixv02app/models/shared/item.dart';
 import 'package:dsixv02app/models/player/playerBackground.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/player/playerRace.dart';
-import 'package:dsixv02app/models/player/option.dart';
+import 'package:dsixv02app/models/player/newOption.dart';
 import 'package:dsixv02app/models/player/playerAction.dart';
 import 'package:dsixv02app/models/player/effect.dart';
 import '../shared/exceptions.dart';
@@ -13,6 +13,8 @@ import 'package:dsixv02app/models/shared/shop.dart';
 import 'package:dsixv02app/models/player/playerBackgroundList.dart';
 import 'package:dsixv02app/models/player/playerSkillList.dart';
 import 'package:dsixv02app/models/player/effectList.dart';
+import 'result.dart';
+import 'package:dsixv02app/models/player/outcome.dart';
 
 class PlayerColor {
   String name;
@@ -150,8 +152,10 @@ class Player {
       description:
           'These represents the strenghts and weaknesses of your character. Use the arrows on the left to make your character better. The more points you have, the better you are in that action.',
       option: [
-        Option('OPTIONS', 'Each action has different options to choose from.',
-            '', '', '', [], '', false)
+        Option(
+            name: 'OPTIONS',
+            description: 'Each action has different options to choose from.',
+            value: 0)
       ],
       value: 0,
       bonus: 0,
@@ -162,41 +166,18 @@ class Player {
       description: 'You try to attack or grapple a target.',
       option: [
         Option(
-            'PUNCH',
-            'You punch the target with your fists.',
-            'You hit in a weak spot.',
-            'You hit the target.',
-            'You miss and',
-            [
-              'the enemy takes an action.',
-              'drop something from your inventory',
-            ],
-            'DAMAGE',
-            true),
+            name: 'PUNCH',
+            description: 'You punch the target with your fists.',
+            value: 0),
         Option(
-            'WEAPON',
-            'You attack the target with your weapon, trying to bring them down.',
-            'You hit in a weak spot.',
-            'You hit the target.',
-            'You miss and',
-            [
-              'the enemy takes an action.',
-              'drop something from your inventory',
-            ],
-            'DAMAGE',
-            true),
+            name: 'WEAPON',
+            description:
+                'You attack the target with your weapon, trying to bring them down.',
+            value: 0),
         Option(
-            'GRAPPLE',
-            'You try to grapple the target, holding them down.',
-            'You hold them in place and they are unable to move.',
-            'You hold one of their arms or legs.',
-            'They escape and',
-            [
-              'hold you down.',
-              'take an action.',
-            ],
-            'HOLD',
-            false),
+            name: 'GRAPPLE',
+            description: 'You try to grapple the target, holding them down.',
+            value: 0),
       ],
       value: 0,
       bonus: 0,
@@ -206,33 +187,9 @@ class Player {
       name: 'DEFEND',
       description: 'You protect yourself and others.',
       option: [
-        Option(
-            'DEFEND',
-            'You try to protect.',
-            'You protect a lot of damage.',
-            'You protect some damage.',
-            'You take damage and',
-            ['get stunned.', 'drop something from your inventory.'],
-            'PROTECT',
-            true),
-        Option(
-            'RESIST',
-            'You try to resist.',
-            'You resist a lot of damage.',
-            'You resist some damage.',
-            'You take damage and',
-            ['get stunned.', 'drop something from your inventory.'],
-            'RESIST',
-            true),
-        Option(
-            'HELP',
-            'You try to help.',
-            'You give them a real advantage.',
-            'You make things easier for them.',
-            'You get on their way and',
-            ['hurt yourself.', 'drop something from their inventory.'],
-            'HELP',
-            false),
+        Option(name: 'DEFEND', description: 'You try to protect.', value: 0),
+        Option(name: 'RESIST', description: 'You try to resist.', value: 0),
+        Option(name: 'HELP', description: 'You try to help.', value: 0),
       ],
       value: 0,
       bonus: 0,
@@ -243,29 +200,13 @@ class Player {
       description: 'You look around and notice things.',
       option: [
         Option(
-            'RESOURCES',
-            'You search for something useful.',
-            'You find resources and gold.',
-            'You find resources.',
-            'You don\'t find anything useful and',
-            [
-              'notice a new threat.',
-              'notice a new obstacle.',
-            ],
-            'RESOURCES',
-            true),
+            name: 'RESOURCES',
+            description: 'You search for something useful.',
+            value: 0),
         Option(
-            'INFORMATION',
-            'You try to gather information.',
-            'You gather meaningful information.',
-            'You gather information, but it costs you.',
-            'You don\'t find anything useful and',
-            [
-              'notice a new threat.',
-              'notice a new obstacle.',
-            ],
-            'INFORMATION',
-            false),
+            name: 'INFORMATION',
+            description: 'You try to gather information.',
+            value: 0),
         // Option(
         //     'SECRETE',
         //     'You try to find a hidden door or chest.',
@@ -284,44 +225,15 @@ class Player {
       description: 'You talk to someone that can understand you.',
       option: [
         Option(
-            'TRADE',
-            'You try to strike a deal.',
-            'They accept your offer.',
-            'They ask for more.',
-            'The deal is off and',
-            ['the enemy takes an action.', 'the enemy calls for backup.'],
-            'DEAL',
-            false),
+            name: 'TRADE', description: 'You try to strike a deal.', value: 0),
         Option(
-            'INFORMATION',
-            'You try to gather information.',
-            'You gather information.',
-            'You gather information, but at a cost.',
-            'You don\'t learn anything and',
-            ['the enemy takes an action.', 'the enemy calls for backup.'],
-            'INFORMATION',
-            false),
+            name: 'INFORMATION',
+            description: 'You try to gather information.',
+            value: 0),
         Option(
-            'CONVINCE',
-            'You try to change people\'s minds.',
-            'You change their minds.',
-            'They see your point, but ask for something in return.',
-            'You can\'t change their minds and',
-            ['the enemy takes an action.', 'the enemy calls for backup.'],
-            '',
-            false),
-        Option(
-            'ENTERTAIN',
-            'You entertain people around you.',
-            'Everyone loves your performance and becomes friendly.',
-            'Some people enjoy your performance and become friendly.',
-            'You make a mistake and',
-            [
-              'people make fun of you.',
-              'people are offended by your performance.'
-            ],
-            'ENTERTAIN',
-            false),
+            name: 'CONVINCE',
+            description: 'You try to change people\'s minds.',
+            value: 0),
       ],
       value: 0,
       bonus: 0,
@@ -332,68 +244,20 @@ class Player {
       description: 'You climb, swim, hide or try to escape.',
       option: [
         Option(
-            'DODGE',
-            'You try to get out of the way.',
-            'You dodge and take no damage.',
-            'You take half damage.',
-            'You take damage and',
-            ['get stunned.', 'drop something from your inventory.'],
-            'AVOID',
-            false),
+            name: 'DODGE',
+            description: 'You try to get out of the way.',
+            value: 0),
         Option(
-            'ESCAPE',
-            'You try to escape from a tough situation.',
-            'You escape.',
-            'You escape, but call unwanted attention.',
-            'You can\'t escape and',
-            [
-              'the enemy takes an action.',
-              'drop something from your inventory.'
-            ],
-            'ESCAPE',
-            false),
+            name: 'ESCAPE',
+            description: 'You try to escape from a tough situation.',
+            value: 0),
+        Option(name: 'HIDE', description: 'You try to hide.', value: 0),
         Option(
-            'HIDE',
-            'You try to hide.',
-            'You are hidden.',
-            'You are noticed.',
-            'You are exposed and',
-            ['the enemy takes an action.', 'everyone focus on you.'],
-            'HIDE',
-            false),
-        Option(
-            'JUMP',
-            'You try to jump over an obstacle.',
-            'You land where you wanted.',
-            'You land somewhere close.',
-            'You trip and',
-            ['land in a bad place.', 'hurt your yourself on the landing.'],
-            'JUMP',
-            false),
-        Option(
-            'CLIMB',
-            'You try to climb.',
-            'You have no trouble.',
-            'You face some difficulty.',
-            'You fall and',
-            [
-              'drop something from your inventory.',
-              'hurt your yourself on the landing.'
-            ],
-            'CLIMB',
-            false),
-        Option(
-            'SWIM',
-            'You try to swim.',
-            'You have no trouble.',
-            'You face some difficulty.',
-            'You can\'t stay afloat and',
-            [
-              'drink some water.',
-              'drop something from your inventory.',
-            ],
-            'SWIM',
-            false)
+            name: 'JUMP',
+            description: 'You try to jump over an obstacle.',
+            value: 0),
+        Option(name: 'CLIMB', description: 'You try to climb.', value: 0),
+        Option(name: 'SWIM', description: 'You try to swim.', value: 0)
       ],
       value: 0,
       bonus: 0,
@@ -404,8 +268,10 @@ class Player {
       description:
           'This is your special move and what you are known for. Choose your skill by clicking on the icons above.',
       option: [
-        Option('OPTIONS', 'Each skill has different options to choose from.',
-            'Success.', 'Half Success.', 'Fail.', [], 'OPTIONS', false)
+        Option(
+            name: 'OPTIONS',
+            description: 'Each skill has different options to choose from.',
+            value: 0)
       ],
       value: 0,
       bonus: 0,
@@ -530,9 +396,7 @@ class Player {
         }
         this.inventory.remove(item);
         playerTurn();
-        int randomNumber = Random().nextInt(3) + 1;
-
-        healPlayer(randomNumber);
+        healPlayer(3);
 
         break;
 
@@ -998,18 +862,1540 @@ class Player {
 
 //ACTION
 
-  void action(Option option) {
-    //Count player turn
-    playerTurn();
-
-    //Reduce ammunition
-    if (option.name == 'WEAPON') {
-      this.reduceAmmo();
+//CHECK WEAPON
+  void checkWeapon() {
+    if (this.mainHandEquip.name == '' && this.offHandEquip.name == '') {
+      throw new NoWeaponException();
     }
 
-    //Prepare for second roll
-    option.firstRoll = false;
+    if (this.mainHandEquip.itemClass == 'rangedWeapon' ||
+        this.offHandEquip.itemClass == 'rangedWeapon') {
+      for (int check = 0; check < this.inventory.length; check++) {
+        if (this.inventory[check].icon == 'ammo') {
+          return;
+        }
+      }
+      throw new NoAmmoException();
+    }
   }
+
+  Result result = Result().blankResult();
+
+  List<Item> foundResources = [];
+
+  void action(Option option) {
+// Roll Dice
+
+    result.blankResult();
+
+    int numberOfDice = 2;
+
+    while (numberOfDice > 0) {
+      this.result.diceResult.add(Random().nextInt(6) + 1);
+      numberOfDice--;
+    }
+    print('  ${this.result.diceResult}');
+
+    this.result.total =
+        this.result.diceResult.fold(0, (p, element) => p + element) +
+            option.value;
+    this.result.sum =
+        '${this.result.diceResult[0]} + ${this.result.diceResult[1]} + ${option.value} = ${this.result.total}';
+
+    this.result.color = Colors.green;
+
+    print('  ${this.result.total}');
+    print('  ${this.result.sum}');
+
+    switch (option.name) {
+      case 'PUNCH':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(description: 'You miss and the enemy holds you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+
+      case 'WEAPON':
+        {
+          checkWeapon();
+          reduceAmmo();
+
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = this.pDamage + this.mDamage;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = this.pDamage + this.mDamage;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(description: 'You miss and the enemy holds you.'),
+              Outcome(description: 'You miss and drop your weapon.'),
+            ];
+
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'GRAPPLE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                'You hold them in place and they are unable to move.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You hold one of their arms or legs.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They escape and take an action.'),
+              Outcome(description: 'They escape and hold you down.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'DEFEND':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DEFEND';
+            this.result.outcomeText = 'You protect some damage.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DEFEND';
+            this.result.outcomeText = 'You protect some damage.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You take damage and are stunned.'),
+              Outcome(
+                  description: 'You take damage and drop a piece of armor.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'RESIST':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You clear all negative effects.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                'You don\'t receive any additional effect.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You don\'t resist.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'HELP':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You are super helpful.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You help them.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You get on their way.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      //voltar pra ca <----------
+      case 'RESOURCES':
+        {
+          this.foundResources = [];
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'RESOURCES';
+            this.result.outcomeText = 'You find something useful.';
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = 0;
+            this.foundResources = this.resources(this.result.outcomeValue);
+            this.result.outcomeOptions = [];
+
+            this.foundResources.forEach((element) {
+              this.result.outcomeOptions.add(Outcome(
+                  name: element.name, itemList: [element], selected: false));
+            });
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'RESOURCES';
+            this.result.outcomeText = 'You find something.';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            this.foundResources = this.resources(this.result.outcomeValue);
+            this.result.outcomeOptions = [];
+            this.foundResources.forEach((element) {
+              this.result.outcomeOptions.add(Outcome(
+                  name: element.name, itemList: [element], selected: false));
+            });
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You find a new danger.'),
+              Outcome(description: 'You find a new obstacle.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'INFORMATION':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'INFORMATION';
+            this.result.outcomeText = 'You discover something important.';
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(
+                  name: 'STORY',
+                  description: 'You learn something about the story.',
+                  selected: false),
+              Outcome(
+                  name: 'DANGER',
+                  description: 'You learn about a danger.',
+                  selected: false),
+              Outcome(
+                  name: 'SECRETE',
+                  description: 'You learn about a secrete.',
+                  selected: false),
+              Outcome(
+                  name: 'OBSTACLE',
+                  description: 'You learn about an obstacle.',
+                  selected: false),
+              Outcome(
+                  name: 'CHARACTER',
+                  description: 'You learn about a character.',
+                  selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'INFORMATION';
+            this.result.outcomeText = 'You discover something.';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(
+                  name: 'STORY',
+                  description: 'You learn something about the story.',
+                  selected: false),
+              Outcome(
+                  name: 'DANGER',
+                  description: 'You learn about a danger.',
+                  selected: false),
+              Outcome(
+                  name: 'SECRETE',
+                  description: 'You learn about a secrete.',
+                  selected: false),
+              Outcome(
+                  name: 'OBSTACLE',
+                  description: 'You learn about an obstacle.',
+                  selected: false),
+              Outcome(
+                  name: 'CHARACTER',
+                  description: 'You learn about a character.',
+                  selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You find a new danger.'),
+              Outcome(description: 'You find a new obstacle.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'TRADE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'They accept your offer.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They raise the price.'),
+              Outcome(description: 'They ask for an aditional favor.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'The deal is off.'),
+              Outcome(description: 'They call for backup'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+
+      case 'CONVINCE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You change their minds.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They ask for \$50.'),
+              Outcome(description: 'They ask for \$100.'),
+              Outcome(description: 'They ask for a favor.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They take an action.'),
+              Outcome(description: 'They call for backup.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+
+      case 'DODGE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You dodge.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You take half damage.'),
+              Outcome(description: 'You dodge, but drop something.'),
+              Outcome(description: 'You dodge, but find another obstacle.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You take damage and fall.'),
+              Outcome(description: 'You take damage and get stuck.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'ESCAPE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You escape.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'One of your arms or legs gets stuck.'),
+              Outcome(description: 'You escape, but leave something behind.'),
+              Outcome(description: 'You escape, but find a new obstacle.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You are stuck and take damage.'),
+              Outcome(description: 'You are stuck and loose something.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'HIDE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You are hidden.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You make a sound.'),
+              Outcome(description: 'You drop something.'),
+              Outcome(description: 'You loose your cover.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They find you and take an action.'),
+              Outcome(description: 'They find you and call for backup.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'JUMP':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You land right on spot.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You land in a dangerous place.'),
+              Outcome(description: 'You fall on the landing.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You land in a bad place.'),
+              Outcome(description: 'You freeze and the enemy takes an action.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'CLIMB':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You reach your goal.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(
+                  description:
+                      'You reach your goal, but leave something behind.'),
+              Outcome(
+                  description:
+                      'You reach your goal, but find another obstacle.'),
+              Outcome(description: 'You climb halfway.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You slide and fall.'),
+              Outcome(description: 'You freeze and the enemy takes an action.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'SWIM':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You reach your goal.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You swim halfway.'),
+              Outcome(
+                  description:
+                      'You reach your goal, but find another obstacle.'),
+              Outcome(
+                  description:
+                      'You reach your goal, but leave something behind.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You drink water.'),
+              Outcome(description: 'You freeze and the enemy takes an action.'),
+              Outcome(description: 'You sink.'),
+              Outcome(description: 'You get stuck.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'MORPH':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'MORPH';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'TIGER', selected: false),
+              Outcome(name: 'SHARK', selected: false),
+              Outcome(name: 'GORILLA', selected: false),
+              Outcome(name: 'RHYNO', selected: false),
+              Outcome(name: 'GIANT EAGLE', selected: false),
+              Outcome(name: 'BEAR', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'MORPH';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'FISH', selected: false),
+              Outcome(name: 'LIZZARD', selected: false),
+              Outcome(name: 'MONKEY', selected: false),
+              Outcome(name: 'HORSE', selected: false),
+              Outcome(name: 'BAT', selected: false),
+              Outcome(name: 'WOLF', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else {
+            //6-
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'MORPH';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'ANT', selected: false),
+              Outcome(name: 'TURTLE', selected: false),
+              Outcome(name: 'RAT', selected: false),
+              Outcome(name: 'GOLD FISH', selected: false),
+              Outcome(name: 'BUG', selected: false),
+              Outcome(name: 'FROG', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          }
+        }
+        break;
+      case 'ILLUSION':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'ILLUSION';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'LARGE CREATURE', selected: false),
+              Outcome(name: 'GROUP OF PEOPLE', selected: false),
+              Outcome(name: 'STRUCTURE', selected: false),
+              Outcome(name: 'OBJECTS', selected: false),
+              Outcome(name: 'OBSTACLE', selected: false),
+              Outcome(name: 'ANIMALS', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'ILLUSION';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'PERSON', selected: false),
+              Outcome(name: 'ANIMAL', selected: false),
+              Outcome(name: 'OBJECT', selected: false),
+              Outcome(name: 'LIGHT', selected: false),
+              Outcome(name: 'SOUND', selected: false),
+              Outcome(name: 'SMALL CREATURE', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'People see through your illusions.'),
+              Outcome(
+                  description:
+                      'Someone touchs your illusion and gets confused.'),
+              Outcome(description: 'You loose control.'),
+              Outcome(description: 'You release a loud noise.'),
+              Outcome(description: 'You release a blinding light.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'FIRE BOMB':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = this.mDamage;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = this.mDamage;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(
+                  description:
+                      'You miss and the explosion creates a new obstacle'),
+            ];
+
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'SMOKE BOMB':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                'You hit the target and create a cloud of smoke.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(
+                  description:
+                      'It lands near the target and creates a cloud of smoke.'),
+              Outcome(
+                  description:
+                      'You hit the target, but the effect is a litte weaker.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(
+                  description:
+                      'You miss and the explosion creates a new obstacle'),
+              Outcome(
+                  description:
+                      'It falls from your hand and lands on your feet.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'ICE BOMB':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                'You hit the target and freeze everything around it.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(
+                  description:
+                      'It lands near the target and freeze everything around it.'),
+              Outcome(
+                  description:
+                      'You hit the target, but the effect is a litte weaker.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(
+                  description:
+                      'You miss and the explosion creates a new obstacle'),
+              Outcome(
+                  description:
+                      'It falls from your hand and lands on your feet.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+
+//VOLTA AQUI <-----
+
+      case 'DIG':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You dig a hole.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You dig a small hole.'),
+              Outcome(description: 'You dig a hole near you.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You loose control and destroy something.'),
+              Outcome(
+                  description:
+                      'You loose control and the enemy takes an action.'),
+              Outcome(
+                  description: 'You loose control and put a friend in a hole.'),
+              Outcome(
+                  description: 'You loose control and get stuck in a hole.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'HOLD':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You hold them.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You hold one of their arms or legs.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They escape and take an action.'),
+              Outcome(description: 'You loose control and it backfires.'),
+              Outcome(description: 'You loose control and hold a friend.'),
+              Outcome(
+                  description: 'You loose control and  create new obstacle.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'BUILD':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'BUILD';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'FULL COVER', selected: false),
+              Outcome(name: 'LARGE STRUCTURE', selected: false),
+              Outcome(name: 'FUNITURE', selected: false),
+              Outcome(name: 'LARGE OBSTACLE', selected: false),
+              Outcome(name: 'PATH', selected: false),
+              Outcome(name: 'TRAP', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'BUILD';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'HALF COVER', selected: false),
+              Outcome(name: 'STRUCTURE', selected: false),
+              Outcome(name: 'FUNITURE', selected: false),
+              Outcome(name: 'OBSTACLE', selected: false),
+              Outcome(name: 'OPENING', selected: false),
+              Outcome(name: 'SMALL TRAP', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You loose control and destroy something.'),
+              Outcome(
+                  description:
+                      'You have to concentrate and the enemy takes an action.'),
+              Outcome(description: 'You loose control and lock a friend.'),
+              Outcome(description: 'You loose control and it backfires'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'DESTROY':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You destroy a structure.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You destroy half of it.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(
+                  description:
+                      'You create an explosion around you that sends everyone flying.'),
+              Outcome(
+                  description:
+                      'You destroy the wrong thing and create an obstacle.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'TRANSFORM':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You transform into someone else.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'Your voice become like someone\'s elses.'),
+              Outcome(
+                  description: 'Your appearance become like someone\'s elses.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You become a little kid.'),
+              Outcome(description: 'You become an old lady.'),
+              Outcome(description: 'You become blind.'),
+              Outcome(description: 'You make a loud noise.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'ENHANCE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'ENHANCE';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'NIGHT VISION', selected: false),
+              Outcome(name: 'INFRARED VISION', selected: false),
+              Outcome(name: 'X-RAY VISION', selected: false),
+              Outcome(name: 'ULTRASONIC HEARING', selected: false),
+              Outcome(name: 'SPEED', selected: false),
+              Outcome(name: 'POWER', selected: false),
+              Outcome(name: 'CLIMB', selected: false),
+              Outcome(name: 'FLY', selected: false),
+              Outcome(name: 'BREATH UNDERWATER', selected: false),
+              Outcome(name: 'THICK SKIN', selected: false),
+              Outcome(name: 'SUPER STRENGTH', selected: false),
+              Outcome(name: 'SUPER JUMP', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'ENHANCE';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'NIGHT VISION', selected: false),
+              Outcome(name: 'INFRARED VISION', selected: false),
+              Outcome(name: 'X-RAY VISION', selected: false),
+              Outcome(name: 'ULTRASONIC HEARING', selected: false),
+              Outcome(name: 'SPEED', selected: false),
+              Outcome(name: 'POWER', selected: false),
+              Outcome(name: 'CLIMB', selected: false),
+              Outcome(name: 'FLY', selected: false),
+              Outcome(name: 'BREATH UNDERWATER', selected: false),
+              Outcome(name: 'THICK SKIN', selected: false),
+              Outcome(name: 'SUPER STRENGTH', selected: false),
+              Outcome(name: 'SUPER JUMP', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You become blind.'),
+              Outcome(description: 'You make them blind.'),
+              Outcome(description: 'You make them numb.'),
+              Outcome(description: 'You fail and the enemy takes an action.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'CURSE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'CURSE';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'WEAK', selected: false),
+              Outcome(name: 'VULNERABLE', selected: false),
+              Outcome(name: 'BLIND', selected: false),
+              Outcome(name: 'MUTE', selected: false),
+              Outcome(name: 'NUMB', selected: false),
+              Outcome(name: 'DEAF', selected: false),
+              Outcome(name: 'PARALIZED', selected: false),
+              Outcome(name: 'CHARM', selected: false),
+              Outcome(name: 'FORGET', selected: false),
+              Outcome(name: 'SCARED', selected: false),
+              Outcome(name: 'SLOW', selected: false),
+              Outcome(name: 'UGLY', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'OPTIONS';
+            this.result.outcomeAction = 'CURSE';
+            this.result.outcomeText = '';
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = 0;
+            List<Outcome> possibleOutcomes = [
+              Outcome(name: 'WEAK', selected: false),
+              Outcome(name: 'VULNERABLE', selected: false),
+              Outcome(name: 'BLIND', selected: false),
+              Outcome(name: 'MUTE', selected: false),
+              Outcome(name: 'NUMB', selected: false),
+              Outcome(name: 'DEAF', selected: false),
+              Outcome(name: 'PARALIZED', selected: false),
+              Outcome(name: 'CHARM', selected: false),
+              Outcome(name: 'FORGET', selected: false),
+              Outcome(name: 'SCARED', selected: false),
+              Outcome(name: 'SLOW', selected: false),
+              Outcome(name: 'UGLY', selected: false),
+            ];
+            this.result.outcomeOptions = possibleOutcomes;
+            this.result.outcomeOptions.shuffle();
+            while (this.result.outcomeOptions.length > 3) {
+              this.result.outcomeOptions.removeLast();
+            }
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You become blind.'),
+              Outcome(description: 'You make them stronger.'),
+              Outcome(description: 'You make them faster.'),
+              Outcome(description: 'You fail and the enemy takes an action.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+    }
+
+    //Count player turn
+    playerTurn();
+  }
+
+  void secondRoll(int numberDice) {
+    this.result.diceResult.clear();
+
+    for (int i = 0; i < numberDice; i++) {
+      this.result.diceResult.add(Random().nextInt(6) + 1);
+    }
+    print('  ${this.result.diceResult}');
+
+    this.result.total =
+        this.result.diceResult.fold(0, (p, element) => p + element) +
+            this.result.outcomeBonus;
+    this.result.sum =
+        '${this.result.total - this.result.outcomeBonus} + ${this.result.outcomeBonus} = ${this.result.total}';
+  }
+
+  void chooseOutcome() {
+    switch (this.result.outcomeAction) {
+      case 'RESOURCES':
+        {
+          this.result.outcomeOptions.forEach((outcome) {
+            if (outcome.selected) {
+              this.inventory.add(outcome.itemList.first);
+            }
+          });
+        }
+        break;
+
+      case 'INFORMATION':
+        {}
+        break;
+
+      case 'MORPH':
+        {}
+        break;
+
+      case 'ILLUSION':
+        {}
+        break;
+
+      case 'ENHANCE':
+        {}
+        break;
+      case 'CURSE':
+        {}
+        break;
+    }
+  }
+
+  // void action(Option option) {
+  //   //Count player turn
+  //   playerTurn();
+
+  //   //Reduce ammunition
+  //   if (option.name == 'WEAPON') {
+  //     this.reduceAmmo();
+  //   }
+
+  //   //Prepare for second roll
+  //   option.firstRoll = false;
+  // }
 
   void reduceAmmo() {
     if (this.mainHandEquip.itemClass == 'thrownWeapon') {
@@ -1071,22 +2457,6 @@ class Player {
 
     // lootList.add('${shop.resources[loot].name}');
     return lootList;
-  }
-
-  void checkWeapon() {
-    if (this.mainHandEquip.name == '' && this.offHandEquip.name == '') {
-      throw new NoWeaponException();
-    }
-
-    if (this.mainHandEquip.itemClass == 'rangedWeapon' ||
-        this.offHandEquip.itemClass == 'rangedWeapon') {
-      for (int check = 0; check < this.inventory.length; check++) {
-        if (this.inventory[check].icon == 'ammo') {
-          return;
-        }
-      }
-      throw new NoAmmoException();
-    }
   }
 
 // PLAYER TURN
@@ -1302,6 +2672,14 @@ class Player {
     }
     this.playerColor.name =
         '${this.race.race} ${this.playerBackground.background}';
+
+    //Assign the action value to each option
+    this.playerAction.forEach((action) {
+      action.option.forEach((option) {
+        option.value = action.value;
+      });
+    });
+
     this.characterFinished = true;
   }
 
@@ -1309,5 +2687,20 @@ class Player {
 
   void setColor(PlayerColor playerColor) {
     this.playerColor = playerColor;
+  }
+
+//FINISH CHARACTER
+
+  void finishCharacter(String name) {
+    this.playerColor.name = name;
+
+//Assign the action value to each option
+    this.playerAction.forEach((action) {
+      action.option.forEach((option) {
+        option.value = action.value;
+      });
+    });
+
+    this.characterFinished = true;
   }
 }
