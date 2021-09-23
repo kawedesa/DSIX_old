@@ -1,3 +1,5 @@
+import 'package:dsixv02app/models/dsix/sprite.dart';
+import 'package:flutter/cupertino.dart';
 import 'characterSkill.dart';
 import 'dart:math';
 
@@ -9,7 +11,8 @@ class Character {
   String name;
   String description;
   String image;
-
+  Offset location = Offset.zero;
+  // Sprite sprite;
 //HEALTH
 
   int baseHealth;
@@ -19,6 +22,8 @@ class Character {
   //DICE
 
   int dice;
+
+  double size;
 
   //STATS
 
@@ -56,6 +61,7 @@ class Character {
       baseLoot: this.baseLoot,
       baseXp: this.baseXp,
       dice: this.dice,
+      size: this.size,
       pDamage: this.pDamage,
       pArmor: this.pArmor,
       mDamage: this.mDamage,
@@ -188,8 +194,11 @@ class Character {
     String name,
     String description,
     String image,
+    Offset location,
+    // Sprite sprite,
     int baseHealth,
     int dice,
+    double size,
     int pDamage,
     int pArmor,
     int mDamage,
@@ -205,9 +214,12 @@ class Character {
     this.name = name;
     this.description = description;
     this.image = image;
+    this.location = location;
+    // this.sprite = sprite;
 
     this.baseHealth = baseHealth;
     this.dice = dice;
+    this.size = size;
     this.pDamage = pDamage;
     this.pArmor = pArmor;
     this.mDamage = mDamage;

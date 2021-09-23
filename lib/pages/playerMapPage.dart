@@ -1,162 +1,199 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:dsixv02app/models/dsix/dsix.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+class PlayerMapPage extends StatefulWidget {
+  final Function() refresh;
+  final Function(String) alert;
+  final Dsix dsix;
 
+  PlayerMapPage({Key key, this.dsix, this.refresh, this.alert})
+      : super(key: key);
 
-
-class MapPage extends StatefulWidget {
-  MapPage({Key key}) : super(key: key);
-
-  static const String routeName = "/mapPage";
-
-
+  static const String routeName = "/playerMapPage";
 
   @override
-  _MapPageState createState() => new _MapPageState();
+  _PlayerMapPageState createState() => new _PlayerMapPageState();
 }
 
-class _MapPageState extends State<MapPage> {
+class _PlayerMapPageState extends State<PlayerMapPage> {
+  TransformationController interactiveViewerController =
+      TransformationController();
 
+  @override
+  void initState() {
+    super.initState();
 
-  int skillSelect = 0;
+    //SCALE
+    interactiveViewerController.value.multiply(
+        Matrix4(2.5, 0, 0, 0, 0, 2.5, 0, 0, 0, 0, 2.5, 0, 0, 0, 0, 1));
+    //POSITION
+
+    widget.dsix.gm.displayCharacters.forEach((element) {
+      if (element.color ==
+          widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor) {
+        interactiveViewerController.value.add(Matrix4(
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            -element.location.dx * 2.5 + 200,
+            -element.location.dy * 2.5 + 200,
+            0,
+            0));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-
-    return new Scaffold(
-
-
-      appBar: new AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.keyboard_arrow_left, color: Colors.white, size: 40,),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
-        titleSpacing: 0,
-        backgroundColor: Colors.black,
-        title: new Text('Choose your character.',
-          textAlign: TextAlign.left,
-          style: TextStyle(
-            fontFamily: 'Calibri',
-            height: 1.3,
-            fontSize: 20.0,
-            color: Colors.white,
-            letterSpacing: 1,
-          ),),
-
-      ),
-      backgroundColor: Colors.black,
-        body: new SafeArea(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget>[
-              Divider(
-                height: 2.5,
-                thickness: 2.5,
-                color: Colors.white,
-              ),
-
-
-
-
-
-              Expanded(
-                flex: 20,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-
-                  ],
-
-                ),
-              ),
-              Divider(
-                height: 2.5,
-                thickness: 2.5,
-                color: Colors.white,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: <Widget>[
+        Container(
+          height: MediaQuery.of(context).size.height * 0.1,
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.fromLTRB(7, 0, 0, 0),
+                child: IconButton(
+                    icon: Icon(
+                      Icons.alarm,
+                      color: widget.dsix.gm
+                          .getCurrentPlayer()
+                          .playerColor
+                          .primaryColor,
+                      size: 30,
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        widget.dsix.gm.addGmTurn();
+                      });
+                    }),
               ),
               Expanded(
-                flex: 3,
                 child: Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 5,10, 0),
-                  child: Row(
-                    children: <Widget>[
-                      
-                      Expanded(
-                        child: TextButton(
-                            style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(10),
-                            ),
-                            onPressed: (){
-
-                            },
-                            child: Image.asset('images/player/skill13.png')),
-                      ),
-                      Expanded(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(10),
-                            ),
-                              onPressed: (){
-                          },
-                              child: Image.asset('images/player/skill14.png')
-
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: ListView.separated(
+                    shrinkWrap: true,
+                    physics: ScrollPhysics(),
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
+                    itemCount: widget.dsix.gm.turnOrder.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      return GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            widget.dsix.gm.removeTurn(index);
+                          });
+                        },
+                        onDoubleTap: () {
+                          setState(() {
+                            widget.dsix.gm.nextTurn();
+                          });
+                        },
+                        onTap: () {
+                          setState(() {
+                            widget.dsix.gm.chooseTurn(index);
+                          });
+                        },
+                        child: Container(
+                          height: 35,
+                          width: 35,
+                          // color: Colors.amber,
+                          child: SvgPicture.asset(
+                            'assets/player/race/${widget.dsix.gm.turnOrder[index].icon}.svg',
+                            color: widget.dsix.gm.turnOrder[index].primaryColor,
                           ),
-                      ),
-                      Expanded(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(10),
-                            ),
-                              onPressed: (){
-                              },
-                          child: Image.asset('images/player/skill15.png')
-                          ),
-                      ),
-                      Expanded(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(10),
-                            ),
-                              onPressed: (){
-                              },
-                              child: Image.asset('images/player/skill16.png')
-                          ),
-                      ),
-                      Expanded(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.all(10),
-                            ),
-                              onPressed: (){
-                              },
-                              child: Image.asset('images/player/skill17.png')),
-                      ),
-                      Expanded(
-                          child: TextButton(
-                            style: TextButton.styleFrom(
-                            padding: const EdgeInsets.all(10),
-                            ),
-                            onPressed: (){
-                            },
-                              child: Image.asset('images/player/skill1.png'),
-                          ),
-                      ),
-                    ],
+                        ),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return SizedBox(
+                        width: 5,
+                      );
+                    },
                   ),
                 ),
               ),
-              Divider(
-                height: 0,
-                thickness: 2,
-                color: Colors.white,
-              ),
-
-
             ],
           ),
         ),
+        Divider(
+          height: 0,
+          thickness: 2,
+          color: widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor,
+        ),
+        Expanded(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                width: MediaQuery.of(context).size.width,
+                height: MediaQuery.of(context).size.height * 0.678,
+                child: GestureDetector(
+                  onDoubleTap: () {},
+                  onDoubleTapDown: (details) {
+                    setState(() {
+                      double xTranslation =
+                          (interactiveViewerController.value.row0[3] /
+                                  interactiveViewerController.value.row0[0])
+                              .abs();
+
+                      double yTranslation =
+                          (interactiveViewerController.value.row1[3] /
+                                  interactiveViewerController.value.row1[1])
+                              .abs();
+
+                      Offset spawnLocation = Offset(
+                          xTranslation +
+                              details.localPosition.dx /
+                                  interactiveViewerController.value.row0[0],
+                          yTranslation +
+                              details.localPosition.dy /
+                                  interactiveViewerController.value.row1[1]);
+
+                      //SPAWN ON DOUBLE TAP <---- COME BACK HERE
+
+                      // widget.dsix.gm.newCharacter(spawnLocation);
+                    });
+                  },
+                  child: InteractiveViewer(
+                    transformationController: interactiveViewerController,
+                    onInteractionStart: (details) {},
+                    onInteractionUpdate: (details) {},
+                    onInteractionEnd: (details) {},
+                    constrained: false,
+                    maxScale: 20,
+                    minScale: 0.7,
+                    child: Stack(
+                      children: [
+                        widget.dsix.world.mapTile.mapTile,
+                        Container(
+                          width: widget.dsix.world.mapSize,
+                          height: widget.dsix.world.mapSize,
+                          child: Stack(
+                            children: widget.dsix.gm.displayCharacters,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
     );
   }
 }
-

@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/player/newOption.dart';
+import 'package:dsixv02app/models/player/option.dart';
 
 class PlayerAction {
   String icon;
@@ -6,8 +6,23 @@ class PlayerAction {
   String description;
   List<Option> option;
   int value;
-  int bonus;
-  // bool focus;
+
+  PlayerAction copyAction() {
+    PlayerAction newPlayerAction = PlayerAction(
+      icon: this.icon,
+      name: this.name,
+      description: this.description,
+      option: this.option,
+      value: this.value,
+    );
+    List<Option> newOptions = [];
+    newPlayerAction.option.forEach((element) {
+      newOptions.add(element.copyOption());
+    });
+    newPlayerAction.option = newOptions;
+
+    return newPlayerAction;
+  }
 
   PlayerAction(
       {String icon,
@@ -21,6 +36,5 @@ class PlayerAction {
     this.description = description;
     this.option = option;
     this.value = value;
-    this.bonus = bonus;
   }
 }

@@ -24,7 +24,7 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
   String actionResult = 'Roll';
-  int _layout = 0;
+  int _layout = 1;
   List<bool> characterSelection;
 
   void newCharacter(String environment) {

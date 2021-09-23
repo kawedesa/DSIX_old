@@ -1,3 +1,4 @@
+import 'package:dsixv02app/pages/playerMapPage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -22,15 +23,15 @@ class PlayerUI extends StatefulWidget {
 }
 
 class _PlayerUIState extends State<PlayerUI> {
-  void newTurn() {
-    try {
-      widget.dsix.gm.newTurn();
-    } on NewTurnException catch (e) {
-      refresh();
-      ScaffoldMessenger.of(context).showSnackBar(displayAlert(e.message));
-      return;
-    }
-  }
+  // void newTurn() {
+  //   try {
+  //     widget.dsix.gm.newTurn();
+  //   } on NewTurnException catch (e) {
+  //     refresh();
+  //     ScaffoldMessenger.of(context).showSnackBar(displayAlert(e.message));
+  //     return;
+  //   }
+  // }
 
   showAlertDialogHealth(BuildContext context) {
     showDialog(
@@ -586,11 +587,17 @@ class _PlayerUIState extends State<PlayerUI> {
     keepPage: true,
   );
 
+  int currentPage = 0;
+
   Widget buildPageView() {
     return PageView(
       controller: pageController,
+      physics:
+          (currentPage == 4) ? NeverScrollableScrollPhysics() : ScrollPhysics(),
       onPageChanged: (index) {
+        currentPage = index;
         pageChanged(index);
+        print(pageController.page);
       },
       children: <Widget>[
         CharacterPage(
@@ -611,7 +618,7 @@ class _PlayerUIState extends State<PlayerUI> {
           refresh: refresh,
           alert: displayAlert,
         ),
-        HelpPage(
+        PlayerMapPage(
           dsix: widget.dsix,
         ),
         HelpPage(
@@ -667,7 +674,7 @@ class _PlayerUIState extends State<PlayerUI> {
   }
 
   Widget build(BuildContext context) {
-    List<bool> turn = widget.dsix.gm.getCurrentPlayer().turn;
+    // List<bool> turn = widget.dsix.gm.getCurrentPlayer().turn;
 
     return new Scaffold(
       backgroundColor: Colors.black,
@@ -707,53 +714,44 @@ class _PlayerUIState extends State<PlayerUI> {
               mainAxisAlignment: MainAxisAlignment.end,
               children: <Widget>[
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 0, 2.5, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                   child: GestureDetector(
-                    onLongPress: () {
-                      newTurn();
-                    },
                     onTap: () {
-                      widget.dsix.gm.getCurrentPlayer().changeTurn(0);
-
-                      turn = widget.dsix.gm.getCurrentPlayer().turn;
-                      refresh();
+                      setState(() {
+                        widget.dsix.gm.getCurrentPlayer().playerTurn();
+                      });
                     },
                     child: SvgPicture.asset(
                       'assets/player/action.svg',
-                      color: turn[0]
-                          ? widget.dsix.gm
-                              .getCurrentPlayer()
-                              .playerColor
-                              .tertiaryColor
-                          : Colors.white,
+                      color: Colors.white,
                       width: MediaQuery.of(context).size.width * 0.05,
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(2.5, 0, 15, 0),
-                  child: GestureDetector(
-                    onLongPress: () {
-                      newTurn();
-                    },
-                    onTap: () {
-                      widget.dsix.gm.getCurrentPlayer().changeTurn(1);
+                // Padding(
+                //   padding: const EdgeInsets.fromLTRB(2.5, 0, 15, 0),
+                //   child: GestureDetector(
+                //     onLongPress: () {
+                //       newTurn();
+                //     },
+                //     onTap: () {
+                //       widget.dsix.gm.getCurrentPlayer().changeTurn(1);
 
-                      turn = widget.dsix.gm.getCurrentPlayer().turn;
-                      refresh();
-                    },
-                    child: SvgPicture.asset(
-                      'assets/player/action.svg',
-                      color: turn[1]
-                          ? widget.dsix.gm
-                              .getCurrentPlayer()
-                              .playerColor
-                              .tertiaryColor
-                          : Colors.white,
-                      width: MediaQuery.of(context).size.width * 0.05,
-                    ),
-                  ),
-                ),
+                //       turn = widget.dsix.gm.getCurrentPlayer().turn;
+                //       refresh();
+                //     },
+                //     child: SvgPicture.asset(
+                //       'assets/player/action.svg',
+                //       color: turn[1]
+                //           ? widget.dsix.gm
+                //               .getCurrentPlayer()
+                //               .playerColor
+                //               .tertiaryColor
+                //           : Colors.white,
+                //       width: MediaQuery.of(context).size.width * 0.05,
+                //     ),
+                //   ),
+                // ),
                 GestureDetector(
                   onTap: () {
                     showAlertDialogHealth(context);

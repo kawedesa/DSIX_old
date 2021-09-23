@@ -4,17 +4,17 @@ class Location {
   String icon;
   String name;
   String description;
-  List<Character> characters = [];
+  List<Character> possibleCharacters = [];
 
   Location({
     String icon,
     String name,
     String description,
-    List<Character> characters,
+    List<Character> possibleCharacters,
   }) {
     this.icon = icon;
     this.name = name;
     this.description = description;
-    this.characters = characters;
+    this.possibleCharacters = possibleCharacters;
   }
 }

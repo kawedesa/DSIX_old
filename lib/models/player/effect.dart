@@ -2,22 +2,27 @@ class Effect {
   String icon;
   String name;
   String description;
-  String typeOfEffect;
-  int duration = 0;
+  bool permanent;
+  String type;
+  int duration;
+  int value;
 
   Effect({
     String icon,
     String name,
     String description,
-    String typeOfEffect,
-    int value,
+    bool permanent,
+    String type,
     int duration,
+    int value,
   }) {
     this.icon = icon;
     this.name = name;
     this.description = description;
-    this.typeOfEffect = typeOfEffect;
+    this.permanent = permanent;
+    this.type = type;
     this.duration = duration;
+    this.value = value;
   }
 
   Effect copyEffect() {
@@ -25,8 +30,10 @@ class Effect {
       icon: this.icon,
       name: this.name,
       description: this.description,
-      typeOfEffect: this.typeOfEffect,
+      permanent: this.permanent,
+      type: this.type,
       duration: this.duration,
+      value: this.value,
     );
 
     return newEffect;

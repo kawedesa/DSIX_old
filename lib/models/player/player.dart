@@ -4,7 +4,7 @@ import 'package:dsixv02app/models/shared/item.dart';
 import 'package:dsixv02app/models/player/playerBackground.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/player/playerRace.dart';
-import 'package:dsixv02app/models/player/newOption.dart';
+import 'package:dsixv02app/models/player/option.dart';
 import 'package:dsixv02app/models/player/playerAction.dart';
 import 'package:dsixv02app/models/player/effect.dart';
 import '../shared/exceptions.dart';
@@ -18,16 +18,31 @@ import 'package:dsixv02app/models/player/outcome.dart';
 
 class PlayerColor {
   String name;
+  String icon;
   Color primaryColor;
   Color secondaryColor;
   Color tertiaryColor;
 
+  PlayerColor copyPlayerColor() {
+    PlayerColor newPlayerColor = new PlayerColor(
+      name: this.name,
+      icon: this.icon,
+      primaryColor: this.primaryColor,
+      secondaryColor: this.secondaryColor,
+      tertiaryColor: this.tertiaryColor,
+    );
+
+    return newPlayerColor;
+  }
+
   PlayerColor(
       {String name,
+      String icon,
       Color primaryColor,
       Color secondaryColor,
       Color tertiaryColor}) {
     this.name = name;
+    this.icon = icon;
     this.primaryColor = primaryColor;
     this.secondaryColor = secondaryColor;
     this.tertiaryColor = tertiaryColor;
@@ -40,6 +55,8 @@ class Player {
   // var playerIndex;
 
   PlayerColor playerColor;
+
+  Offset location;
 
   bool characterFinished = false;
 
@@ -70,6 +87,7 @@ class Player {
 
   void chooseRace(int index) {
     this.race = this.availableRaces[index];
+    this.playerColor.icon = this.availableRaces[index].icon;
     this.currentHealth = this.race.maxHealth;
     this.currentWeight = 0;
   }
@@ -190,6 +208,10 @@ class Player {
         Option(name: 'DEFEND', description: 'You try to protect.', value: 0),
         Option(name: 'RESIST', description: 'You try to resist.', value: 0),
         Option(name: 'HELP', description: 'You try to help.', value: 0),
+        Option(
+            name: 'LIFT',
+            description: 'You try to lift something heavy.',
+            value: 0),
       ],
       value: 0,
       bonus: 0,
@@ -207,14 +229,6 @@ class Player {
             name: 'INFORMATION',
             description: 'You try to gather information.',
             value: 0),
-        // Option(
-        //     'SECRETE',
-        //     'You try to find a hidden door or chest.',
-        //     'You find a secrete.',
-        //     'You find a secrete, but it\'s blocked.',
-        //     'You find something bad',
-        //     'SECRETE',
-        //     false)
       ],
       value: 0,
       bonus: 0,
@@ -449,7 +463,7 @@ class Player {
         playerTurn();
 
         this.effects.forEach((element) {
-          if (element.typeOfEffect == 'TEMPORARY') {
+          if (element.permanent == false) {
             element.duration = 0;
           }
         });
@@ -884,7 +898,7 @@ class Player {
   List<Item> foundResources = [];
 
   void action(Option option) {
-// Roll Dice
+    // Roll Dice
 
     result.blankResult();
 
@@ -894,7 +908,6 @@ class Player {
       this.result.diceResult.add(Random().nextInt(6) + 1);
       numberOfDice--;
     }
-    print('  ${this.result.diceResult}');
 
     this.result.total =
         this.result.diceResult.fold(0, (p, element) => p + element) +
@@ -904,10 +917,472 @@ class Player {
 
     this.result.color = Colors.green;
 
-    print('  ${this.result.total}');
-    print('  ${this.result.sum}');
-
     switch (option.name) {
+
+//MORPH ACTIONS
+      case 'FLY':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You reach your goal.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You  fly half of the way.'),
+              Outcome(description: 'You face an obstacle.'),
+              Outcome(description: 'You leave something behind.'),
+            ];
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You freeze and the enemy takes an action.'),
+              Outcome(description: 'You fall'),
+              Outcome(description: 'You hit something.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+
+      case 'TRAMPLE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You crush everyone in your path.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                5; // Raw damage +5
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You crush everyone in your path.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                3; // Raw damage +3
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'The enemy dodges and take and action.'),
+              Outcome(description: 'The enemy dodges and you trample an ally.'),
+              Outcome(description: 'The enemy dodges and attack you.'),
+            ];
+
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'THROW':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 2;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                3; // Raw damage +3
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You hit the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 1;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                1; // Raw damage +1
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(description: 'You miss and hit an ally.'),
+            ];
+
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'GRAB':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                'You grab them and they are unable to move.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You grab one of their arms or legs.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They escape and take an action.'),
+              Outcome(description: 'They attack you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'SLASH':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText =
+                'You slash the target and make them bleed.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                3; // Raw damage +3
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText =
+                'You slash the target and make them bleed.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                1; // Raw damage +1
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(description: 'You miss and the enemy and hold.'),
+              Outcome(description: 'You miss and the enemy attacks you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'CHARGE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You crush everyone in your path.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                4; // Raw damage +4
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You crush everyone in your path.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                2; // Raw damage +2
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'The enemy dodges and take and action.'),
+              Outcome(description: 'The enemy dodges and you trample an ally.'),
+              Outcome(description: 'The enemy dodges and attack you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'CONSTRICT':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You crush the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                4; // Raw damage +4
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You crush the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                2; // Raw damage +2
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They escape and take an action.'),
+              Outcome(description: 'They escape and hold you down.'),
+              Outcome(description: 'They attack you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'TWIST':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You twist and rip the targe apart.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                5; // Raw damage +4
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You twist and rip the targe apart.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value +
+                3; // Raw damage +2
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'They escape and take an action.'),
+              Outcome(description: 'They escape and hold you.'),
+              Outcome(description: 'They attack you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'PECK':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You peck the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value; // Only add raw damage
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You peck the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value; // Only add raw damage
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(description: 'You miss and the enemy and hold.'),
+              Outcome(description: 'You miss and the enemy attacks you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+      case 'BITE':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = '2D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You bite the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value; // Only add raw damage
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = '1D6';
+            this.result.outcomeAction = 'DAMAGE';
+            this.result.outcomeText = 'You bite the target.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value; // Only add raw damage
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You miss and the enemy takes an action.'),
+              Outcome(description: 'You miss and the enemy and hold.'),
+              Outcome(description: 'You miss and the enemy attacks you.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+
+//BASIC ACTIONS
+
       case 'PUNCH':
         {
           if (this.result.total >= 10) {
@@ -918,7 +1393,10 @@ class Player {
             this.result.outcomeText = 'You hit the target.';
             this.result.outcomeOptions = [];
             this.result.outcomeValue = 0;
-            this.result.outcomeBonus = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value; // Only add raw damage
           } else if (this.result.total >= 7 && this.result.total <= 9) {
             //7-9
             this.result.outcomeTitle = 'HALF SUCCESS';
@@ -932,7 +1410,8 @@ class Player {
             //6-
             List<Outcome> possibleOutcomes = [
               Outcome(description: 'You miss and the enemy takes an action.'),
-              Outcome(description: 'You miss and the enemy holds you.'),
+              Outcome(description: 'You miss and the enemy and hold.'),
+              Outcome(description: 'You miss and the enemy attacks you.'),
             ];
             this.result.color = Colors.red;
             this.result.outcomeTitle = 'FAIL';
@@ -942,7 +1421,10 @@ class Player {
                 '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
             this.result.outcomeOptions = [];
             this.result.outcomeValue = 0;
-            this.result.outcomeBonus = 0;
+            this.result.outcomeBonus = this.pDamage +
+                this.mDamage -
+                this.mainHandEquip.value -
+                this.offHandEquip.value; // Only add raw damage
           }
         }
         break;
@@ -974,7 +1456,8 @@ class Player {
             //6-
             List<Outcome> possibleOutcomes = [
               Outcome(description: 'You miss and the enemy takes an action.'),
-              Outcome(description: 'You miss and the enemy holds you.'),
+              Outcome(description: 'You miss and the enemy and hold.'),
+              Outcome(description: 'You miss and the enemy attacks you.'),
               Outcome(description: 'You miss and drop your weapon.'),
             ];
 
@@ -1016,6 +1499,7 @@ class Player {
             List<Outcome> possibleOutcomes = [
               Outcome(description: 'They escape and take an action.'),
               Outcome(description: 'They escape and hold you down.'),
+              Outcome(description: 'They attack you.'),
             ];
             this.result.color = Colors.red;
             this.result.outcomeTitle = 'FAIL';
@@ -1143,7 +1627,49 @@ class Player {
           }
         }
         break;
-      //voltar pra ca <----------
+
+      case 'LIFT':
+        {
+          if (this.result.total >= 10) {
+            //10+
+            this.result.outcomeTitle = 'SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You lift with no problem.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else if (this.result.total >= 7 && this.result.total <= 9) {
+            //7-9
+            this.result.outcomeTitle = 'HALF SUCCESS';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText = 'You can lift, but not for long.';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          } else {
+            //6-
+            List<Outcome> possibleOutcomes = [
+              Outcome(description: 'You drop it on yourself.'),
+              Outcome(description: 'You drop it on someone else.'),
+              Outcome(
+                  description:
+                      'You fail to lift and the enemy takes an action.'),
+            ];
+            this.result.color = Colors.red;
+            this.result.outcomeTitle = 'FAIL';
+            this.result.outcomeType = 'TEXT';
+            this.result.outcomeAction = '';
+            this.result.outcomeText =
+                '${possibleOutcomes[Random().nextInt(possibleOutcomes.length)].description}';
+            this.result.outcomeOptions = [];
+            this.result.outcomeValue = 0;
+            this.result.outcomeBonus = 0;
+          }
+        }
+        break;
+
       case 'RESOURCES':
         {
           this.foundResources = [];
@@ -1646,6 +2172,9 @@ class Player {
           }
         }
         break;
+
+//ACTION SKILLS
+
       case 'MORPH':
         {
           if (this.result.total >= 10) {
@@ -1657,11 +2186,11 @@ class Player {
             this.result.outcomeValue = 1;
             this.result.outcomeBonus = 0;
             List<Outcome> possibleOutcomes = [
-              Outcome(name: 'TIGER', selected: false),
-              Outcome(name: 'SHARK', selected: false),
+              Outcome(name: 'PUMA', selected: false),
+              Outcome(name: 'CROCODILE', selected: false),
               Outcome(name: 'GORILLA', selected: false),
-              Outcome(name: 'RHYNO', selected: false),
-              Outcome(name: 'GIANT EAGLE', selected: false),
+              Outcome(name: 'RHINO', selected: false),
+              Outcome(name: 'ELEPHANT', selected: false),
               Outcome(name: 'BEAR', selected: false),
             ];
             this.result.outcomeOptions = possibleOutcomes;
@@ -1678,12 +2207,12 @@ class Player {
             this.result.outcomeValue = 1;
             this.result.outcomeBonus = 0;
             List<Outcome> possibleOutcomes = [
-              Outcome(name: 'FISH', selected: false),
-              Outcome(name: 'LIZZARD', selected: false),
-              Outcome(name: 'MONKEY', selected: false),
-              Outcome(name: 'HORSE', selected: false),
+              Outcome(name: 'CRAB', selected: false),
+              Outcome(name: 'SNAKE', selected: false),
+              Outcome(name: 'BIRD', selected: false),
+              Outcome(name: 'BULL', selected: false),
               Outcome(name: 'BAT', selected: false),
-              Outcome(name: 'WOLF', selected: false),
+              Outcome(name: 'FOX', selected: false),
             ];
             this.result.outcomeOptions = possibleOutcomes;
             this.result.outcomeOptions.shuffle();
@@ -1700,11 +2229,11 @@ class Player {
             this.result.outcomeValue = 1;
             this.result.outcomeBonus = 0;
             List<Outcome> possibleOutcomes = [
-              Outcome(name: 'ANT', selected: false),
-              Outcome(name: 'TURTLE', selected: false),
-              Outcome(name: 'RAT', selected: false),
-              Outcome(name: 'GOLD FISH', selected: false),
               Outcome(name: 'BUG', selected: false),
+              Outcome(name: 'TURTLE', selected: false),
+              Outcome(name: 'MONKEY', selected: false),
+              Outcome(name: 'FISH', selected: false),
+              Outcome(name: 'CHAMELEON', selected: false),
               Outcome(name: 'FROG', selected: false),
             ];
             this.result.outcomeOptions = possibleOutcomes;
@@ -1723,7 +2252,7 @@ class Player {
             this.result.outcomeType = 'OPTIONS';
             this.result.outcomeAction = 'ILLUSION';
             this.result.outcomeText = '';
-            this.result.outcomeValue = 2;
+            this.result.outcomeValue = 1;
             this.result.outcomeBonus = 0;
             List<Outcome> possibleOutcomes = [
               Outcome(name: 'LARGE CREATURE', selected: false),
@@ -1744,12 +2273,12 @@ class Player {
             this.result.outcomeType = 'OPTIONS';
             this.result.outcomeAction = 'ILLUSION';
             this.result.outcomeText = '';
-            this.result.outcomeValue = 2;
+            this.result.outcomeValue = 1;
             this.result.outcomeBonus = 0;
             List<Outcome> possibleOutcomes = [
               Outcome(name: 'PERSON', selected: false),
-              Outcome(name: 'ANIMAL', selected: false),
-              Outcome(name: 'OBJECT', selected: false),
+              Outcome(name: 'ANIMALS', selected: false),
+              Outcome(name: 'OBJECTS', selected: false),
               Outcome(name: 'LIGHT', selected: false),
               Outcome(name: 'SOUND', selected: false),
               Outcome(name: 'SMALL CREATURE', selected: false),
@@ -1929,8 +2458,6 @@ class Player {
           }
         }
         break;
-
-//VOLTA AQUI <-----
 
       case 'DIG':
         {
@@ -2204,7 +2731,7 @@ class Player {
             ];
             this.result.outcomeOptions = possibleOutcomes;
             this.result.outcomeOptions.shuffle();
-            while (this.result.outcomeOptions.length > 3) {
+            while (this.result.outcomeOptions.length > 5) {
               this.result.outcomeOptions.removeLast();
             }
           } else if (this.result.total >= 7 && this.result.total <= 9) {
@@ -2280,7 +2807,7 @@ class Player {
             ];
             this.result.outcomeOptions = possibleOutcomes;
             this.result.outcomeOptions.shuffle();
-            while (this.result.outcomeOptions.length > 3) {
+            while (this.result.outcomeOptions.length > 5) {
               this.result.outcomeOptions.removeLast();
             }
           } else if (this.result.total >= 7 && this.result.total <= 9) {
@@ -2342,7 +2869,6 @@ class Player {
     for (int i = 0; i < numberDice; i++) {
       this.result.diceResult.add(Random().nextInt(6) + 1);
     }
-    print('  ${this.result.diceResult}');
 
     this.result.total =
         this.result.diceResult.fold(0, (p, element) => p + element) +
@@ -2368,34 +2894,75 @@ class Player {
         break;
 
       case 'MORPH':
-        {}
+        {
+          List<Effect> removeEffects = [];
+
+          this.effects.forEach((currentEffect) {
+            if (currentEffect.type == 'MORPH') {
+              removeEffects.add(currentEffect);
+            }
+          });
+
+          removeEffects.forEach((removeEffect) {
+            removeTemporaryEffect(removeEffect);
+          });
+
+          this.result.outcomeOptions.forEach((outcome) {
+            if (outcome.selected) {
+              newTemporaryEffect(outcome.name, 2);
+            }
+          });
+        }
         break;
 
       case 'ILLUSION':
-        {}
+        {
+          this.result.outcomeOptions.forEach((outcome) {
+            if (outcome.selected) {
+              newTemporaryEffect(outcome.name, 2);
+            }
+          });
+        }
         break;
 
       case 'ENHANCE':
-        {}
+        {
+          List<Effect> removeEffects = [];
+          this.effects.forEach((effect) {
+            if (effect.type == 'ALTER SENSES') {
+              removeEffects.add(effect);
+            }
+          });
+          removeEffects.forEach((element) {
+            this.effects.remove(element);
+          });
+          this.result.outcomeOptions.forEach((outcome) {
+            if (outcome.selected) {
+              newTemporaryEffect(outcome.name, 2);
+            }
+          });
+        }
         break;
       case 'CURSE':
-        {}
+        {
+          List<Effect> removeEffects = [];
+          this.effects.forEach((effect) {
+            if (effect.type == 'ALTER SENSES') {
+              removeEffects.add(effect);
+            }
+          });
+          removeEffects.forEach((element) {
+            this.effects.remove(element);
+          });
+          this.result.outcomeOptions.forEach((outcome) {
+            if (outcome.selected) {
+              newTemporaryEffect(outcome.name, 2);
+            }
+          });
+        }
         break;
     }
   }
-
-  // void action(Option option) {
-  //   //Count player turn
-  //   playerTurn();
-
-  //   //Reduce ammunition
-  //   if (option.name == 'WEAPON') {
-  //     this.reduceAmmo();
-  //   }
-
-  //   //Prepare for second roll
-  //   option.firstRoll = false;
-  // }
 
   void reduceAmmo() {
     if (this.mainHandEquip.itemClass == 'thrownWeapon') {
@@ -2422,7 +2989,11 @@ class Player {
         this.inventory[check].uses--;
 
         if (this.inventory[check].uses < 1) {
-          this.inventory.removeAt(check);
+          if (this.gold >= 50) {
+            restock(this.inventory[check]);
+          } else {
+            this.inventory.removeAt(check);
+          }
         }
         return;
       }
@@ -2461,46 +3032,12 @@ class Player {
 
 // PLAYER TURN
 
-  List<bool> turn = [false, false];
-
-  void newTurn() {
-    turn = [false, false];
-  }
-
-  bool checkTurn() {
-    bool endTurn = false;
-    if (turn.contains(false)) {
-      endTurn = false;
-    } else {
-      endTurn = true;
-    }
-    return endTurn;
-  }
-
-  void changeTurn(int index) {
-    if (this.turn[index]) {
-      this.turn[index] = false;
-    } else {
-      this.playerTurn();
-    }
-  }
+  bool turn = true;
 
   void playerTurn() {
-    if (this.turn.contains(false)) {
-      this.actionsTaken++;
-      this.runEffects();
-      this.checkEffects();
-
-      if (turn[0]) {
-        turn[1] = true;
-      } else {
-        turn[0] = true;
-      }
-
-      checkTurn();
-    } else {
-      return;
-    }
+    this.actionsTaken++;
+    this.runEffects();
+    this.checkEffects();
   }
 
 // EFFECTS
@@ -2518,7 +3055,7 @@ class Player {
   }
 
   void removePermanentEffect(String name) {
-    List<Effect> currentEffects = [];
+    List<Effect> removeEffects = [];
 
     switch (name) {
       case 'FAME':
@@ -2527,33 +3064,440 @@ class Player {
         }
         break;
     }
-    currentEffects
+    removeEffects
         .add(this.effects.lastWhere((element) => element.name == name));
-    currentEffects.forEach((element) {
+    removeEffects.forEach((element) {
       this.effects.remove(element);
     });
   }
 
+//ADD EFFECTS
+
   void newTemporaryEffect(String name, int duration) {
     switch (name) {
+      case 'POWERFUL':
+        {
+          this.playerAction[1].value++;
+          this.playerAction[1].option.forEach((element) {
+            element.value = this.playerAction[1].value;
+          });
+        }
+        break;
+      case 'WEAK':
+        {
+          this.playerAction[1].value--;
+          this.playerAction[1].option.forEach((element) {
+            element.value = this.playerAction[1].value;
+          });
+        }
+        break;
+      case 'DEFENSIVE':
+        {
+          this.playerAction[2].value++;
+          this.playerAction[2].option.forEach((element) {
+            element.value = this.playerAction[2].value;
+          });
+        }
+        break;
+      case 'VULNERABLE':
+        {
+          this.playerAction[2].value--;
+          this.playerAction[2].option.forEach((element) {
+            element.value = this.playerAction[2].value;
+          });
+        }
+        break;
+
+      case 'PERCEPTIVE':
+        {
+          this.playerAction[3].value++;
+          this.playerAction[3].option.forEach((element) {
+            element.value = this.playerAction[3].value;
+          });
+        }
+        break;
+      case 'DULL':
+        {
+          this.playerAction[3].value--;
+          this.playerAction[3].option.forEach((element) {
+            element.value = this.playerAction[3].value;
+          });
+        }
+        break;
+      case 'CHARISMATIC':
+        {
+          this.playerAction[4].value++;
+          this.playerAction[4].option.forEach((element) {
+            element.value = this.playerAction[4].value;
+          });
+        }
+        break;
+      case 'INCONVENIENT':
+        {
+          this.playerAction[4].value--;
+          this.playerAction[4].option.forEach((element) {
+            element.value = this.playerAction[4].value;
+          });
+        }
+        break;
+
+      case 'FAST':
+        {
+          this.playerAction[5].value++;
+          this.playerAction[5].option.forEach((element) {
+            element.value = this.playerAction[5].value;
+          });
+        }
+        break;
+      case 'SLOW':
+        {
+          this.playerAction[5].value--;
+          this.playerAction[5].option.forEach((element) {
+            element.value = this.playerAction[5].value;
+          });
+        }
+        break;
+
       case 'MAGIC RESISTANCE':
         {
           this.mArmor += 3;
         }
         break;
-      case 'FAST':
+
+      //MORPH EFFECTS
+
+      case 'PUMA':
         {
-          this.playerAction[5].value++;
+          //ADD BITE AND SLASH
+          removeActionOption('ATTACK',
+              [this.playerAction[1].option[0], this.playerAction[1].option[1]]);
+          this.playerAction[1].option[0].name = 'BITE';
+          this.playerAction[1].option[1].name = 'SLASH'; // adds bleed
+
+          //Fast
+          this.playerAction[5].option.forEach((actionOption) {
+            actionOption.value += 1;
+          });
+
+          if (this.playerAction[5].value < 3) {
+            this.playerAction[5].value += 1;
+          }
+
+          //ADD HIDE
+          this.playerAction[5].option[2].value += 2;
+
+          //LARGE
+          this.pDamage += 2;
+          this.pArmor += 2;
         }
         break;
-      case 'POWERFUL':
+      case 'RHINO':
         {
-          this.playerAction[1].value++;
+          //ADD CHARGE
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'CHARGE';
+
+          //THICK SKIN
+          this.pArmor += 2;
+          this.mArmor += 2;
+
+          //THICK SKIN
+          this.pArmor += 2;
+          this.mArmor += 2;
+
+          //LARGE
+          this.pDamage += 2;
+          this.pArmor += 2;
         }
         break;
-      case 'PERCEPTIVE':
+
+      case 'ELEPHANT':
         {
-          this.playerAction[3].value++;
+          //ADD GRAB AND TRAMPLE
+          removeActionOption('ATTACK',
+              [this.playerAction[1].option[0], this.playerAction[1].option[1]]);
+          this.playerAction[1].option[0].name = 'GRAB';
+          this.playerAction[1].option[1].name = 'TRAMPLE'; // adds bleed
+
+          //STRONG
+          this.pDamage += 3;
+
+          //LARGE
+          this.pDamage += 2;
+          this.pArmor += 2;
+        }
+        break;
+
+      case 'CROCODILE':
+        {
+          //ADD BITE AND TWIST
+          removeActionOption('ATTACK',
+              [this.playerAction[1].option[0], this.playerAction[1].option[1]]);
+          this.playerAction[1].option[0].name = 'BITE';
+          this.playerAction[1].option[1].name = 'TWIST'; // +5 ON ATTACK
+
+          //ADD SWIM
+          this.playerAction[5].option[5].value += 2;
+          //ADD HIDE
+          this.playerAction[5].option[2].value += 2;
+
+          //LARGE
+          this.pDamage += 2;
+          this.pArmor += 2;
+        }
+        break;
+
+      case 'BEAR':
+        {
+          //ADD CONSTRICT AND BITE
+          removeActionOption('ATTACK',
+              [this.playerAction[1].option[0], this.playerAction[1].option[1]]);
+          this.playerAction[1].option[0].name = 'BITE';
+          this.playerAction[1].option[1].name = 'SLASH'; // adds bleed
+
+          //THICK FUR
+          this.pArmor += 2;
+          this.mArmor += 2;
+
+          //PROTECTIVE INSTINCT
+          //DEFENCE +1
+          this.playerAction[2].option.forEach((actionOption) {
+            actionOption.value += 1;
+          });
+
+          if (this.playerAction[2].value < 3) {
+            this.playerAction[2].value += 1;
+          }
+
+          //LARGE
+          this.pDamage += 2;
+          this.pArmor += 2;
+        }
+        break;
+
+      case 'GORILLA':
+        {
+          //ADD THROW and GRAB
+          this.playerAction[1].option[0].name = 'GRAB';
+          this.playerAction[1].option[1].name = 'THROW';
+          this.playerAction[1].option[2].name = 'WEAPON';
+
+          //LARGE
+          this.pDamage += 2;
+          this.pArmor += 2;
+
+          //STRONG
+          this.pDamage += 3;
+
+          //ADD CLIMB
+          this.playerAction[5].option[4].value += 2;
+        }
+        break;
+
+      case 'BULL':
+        {
+          //ADD CHARGE
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'CHARGE';
+
+          //add LIFT
+          this.playerAction[2].option[3].value += 2;
+
+          //LARGE
+          this.pDamage += 2;
+          this.pArmor += 2;
+
+          //ADD LIFT
+
+        }
+        break;
+
+      case 'CRAB':
+        {
+          //ADD GRAB
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'GRAB';
+
+          //ADD CLIMB
+          this.playerAction[5].option[4].value += 2;
+
+          //ADD SWIM
+          this.playerAction[5].option[5].value += 2;
+
+          //SHELL
+          this.pArmor += 4;
+          this.mArmor += 4;
+        }
+        break;
+
+      case 'SNAKE':
+        {
+          //ADD CONSTRICT AND BITE
+          removeActionOption('ATTACK',
+              [this.playerAction[1].option[0], this.playerAction[1].option[1]]);
+          this.playerAction[1].option[0].name = 'BITE';
+          this.playerAction[1].option[1].name = 'CONSTRICT';
+
+          //ADD CLIMB
+          this.playerAction[5].option[4].value += 2;
+        }
+        break;
+
+      case 'BAT':
+        {
+          //ADD BITE
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //SWITCH FLY +2 FOR JUMP
+          this.playerAction[5].option[3].name = 'FLY';
+          this.playerAction[5].option[3].value += 2;
+
+          //Perceptive
+          this.playerAction[3].option.forEach((actionOption) {
+            actionOption.value += 1;
+          });
+
+          if (this.playerAction[3].value < 3) {
+            this.playerAction[3].value += 1;
+          }
+        }
+        break;
+
+      case 'FOX':
+        {
+          //ADD BITE ATTACK
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //Fast
+          this.playerAction[5].option.forEach((actionOption) {
+            actionOption.value += 1;
+          });
+
+          if (this.playerAction[5].value < 3) {
+            this.playerAction[5].value += 1;
+          }
+
+          //ESCAPE +2
+          this.playerAction[5].option[1].value += 2;
+
+          //Perceptive
+          this.playerAction[3].option.forEach((actionOption) {
+            actionOption.value += 1;
+          });
+
+          if (this.playerAction[3].value < 3) {
+            this.playerAction[3].value += 1;
+          }
+        }
+        break;
+
+      case 'BIRD':
+        {
+          //ADD PECK
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'PECK';
+
+          //SHARP BEAK
+          this.pDamage += 2;
+
+          //SWITCH FLY +2 FOR JUMP
+          this.playerAction[5].option[3].name = 'FLY';
+          this.playerAction[5].option[3].value += 2;
+        }
+        break;
+
+      case 'MONKEY':
+        {
+          //ADD BITE BUT KEEP OTHERS
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //SHRINK
+          this.pDamage -= 2;
+          this.pArmor -= 2;
+          //ADD CLIMB
+          this.playerAction[5].option[4].value += 2;
+        }
+        break;
+      case 'TURTLE':
+        {
+          //ADD BITE ATTACK
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //SHRINK
+          this.pDamage -= 2;
+          this.pArmor -= 2;
+
+          //SHELL
+          this.pArmor += 4;
+          this.mArmor += 4;
+
+          //SLOW
+          this.playerAction[5].option.forEach((actionOption) {
+            actionOption.value -= 2;
+          });
+          this.playerAction[5].value -= 2;
+        }
+        break;
+      case 'CHAMELEON':
+        {
+          //ADD BITE
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //SHRINK
+          this.pDamage -= 2;
+          this.pArmor -= 2;
+
+          //ADD HIDE
+          this.playerAction[5].option[2].value += 2;
+        }
+        break;
+      case 'FISH':
+        {
+          //ADD BITE
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //SHRINK
+          this.pDamage -= 2;
+          this.pArmor -= 2;
+
+          //ADD SWIM
+          this.playerAction[5].option[5].value += 2;
+        }
+        break;
+
+      case 'BUG':
+        {
+          //ADD BITE
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //SHRINK
+          this.pDamage -= 2;
+          this.pArmor -= 2;
+
+          //SWITCH FLY+2 FOR SWIM
+          this.playerAction[5].option[5].name = 'FLY';
+          this.playerAction[5].option[5].value += 2;
+        }
+        break;
+
+      case 'FROG':
+        {
+          //ADD BITE
+          removeActionOption('ATTACK', [this.playerAction[1].option[0]]);
+          this.playerAction[1].option[0].name = 'BITE';
+
+          //SHRINK
+          this.pDamage -= 2;
+          this.pArmor -= 2;
+
+          //ADD JUMP
+          this.playerAction[5].option[3].value += 2;
         }
         break;
     }
@@ -2563,29 +3507,525 @@ class Player {
         .add(this.effectList.newTemporaryEffect(name, duration).copyEffect());
   }
 
+//REMOVE ACTION
+
+  void removeActionOption(String name, List<Option> keepOptions) {
+    for (int i = 0; i < this.playerAction.length; i++) {
+      if (this.playerAction[i].name == name) {
+        this.playerAction[i].option.clear();
+        this.playerAction[i].option = keepOptions;
+        this.playerAction[i].option.forEach((option) {});
+      }
+    }
+  }
+
+//ADD ACTION
+
+  void restoreAction(String action, int value) {
+    switch (action) {
+      case 'ATTACK':
+        this.playerAction[1].option.clear();
+        this.playerAction[1].option.add(Option(
+              name: 'PUNCH',
+              description: 'You punch the target with your fists.',
+            ));
+        this.playerAction[1].option.add(Option(
+              name: 'WEAPON',
+              description:
+                  'You attack the target with your weapon, trying to bring them down.',
+            ));
+        this.playerAction[1].option.add(Option(
+              name: 'GRAPPLE',
+              description: 'You try to grapple the target, holding them down.',
+            ));
+
+        this.playerAction[1].value += value;
+
+        this.playerAction[1].option.forEach((element) {
+          element.value = playerAction[1].value;
+        });
+
+        break;
+
+      case 'DEFEND':
+        this.playerAction[2].option.clear();
+        this.playerAction[2].option.add(Option(
+              name: 'DEFEND',
+              description: 'You try to protect.',
+            ));
+        this.playerAction[2].option.add(Option(
+              name: 'RESIST',
+              description: 'You try to resist.',
+            ));
+        this.playerAction[2].option.add(Option(
+              name: 'HELP',
+              description: 'You try to help.',
+            ));
+
+        this.playerAction[2].value += value;
+        this.playerAction[2].option.forEach((element) {
+          element.value = playerAction[2].value;
+        });
+
+        break;
+
+      case 'LOOK':
+        this.playerAction[3].option.clear();
+        this.playerAction[3].option.add(Option(
+              name: 'RESOURCES',
+              description: 'You search for something useful.',
+            ));
+        this.playerAction[3].option.add(Option(
+              name: 'INFORMATION',
+              description: 'You try to gather information.',
+            ));
+
+        this.playerAction[3].value += value;
+        this.playerAction[3].option.forEach((element) {
+          element.value = playerAction[3].value;
+        });
+
+        break;
+
+      case 'TALK':
+        this.playerAction[4].option.clear();
+        this.playerAction[4].option.add(Option(
+              name: 'TRADE',
+              description: 'You try to strike a deal.',
+            ));
+        this.playerAction[4].option.add(Option(
+              name: 'INFORMATION',
+              description: 'You try to gather information.',
+            ));
+        this.playerAction[4].option.add(Option(
+              name: 'CONVINCE',
+              description: 'You try to change people\'s minds.',
+            ));
+
+        this.playerAction[4].value += value;
+        this.playerAction[4].option.forEach((element) {
+          element.value = playerAction[4].value;
+        });
+
+        break;
+
+      case 'MOVE':
+        this.playerAction[5].option.clear();
+        this.playerAction[5].option.add(Option(
+              name: 'DODGE',
+              description: 'You try to get out of the way.',
+            ));
+        this.playerAction[5].option.add(Option(
+              name: 'ESCAPE',
+              description: 'You try to escape from a tough situation.',
+            ));
+        this.playerAction[5].option.add(Option(
+              name: 'HIDE',
+              description: 'You try to hide.',
+            ));
+        this.playerAction[5].option.add(Option(
+              name: 'JUMP',
+              description: 'You try to jump over an obstacle.',
+            ));
+
+        this.playerAction[5].option.add(Option(
+              name: 'CLIMB',
+              description: 'You try to climb.',
+            ));
+
+        this.playerAction[5].option.add(Option(
+              name: 'SWIM',
+              description: 'You try to swim.',
+            ));
+
+        this.playerAction[5].value += value;
+        this.playerAction[5].option.forEach((element) {
+          element.value = playerAction[5].value;
+        });
+
+        break;
+    }
+  }
+
+  void quickPositiveEffect(String action) {
+    switch (action) {
+      case 'ATTACK':
+        newTemporaryEffect('POWERFUL', 1);
+        break;
+      case 'DEFEND':
+        newTemporaryEffect('DEFENSIVE', 1);
+        break;
+      case 'LOOK':
+        newTemporaryEffect('PERCEPTIVE', 1);
+        break;
+      case 'TALK':
+        newTemporaryEffect('CHARISMATIC', 1);
+        break;
+      case 'MOVE':
+        newTemporaryEffect('FAST', 1);
+        break;
+    }
+  }
+
+  void quickNegativeEffect(String action) {
+    switch (action) {
+      case 'ATTACK':
+        newTemporaryEffect('WEAK', 1);
+        break;
+      case 'DEFEND':
+        newTemporaryEffect('VULNERABLE', 1);
+        break;
+      case 'LOOK':
+        newTemporaryEffect('DULL', 1);
+        break;
+      case 'TALK':
+        newTemporaryEffect('INCONVENIENT', 1);
+        break;
+      case 'MOVE':
+        newTemporaryEffect('SLOW', 1);
+        break;
+    }
+  }
+
+//REMOVE EFFECTS
+
   void removeTemporaryEffect(Effect effect) {
     switch (effect.name) {
+      case 'POWERFUL':
+        {
+          this.playerAction[1].value--;
+          this.playerAction[1].option.forEach((element) {
+            element.value = this.playerAction[1].value;
+          });
+        }
+        break;
+      case 'WEAK':
+        {
+          this.playerAction[1].value++;
+          this.playerAction[1].option.forEach((element) {
+            element.value = this.playerAction[1].value;
+          });
+        }
+        break;
+      case 'DEFENSIVE':
+        {
+          this.playerAction[2].value--;
+          this.playerAction[2].option.forEach((element) {
+            element.value = this.playerAction[2].value;
+          });
+        }
+        break;
+      case 'VULNERABLE':
+        {
+          this.playerAction[2].value++;
+          this.playerAction[2].option.forEach((element) {
+            element.value = this.playerAction[2].value;
+          });
+        }
+        break;
+
+      case 'PERCEPTIVE':
+        {
+          this.playerAction[3].value--;
+          this.playerAction[3].option.forEach((element) {
+            element.value = this.playerAction[3].value;
+          });
+        }
+        break;
+      case 'DULL':
+        {
+          this.playerAction[3].value++;
+          this.playerAction[3].option.forEach((element) {
+            element.value = this.playerAction[3].value;
+          });
+        }
+        break;
+      case 'CHARISMATIC':
+        {
+          this.playerAction[4].value--;
+          this.playerAction[4].option.forEach((element) {
+            element.value = this.playerAction[4].value;
+          });
+        }
+        break;
+      case 'INCONVENIENT':
+        {
+          this.playerAction[4].value++;
+          this.playerAction[4].option.forEach((element) {
+            element.value = this.playerAction[4].value;
+          });
+        }
+        break;
+
+      case 'FAST':
+        {
+          this.playerAction[5].value--;
+          this.playerAction[5].option.forEach((element) {
+            element.value = this.playerAction[5].value;
+          });
+        }
+        break;
+      case 'SLOW':
+        {
+          this.playerAction[5].value++;
+          this.playerAction[5].option.forEach((element) {
+            element.value = this.playerAction[5].value;
+          });
+        }
+        break;
+
       case 'MAGIC RESISTANCE':
         {
           this.mArmor -= 3;
         }
         break;
-      case 'FAST':
+
+      //MORPH EFFECTS
+
+      case 'PUMA':
         {
-          this.playerAction[5].value--;
+          // remove bite and slash
+          restoreAction('ATTACK', 0);
+
+          //  remove fast and restore hide
+          restoreAction('MOVE', -1);
+
+          //  shrink
+          this.pArmor -= 2;
+          this.pDamage -= 2;
         }
         break;
-      case 'POWERFUL':
+
+      case 'RHINO':
         {
-          this.playerAction[1].value--;
+          // remove charge
+          restoreAction('ATTACK', 0);
+
+          //remove think skin
+          this.pArmor -= 2;
+          this.mArmor -= 2;
+
+          //remove think skin
+          this.pArmor -= 2;
+          this.mArmor -= 2;
+
+          //shrink
+          this.pArmor -= 2;
+          this.pDamage -= 2;
         }
         break;
-      case 'PERCEPTIVE':
+
+      case 'ELEPHANT':
         {
-          this.playerAction[3].value--;
+          // remove trample
+          restoreAction('ATTACK', 0);
+          // remove strong
+          this.pDamage -= 3;
+          //shrink
+          this.pArmor -= 2;
+          this.pDamage -= 2;
+        }
+        break;
+
+      case 'CROCODILE':
+        {
+          //remove bite
+          restoreAction('ATTACK', 0);
+          //restore move
+          restoreAction('MOVE', 0);
+          //shrink
+          this.pArmor -= 2;
+          this.pDamage -= 2;
+        }
+        break;
+
+      case 'BEAR':
+        {
+          //remove bite
+          restoreAction('ATTACK', 0);
+          //restore defence
+          restoreAction('DEFEND', -1);
+          //remove think fur
+          this.pArmor -= 2;
+          this.mArmor -= 2;
+
+          //shrink
+          this.pArmor -= 2;
+          this.pDamage -= 2;
+        }
+        break;
+      case 'GORILLA':
+        {
+          //remove throw and grab
+          restoreAction('ATTACK', 0);
+
+          //remove climb
+          restoreAction('MOVE', 0);
+
+          // remove strong
+          this.pDamage -= 3;
+
+          //shrink
+          this.pArmor -= 2;
+          this.pDamage -= 2;
+        }
+        break;
+      case 'BULL':
+        {
+          //remove charge
+          restoreAction('ATTACK', 0);
+          //remove LIFT
+          restoreAction('DEFEND', 0);
+          //shrink
+          this.pArmor -= 2;
+          this.pDamage -= 2;
+        }
+        break;
+      case 'CRAB':
+        {
+          //remove grab
+          restoreAction('ATTACK', 0);
+
+          //remove climb and swim
+          restoreAction('MOVE', 0);
+
+          //remove shell
+          this.pArmor -= 4;
+          this.mArmor -= 4;
+        }
+        break;
+
+      case 'SNAKE':
+        {
+          //remove constrict
+          restoreAction('ATTACK', 0);
+
+          //remove climb
+          restoreAction('MOVE', 0);
+        }
+        break;
+
+      case 'BAT':
+        {
+          //remove bite
+          restoreAction('ATTACK', 0);
+          //remove climb
+          restoreAction('MOVE', 0);
+          //remove PERCEPTIVE
+          restoreAction('LOOK', -1);
+        }
+        break;
+
+      case 'FOX':
+        {
+          //remove bite
+          restoreAction('ATTACK', 0);
+
+          //remove FAST
+          restoreAction('MOVE', -1);
+          //remove PERCEPTIVE
+          restoreAction('LOOK', -1);
+        }
+        break;
+
+      case 'BIRD':
+        {
+          //remove PECK
+          restoreAction('ATTACK', 0);
+          //remove FLY
+          restoreAction('MOVE', 0);
+          //remove sharp beak
+          this.pDamage -= 2;
+        }
+        break;
+
+      case 'MONKEY':
+        {
+          //remove PECK
+          restoreAction('ATTACK', 0);
+
+          //remove climb
+          restoreAction('MOVE', 0);
+
+          //GROW
+          this.pDamage += 2;
+          this.pArmor += 2;
+        }
+        break;
+      case 'TURTLE':
+        {
+          //remove BITE
+          restoreAction('ATTACK', 0);
+
+          //remove SLOW
+          restoreAction('MOVE', 1);
+
+          //GROW
+          this.pDamage += 2;
+          this.pArmor += 2;
+
+          //REMOVE SHELL
+          this.pArmor -= 4;
+          this.mArmor -= 4;
+        }
+        break;
+      case 'CHAMELEON':
+        {
+          //GROW
+          this.pDamage += 2;
+          this.pArmor += 2;
+
+          //remove HIDE
+          restoreAction('MOVE', 0);
+
+          //RESTORE ATTACK
+          restoreAction('ATTACK', 0);
+        }
+        break;
+
+      case 'FISH':
+        {
+          //GROW
+          this.pDamage += 2;
+          this.pArmor += 2;
+
+          //remove SWIM
+          restoreAction('SWIM', 0);
+
+          //RESTORE ATTACK
+          restoreAction('ATTACK', 0);
+        }
+        break;
+      case 'BUG':
+        {
+          //GROW
+          this.pDamage += 2;
+          this.pArmor += 2;
+
+          //remove FLY
+          restoreAction('MOVE', 0);
+
+          //RESTORE ATTACK
+          restoreAction('ATTACK', 0);
+        }
+        break;
+
+      case 'FROG':
+        {
+          //GROW
+          this.pDamage += 2;
+          this.pArmor += 2;
+
+          //remove JUMP
+          restoreAction('MOVE', 0);
+
+          //RESTORE ATTACK
+          restoreAction('ATTACK', 0);
         }
         break;
     }
+
+    this.effects.remove(effect);
   }
 
   void selectEffect(int index) {
@@ -2597,7 +4037,7 @@ class Player {
       return;
     }
     this.effects.forEach((element) {
-      if (element.typeOfEffect == 'PERMANENT') {
+      if (element.permanent) {
         return;
       }
       element.duration--;
@@ -2609,48 +4049,45 @@ class Player {
       return;
     }
 
-    List<Effect> currentEffects = [];
+    List<Effect> removeEffects = [];
 
     this.effects.forEach((element) {
-      if (element.typeOfEffect == 'PERMANENT') {
+      if (element.permanent) {
         return;
       }
 
       if (element.duration < 1) {
-        removeTemporaryEffect(element);
-        currentEffects.add(element);
+        removeEffects.add(element);
       }
     });
 
-    if (currentEffects.isNotEmpty) {
-      currentEffects.forEach((element) {
-        this.effects.remove(element);
-      });
-    }
-  }
-
-  void checkSkillEffects(List<String> itemList) {
-    List<Effect> deleteEffects = [];
-
-    this.effects.forEach((effect) {
-      if (effect.typeOfEffect == 'PERMANENT') {
-        return;
-      }
-
-      itemList.forEach((item) {
-        if (item == effect.name) {
-          removeTemporaryEffect(effect);
-          deleteEffects.add(effect);
-        }
-      });
+    removeEffects.forEach((removeEffect) {
+      removeTemporaryEffect(removeEffect);
     });
-
-    if (deleteEffects.isNotEmpty) {
-      deleteEffects.forEach((element) {
-        this.effects.remove(element);
-      });
-    }
   }
+
+  // void checkSkillEffects(List<String> itemList) {
+  //   List<Effect> deleteEffects = [];
+
+  //   this.effects.forEach((effect) {
+  //     if (effect.permanent) {
+  //       return;
+  //     }
+
+  //     itemList.forEach((item) {
+  //       if (item == effect.name) {
+  //         removeTemporaryEffect(effect);
+  //         deleteEffects.add(effect);
+  //       }
+  //     });
+  //   });
+
+  //   if (deleteEffects.isNotEmpty) {
+  //     deleteEffects.forEach((element) {
+  //       this.effects.remove(element);
+  //     });
+  //   }
+  // }
 
   void changeFame(int value) {
     if (this.fame + value < 1) {

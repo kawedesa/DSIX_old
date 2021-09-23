@@ -104,7 +104,12 @@ class PlayerBackgroundList {
         'You already saved many lives and people respect you. Blood, diseases, guts and bones don\'t bother you.',
         [
           Bonus(
-            '2x HEALING POTION   ',
+            'MAGIC ROBE   ',
+            'item',
+            '${shop.armor[6].description}',
+          ),
+          Bonus(
+            'HEALING POTION   ',
             'item',
             '${shop.resources[10].description}',
           ),

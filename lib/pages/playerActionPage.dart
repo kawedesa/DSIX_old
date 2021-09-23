@@ -2,15 +2,11 @@ import 'package:flare_flutter/flare_actor.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/shared/dice.dart';
-import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'dart:math';
 import '../models/player/playerAction.dart';
-import '../models/player/newOption.dart';
-import 'package:dsixv02app/models/shared/item.dart';
+import '../models/player/option.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import '../models/shared/exceptions.dart';
-import 'package:dsixv02app/models/player/result.dart';
 
 class ActionPage extends StatefulWidget {
   final Function() refresh;
@@ -25,14 +21,7 @@ class ActionPage extends StatefulWidget {
 }
 
 class _ActionPageState extends State<ActionPage> {
-  PlayerAction displayedAction = PlayerAction(
-    icon: 'action',
-    name: 'ACTION',
-    description:
-        'These are the actions your character can make in the game. Each one will have a different outcome depending on your luck.',
-    option: [],
-    value: 0,
-  );
+  PlayerAction displayedAction = PlayerAction();
 
   Widget button;
 
@@ -46,22 +35,9 @@ class _ActionPageState extends State<ActionPage> {
   Color resultColor = Colors.black;
   Widget outcomeWidget = Container();
   Widget actionButton = Container();
+  int selectedAction = 1;
 
   void takeAction(Option option) {
-    try {
-      widget.dsix.gm.checkTurn();
-    } on NewTurnException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
-      widget.refresh();
-      return;
-    }
-
-    if (widget.dsix.gm.getCurrentPlayer().checkTurn()) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(widget.alert('Wait for the next turn'));
-      return;
-    }
-
     try {
       widget.dsix.gm.getCurrentPlayer().action(option);
     } on NoAmmoException catch (e) {
@@ -99,7 +75,7 @@ class _ActionPageState extends State<ActionPage> {
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.green,
+                  color: resultColor,
                   width: 2, //                   <--- border width here
                 ),
               ),
@@ -114,7 +90,7 @@ class _ActionPageState extends State<ActionPage> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                         child: SvgPicture.asset(
                           'assets/ui/action.svg',
-                          color: Colors.green,
+                          color: resultColor,
                           width: MediaQuery.of(context).size.width * 0.04,
                         ),
                       ),
@@ -154,7 +130,7 @@ class _ActionPageState extends State<ActionPage> {
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.green,
+                  color: resultColor,
                   width: 2, //                   <--- border width here
                 ),
               ),
@@ -169,7 +145,7 @@ class _ActionPageState extends State<ActionPage> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                         child: SvgPicture.asset(
                           'assets/ui/action.svg',
-                          color: Colors.green,
+                          color: resultColor,
                           width: MediaQuery.of(context).size.width * 0.04,
                         ),
                       ),
@@ -223,7 +199,7 @@ class _ActionPageState extends State<ActionPage> {
               width: double.infinity,
               decoration: BoxDecoration(
                 border: Border.all(
-                  color: Colors.green,
+                  color: resultColor,
                   width: 2, //                   <--- border width here
                 ),
               ),
@@ -238,7 +214,7 @@ class _ActionPageState extends State<ActionPage> {
                         padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                         child: SvgPicture.asset(
                           'assets/ui/action.svg',
-                          color: Colors.green,
+                          color: resultColor,
                           width: MediaQuery.of(context).size.width * 0.04,
                         ),
                       ),
@@ -288,8 +264,8 @@ class _ActionPageState extends State<ActionPage> {
   void showResult() {
     title = widget.dsix.gm.getCurrentPlayer().result.outcomeTitle;
     displaySum = widget.dsix.gm.getCurrentPlayer().result.sum;
-    actionButton = outcomeWidget;
     resultColor = widget.dsix.gm.getCurrentPlayer().result.color;
+    actionButton = outcomeWidget;
   }
 
   void secondRoll(int numberDice) {
@@ -333,52 +309,10 @@ class _ActionPageState extends State<ActionPage> {
 
     if (widget.dsix.gm.getCurrentPlayer().result.outcomeValue < 1) {
       widget.dsix.gm.getCurrentPlayer().chooseOutcome();
+      setState(() {});
       Navigator.pop(context);
     }
   }
-
-  // void checkAction(Option option, int numberDice) {
-  //   try {
-  //     widget.dsix.gm.checkTurn();
-  //   } on NewTurnException catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
-  //     widget.refresh();
-  //     return;
-  //   }
-
-  //   if (widget.dsix.gm.getCurrentPlayer().checkTurn()) {
-  //     ScaffoldMessenger.of(context)
-  //         .showSnackBar(widget.alert('Wait for the next turn'));
-  //     return;
-  //   }
-
-  //   try {
-  //     if (option.name == 'WEAPON') {
-  //       widget.dsix.gm.getCurrentPlayer().checkWeapon();
-  //     }
-  //   } on NoAmmoException catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
-  //     return;
-  //   } on NoWeaponException catch (e) {
-  //     ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
-  //     return;
-  //   }
-
-  //   diceList = [];
-  //   for (int i = 0; i < numberDice; i++) {
-  //     diceList.add(die.newDie());
-  //   }
-
-  //   title = option.name;
-  //   textSize = 0;
-  //   displaySum = '';
-  //   resultText = '';
-  //   button = Container();
-  //   bonus = displayedAction.value + displayedAction.bonus;
-  //   resultColor = widget.dsix.gm.getCurrentPlayer().playerColor.primaryColor;
-  //   rollSwitcher = true;
-  //   showAlertDialogAction(context, option);
-  // }
 
 // NEW DICE ROLL MENU
   showAlertDialogAction(BuildContext context) {
@@ -587,7 +521,6 @@ class _ActionPageState extends State<ActionPage> {
                             ),
                           ),
                         ),
-
                         Divider(
                           height: 0,
                           thickness: 2,
@@ -677,80 +610,6 @@ class _ActionPageState extends State<ActionPage> {
                                 }),
                           ),
                         ),
-                        // Divider(
-                        //   height: 0,
-                        //   thickness: 2,
-                        //   color: widget.dsix.gm
-                        //       .getCurrentPlayer()
-                        //       .playerColor
-                        //       .primaryColor,
-                        // ),
-                        // Padding(
-                        //   padding: const EdgeInsets.fromLTRB(35, 15, 35, 15),
-                        //   child: GestureDetector(
-                        //     onTap: () {
-                        //       setState(() {
-                        //         Navigator.pop(context);
-                        //         chooseOutcome(option);
-                        //         widget.refresh();
-                        //       });
-                        //     },
-                        //     child: Container(
-                        //       height:
-                        //           MediaQuery.of(context).size.height * 0.058,
-                        //       width: double.infinity,
-                        //       decoration: BoxDecoration(
-                        //         border: Border.all(
-                        //           color: widget.dsix.gm
-                        //               .getCurrentPlayer()
-                        //               .playerColor
-                        //               .primaryColor,
-                        //           width:
-                        //               2, //                   <--- border width here
-                        //         ),
-                        //       ),
-                        //       child: Stack(
-                        //         alignment: AlignmentDirectional.centerEnd,
-                        //         children: [
-                        //           Column(
-                        //             mainAxisAlignment: MainAxisAlignment.center,
-                        //             crossAxisAlignment:
-                        //                 CrossAxisAlignment.start,
-                        //             children: <Widget>[
-                        //               Padding(
-                        //                 padding: const EdgeInsets.fromLTRB(
-                        //                     0, 0, 10, 0),
-                        //                 child: SvgPicture.asset(
-                        //                   'assets/ui/check.svg',
-                        //                   color: widget.dsix.gm
-                        //                       .getCurrentPlayer()
-                        //                       .playerColor
-                        //                       .primaryColor,
-                        //                   width: MediaQuery.of(context)
-                        //                           .size
-                        //                           .width *
-                        //                       0.04,
-                        //                 ),
-                        //               ),
-                        //             ],
-                        //           ),
-                        //           Center(
-                        //             child: Text(
-                        //               'CONFIRM',
-                        //               style: TextStyle(
-                        //                 fontSize: 14,
-                        //                 fontWeight: FontWeight.bold,
-                        //                 letterSpacing: 1.5,
-                        //                 fontFamily: 'Calibri',
-                        //                 color: Colors.white,
-                        //               ),
-                        //             ),
-                        //           ),
-                        //         ],
-                        //       ),
-                        //     ),
-                        //   ),
-                        // )
                       ],
                     ),
                   ),
@@ -764,13 +623,11 @@ class _ActionPageState extends State<ActionPage> {
   }
 
   @override
-  void initState() {
-    displayedAction = widget.dsix.gm.getCurrentPlayer().playerAction[1];
-    super.initState();
-  }
-
   Widget build(BuildContext context) {
     //ACTION SELECTION
+    displayedAction =
+        widget.dsix.gm.getCurrentPlayer().playerAction[selectedAction];
+
     actionSelection = [];
     widget.dsix.gm.getCurrentPlayer().playerAction.forEach((element) {
       if (element == displayedAction) {
@@ -811,11 +668,43 @@ class _ActionPageState extends State<ActionPage> {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 17),
                       child: GestureDetector(
+                        onDoubleTap: () {
+                          setState(() {
+                            selectedAction = index + 1;
+                            if (widget.dsix.gm
+                                    .getCurrentPlayer()
+                                    .playerAction[index + 1]
+                                    .value <
+                                3) {
+                              widget.dsix.gm
+                                  .getCurrentPlayer()
+                                  .quickPositiveEffect(widget.dsix.gm
+                                      .getCurrentPlayer()
+                                      .playerAction[index + 1]
+                                      .name);
+                            }
+                          });
+                        },
+                        onLongPress: () {
+                          setState(() {
+                            selectedAction = index + 1;
+                            if (widget.dsix.gm
+                                    .getCurrentPlayer()
+                                    .playerAction[index + 1]
+                                    .value >
+                                -2) {
+                              widget.dsix.gm
+                                  .getCurrentPlayer()
+                                  .quickNegativeEffect(widget.dsix.gm
+                                      .getCurrentPlayer()
+                                      .playerAction[index + 1]
+                                      .name);
+                            }
+                          });
+                        },
                         onTap: () {
                           setState(() {
-                            displayedAction = widget.dsix.gm
-                                .getCurrentPlayer()
-                                .playerAction[index + 1];
+                            selectedAction = index + 1;
                           });
                         },
                         child: SvgPicture.asset(
@@ -863,23 +752,6 @@ class _ActionPageState extends State<ActionPage> {
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
-                //   child: RichText(
-                //     textAlign: TextAlign.justify,
-                //     text: new TextSpan(
-                //       style: TextStyle(
-                //         height: 1.3,
-                //         fontSize: 18,
-                //         fontFamily: 'Calibri',
-                //         color: Colors.white,
-                //       ),
-                //       children: <TextSpan>[
-                //         TextSpan(text: displayedAction.description),
-                //       ],
-                //     ),
-                //   ),
-                // ),
                 ListView.builder(
                     shrinkWrap: true,
                     padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),

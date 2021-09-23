@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/player/newOption.dart';
+import 'package:dsixv02app/models/player/option.dart';
 import 'package:dsixv02app/models/player/playerAction.dart';
 
 class PlayerSkillList {

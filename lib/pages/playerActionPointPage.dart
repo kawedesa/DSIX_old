@@ -1,5 +1,5 @@
 import 'playerUI.dart';
-import '../models/player/newOption.dart';
+import '../models/player/option.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';

@@ -3,7 +3,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'playerRacePage.dart';
 import 'gmUI.dart';
-import 'package:dsixv02app/models/shared/exceptions.dart';
 import 'playerUI.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 
@@ -176,11 +175,9 @@ class _PlayersPageState extends State<PlayersPage> {
                   child: TextButton(
                     onPressed: () {
                       setState(() {
-                        try {
-                          widget.dsix.gm.deleteCurrentPlayer(index);
-                        } on NoPlayersException catch (e) {
-                          Navigator.of(context).pop(true);
-                        }
+                        widget.dsix.gm.deleteCurrentPlayer(index);
+
+                        Navigator.of(context).pop(true);
                       });
                     },
                     style: TextButton.styleFrom(

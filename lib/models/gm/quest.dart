@@ -163,33 +163,53 @@ class Quest {
     return newQuest;
   }
 
-  Quest newRandomQuest(int xp) {
-    Location randomLocation =
-        locations.locations[Random().nextInt(locations.locations.length)];
+  List<Character> spawnCharacters(int xp, Location location) {
+    List<Character> characterList = [];
+    List<Character> possibleCharacters = [];
 
-    int totalXp = xp;
+//NARROW THE SEARCH
 
-    List<Character> randomThreat = [];
-    bool check = true;
-    while (totalXp > 0) {
-      check = true;
-      Character randomCharacter = randomLocation
-          .characters[Random().nextInt(randomLocation.characters.length)]
+    while (possibleCharacters.length < 3) {
+      Character randomCharacter = location.possibleCharacters[
+              Random().nextInt(location.possibleCharacters.length)]
           .newCharacter();
+
+      if (possibleCharacters.isEmpty) {
+        if (randomCharacter.baseXp <= 50) {
+          possibleCharacters.add(randomCharacter);
+        }
+      }
+      if (possibleCharacters.isNotEmpty) {
+        if (randomCharacter.baseXp > 50) {
+          possibleCharacters.add(randomCharacter);
+        }
+      }
+    }
+
+//ADD THE CHARACTER TO THE LIST
+
+    bool check = true;
+
+    while (xp > 0) {
+      check = true;
+      Character randomCharacter =
+          possibleCharacters[Random().nextInt(possibleCharacters.length)]
+              .newCharacter();
+
       //Check random character XP
-      if (randomCharacter.baseXp <= totalXp) {
+      if (randomCharacter.baseXp <= xp) {
         //Check to see if it's the first character to be added
-        if (randomThreat.isEmpty) {
+        if (characterList.isEmpty) {
           randomCharacter.totalXp = randomCharacter.baseXp;
           randomCharacter.totalLoot = (randomCharacter.baseLoot).toInt();
           randomCharacter.maxHealth = randomCharacter.baseHealth;
           randomCharacter.currentHealth = randomCharacter.maxHealth;
-          randomThreat.add(randomCharacter);
-          totalXp -= randomCharacter.baseXp;
+          characterList.add(randomCharacter);
+          xp -= randomCharacter.baseXp;
         } else {
           //Loop to see if the character already exists and I can put more of them together on the same pack
           while (check) {
-            randomThreat.forEach((element) {
+            characterList.forEach((element) {
               if (element.name == randomCharacter.name &&
                   element.totalXp < 100) {
                 element.amount++;
@@ -200,7 +220,7 @@ class Quest {
                 element.totalXp += randomCharacter.baseXp;
                 //change Loot
                 element.totalLoot = (element.baseLoot * element.amount).toInt();
-                totalXp -= randomCharacter.baseXp;
+                xp -= randomCharacter.baseXp;
                 check = false;
               }
             });
@@ -210,14 +230,25 @@ class Quest {
               randomCharacter.totalLoot = (randomCharacter.baseLoot).toInt();
               randomCharacter.maxHealth = randomCharacter.baseHealth;
               randomCharacter.currentHealth = randomCharacter.maxHealth;
-              randomThreat.add(randomCharacter);
-              totalXp -= randomCharacter.baseXp;
+              characterList.add(randomCharacter);
+              xp -= randomCharacter.baseXp;
               check = false;
             } //If
           } //While
         }
       }
     }
+
+    return characterList;
+  }
+
+  Quest newRandomQuest(int xp) {
+    Location randomLocation =
+        locations.locations[Random().nextInt(locations.locations.length)];
+
+    List<Character> randomThreat = [];
+
+    randomThreat = spawnCharacters(xp, randomLocation);
 
     String randomCharacter =
         '${backgroundList[Random().nextInt(backgroundList.length)]}';
@@ -336,30 +367,6 @@ class Quest {
     );
     return newRandomQuest;
   }
-
-  // void chooseQuest(String category) {
-  //   switch (category) {
-  //     case 'objective':
-  //       this.objective = objectiveList[Random().nextInt(objectiveList.length)];
-  //       break;
-
-  //     case 'target':
-  //       this.target = targetList[Random().nextInt(targetList.length)];
-  //       if (target == 'Person') {
-  //         this.target =
-  //             '${backgroundList[Random().nextInt(backgroundList.length)]}';
-  //       } else if (target == 'Group') {
-  //         this.target =
-  //             'Group of ${backgroundList[Random().nextInt(backgroundList.length)]}s';
-  //       }
-
-  //       break;
-
-  //     case 'location':
-  //       this.location = locationList[Random().nextInt(locationList.length)];
-  //       break;
-  //   }
-  // }
 
   Quest({
     String icon,

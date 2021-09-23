@@ -792,7 +792,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
-                          width: 2, //                   <--- border width here
+                          width: 1, //                   <--- border width here
                         ),
                       ),
                       child: Stack(
@@ -850,7 +850,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                               .getCurrentPlayer()
                               .playerColor
                               .primaryColor,
-                          width: 2, //                   <--- border width here
+                          width: 1, //                   <--- border width here
                         ),
                       ),
                       child: Stack(
@@ -985,11 +985,12 @@ class _InventoryStatePage extends State<InventoryPage> {
                                       width: double.infinity,
                                       decoration: BoxDecoration(
                                         border: Border.all(
-                                          color: availablePlayers[index]
+                                          color: widget.dsix.gm
+                                              .getCurrentPlayer()
                                               .playerColor
                                               .primaryColor,
                                           width:
-                                              3, //                   <--- border width here
+                                              1, //                   <--- border width here
                                         ),
                                       ),
                                       child: Stack(
@@ -1024,7 +1025,9 @@ class _InventoryStatePage extends State<InventoryPage> {
                                                 fontWeight: FontWeight.bold,
                                                 letterSpacing: 1.5,
                                                 fontFamily: 'Calibri',
-                                                color: Colors.white,
+                                                color: availablePlayers[index]
+                                                    .playerColor
+                                                    .primaryColor,
                                               ),
                                             ),
                                           ),

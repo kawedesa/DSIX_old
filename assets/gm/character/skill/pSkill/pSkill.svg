@@ -1,1 +1,23 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 314.5 314"><defs><style>.cls-1{fill:none;}.cls-2{fill:#231f20;}</style></defs><g id="Layer_2" data-name="Layer 2"><g id="Layer_1-2" data-name="Layer 1"><g id="a3d891e3-d1a8-45d9-8bb4-c816c9df960b"><g id="aab71d7e-7bf8-4474-9c42-a9921f90853b"><line class="cls-1" x2="314.5"/><line class="cls-1" x1="314.5" y1="314" y2="314"/></g></g></g><g id="pSkill"><polygon id="pSkill-2" data-name="pSkill" class="cls-2" points="276.59 253.94 244.15 221.16 265.39 199.32 265.39 159.27 235.34 189.3 197.49 151.44 278.14 70.82 278.14 70.75 278.14 30.7 238.09 30.7 238.03 30.7 157.41 111.34 76.79 30.7 76.72 30.7 36.68 30.7 36.68 70.75 36.68 70.82 117.33 151.43 79.47 189.3 49.43 159.27 49.43 199.32 70.4 221.44 38.22 253.94 25.17 253.94 25.17 283.31 25.67 283.31 25.74 283.31 54.04 283.31 54.53 283.31 54.53 270.83 87.07 238.08 110.22 260.14 150.29 260.14 119.53 229.36 157.41 191.5 195.29 229.36 164.53 260.14 204.59 260.14 227.48 237.81 259.97 270.51 259.97 283.31 260.78 283.31 289.08 283.31 289.14 283.31 289.33 283.31 289.33 283.12 289.33 254.81 289.33 253.94 276.59 253.94"/></g></g></svg>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 25.2.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 314.5 314" style="enable-background:new 0 0 314.5 314;" xml:space="preserve">
+<style type="text/css">
+	.st0{fill:none;}
+</style>
+<g id="Layer_2_1_">
+	<g id="Layer_1-2">
+		<g id="a3d891e3-d1a8-45d9-8bb4-c816c9df960b">
+			<g id="aab71d7e-7bf8-4474-9c42-a9921f90853b">
+				<line class="st0" x1="0" y1="0" x2="314.5" y2="0"/>
+				<line class="st0" x1="314.5" y1="314" x2="0" y2="314"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="Values">
+	<g id="mDamage">
+		<polygon points="157.2,104.3 110.7,150.9 157.2,197.5 157.2,197.3 203.8,150.9 		"/>
+	</g>
+</g>
+</svg>

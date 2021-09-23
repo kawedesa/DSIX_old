@@ -1,28 +1,22 @@
 class Option {
   String name;
   String description;
-  String success;
-  String halfSuccess;
-  String fail;
-  List<String> failOutcome;
-  String outcome;
-  bool firstRoll = true;
-  bool newRoll = false;
+  int value;
 
   Option copyOption() {
     Option newOption = new Option(
-        this.name,
-        this.description,
-        this.success,
-        this.halfSuccess,
-        this.fail,
-        this.failOutcome,
-        this.outcome,
-        this.newRoll);
+        name: this.name, description: this.description, value: this.value);
 
     return newOption;
   }
 
-  Option(this.name, this.description, this.success, this.halfSuccess, this.fail,
-      this.failOutcome, this.outcome, this.newRoll);
+  Option({
+    String name,
+    String description,
+    int value,
+  }) {
+    this.name = name;
+    this.description = description;
+    this.value = value;
+  }
 }

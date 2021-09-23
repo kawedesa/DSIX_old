@@ -83,7 +83,7 @@ class _LootPageState extends State<LootPage> {
                     width: 2.5, //                   <--- border width here
                   ),
                 ),
-                width: 300,
+                width: MediaQuery.of(context).size.width * 0.7,
                 child: Container(
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -95,114 +95,104 @@ class _LootPageState extends State<LootPage> {
                           padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                           child: Center(
                             child: Text(
-                              'GIVE ${item.name}',
+                              'SELECT A PLAYER',
                               style: TextStyle(
-                                fontFamily: 'Headline',
-                                height: 1.3,
-                                fontSize: 25.0,
+                                fontFamily: 'Santana',
+                                height: 1,
+                                fontSize: 25,
                                 color: Colors.white,
-                                letterSpacing: 2,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: 3,
                               ),
                             ),
                           ),
                         ),
                       ),
-                      Container(
-                        width: double.infinity,
-                        child: Padding(
-                          padding: const EdgeInsets.fromLTRB(35, 15, 35, 10),
-                          child: Text(
-                            (availablePlayers.length < 1)
-                                ? 'There are no players.'
-                                : 'Select a player:',
-                            textAlign: TextAlign.justify,
-                            style: TextStyle(
-                              height: 1.25,
-                              fontSize: 19,
-                              fontFamily: 'Calibri',
-                              color: Colors.white,
-                            ),
-                          ),
-                        ),
-                      ),
-                      Container(
-                        height: 50.0 * availablePlayers.length,
-                        child: ListView.builder(
-                            itemCount: availablePlayers.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              return Padding(
-                                padding:
-                                    const EdgeInsets.fromLTRB(30, 0, 30, 0),
-                                child: TextButton(
-                                  onPressed: () {
-                                    giveLoot(
-                                        item,
-                                        availablePlayers[index]
-                                            .playerColor
-                                            .primaryColor);
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Container(
+                          height: MediaQuery.of(context).size.height *
+                              0.08 *
+                              availablePlayers.length,
+                          child: ListView.builder(
+                              itemCount: availablePlayers.length,
+                              itemBuilder: (BuildContext context, int index) {
+                                return Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                  child: TextButton(
+                                    onPressed: () {
+                                      giveLoot(
+                                          item,
+                                          availablePlayers[index]
+                                              .playerColor
+                                              .primaryColor);
 
-                                    widget.refresh();
+                                      widget.refresh();
 
-                                    Navigator.pop(context);
-                                  },
-                                  style: TextButton.styleFrom(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                                  ),
-                                  child: Container(
-                                    height: MediaQuery.of(context).size.height *
-                                        0.058,
-                                    width: double.infinity,
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: availablePlayers[index]
-                                            .playerColor
-                                            .primaryColor,
-                                        width:
-                                            2, //                   <--- border width here
-                                      ),
+                                      Navigator.pop(context);
+                                    },
+                                    style: TextButton.styleFrom(
+                                      padding:
+                                          const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                     ),
-                                    child: Stack(
-                                      alignment: AlignmentDirectional.centerEnd,
-                                      children: [
-                                        Column(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: <Widget>[
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      0, 0, 10, 0),
-                                              child: Icon(
-                                                Icons.keyboard_arrow_right,
+                                    child: Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                              0.08,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: Colors.grey[700],
+                                          width:
+                                              1, //                   <--- border width here
+                                        ),
+                                      ),
+                                      child: Stack(
+                                        alignment:
+                                            AlignmentDirectional.centerEnd,
+                                        children: [
+                                          Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: <Widget>[
+                                              Padding(
+                                                padding:
+                                                    const EdgeInsets.fromLTRB(
+                                                        0, 0, 15, 0),
+                                                child: Icon(
+                                                  Icons.keyboard_arrow_right,
+                                                  color: availablePlayers[index]
+                                                      .playerColor
+                                                      .primaryColor,
+                                                  size: 25,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          Center(
+                                            child: Text(
+                                              '${availablePlayers[index].playerColor.name}',
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.bold,
+                                                letterSpacing: 1.5,
+                                                fontFamily: 'Calibri',
                                                 color: availablePlayers[index]
                                                     .playerColor
                                                     .primaryColor,
-                                                size: 20,
                                               ),
                                             ),
-                                          ],
-                                        ),
-                                        Center(
-                                          child: Text(
-                                            '${availablePlayers[index].playerColor.name}',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              fontWeight: FontWeight.bold,
-                                              letterSpacing: 1.5,
-                                              fontFamily: 'Calibri',
-                                              color: Colors.white,
-                                            ),
                                           ),
-                                        ),
-                                      ],
+                                        ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              );
-                            }),
+                                );
+                              }),
+                        ),
                       ),
                     ],
                   ),

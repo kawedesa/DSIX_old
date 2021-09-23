@@ -1,5 +1,7 @@
 //PLAYER EXCEPTION
 
+import 'package:dsixv02app/models/dsix/sprite.dart';
+
 class NoAmmoException implements Exception {
   String message = 'NO AMMO';
 

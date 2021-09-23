@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'gmMapPage.dart';
 import 'playersPage.dart';
 import 'package:dsixv02app/pages/gmScenePage.dart';
 import 'gmLootPage.dart';
@@ -9,6 +10,7 @@ import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'gmCharacterPage.dart';
 import 'package:dsixv02app/models/gm/character.dart';
 import 'package:dsixv02app/models/gm/characterSkill.dart';
+import 'package:dsixv02app/pages/gmTurnPage.dart';
 
 class GmUI extends StatefulWidget {
   final Dsix dsix;
@@ -95,18 +97,18 @@ class _GmUIState extends State<GmUI> {
       ),
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
-          'assets/gm/scene.svg',
+          'assets/player/map.svg',
           color: Colors.white,
-          width: MediaQuery.of(context).size.width * 0.075,
+          width: MediaQuery.of(context).size.width * 0.1,
         ),
         icon: new SvgPicture.asset(
-          'assets/gm/scene.svg',
+          'assets/player/map.svg',
           color: (widget.dsix.gm.story.round < 1)
               ? Colors.grey[900]
               : Colors.grey[600],
-          width: MediaQuery.of(context).size.width * 0.065,
+          width: MediaQuery.of(context).size.width * 0.1,
         ),
-        label: 'SCENE',
+        label: 'MAP',
       ),
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
@@ -122,6 +124,21 @@ class _GmUIState extends State<GmUI> {
           width: MediaQuery.of(context).size.width * 0.085,
         ),
         label: 'CHARACTER',
+      ),
+      BottomNavigationBarItem(
+        activeIcon: new SvgPicture.asset(
+          'assets/gm/scene.svg',
+          color: Colors.white,
+          width: MediaQuery.of(context).size.width * 0.075,
+        ),
+        icon: new SvgPicture.asset(
+          'assets/gm/scene.svg',
+          color: (widget.dsix.gm.story.round < 1)
+              ? Colors.grey[900]
+              : Colors.grey[600],
+          width: MediaQuery.of(context).size.width * 0.065,
+        ),
+        label: 'SCENE',
       ),
       BottomNavigationBarItem(
         activeIcon: new SvgPicture.asset(
@@ -153,21 +170,6 @@ class _GmUIState extends State<GmUI> {
         ),
         label: 'ACTION',
       ),
-      BottomNavigationBarItem(
-        activeIcon: new SvgPicture.asset(
-          'assets/player/map.svg',
-          color: Colors.white,
-          width: MediaQuery.of(context).size.width * 0.1,
-        ),
-        icon: new SvgPicture.asset(
-          'assets/player/map.svg',
-          color: (widget.dsix.gm.story.round < 1)
-              ? Colors.grey[900]
-              : Colors.grey[600],
-          width: MediaQuery.of(context).size.width * 0.1,
-        ),
-        label: 'MAP',
-      ),
     ];
   }
 
@@ -179,28 +181,26 @@ class _GmUIState extends State<GmUI> {
   Widget buildPageView() {
     return PageView(
       controller: pageController,
-      physics: (widget.dsix.gm.story.round < 1)
-          ? NeverScrollableScrollPhysics()
-          : AlwaysScrollableScrollPhysics(),
+      physics: NeverScrollableScrollPhysics(),
       children: <Widget>[
         StoryPage(
           dsix: widget.dsix,
           refresh: refreshPage,
           alert: displayAlert,
         ),
-        ScenePage(dsix: widget.dsix, refresh: refreshPage),
+        GmMapPage(dsix: widget.dsix, refresh: refreshPage),
         CharacterPage(
           dsix: widget.dsix,
           refresh: refreshPage,
           alert: displayAlert,
         ),
+        ScenePage(dsix: widget.dsix, refresh: refreshPage),
         LootPage(
           dsix: widget.dsix,
           refresh: refreshPage,
           alert: displayAlert,
         ),
-        ScenePage(dsix: widget.dsix, refresh: refreshPage),
-        CharacterPage(dsix: widget.dsix, refresh: refreshPage),
+        TurnPage(dsix: widget.dsix, refresh: refreshPage),
       ],
     );
   }
@@ -1146,22 +1146,22 @@ class _GmUIState extends State<GmUI> {
                         ],
                       ),
                     ),
-                    Builder(
-                      builder: (BuildContext context) {
-                        return GestureDetector(
-                          onTap: () {
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(displayAlert('NEW TURN'));
-                            widget.dsix.gm.newTurn();
-                          },
-                          child: SvgPicture.asset(
-                            'assets/player/action.svg',
-                            color: Colors.white,
-                            width: MediaQuery.of(context).size.width * 0.05,
-                          ),
-                        );
-                      },
-                    ),
+                    // Builder(
+                    //   builder: (BuildContext context) {
+                    //     return GestureDetector(
+                    //       onTap: () {
+                    //         ScaffoldMessenger.of(context)
+                    //             .showSnackBar(displayAlert('NEW TURN'));
+                    //         widget.dsix.gm.newTurn();
+                    //       },
+                    //       child: SvgPicture.asset(
+                    //         'assets/player/action.svg',
+                    //         color: Colors.white,
+                    //         width: MediaQuery.of(context).size.width * 0.05,
+                    //       ),
+                    //     );
+                    //   },
+                    // ),
                   ],
                 ),
               ),

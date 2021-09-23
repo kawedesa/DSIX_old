@@ -1,5 +1,7 @@
 import 'dart:math';
 
+import 'package:dsixv02app/models/dsix/sprite.dart';
+
 import 'loot.dart';
 import 'story.dart';
 import 'package:dsixv02app/models/player/player.dart';
@@ -141,38 +143,114 @@ class Gm {
         this.numberPlayers++;
       }
     });
-    if (this.numberPlayers < 1) {
-      throw new NoPlayersException();
-    }
   }
 
   // TURN
 
+  List<PlayerColor> turnOrder = [];
   void newTurn() {
+    turnOrder = [];
     this.players.forEach((element) {
-      element.newTurn();
-    });
-    throw new NewTurnException();
-  }
-
-  void checkTurn() {
-    checkPlayers();
-
-    int check = 0;
-    this.players.forEach((player) {
-      if (player.characterFinished) {
-        if (player.turn.contains(false)) {
-          return;
-        } else {
-          check++;
-        }
+      if (element.characterFinished) {
+        this.turnOrder.add(element.playerColor);
       }
     });
 
-    if (check == this.numberPlayers) {
-      newTurn();
+    this.turnOrder.shuffle();
+
+    int gmTurn = 0;
+    gmTurn = turnOrder.length ~/ 2;
+    for (int i = 0; i < gmTurn; i++) {
+      this.turnOrder.add(
+            PlayerColor(
+                name: 'GM',
+                icon: 'gm',
+                primaryColor: Colors.grey[600],
+                secondaryColor: Colors.grey[100],
+                tertiaryColor: Colors.grey[800]),
+          );
     }
+    print(turnOrder);
   }
+
+  void nextTurn() {
+    this.turnOrder.removeAt(0);
+    if (this.turnOrder.isEmpty) newTurn();
+  }
+
+  void skipTurn() {
+    if (turnOrder.length < 2) {
+      return;
+    }
+
+    this.turnOrder.add(this.turnOrder.first);
+    this.turnOrder.removeAt(0);
+  }
+
+  void chooseTurn(int index) {
+    List<PlayerColor> temporaryPlayers = [];
+
+    temporaryPlayers.add(this.turnOrder[index].copyPlayerColor());
+
+    this.turnOrder.removeAt(index);
+    this.turnOrder.forEach((element) {
+      temporaryPlayers.add(element.copyPlayerColor());
+    });
+    this.turnOrder = [];
+    this.turnOrder = temporaryPlayers;
+  }
+
+  void removeTurn(int index) {
+    chooseTurn(index);
+    nextTurn();
+  }
+
+  void shuffleTurn() {
+    this.turnOrder.shuffle();
+  }
+
+  void addGmTurn() {
+    List<PlayerColor> temporaryPlayers = [];
+    temporaryPlayers.add(
+      PlayerColor(
+          name: 'GM',
+          icon: 'gm',
+          primaryColor: Colors.grey[600],
+          secondaryColor: Colors.grey[100],
+          tertiaryColor: Colors.grey[800]),
+    );
+    this.turnOrder.forEach((element) {
+      temporaryPlayers.add(element.copyPlayerColor());
+    });
+    this.turnOrder = [];
+    this.turnOrder = temporaryPlayers;
+  }
+
+  // void newTurn() {
+  //   this.players.forEach((element) {
+  //     element.newTurn();
+  //   });
+  //   throw new NewTurnException();
+  // }
+
+  // void checkTurn() {
+  //   checkPlayers();
+
+  //   int check = 0;
+  //   this.players.forEach((player) {
+  //     if (player.characterFinished) {
+  //       if (player.turn.contains(false)) {
+  //         return;
+  //       } else {
+  //         check++;
+  //       }
+  //     }
+  //   });
+
+  //   if (check == this.numberPlayers) {
+  //     newTurn();
+  //   }
+  // }
 
   // SET DIFFICULTY AND STORY
 
@@ -204,7 +282,9 @@ class Gm {
     this.story.chooseQuest(index);
 
     this.totalXp = 0;
-    this.story.quest.threatList.forEach((element) {});
+    this.selectedCharacter = this.story.quest.threatList.first;
+    newTurn();
+    // this.story.quest.threatList.forEach((element) {});
 
     throw new NewStoryException();
   }
@@ -330,13 +410,80 @@ class Gm {
 
   List<Character> availableCharacters = [];
 
+  List<Sprite> displayCharacters = [];
+
+  void clearMap() {
+    this.displayCharacters.clear();
+  }
+
+  void spawnPlayers(double size) {
+    Offset firstSpawn = Offset(Random().nextDouble() * size * 0.6 + size * 0.2,
+        Random().nextDouble() * size * 0.6 + size * 0.2);
+
+    List<Sprite> spawnPlayers = [];
+
+    this.players.forEach((element) {
+      if (element.characterFinished) {
+        double randomX = Random().nextDouble() * size * 0.2;
+        double randomY = Random().nextDouble() * size * 0.2;
+
+        Offset playerOffset =
+            Offset(firstSpawn.dx + randomX, firstSpawn.dy + randomY);
+
+        element.location = playerOffset;
+
+        spawnPlayers.add(Sprite(
+            icon: element.race.icon,
+            color: element.playerColor.primaryColor,
+            size: 25,
+            canvasSize: size,
+            location: element.location));
+      }
+    });
+
+    spawnPlayers.forEach((element) {
+      this.displayCharacters.add(element);
+    });
+  }
+
+  void spawnCharacters(double size) {
+    Offset firstSpawn = Offset(Random().nextDouble() * size * 0.4 + size * 0.3,
+        Random().nextDouble() * size * 0.4 + size * 0.3);
+
+    List<Sprite> spawnCharacters = [];
+
+    this.story.quest.threatList.forEach((element) {
+      for (int i = 0; i < element.amount; i++) {
+        double randomX = Random().nextDouble() * size * 0.1;
+        double randomY = Random().nextDouble() * size * 0.1;
+
+        Offset characterOffset =
+            Offset(firstSpawn.dx + randomX, firstSpawn.dy + randomY);
+
+        element.location = characterOffset;
+
+        spawnCharacters.add(Sprite(
+          icon: '${element.icon}',
+          location: element.location,
+          size: element.size,
+          canvasSize: size,
+          color: Colors.black,
+        ));
+      }
+    });
+
+    spawnCharacters.forEach((element) {
+      this.displayCharacters.add(element);
+    });
+  }
+
   void availableCharacter(String environment) {
     this.availableCharacters = [];
 
     switch (environment) {
       case 'Mountain':
         {
-          this.locationList.locations[0].characters.forEach((element) {
+          this.locationList.locations[0].possibleCharacters.forEach((element) {
             if (element.baseXp <= this.totalXp) {
               this.availableCharacters.add(element);
             }
@@ -345,7 +492,7 @@ class Gm {
         break;
       case 'Swamp':
         {
-          this.locationList.locations[1].characters.forEach((element) {
+          this.locationList.locations[1].possibleCharacters.forEach((element) {
             if (element.baseXp <= this.totalXp) {
               this.availableCharacters.add(element);
             }

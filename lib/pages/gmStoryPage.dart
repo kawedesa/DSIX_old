@@ -43,7 +43,21 @@ class _StoryPageState extends State<StoryPage> {
     try {
       widget.dsix.gm.chooseQuest(index);
     } on NewStoryException catch (e) {
+      //Clear board
+      widget.dsix.gm.clearMap();
+
+      //Spawn Players
+
+      widget.dsix.gm.spawnPlayers(widget.dsix.world.mapSize);
+
+      //Spawn Enemy
+
+      widget.dsix.gm.spawnCharacters(widget.dsix.world.mapSize);
+
+      print(widget.dsix.gm.displayCharacters);
+
       Navigator.pop(context);
+
       ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
       widget.refresh();
       return;
@@ -780,12 +794,12 @@ class _StoryPageState extends State<StoryPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: <Widget>[
                     SvgPicture.asset(
-                      'assets/gm/xp.svg',
+                      'assets/gm/money.svg',
                       color: Colors.grey[700],
                       width: MediaQuery.of(context).size.width * 0.08,
                     ),
                     Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Text(
                         '${widget.dsix.gm.story.settings.questGold}',
                         textAlign: TextAlign.left,
@@ -966,62 +980,62 @@ class _StoryPageState extends State<StoryPage> {
                     Stack(
                       alignment: Alignment.topCenter,
                       children: [
-                        Container(
-                          width: double.infinity,
-                          height: 120,
-                          child: Padding(
-                            padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
-                            child: Column(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                GestureDetector(
-                                  onTap: () {
-                                    showAlertDialogFinishQuest(context);
-                                  },
-                                  child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    child: Icon(
-                                      Icons.check,
-                                      color: Colors.green,
-                                      size: 50,
-                                    ),
-                                  ),
-                                ),
-                                GestureDetector(
-                                  onTap: () {
-                                    showAlertDialogAbandonQuest(context);
-                                  },
-                                  child: Container(
-                                    width: 50,
-                                    height: 50,
-                                    child: Icon(
-                                      Icons.close,
-                                      color: Colors.red,
-                                      size: 50,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
+                        // Container(
+                        //   width: double.infinity,
+                        //   height: 120,
+                        //   child: Padding(
+                        //     padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        //     child: Column(
+                        //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        //       crossAxisAlignment: CrossAxisAlignment.start,
+                        //       children: [
+                        //         GestureDetector(
+                        //           onTap: () {
+                        //             showAlertDialogFinishQuest(context);
+                        //           },
+                        //           child: Container(
+                        //             width: 50,
+                        //             height: 50,
+                        //             child: Icon(
+                        //               Icons.check,
+                        //               color: Colors.green,
+                        //               size: 50,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //         GestureDetector(
+                        //           onTap: () {
+                        //             showAlertDialogAbandonQuest(context);
+                        //           },
+                        //           child: Container(
+                        //             width: 50,
+                        //             height: 50,
+                        //             child: Icon(
+                        //               Icons.close,
+                        //               color: Colors.red,
+                        //               size: 50,
+                        //             ),
+                        //           ),
+                        //         ),
+                        //       ],
+                        //     ),
+                        //   ),
+                        // ),
                         Container(
                           width: MediaQuery.of(context).size.width * 0.65,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                '${widget.dsix.gm.story.quest.name}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1.3,
-                                  fontSize: 45,
-                                  color: Colors.grey[700],
-                                  letterSpacing: 2,
-                                ),
-                              ),
+                              // Text(
+                              //   '${widget.dsix.gm.story.quest.name}',
+                              //   style: TextStyle(
+                              //     fontFamily: 'Headline',
+                              //     height: 1.3,
+                              //     fontSize: 45,
+                              //     color: Colors.grey[700],
+                              //     letterSpacing: 2,
+                              //   ),
+                              // ),
                               Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -1036,13 +1050,121 @@ class _StoryPageState extends State<StoryPage> {
                                   ),
                                 ),
                               ),
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 5),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    showAlertDialogFinishQuest(context);
+                                  },
+                                  child: Container(
+                                    height: MediaQuery.of(context).size.height *
+                                        0.08,
+                                    width: MediaQuery.of(context).size.width *
+                                        0.65,
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: Colors.green,
+                                        width:
+                                            2, //                   <--- border width here
+                                      ),
+                                    ),
+                                    child: Stack(
+                                      alignment: AlignmentDirectional.centerEnd,
+                                      children: [
+                                        Column(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: <Widget>[
+                                            Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      0, 0, 15, 0),
+                                              child: Icon(
+                                                Icons.check,
+                                                color: Colors.green,
+                                                size: 25,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        Center(
+                                          child: Text(
+                                            'FINISH',
+                                            style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.5,
+                                              fontFamily: 'Calibri',
+                                              color: Colors.white,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  showAlertDialogAbandonQuest(context);
+                                },
+                                child: Container(
+                                  height:
+                                      MediaQuery.of(context).size.height * 0.08,
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.65,
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                      color: Colors.grey[700],
+                                      width:
+                                          2, //                   <--- border width here
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    alignment: AlignmentDirectional.centerEnd,
+                                    children: [
+                                      Column(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                0, 0, 15, 0),
+                                            child: Icon(
+                                              Icons.clear,
+                                              color: Colors.grey[700],
+                                              size: 25,
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Center(
+                                        child: Text(
+                                          'ABANDON',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.bold,
+                                            letterSpacing: 1.5,
+                                            fontFamily: 'Calibri',
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
                       ],
                     ),
                     Container(
-                      height: MediaQuery.of(context).size.height * 0.081 * 4,
+                      height: MediaQuery.of(context).size.height * 0.081 * 3,
                       child: ListView(
                         shrinkWrap: true,
                         physics: AlwaysScrollableScrollPhysics(),
@@ -1053,46 +1175,46 @@ class _StoryPageState extends State<StoryPage> {
                             thickness: 2,
                             color: Colors.grey[700],
                           ),
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.08,
-                            child: Padding(
-                              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                              child: ListTile(
-                                onTap: () {
-                                  // setState(() {
-                                  //   widget.dsix.gm.story.quest
-                                  //       .chooseQuest('character');
-                                  //   widget.refresh();
-                                  // });
-                                },
-                                title: Text(
-                                  'CHARACTER:',
-                                  style: TextStyle(
-                                    fontFamily: 'Calibri',
-                                    height: 1,
-                                    fontSize: 18,
-                                    color: Colors.grey[600],
-                                    letterSpacing: 1.5,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                trailing: Text(
-                                  widget.dsix.gm.story.quest.character,
-                                  style: TextStyle(
-                                    height: 1.5,
-                                    fontSize: 18,
-                                    fontFamily: 'Calibri',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          Divider(
-                            height: 0,
-                            thickness: 2,
-                            color: Colors.grey[700],
-                          ),
+                          // Container(
+                          //   height: MediaQuery.of(context).size.height * 0.08,
+                          //   child: Padding(
+                          //     padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          //     child: ListTile(
+                          //       onTap: () {
+                          //         // setState(() {
+                          //         //   widget.dsix.gm.story.quest
+                          //         //       .chooseQuest('character');
+                          //         //   widget.refresh();
+                          //         // });
+                          //       },
+                          //       title: Text(
+                          //         'CHARACTER:',
+                          //         style: TextStyle(
+                          //           fontFamily: 'Calibri',
+                          //           height: 1,
+                          //           fontSize: 18,
+                          //           color: Colors.grey[600],
+                          //           letterSpacing: 1.5,
+                          //           fontWeight: FontWeight.bold,
+                          //         ),
+                          //       ),
+                          //       trailing: Text(
+                          //         widget.dsix.gm.story.quest.character,
+                          //         style: TextStyle(
+                          //           height: 1.5,
+                          //           fontSize: 18,
+                          //           fontFamily: 'Calibri',
+                          //           color: Colors.white,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // Divider(
+                          //   height: 0,
+                          //   thickness: 2,
+                          //   color: Colors.grey[700],
+                          // ),
                           Container(
                             height: MediaQuery.of(context).size.height * 0.08,
                             child: Padding(

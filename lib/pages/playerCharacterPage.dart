@@ -86,30 +86,27 @@ class _CharacterPageState extends State<CharacterPage> {
                         fontFamily: 'Calibri',
                         color: Colors.white,
                       ),
-                      children: (widget.dsix.gm
-                                  .getCurrentPlayer()
-                                  .effect
-                                  .typeOfEffect ==
-                              'PERMANENT')
-                          ? <TextSpan>[
-                              TextSpan(
-                                  text:
-                                      '${widget.dsix.gm.getCurrentPlayer().effect.description}'),
-                            ]
-                          : <TextSpan>[
-                              TextSpan(
-                                  text:
-                                      '${widget.dsix.gm.getCurrentPlayer().effect.description} Turns left: '),
-                              TextSpan(
-                                  text:
-                                      '${widget.dsix.gm.getCurrentPlayer().effect.duration}',
-                                  style: new TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                      color: widget.dsix.gm
-                                          .getCurrentPlayer()
-                                          .playerColor
-                                          .primaryColor)),
-                            ],
+                      children:
+                          (widget.dsix.gm.getCurrentPlayer().effect.permanent)
+                              ? <TextSpan>[
+                                  TextSpan(
+                                      text:
+                                          '${widget.dsix.gm.getCurrentPlayer().effect.description}'),
+                                ]
+                              : <TextSpan>[
+                                  TextSpan(
+                                      text:
+                                          '${widget.dsix.gm.getCurrentPlayer().effect.description} Turns left: '),
+                                  TextSpan(
+                                      text:
+                                          '${widget.dsix.gm.getCurrentPlayer().effect.duration}',
+                                      style: new TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: widget.dsix.gm
+                                              .getCurrentPlayer()
+                                              .playerColor
+                                              .primaryColor)),
+                                ],
                     ),
                   ),
                 ),
@@ -305,45 +302,45 @@ class _CharacterPageState extends State<CharacterPage> {
         Container(
           height: MediaQuery.of(context).size.height * 0.1,
           width: double.infinity,
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(5, 2.5, 10, 0),
-            child: Stack(
-              children: <Widget>[
-                //ACTION ICON
+          //   child: Padding(
+          //     padding: const EdgeInsets.fromLTRB(5, 2.5, 10, 0),
+          //     child: Stack(
+          //       children: <Widget>[
+          //         //ACTION ICON
 
-                GridView.count(
-                  crossAxisCount: 6,
-                  children: List.generate(6, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 17),
-                      child: SvgPicture.asset(
-                        'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].icon}.svg',
-                        color: widget.dsix.gm
-                            .getCurrentPlayer()
-                            .playerColor
-                            .primaryColor,
-                      ),
-                    );
-                  }),
-                ),
+          //         GridView.count(
+          //           crossAxisCount: 6,
+          //           children: List.generate(6, (index) {
+          //             return Padding(
+          //               padding: const EdgeInsets.symmetric(horizontal: 17),
+          //               child: SvgPicture.asset(
+          //                 'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].icon}.svg',
+          //                 color: widget.dsix.gm
+          //                     .getCurrentPlayer()
+          //                     .playerColor
+          //                     .primaryColor,
+          //               ),
+          //             );
+          //           }),
+          //         ),
 
-                //ACTION VALUE
+          //         //ACTION VALUE
 
-                GridView.count(
-                  crossAxisCount: 6,
-                  children: List.generate(6, (index) {
-                    return Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 5),
-                      child: SvgPicture.asset(
-                        'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].value}.svg',
-                        color: Colors.white,
-                      ),
-                    );
-                  }),
-                ),
-              ],
-            ),
-          ),
+          //         GridView.count(
+          //           crossAxisCount: 6,
+          //           children: List.generate(6, (index) {
+          //             return Padding(
+          //               padding: const EdgeInsets.symmetric(horizontal: 5),
+          //               child: SvgPicture.asset(
+          //                 'assets/player/action/${widget.dsix.gm.getCurrentPlayer().playerAction[index + 1].value}.svg',
+          //                 color: Colors.white,
+          //               ),
+          //             );
+          //           }),
+          //         ),
+          //       ],
+          //     ),
+          //   ),
         ),
         Divider(
           height: 0,
