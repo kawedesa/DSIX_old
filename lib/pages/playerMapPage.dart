@@ -1,3 +1,4 @@
+import 'package:dsixv02app/models/gm/draw/drawing_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
@@ -178,6 +179,7 @@ class _PlayerMapPageState extends State<PlayerMapPage> {
                     child: Stack(
                       children: [
                         widget.dsix.world.mapTile.mapTile,
+                        widget.dsix.gm.drawingCanvas,
                         Container(
                           width: widget.dsix.world.mapSize,
                           height: widget.dsix.world.mapSize,

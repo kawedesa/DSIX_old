@@ -1,11 +1,12 @@
 import 'dart:math';
 
 import 'package:dsixv02app/models/dsix/sprite.dart';
-
+import 'package:dsixv02app/models/gm/draw/drawing_page.dart';
+import 'package:flutter/material.dart';
 import 'loot.dart';
 import 'story.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:flutter/material.dart';
+
 import 'package:dsixv02app/models/shared/shop.dart';
 import 'character.dart';
 import '../shared/exceptions.dart';
@@ -416,9 +417,17 @@ class Gm {
     this.displayCharacters.clear();
   }
 
+  DrawingPage drawingCanvas = DrawingPage(
+    canvasSize: 640,
+    selectedColor: Colors.black,
+    selectedWidth: 5.0,
+    lines: [],
+    line: null,
+  );
+
   void spawnPlayers(double size) {
-    Offset firstSpawn = Offset(Random().nextDouble() * size * 0.6 + size * 0.2,
-        Random().nextDouble() * size * 0.6 + size * 0.2);
+    Offset firstSpawn = Offset(Random().nextDouble() * size * 0.4 + size * 0.3,
+        Random().nextDouble() * size * 0.4 + size * 0.3);
 
     List<Sprite> spawnPlayers = [];
 
