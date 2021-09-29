@@ -68,12 +68,12 @@ class _GmUIState extends State<GmUI> {
           }
           break;
       }
-      if (widget.dsix.gm.story.round < 1) {
-        bottomSelectedIndex = 0;
-      } else {
+      if (widget.dsix.gm.story.quest.onGoing) {
         bottomSelectedIndex = index;
         pageController.animateToPage(index,
             duration: Duration(milliseconds: 500), curve: Curves.ease);
+      } else {
+        bottomSelectedIndex = 0;
       }
     });
   }
@@ -88,9 +88,9 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/gm/story.svg',
-          color: (widget.dsix.gm.story.round < 1)
-              ? Colors.grey[800]
-              : Colors.grey[600],
+          color: (widget.dsix.gm.story.quest.onGoing)
+              ? Colors.grey[600]
+              : Colors.grey[900],
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         label: 'STORY',
@@ -103,9 +103,9 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/player/map.svg',
-          color: (widget.dsix.gm.story.round < 1)
-              ? Colors.grey[900]
-              : Colors.grey[600],
+          color: (widget.dsix.gm.story.quest.onGoing)
+              ? Colors.grey[600]
+              : Colors.grey[900],
           width: MediaQuery.of(context).size.width * 0.1,
         ),
         label: 'MAP',
@@ -118,9 +118,9 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/gm/npc.svg',
-          color: (widget.dsix.gm.story.round < 1)
-              ? Colors.grey[900]
-              : Colors.grey[600],
+          color: (widget.dsix.gm.story.quest.onGoing)
+              ? Colors.grey[600]
+              : Colors.grey[900],
           width: MediaQuery.of(context).size.width * 0.085,
         ),
         label: 'CHARACTER',
@@ -133,9 +133,9 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/gm/scene.svg',
-          color: (widget.dsix.gm.story.round < 1)
-              ? Colors.grey[900]
-              : Colors.grey[600],
+          color: (widget.dsix.gm.story.quest.onGoing)
+              ? Colors.grey[600]
+              : Colors.grey[900],
           width: MediaQuery.of(context).size.width * 0.065,
         ),
         label: 'SCENE',
@@ -148,9 +148,9 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/gm/loot.svg',
-          color: (widget.dsix.gm.story.round < 1)
-              ? Colors.grey[900]
-              : Colors.grey[600],
+          color: (widget.dsix.gm.story.quest.onGoing)
+              ? Colors.grey[600]
+              : Colors.grey[900],
           width: MediaQuery.of(context).size.width * 0.085,
         ),
         label: 'LOOT',
@@ -163,9 +163,9 @@ class _GmUIState extends State<GmUI> {
         ),
         icon: new SvgPicture.asset(
           'assets/player/action.svg',
-          color: (widget.dsix.gm.story.round < 1)
-              ? Colors.grey[900]
-              : Colors.grey[600],
+          color: (widget.dsix.gm.story.quest.onGoing)
+              ? Colors.grey[600]
+              : Colors.grey[900],
           width: MediaQuery.of(context).size.width * 0.065,
         ),
         label: 'ACTION',
@@ -178,6 +178,12 @@ class _GmUIState extends State<GmUI> {
     keepPage: true,
   );
 
+void changePage(int index){
+ bottomSelectedIndex = index;
+        pageController.animateToPage(index,
+            duration: Duration(milliseconds: 500), curve: Curves.ease);
+}
+
   Widget buildPageView() {
     return PageView(
       controller: pageController,
@@ -187,7 +193,9 @@ class _GmUIState extends State<GmUI> {
           dsix: widget.dsix,
           refresh: refreshPage,
           alert: displayAlert,
+          changePage: changePage,
         ),
+
         GmMapPage(dsix: widget.dsix, refresh: refreshPage),
         CharacterPage(
           dsix: widget.dsix,
@@ -224,139 +232,6 @@ class _GmUIState extends State<GmUI> {
     );
   }
 
-  showAlertDialogXp(BuildContext context) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) {
-            return AlertDialog(
-              backgroundColor: Colors.black,
-              contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              content: Container(
-                decoration: BoxDecoration(
-                  border: Border.all(
-                    color: Colors.grey[700],
-                    width: 1.5, //                   <--- border width here
-                  ),
-                ),
-                width: MediaQuery.of(context).size.width * 0.7,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Container(
-                      color: Colors.grey[700],
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
-                        child: Center(
-                          child: Text(
-                            'AVAILABLE XP',
-                            style: TextStyle(
-                              fontFamily: 'Santana',
-                              height: 1,
-                              fontSize: 33,
-                              color: Colors.white,
-                              letterSpacing: 1.2,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Container(
-                      // color: Colors.pink,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(30, 0, 30, 30),
-                              child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.2,
-                                child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          widget.dsix.gm.changeXp(-25);
-                                          refreshPage();
-                                        });
-                                      },
-                                      child: SvgPicture.asset(
-                                        'assets/ui/arrowLeft.svg',
-                                        color: Colors.white,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.08,
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: const EdgeInsets.fromLTRB(
-                                          10, 0, 10, 0),
-                                      child: Center(
-                                          child: Container(
-                                        // height: 125,
-                                        child: Container(
-                                          // width: 100,
-                                          // height: 100,
-                                          // color: Colors.white,
-                                          child: Center(
-                                            child: Row(
-                                              children: [
-                                                Text(
-                                                  '${widget.dsix.gm.totalXp}',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Headline',
-                                                    height: 1,
-                                                    fontSize: 50.0,
-                                                    color: Colors.grey[700],
-                                                    letterSpacing: 2,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        // color: Colors.red,
-                                      )),
-                                    ),
-                                    GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          widget.dsix.gm.changeXp(25);
-                                          refreshPage();
-                                        });
-                                      },
-                                      child: SvgPicture.asset(
-                                        'assets/ui/arrowRight.svg',
-                                        color: Colors.white,
-                                        width:
-                                            MediaQuery.of(context).size.width *
-                                                0.08,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
-
   showAlertDialogChooseCharacter(BuildContext context, Character character) {
     AlertDialog alerta = AlertDialog(
       backgroundColor: Colors.black,
@@ -371,7 +246,7 @@ class _GmUIState extends State<GmUI> {
                 width: 2.5, //                   <--- border width here
               ),
             ),
-            width: MediaQuery.of(context).size.width * 0.7,
+            width: MediaQuery.of(context).size.height * 0.4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.end,
@@ -553,23 +428,6 @@ class _GmUIState extends State<GmUI> {
 
                 // OLD DESCRIPTION
 
-                // Container(
-                //   width: double.infinity,
-                //   child: Padding(
-                //     padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
-                //     child: Text(
-                //       '${character.description}',
-                //       textAlign: TextAlign.justify,
-                //       style: TextStyle(
-                //         height: 1.25,
-                //         fontSize: 19,
-                //         fontFamily: 'Calibri',
-                //         color: Colors.white,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: GestureDetector(
@@ -577,10 +435,17 @@ class _GmUIState extends State<GmUI> {
                       setState(() {
                         widget.dsix.gm.newCharacter(character);
 
-                        Navigator.pop(context);
-                        Navigator.pop(context);
+                        if (character.baseXp >= 100) {
+                          widget.dsix.gm.confirmCharacter();
+                          refreshPage();
+                          Navigator.pop(context);
+                          Navigator.pop(context);
+                        } else {
+                          Navigator.pop(context);
+                          Navigator.pop(context);
 
-                        showAlertDialogAmount(context);
+                          showAlertDialogAmount(context);
+                        }
                       });
                     },
                     child: Container(
@@ -921,7 +786,7 @@ class _GmUIState extends State<GmUI> {
                 width: 2.5, //                   <--- border width here
               ),
             ),
-            width: 300,
+            width: MediaQuery.of(context).size.height * 0.4,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -935,11 +800,11 @@ class _GmUIState extends State<GmUI> {
                       child: Text(
                         '${skill.name}',
                         style: TextStyle(
-                          fontFamily: 'Headline',
-                          height: 1.3,
-                          fontSize: 25.0,
+                          fontFamily: 'Santana',
+                          height: 1,
+                          fontSize: 33,
                           color: Colors.white,
-                          letterSpacing: 2,
+                          letterSpacing: 1.2,
                         ),
                       ),
                     ),
@@ -948,10 +813,10 @@ class _GmUIState extends State<GmUI> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: SizedBox(
-                    height: 200,
+                    height: MediaQuery.of(context).size.height * 0.4,
                     width: double.infinity,
                     child: Padding(
-                      padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
+                      padding: const EdgeInsets.fromLTRB(15, 15, 15, 15),
                       child: SvgPicture.asset(
                         'assets/gm/character/skill/${skill.skillType}/${skill.icon}.svg',
                         color: Colors.grey[400],
@@ -962,25 +827,26 @@ class _GmUIState extends State<GmUI> {
 
                 Divider(thickness: 2, color: Colors.grey[700]),
 
-                Container(
+                SizedBox(
+                  height: MediaQuery.of(context).size.height * 0.05,
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(35, 10, 35, 10),
+                    padding: const EdgeInsets.fromLTRB(15, 3, 15, 10),
                     child: Text(
                       '${skill.description}',
-                      textAlign: TextAlign.justify,
+                      textAlign: TextAlign.center,
                       style: TextStyle(
-                        height: 1.25,
-                        fontSize: 19,
+                        height: 1.2,
+                        fontSize: 16,
                         fontFamily: 'Calibri',
                         color: Colors.white,
                       ),
                     ),
                   ),
                 ),
-
+                Divider(thickness: 2, height: 0, color: Colors.grey[700]),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(30, 5, 30, 10),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: TextButton(
                     onPressed: () {
                       setState(() {
@@ -993,12 +859,12 @@ class _GmUIState extends State<GmUI> {
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                     ),
                     child: Container(
-                      height: MediaQuery.of(context).size.height * 0.058,
+                      height: MediaQuery.of(context).size.height * 0.08,
                       width: double.infinity,
                       decoration: BoxDecoration(
                         border: Border.all(
-                          color: Colors.grey[400],
-                          width: 2, //                   <--- border width here
+                          color: Colors.grey[700],
+                          width: 1, //                   <--- border width here
                         ),
                       ),
                       child: Stack(
@@ -1009,11 +875,11 @@ class _GmUIState extends State<GmUI> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               Padding(
-                                padding: const EdgeInsets.fromLTRB(0, 0, 10, 2),
+                                padding: const EdgeInsets.fromLTRB(0, 0, 20, 0),
                                 child: Icon(
                                   Icons.check,
-                                  color: Colors.grey[400],
-                                  size: 20,
+                                  color: Colors.grey[700],
+                                  size: 25,
                                 ),
                               ),
                             ],
@@ -1022,7 +888,7 @@ class _GmUIState extends State<GmUI> {
                             child: Text(
                               'CHOOSE',
                               style: TextStyle(
-                                fontSize: 14,
+                                fontSize: 16,
                                 fontWeight: FontWeight.bold,
                                 letterSpacing: 1.5,
                                 fontFamily: 'Calibri',
@@ -1096,7 +962,7 @@ class _GmUIState extends State<GmUI> {
                 width: MediaQuery.of(context).size.width * 0.5,
                 child: new Row(
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  mainAxisAlignment: MainAxisAlignment.end,
                   children: [
                     GestureDetector(
                       onTap: () {},
@@ -1121,47 +987,6 @@ class _GmUIState extends State<GmUI> {
                         ],
                       ),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        showAlertDialogXp(context);
-                      },
-                      child: Row(
-                        children: <Widget>[
-                          SvgPicture.asset(
-                            'assets/gm/xp.svg',
-                            color: Colors.white,
-                            width: MediaQuery.of(context).size.width * 0.08,
-                          ),
-                          Text(
-                            '${widget.dsix.gm.totalXp}',
-                            textAlign: TextAlign.left,
-                            style: TextStyle(
-                              fontFamily: 'Headline',
-                              height: 1.1,
-                              fontSize: 25,
-                              color: Colors.white,
-                              letterSpacing: 2,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Builder(
-                    //   builder: (BuildContext context) {
-                    //     return GestureDetector(
-                    //       onTap: () {
-                    //         ScaffoldMessenger.of(context)
-                    //             .showSnackBar(displayAlert('NEW TURN'));
-                    //         widget.dsix.gm.newTurn();
-                    //       },
-                    //       child: SvgPicture.asset(
-                    //         'assets/player/action.svg',
-                    //         color: Colors.white,
-                    //         width: MediaQuery.of(context).size.width * 0.05,
-                    //       ),
-                    //     );
-                    //   },
-                    // ),
                   ],
                 ),
               ),

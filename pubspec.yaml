@@ -68,6 +68,7 @@ flutter:
   - assets/animation/
   - assets/gm/
   - assets/gm/settings/
+  - assets/gm/situation/
   - assets/gm/story/quest/
   - assets/gm/character/
   - assets/gm/character/skill/pSkill/

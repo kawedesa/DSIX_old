@@ -1,8 +1,10 @@
 import 'dart:math';
 import 'package:dsixv02app/models/gm/character.dart';
 import 'package:dsixv02app/models/gm/location.dart';
-
+import 'package:flutter/material.dart';
+import 'situation.dart';
 import 'locationList.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Quest {
   String icon = 'quest';
@@ -12,30 +14,13 @@ class Quest {
   String character = '-';
   String objective = '-';
   String target = '-';
-  String location = '-';
+  Location location;
   String threat = '-';
   List<Character> threatList = [];
 
   bool onGoing = false;
 
   LocationList locations = LocationList();
-
-  // List<String> characterList = [
-  //   'Human',
-  //   'Dwarf',
-  //   'Orc',
-  //   'Elf',
-  //   'Dark elf',
-  //   'Goblin',
-  //   'Gnome',
-  //   'Halfling',
-  //   // 'Beast',
-  // ];
-
-  // List<String> genderList = [
-  //   'Female',
-  //   'Male',
-  // ];
 
   List<String> backgroundList = [
     'Merchant',
@@ -45,39 +30,6 @@ class Quest {
     'Traveler',
     'Worker',
     'Wizzard',
-    // 'Merchant',
-    // 'Noble',
-    // 'Spy',
-    // 'Prisoner',
-    // 'Pirate',
-    // 'Medic',
-    // 'Worker',
-    // 'Chef',
-    // 'Mercenary',
-    // 'Detective',
-    // 'Artist',
-    // 'Wizard',
-    // 'Student',
-    // 'Traveler',
-    // 'Hunter',
-    // 'Assassin',
-    // 'Thief',
-    // 'Scientist',
-    // 'Lawyer',
-    // 'Farmer',
-    // 'Tailor',
-    // 'Gladiator',
-    // 'Sailor',
-    // 'Innkeeper',
-    // 'Stablehand',
-    // 'Soldier',
-    // 'Politician',
-    // 'Bureaucrat',
-    // 'Shaman',
-    // 'Homeless',
-    // 'Knight',
-    // 'Monk',
-    // 'Gardener',
   ];
 
   List<String> objectiveList = [
@@ -89,79 +41,16 @@ class Quest {
     'Protect',
     'Save',
     'Steal',
-
-    // 'Hunt',
-    // 'Destroy',
-    // 'Deliver',
-    // 'Steal',
-    // 'Capture',
-    // 'Find',
-    // 'Protect',
-    // 'Save',
-    // 'Learn',
-    // 'Avenge',
-    // 'Control',
-    // 'Report',
-    // 'Fight',
-
-    // 'Create',
-    // 'Flee',
-    // 'Gather',
-    // 'Spread',
-    // 'Win',
-    // 'Perform',
-    // 'Solve',
-    // 'Organize',
-    // 'Investigate',
   ];
-
-  // List<String> locationList = [
-  //   'Arena',
-  //   // 'Bar',
-  //   'Ruins',
-  //   'Fort',
-  //   // 'Library',
-  //   // 'Jail',
-  //   // 'Ship',
-  //   'Sewers',
-  //   'Cemitery',
-  //   'Farm',
-  //   'Mine',
-  //   // 'Market',
-  //   'Wilderness',
-  //   // 'Factory',
-  //   // 'Caravan',
-  //   // 'Slum',
-  //   // 'Cassino',
-  //   // 'Bank',
-  //   // 'Port',
-  //   // 'Court',
-  //   'Cave',
-  // ];
 
   List<String> rewardList = [
     'GOLD',
     'ITEM',
-    // 'Information',
     'RESOURCES',
     'FAME',
-    // 'Favor',
   ];
 
-  Quest newQuest() {
-    Quest newQuest = new Quest(
-      icon: 'quest',
-      name: 'NEW QUEST',
-      questDescription:
-          'Each quest should feel unique and have a different backstory. Double tap this text to edit the description and write your own story.',
-      character: '-',
-      objective: '-',
-      target: '-',
-      location: '-',
-      onGoing: false,
-    );
-    return newQuest;
-  }
+// SPAWN RANDOM CHARACTERS
 
   List<Character> spawnCharacters(int xp, Location location) {
     List<Character> characterList = [];
@@ -240,6 +129,176 @@ class Quest {
     }
 
     return characterList;
+  }
+
+  Situation situation;
+
+  void newSituation() {
+    List<String> possibleSituations = [
+      'scout',
+      'obstacle',
+      'guard',
+      'trap',
+      'ambush',
+      'ritual',
+      'fight',
+    ];
+
+    String randomSituation =
+        possibleSituations[Random().nextInt(possibleSituations.length)];
+
+    switch (randomSituation) {
+      case 'scout':
+        this.situation = Situation(
+            name: 'SCOUT',
+            description:
+                'You see the objective and something approaching it.\n1x Character of +50XP',
+            image: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_b.svg',
+                  color: Colors.black,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_w.svg',
+                  color: Colors.white,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_g.svg',
+                  color: Colors.grey[700],
+                ),
+              ],
+            ));
+        break;
+      case 'obstacle':
+        this.situation = Situation(
+            name: 'OBSTACLE',
+            description: 'You face a new obstacle on your path.\n+ Obstacle',
+            image: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_b.svg',
+                  color: Colors.black,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_w.svg',
+                  color: Colors.white,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_g.svg',
+                  color: Colors.grey[700],
+                ),
+              ],
+            ));
+        break;
+      case 'guard':
+        this.situation = Situation(
+            name: 'GUARD',
+            description:
+                'You see a guard approaching you.\n1x Character of +100XP',
+            image: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_b.svg',
+                  color: Colors.black,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_w.svg',
+                  color: Colors.white,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_g.svg',
+                  color: Colors.grey[700],
+                ),
+              ],
+            ));
+        break;
+      case 'trap':
+        this.situation = Situation(
+            name: 'TRAP',
+            description: 'You trigger a trap by accident.\n+ Trap',
+            image: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_b.svg',
+                  color: Colors.black,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_w.svg',
+                  color: Colors.white,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_g.svg',
+                  color: Colors.grey[700],
+                ),
+              ],
+            ));
+        break;
+      case 'ambush':
+        this.situation = Situation(
+            name: 'AMBUSH',
+            description: 'You are ambushed.\n2x Characters of +50XP',
+            image: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_b.svg',
+                  color: Colors.black,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_w.svg',
+                  color: Colors.white,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_g.svg',
+                  color: Colors.grey[700],
+                ),
+              ],
+            ));
+        break;
+      case 'ritual':
+        this.situation = Situation(
+            name: 'RITUAL',
+            description: 'You a ritual happening.\n+50XP Every turn.',
+            image: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_b.svg',
+                  color: Colors.black,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_w.svg',
+                  color: Colors.white,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_g.svg',
+                  color: Colors.grey[700],
+                ),
+              ],
+            ));
+        break;
+      case 'fight':
+        this.situation = Situation(
+            name: 'FIGHT',
+            description:
+                'We start in the middle of a fight.\nRandom XP25 to XP100',
+            image: Stack(
+              children: [
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_b.svg',
+                  color: Colors.black,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_w.svg',
+                  color: Colors.white,
+                ),
+                SvgPicture.asset(
+                  'assets/gm/situation/situation_g.svg',
+                  color: Colors.grey[700],
+                ),
+              ],
+            ));
+        break;
+    }
   }
 
   Quest newRandomQuest(int xp) {
@@ -348,10 +407,6 @@ class Quest {
         break;
     }
 
-    // String randomTarget = (target == 'Person')
-    //     ? '${backgroundList[Random().nextInt(backgroundList.length)]}'
-    //     : 'Group of ${backgroundList[Random().nextInt(backgroundList.length)]}s';
-
     Quest newRandomQuest = new Quest(
       icon: 'quest',
       name: randomObjective,
@@ -360,7 +415,7 @@ class Quest {
       character: randomCharacter,
       objective: randomObjective,
       target: randomTarget,
-      location: randomLocation.name,
+      location: randomLocation,
       threat: randomThreat.last.name,
       threatList: randomThreat,
       onGoing: false,
@@ -375,7 +430,7 @@ class Quest {
     String character,
     String objective,
     String target,
-    String location,
+    Location location,
     String threat,
     List<Character> threatList,
     bool onGoing,

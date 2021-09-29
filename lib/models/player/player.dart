@@ -3009,12 +3009,12 @@ class Player {
 //10+
 
       for (int i = 0; i < 3; i++) {
-        lootList.add(shop.randomResourceRange(100, 300));
+        lootList.add(shop.randomItemRange(100, 300, 'resources'));
       }
     } else {
 //9-7
       for (int i = 0; i < 3; i++) {
-        lootList.add(shop.randomResourceRange(100, 100));
+        lootList.add(shop.randomItemRange(100, 100, 'resources'));
       }
     }
     // if (numberDice > 1) {

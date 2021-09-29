@@ -90,7 +90,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.25,
+          baseLoot: 0.5,
           baseXp: 25,
         ),
         Character(
@@ -99,7 +99,7 @@ class LocationList {
           name: 'Giant Bird',
           description: 'A giant bird.',
           baseHealth: 6,
-          size: 15,
+          size: 20,
           dice: 2,
           pDamage: 4,
           pArmor: 0,
@@ -160,7 +160,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.25,
+          baseLoot: 0.5,
           baseXp: 25,
         ),
         Character(
@@ -237,7 +237,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.5,
+          baseLoot: 1,
           baseXp: 50,
         ),
         Character(
@@ -321,7 +321,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.5,
+          baseLoot: 1,
           baseXp: 50,
         ),
         Character(
@@ -425,7 +425,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.5,
+          baseLoot: 1,
           baseXp: 50,
         ),
         Character(
@@ -494,7 +494,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -564,7 +564,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -634,7 +634,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -704,7 +704,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -809,7 +809,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1.5,
+          baseLoot: 3,
           baseXp: 150,
         ),
         Character(
@@ -879,7 +879,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1.5,
+          baseLoot: 3,
           baseXp: 150,
         ),
         Character(
@@ -949,7 +949,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 2,
+          baseLoot: 4,
           baseXp: 200,
         ),
       ],
@@ -1026,7 +1026,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.25,
+          baseLoot: 0.5,
           baseXp: 25,
         ),
         Character(
@@ -1094,7 +1094,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.25,
+          baseLoot: 0.5,
           baseXp: 25,
         ),
         Character(
@@ -1169,7 +1169,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.25,
+          baseLoot: 0.5,
           baseXp: 25,
         ),
         Character(
@@ -1239,7 +1239,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.25,
+          baseLoot: 0.5,
           baseXp: 25,
         ),
         Character(
@@ -1314,7 +1314,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.5,
+          baseLoot: 1,
           baseXp: 50,
         ),
         Character(
@@ -1384,7 +1384,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 0.5,
+          baseLoot: 1,
           baseXp: 50,
         ),
         Character(
@@ -1454,7 +1454,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -1538,7 +1538,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -1615,7 +1615,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -1692,7 +1692,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1,
+          baseLoot: 2,
           baseXp: 100,
         ),
         Character(
@@ -1853,7 +1853,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 1.5,
+          baseLoot: 3,
           baseXp: 150,
         ),
         Character(
@@ -1944,7 +1944,7 @@ class LocationList {
               value: 0,
             ),
           ],
-          baseLoot: 2,
+          baseLoot: 4,
           baseXp: 200,
         ),
       ],

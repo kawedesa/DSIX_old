@@ -240,7 +240,7 @@ class _LootPageState extends State<LootPage> {
                   color: Colors.grey[700],
                   width: double.infinity,
                   child: Padding(
-                    padding: const EdgeInsets.fromLTRB(0, 7, 0, 7),
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 7),
                     child: Center(
                       child: Text(
                         '${item.name}',

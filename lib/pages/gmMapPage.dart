@@ -31,34 +31,16 @@ class _GmMapPageState extends State<GmMapPage> {
         .add(Matrix4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, -20, 0, 0, 0));
   }
 
-  Widget buildStrokeToolbar() {
+  Widget buildClearToolbar() {
     return Positioned(
-      top: 300,
-      right: 20.0,
+      bottom: 30,
+      right: 10.0,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: [],
-      ),
-    );
-  }
-
-  Widget buildStrokeButton(double strokeWidth) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          widget.dsix.gm.drawingCanvas.selectedWidth = strokeWidth;
-        });
-      },
-      child: Padding(
-        padding: const EdgeInsets.all(4.0),
-        child: Container(
-          width: strokeWidth * 2,
-          height: strokeWidth * 2,
-          decoration: BoxDecoration(
-              color: widget.dsix.gm.drawingCanvas.selectedColor,
-              borderRadius: BorderRadius.circular(50.0)),
-        ),
+        children: [
+          buildClearButton(),
+        ],
       ),
     );
   }
@@ -76,12 +58,15 @@ class _GmMapPageState extends State<GmMapPage> {
           );
         });
       },
-      child: CircleAvatar(
-        backgroundColor: Colors.grey[700],
-        child: Icon(
-          Icons.create,
-          size: 20.0,
-          color: Colors.white,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+        child: CircleAvatar(
+          backgroundColor: Colors.grey[900],
+          child: Icon(
+            Icons.delete,
+            size: 20.0,
+            color: Colors.grey[300],
+          ),
         ),
       ),
     );
@@ -95,24 +80,10 @@ class _GmMapPageState extends State<GmMapPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          buildClearButton(),
-
-          Divider(
-            height: 20.0,
-          ),
-          // buildColorButton(Colors.red),
-          buildColorButton(Colors.blueAccent),
-          buildColorButton(Colors.deepOrange),
-          // buildColorButton(Colors.green),
-          // buildColorButton(Colors.lightBlue),
           buildColorButton(Colors.black),
           buildColorButton(Colors.white),
-          Divider(
-            height: 20.0,
-          ),
-          buildStrokeButton(5.0),
-          buildStrokeButton(10.0),
-          buildStrokeButton(15.0),
+          buildColorButton(Colors.blueAccent),
+          buildColorButton(Colors.deepOrange),
         ],
       ),
     );
@@ -120,16 +91,20 @@ class _GmMapPageState extends State<GmMapPage> {
 
   Widget buildColorButton(Color color) {
     return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: FloatingActionButton(
-        mini: true,
-        backgroundColor: color,
-        child: Container(),
-        onPressed: () {
-          setState(() {
-            widget.dsix.gm.drawingCanvas.selectedColor = color;
-          });
-        },
+      padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+      child: Container(
+        width: 40,
+        height: 40,
+        child: FloatingActionButton(
+          mini: true,
+          backgroundColor: color,
+          child: Container(),
+          onPressed: () {
+            setState(() {
+              widget.dsix.gm.drawingCanvas.selectedColor = color;
+            });
+          },
+        ),
       ),
     );
   }
@@ -142,33 +117,109 @@ class _GmMapPageState extends State<GmMapPage> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          buildCharacterButton(Colors.blueAccent),
-
-          // buildColorButton(Colors.red),
-          buildColorButton(Colors.blueAccent),
-          buildColorButton(Colors.deepOrange),
+          buildCharacterButton(),
+          buildSceneButton(),
+          buildLootButton(),
         ],
       ),
     );
   }
 
-  Widget buildCharacterButton(Color color) {
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: FloatingActionButton(
-        mini: true,
-        backgroundColor: color,
-        child: Container(),
-        onPressed: () {
-          setState(() {
-            widget.dsix.gm.drawingCanvas.selectedColor = color;
-          });
-        },
+  Widget buildCharacterButton() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {
+          createNewCharacter();
+        });
+      },
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+        child: CircleAvatar(
+          backgroundColor: Colors.grey[900],
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 2),
+            child: SvgPicture.asset(
+              'assets/gm/npc.svg',
+              color: Colors.grey[300],
+              width: MediaQuery.of(context).size.width * 0.05,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildSceneButton() {
+    return GestureDetector(
+      onTap: () {
+        setState(() {});
+      },
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+        child: CircleAvatar(
+          backgroundColor: Colors.grey[900],
+          child: SvgPicture.asset(
+            'assets/gm/scene.svg',
+            color: Colors.grey[300],
+            width: MediaQuery.of(context).size.width * 0.04,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget buildLootButton() {
+    return GestureDetector(
+      onTap: () {},
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(0, 4, 0, 4),
+        child: CircleAvatar(
+          backgroundColor: Colors.grey[900],
+          child: SvgPicture.asset(
+            'assets/gm/loot.svg',
+            color: Colors.grey[300],
+            width: MediaQuery.of(context).size.width * 0.05,
+          ),
+        ),
       ),
     );
   }
 
   //
+
+  void createNewCharacter() {
+    widget.dsix.gm.availableCharacter();
+    widget.refresh();
+
+    Scaffold.of(context).openDrawer();
+  }
+
+  void goToPlayer(Color color) {
+    widget.dsix.gm.displayCharacters.forEach((element) {
+      if (element.color == color) {
+        interactiveViewerController.value
+            .multiply(Matrix4(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+
+        interactiveViewerController.value.add(Matrix4(
+            2.5,
+            0,
+            0,
+            0,
+            0,
+            2.5,
+            0,
+            0,
+            0,
+            0,
+            2.5,
+            0,
+            -element.location.dx * 2.5 + 200,
+            -element.location.dy * 2.5 + 200,
+            0,
+            1));
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -181,17 +232,24 @@ class _GmMapPageState extends State<GmMapPage> {
             children: [
               Padding(
                 padding: const EdgeInsets.fromLTRB(7, 0, 0, 0),
-                child: IconButton(
-                    icon: Icon(
-                      Icons.alarm,
-                      color: Colors.grey[400],
-                      size: 30,
-                    ),
-                    onPressed: () {
-                      setState(() {
-                        widget.dsix.gm.addGmTurn();
-                      });
-                    }),
+                child: GestureDetector(
+                  onLongPress: () {
+                    setState(() {
+                      widget.dsix.gm.shuffleTurn();
+                    });
+                  },
+                  child: IconButton(
+                      icon: Icon(
+                        Icons.alarm,
+                        color: Colors.grey[400],
+                        size: 30,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          widget.dsix.gm.addGmTurn();
+                        });
+                      }),
+                ),
               ),
               Expanded(
                 child: Padding(
@@ -211,12 +269,13 @@ class _GmMapPageState extends State<GmMapPage> {
                         },
                         onDoubleTap: () {
                           setState(() {
-                            widget.dsix.gm.nextTurn();
+                            widget.dsix.gm.chooseTurn(index);
                           });
                         },
                         onTap: () {
                           setState(() {
-                            widget.dsix.gm.chooseTurn(index);
+                            goToPlayer(
+                                widget.dsix.gm.turnOrder[index].primaryColor);
                           });
                         },
                         child: Container(
@@ -256,37 +315,8 @@ class _GmMapPageState extends State<GmMapPage> {
                 child: Stack(
                   children: [
                     GestureDetector(
-                      onDoubleTap: () {},
-                      onDoubleTapDown: (details) {
-                        setState(() {
-                          // double xTranslation =
-                          //     (interactiveViewerController.value.row0[3] /
-                          //             interactiveViewerController.value.row0[0])
-                          //         .abs();
-
-                          // double yTranslation =
-                          //     (interactiveViewerController.value.row1[3] /
-                          //             interactiveViewerController.value.row1[1])
-                          //         .abs();
-
-                          // Offset spawnLocation = Offset(
-                          //     xTranslation +
-                          //         details.localPosition.dx /
-                          //             interactiveViewerController.value.row0[0],
-                          //     yTranslation +
-                          //         details.localPosition.dy /
-                          //             interactiveViewerController.value.row1[1]);
-
-                          //SPAWN ON DOUBLE TAP <---- COME BACK HERE
-
-                          // widget.dsix.gm.newCharacter(spawnLocation);
-                        });
-                      },
                       child: InteractiveViewer(
                         transformationController: interactiveViewerController,
-                        onInteractionStart: (details) {},
-                        onInteractionUpdate: (details) {},
-                        onInteractionEnd: (details) {},
                         constrained: false,
                         panEnabled: true,
                         maxScale: 20,
@@ -306,8 +336,8 @@ class _GmMapPageState extends State<GmMapPage> {
                         ),
                       ),
                     ),
-                    buildStrokeToolbar(),
                     buildColorToolbar(),
+                    buildClearToolbar(),
                     buildCharacterToolbar(),
                   ],
                 ),

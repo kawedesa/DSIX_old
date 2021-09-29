@@ -44,12 +44,6 @@ class Gm {
         tertiaryColor: Colors.purple[800]),
   ];
 
-  // void createPlayer(PlayerColor playerColor) {
-  //   Player newPlayer = Player(playerColor);
-
-  //   this.players.add(newPlayer);
-  // }
-
   void createPlayers() {
     if (this.players.isEmpty == true) {
       for (PlayerColor playerColor in this.playerColors) {
@@ -171,7 +165,6 @@ class Gm {
                 tertiaryColor: Colors.grey[800]),
           );
     }
-    print(turnOrder);
   }
 
   void nextTurn() {
@@ -189,6 +182,9 @@ class Gm {
   }
 
   void chooseTurn(int index) {
+    if (index < 1) {
+      nextTurn();
+    }
     List<PlayerColor> temporaryPlayers = [];
 
     temporaryPlayers.add(this.turnOrder[index].copyPlayerColor());
@@ -220,38 +216,13 @@ class Gm {
           secondaryColor: Colors.grey[100],
           tertiaryColor: Colors.grey[800]),
     );
+    shuffleTurn();
     this.turnOrder.forEach((element) {
       temporaryPlayers.add(element.copyPlayerColor());
     });
     this.turnOrder = [];
     this.turnOrder = temporaryPlayers;
   }
-
-  // void newTurn() {
-  //   this.players.forEach((element) {
-  //     element.newTurn();
-  //   });
-  //   throw new NewTurnException();
-  // }
-
-  // void checkTurn() {
-  //   checkPlayers();
-
-  //   int check = 0;
-  //   this.players.forEach((player) {
-  //     if (player.characterFinished) {
-  //       if (player.turn.contains(false)) {
-  //         return;
-  //       } else {
-  //         check++;
-  //       }
-  //     }
-  //   });
-
-  //   if (check == this.numberPlayers) {
-  //     newTurn();
-  //   }
-  // }
 
   // SET DIFFICULTY AND STORY
 
@@ -260,7 +231,7 @@ class Gm {
   void deleteStory() {
     this.story.deleteStory();
     this.loot.itemList = [];
-    this.totalXp = 0;
+    // this.totalXp = 0;
   }
 
   void newStory() {
@@ -271,26 +242,44 @@ class Gm {
     this.story.newStory(numberPlayers);
   }
 
-  void newQuest() {
+  int returnNumberPlayers() {
     checkPlayers();
-    if (numberPlayers < 1) {
-      throw new NoPlayersException();
-    }
-    this.story.newQuest(numberPlayers);
+
+    return numberPlayers;
   }
+
+//   void newQuest() {
+//     checkPlayers();
+//     if (numberPlayers < 1) {
+//       throw new NoPlayersException();
+//     }
+//     this.story.newQuest(numberPlayers);
+//   }
 
   void chooseQuest(int index) {
     this.story.chooseQuest(index);
 
-    this.totalXp = 0;
-    this.selectedCharacter = this.story.quest.threatList.first;
-    newTurn();
-    // this.story.quest.threatList.forEach((element) {});
+    //New Turn
+    this.newTurn();
 
-    throw new NewStoryException();
+    //Clear board
+    this.clearMap();
+
+    //Spawn Players
+
+    this.spawnPlayers();
+
+    //Spawn Enemy
+
+    this.spawnCharacters();
   }
 
-//QUESTS
+// //QUESTS
+
+  void startQuest() {
+    this.story.startQuest();
+    this.selectedCharacter = this.story.quest.threatList.first;
+  }
 
   void finishQuest() {
     checkPlayers();
@@ -308,10 +297,12 @@ class Gm {
 
   List<String> randomReward() {
     List<String> possibleRewards = [
-      'GOLD',
-      'ITEM',
-      'RESOURCES',
-      'FAME',
+      'gold',
+      'item',
+      'weapon',
+      'armor',
+      'rune',
+      'fame',
     ];
 
     List<String> randomRewards = [];
@@ -326,7 +317,7 @@ class Gm {
 
   void chooseReward(String reward) {
     switch (reward) {
-      case 'GOLD':
+      case 'gold':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
@@ -338,31 +329,55 @@ class Gm {
           });
         }
         break;
-      case 'ITEM':
+      case 'item':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
-              rewardItem();
+              rewardItem('item');
             }
           });
         }
         break;
-      // case 'INFORMATION':
-      //   {}
-      //   break;
-      case 'RESOURCES':
+      case 'weapon':
         {
           this.players.forEach((element) {
             if (element.characterFinished) {
-              element.inventory.add(this.shop.randomResourceRange(100, 600));
+              rewardItem('weapon');
             }
           });
         }
         break;
-      case 'FAME':
+
+      case 'armor':
         {
           this.players.forEach((element) {
-            element.newPermanentEffect('FAME');
+            if (element.characterFinished) {
+              rewardItem('armor');
+            }
+          });
+        }
+
+        break;
+
+      case 'rune':
+        {
+          this.players.forEach((element) {
+            if (element.characterFinished) {
+              for (int i = 0; i < this.story.round; i++) {
+                element.inventory.add(this.shop.resources[11]);
+              }
+            }
+          });
+        }
+        break;
+      case 'fame':
+        {
+          this.players.forEach((element) {
+            if (element.characterFinished) {
+              for (int i = 0; i < this.story.round; i++) {
+                element.newPermanentEffect('FAME');
+              }
+            }
           });
         }
         break;
@@ -375,17 +390,6 @@ class Gm {
   void newRound() {
     checkPlayers();
     this.story.newRound(numberPlayers);
-  }
-
-//MANAGING XP
-  int totalXp = 0;
-  void changeXp(int value) {
-    if (this.totalXp + value < 1) {
-      this.totalXp = 0;
-      return;
-    }
-
-    this.totalXp += value;
   }
 
 //NPCS AND MONSTERS
@@ -417,24 +421,26 @@ class Gm {
     this.displayCharacters.clear();
   }
 
+  double canvasSize = 640.0;
   DrawingPage drawingCanvas = DrawingPage(
     canvasSize: 640,
     selectedColor: Colors.black,
-    selectedWidth: 5.0,
+    selectedWidth: 10.0,
     lines: [],
     line: null,
   );
 
-  void spawnPlayers(double size) {
-    Offset firstSpawn = Offset(Random().nextDouble() * size * 0.4 + size * 0.3,
-        Random().nextDouble() * size * 0.4 + size * 0.3);
+  void spawnPlayers() {
+    Offset firstSpawn = Offset(
+        Random().nextDouble() * this.canvasSize * 0.4 + this.canvasSize * 0.3,
+        Random().nextDouble() * this.canvasSize * 0.4 + this.canvasSize * 0.3);
 
     List<Sprite> spawnPlayers = [];
 
     this.players.forEach((element) {
       if (element.characterFinished) {
-        double randomX = Random().nextDouble() * size * 0.2;
-        double randomY = Random().nextDouble() * size * 0.2;
+        double randomX = Random().nextDouble() * this.canvasSize * 0.2;
+        double randomY = Random().nextDouble() * this.canvasSize * 0.2;
 
         Offset playerOffset =
             Offset(firstSpawn.dx + randomX, firstSpawn.dy + randomY);
@@ -445,7 +451,7 @@ class Gm {
             icon: element.race.icon,
             color: element.playerColor.primaryColor,
             size: 25,
-            canvasSize: size,
+            canvasSize: this.canvasSize,
             location: element.location));
       }
     });
@@ -455,16 +461,44 @@ class Gm {
     });
   }
 
-  void spawnCharacters(double size) {
-    Offset firstSpawn = Offset(Random().nextDouble() * size * 0.4 + size * 0.3,
-        Random().nextDouble() * size * 0.4 + size * 0.3);
+  void spawnSingleCharacter(Character character) {
+    Offset firstSpawn = Offset(
+        Random().nextDouble() * this.canvasSize * 0.4 + this.canvasSize * 0.3,
+        Random().nextDouble() * this.canvasSize * 0.4 + this.canvasSize * 0.3);
+
+    List<Sprite> spawnCharacters = [];
+
+    for (int i = 0; i < character.amount; i++) {
+      double randomX = Random().nextDouble() * this.canvasSize * 0.1;
+      double randomY = Random().nextDouble() * this.canvasSize * 0.1;
+
+      Offset characterOffset =
+          Offset(firstSpawn.dx + randomX, firstSpawn.dy + randomY);
+
+      spawnCharacters.add(Sprite(
+        icon: '${character.icon}',
+        location: characterOffset,
+        size: character.size,
+        canvasSize: this.canvasSize,
+        color: Colors.black,
+      ));
+    }
+    spawnCharacters.forEach((element) {
+      this.displayCharacters.add(element);
+    });
+  }
+
+  void spawnCharacters() {
+    Offset firstSpawn = Offset(
+        Random().nextDouble() * this.canvasSize * 0.4 + this.canvasSize * 0.3,
+        Random().nextDouble() * this.canvasSize * 0.4 + this.canvasSize * 0.3);
 
     List<Sprite> spawnCharacters = [];
 
     this.story.quest.threatList.forEach((element) {
       for (int i = 0; i < element.amount; i++) {
-        double randomX = Random().nextDouble() * size * 0.1;
-        double randomY = Random().nextDouble() * size * 0.1;
+        double randomX = Random().nextDouble() * this.canvasSize * 0.1;
+        double randomY = Random().nextDouble() * this.canvasSize * 0.1;
 
         Offset characterOffset =
             Offset(firstSpawn.dx + randomX, firstSpawn.dy + randomY);
@@ -475,7 +509,7 @@ class Gm {
           icon: '${element.icon}',
           location: element.location,
           size: element.size,
-          canvasSize: size,
+          canvasSize: this.canvasSize,
           color: Colors.black,
         ));
       }
@@ -486,33 +520,11 @@ class Gm {
     });
   }
 
-  void availableCharacter(String environment) {
-    this.availableCharacters = [];
-
-    switch (environment) {
-      case 'Mountain':
-        {
-          this.locationList.locations[0].possibleCharacters.forEach((element) {
-            if (element.baseXp <= this.totalXp) {
-              this.availableCharacters.add(element);
-            }
-          });
-        }
-        break;
-      case 'Swamp':
-        {
-          this.locationList.locations[1].possibleCharacters.forEach((element) {
-            if (element.baseXp <= this.totalXp) {
-              this.availableCharacters.add(element);
-            }
-          });
-        }
-        break;
-    }
-
-    if (this.availableCharacters.isEmpty) {
-      throw new NoXpException();
-    }
+  void availableCharacter() {
+    this.availableCharacters.clear();
+    this.story.quest.location.possibleCharacters.forEach((element) {
+      this.availableCharacters.add(element);
+    });
   }
 
   void newCharacter(Character character) {
@@ -523,7 +535,7 @@ class Gm {
   void chooseCharacterAmount(int value) {
     if ((this.selectedCharacter.amount + value) *
             this.selectedCharacter.baseXp >
-        this.totalXp) {
+        100) {
       return;
     }
     if ((this.selectedCharacter.amount + value) *
@@ -539,7 +551,7 @@ class Gm {
     this.selectedCharacter.setHpAndXp();
     this.story.quest.threatList.add(this.selectedCharacter);
     this.selectedCharacter = this.story.quest.threatList.last;
-    this.totalXp -= this.selectedCharacter.totalXp;
+    spawnSingleCharacter(this.selectedCharacter);
   }
 
   void selectCharacter(int index) {
@@ -553,11 +565,6 @@ class Gm {
     } else {
       this.selectedCharacter = this.selectedCharacter.newCharacter();
     }
-  }
-
-  void refundCharacter() {
-    this.totalXp += this.selectedCharacter.totalXp;
-    this.deleteCharacter();
   }
 
   void characterLoot() {
@@ -593,8 +600,8 @@ class Gm {
 
   List<Loot> lootList = [];
 
-  void rewardItem() {
-    this.loot = this.loot.rewardItemLoot(this.story.round);
+  void rewardItem(String itemType) {
+    this.loot = this.loot.rewardItemLoot(this.story.round, itemType);
     this.lootList.add(this.loot);
   }
 

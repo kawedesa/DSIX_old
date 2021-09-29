@@ -1,17 +1,18 @@
+import 'package:flutter/material.dart';
+
 class Situation {
-  String icon;
+  Widget image;
   String name;
   String description;
 
-  Situation({String icon, String name, String description}) {
-    this.icon = icon;
+  Situation({Widget image, String name, String description}) {
+    this.image = image;
     this.name = name;
     this.description = description;
   }
 
   Situation newSituation() {
     Situation newSituation = Situation(
-      icon: '',
       name: '',
       description: '',
     );
@@ -20,7 +21,7 @@ class Situation {
 
   Situation copySituation() {
     Situation newSituation = Situation(
-      icon: this.icon,
+      image: this.image,
       name: this.name,
       description: this.description,
     );

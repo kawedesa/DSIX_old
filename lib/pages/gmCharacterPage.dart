@@ -24,20 +24,8 @@ class CharacterPage extends StatefulWidget {
 
 class _CharacterPageState extends State<CharacterPage> {
   String actionResult = 'Roll';
-  int _layout = 1;
+
   List<bool> characterSelection;
-
-  void newCharacter(String environment) {
-    try {
-      widget.dsix.gm.availableCharacter(environment);
-    } on NoXpException catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(widget.alert(e.message));
-      return;
-    }
-
-    widget.refresh();
-    Scaffold.of(context).openDrawer();
-  }
 
   void characterAction() {
     if (actionResult != 'Roll') {
@@ -421,7 +409,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     onPressed: () {
                       setState(() {
                         widget.dsix.gm.selectCharacter(index);
-                        widget.dsix.gm.refundCharacter();
+                        widget.dsix.gm.deleteCharacter();
                         widget.refresh();
                         Navigator.of(context).pop(true);
                       });
@@ -539,6 +527,13 @@ class _CharacterPageState extends State<CharacterPage> {
     );
   }
 
+  void createNewCharacter() {
+    widget.dsix.gm.availableCharacter();
+    widget.refresh();
+
+    Scaffold.of(context).openDrawer();
+  }
+
   @override
   Widget build(BuildContext context) {
     //HEALTH OR LOOT
@@ -553,7 +548,6 @@ class _CharacterPageState extends State<CharacterPage> {
             } on NewLootException catch (e) {
               ScaffoldMessenger.of(context)
                   .showSnackBar(widget.alert(e.message));
-              _layout = 0;
 
               widget.refresh();
               return;
@@ -604,10 +598,6 @@ class _CharacterPageState extends State<CharacterPage> {
       }
     });
 
-    if (widget.dsix.gm.story.quest.threatList.isEmpty) {
-      _layout = 0;
-    }
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
@@ -620,8 +610,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 child: GestureDetector(
                   onTap: () {
                     setState(() {
-                      // Scaffold.of(context).openDrawer();
-                      _layout = 0;
+                      createNewCharacter();
                     });
                   },
                   child: Container(
@@ -653,7 +642,6 @@ class _CharacterPageState extends State<CharacterPage> {
                         onTap: () {
                           setState(() {
                             widget.dsix.gm.selectCharacter(index);
-                            _layout = 1;
                           });
                         },
                         child: Container(
@@ -684,585 +672,450 @@ class _CharacterPageState extends State<CharacterPage> {
           thickness: 2,
           color: Colors.grey[700],
         ),
-        IndexedStack(
-          index: _layout,
+        Column(
           children: [
-            Container(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(65, 15, 65, 0),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
+              child: Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      'CHARACTER',
-                      style: TextStyle(
-                        fontFamily: 'Headline',
-                        height: 1.3,
-                        fontSize: 45,
-                        color: Colors.grey[700],
-                        letterSpacing: 2,
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Text(
-                        'The world is filled with unique characters. Create a new character by clicking on the buttons below.',
-                        textAlign: TextAlign.justify,
-                        style: TextStyle(
-                          height: 1.3,
-                          fontSize: 18,
-                          fontFamily: 'Calibri',
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                        itemCount: widget.dsix.gm.locationList.locations.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          return TextButton(
-                            style: TextButton.styleFrom(
-                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                            ),
-                            onPressed: () {
-                              newCharacter(
-                                  '${widget.dsix.gm.locationList.locations[index].name}');
-                            },
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.08,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                border: Border.all(
-                                  color: Colors.grey[700],
-                                  width:
-                                      2, //                   <--- border width here
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.52,
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          // color: Colors.amber,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                                child: Text(
+                                  '${widget.dsix.gm.selectedCharacter.name}',
+                                  style: TextStyle(
+                                    fontFamily: 'Headline',
+                                    height: 1.3,
+                                    fontSize: 30,
+                                    color: Colors.grey[700],
+                                    letterSpacing: 2,
+                                  ),
                                 ),
                               ),
-                              child: Stack(
-                                alignment: AlignmentDirectional.centerEnd,
-                                children: [
-                                  Column(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: <Widget>[
-                                      Padding(
-                                        padding: const EdgeInsets.fromLTRB(
-                                            0, 0, 15, 0),
-                                        child: SvgPicture.asset(
-                                          'assets/ui/help.svg',
+                              Padding(
+                                padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                                child: Row(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.start,
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: <Widget>[
+                                        SvgPicture.asset(
+                                          'assets/gm/character/loot.svg',
                                           color: Colors.grey[700],
                                           width: MediaQuery.of(context)
                                                   .size
                                                   .width *
-                                              0.04,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  Center(
-                                    child: Text(
-                                      widget.dsix.gm.locationList
-                                          .locations[index].name
-                                          .toUpperCase(),
-                                      style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.5,
-                                        fontFamily: 'Calibri',
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          );
-                        }),
-                  ],
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
-                  child: Container(
-                    height: MediaQuery.of(context).size.height * 0.3,
-
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.52,
-                              height: MediaQuery.of(context).size.height * 0.3,
-                              // color: Colors.amber,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                                    child: Text(
-                                      '${widget.dsix.gm.selectedCharacter.name}',
-                                      style: TextStyle(
-                                        fontFamily: 'Headline',
-                                        height: 1.3,
-                                        fontSize: 30,
-                                        color: Colors.grey[700],
-                                        letterSpacing: 2,
-                                      ),
-                                    ),
-                                  ),
-                                  Padding(
-                                    padding:
-                                        const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                                    child: Row(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.start,
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: <Widget>[
-                                            SvgPicture.asset(
-                                              'assets/gm/character/loot.svg',
-                                              color: Colors.grey[700],
-                                              width: MediaQuery.of(context)
-                                                      .size
-                                                      .width *
-                                                  0.05,
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      5, 0, 0, 0),
-                                              child: Text(
-                                                '${widget.dsix.gm.selectedCharacter.totalLoot}',
-                                                style: TextStyle(
-                                                  fontFamily: 'Headline',
-                                                  height: 1,
-                                                  fontSize: 15,
-                                                  color: Colors.white,
-                                                  letterSpacing: 3,
-                                                ),
-                                              ),
-                                            ),
-                                          ],
+                                              0.05,
                                         ),
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
-                                              20, 0, 0, 0),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.start,
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: <Widget>[
-                                              SvgPicture.asset(
-                                                'assets/gm/character/xp.svg',
-                                                color: Colors.grey[700],
-                                                width: MediaQuery.of(context)
-                                                        .size
-                                                        .width *
-                                                    0.05,
-                                              ),
-                                              Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        5, 0, 0, 0),
-                                                child: Text(
-                                                  '${widget.dsix.gm.selectedCharacter.totalXp}',
-                                                  style: TextStyle(
-                                                    fontFamily: 'Headline',
-                                                    height: 1,
-                                                    fontSize: 15,
-                                                    color: Colors.white,
-                                                    letterSpacing: 3,
-                                                  ),
-                                                ),
-                                              ),
-                                            ],
+                                              5, 0, 0, 0),
+                                          child: Text(
+                                            '${widget.dsix.gm.selectedCharacter.totalLoot}',
+                                            style: TextStyle(
+                                              fontFamily: 'Headline',
+                                              height: 1,
+                                              fontSize: 15,
+                                              color: Colors.white,
+                                              letterSpacing: 3,
+                                            ),
                                           ),
                                         ),
                                       ],
                                     ),
-                                  ),
-                                  Text(
-                                    '${widget.dsix.gm.selectedCharacter.description}',
-                                    textAlign: TextAlign.justify,
-                                    style: TextStyle(
-                                      height: 1.3,
-                                      fontSize: 18,
-                                      fontFamily: 'Calibri',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Container(
-                              width: MediaQuery.of(context).size.width * 0.38,
-                              // color: Colors.amberAccent,
-                              child: Stack(
-                                alignment: Alignment.topRight,
-                                children: [
-                                  Container(
-                                    width: double.infinity,
-                                    height: MediaQuery.of(context).size.height *
-                                        0.3,
-                                    // color: Colors.green,
-                                    child: Padding(
+                                    Padding(
                                       padding: const EdgeInsets.fromLTRB(
-                                          10, 20, 10, 0),
-                                      child: SvgPicture.asset(
-                                        'assets/gm/character/race/image/${widget.dsix.gm.selectedCharacter.image}.svg',
-                                        color: Colors.grey[700],
+                                          20, 0, 0, 0),
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.center,
+                                        children: <Widget>[
+                                          SvgPicture.asset(
+                                            'assets/gm/character/xp.svg',
+                                            color: Colors.grey[700],
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.05,
+                                          ),
+                                          Padding(
+                                            padding: const EdgeInsets.fromLTRB(
+                                                5, 0, 0, 0),
+                                            child: Text(
+                                              '${widget.dsix.gm.selectedCharacter.totalXp}',
+                                              style: TextStyle(
+                                                fontFamily: 'Headline',
+                                                height: 1,
+                                                fontSize: 15,
+                                                color: Colors.white,
+                                                letterSpacing: 3,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
-                                  ),
-                                  // Padding(
-                                  //   padding:
-                                  //       const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                                  //   child: GestureDetector(
-                                  //     onTap: () {
-                                  //       setState(() {
-                                  //         widget.dsix.gm.deleteCharacter();
-                                  //         _layout = 0;
-                                  //         widget.refresh();
-                                  //       });
-                                  //     },
-                                  //     child: Icon(
-                                  //       Icons.clear,
-                                  //       color: Colors.red,
-                                  //       size: 30,
-                                  //     ),
-                                  //   ),
-                                  // ),
-                                ],
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                              Text(
+                                '${widget.dsix.gm.selectedCharacter.description}',
+                                textAlign: TextAlign.justify,
+                                style: TextStyle(
+                                  height: 1.3,
+                                  fontSize: 18,
+                                  fontFamily: 'Calibri',
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                    // color: Colors.green,
-                  ),
-                ),
-                Divider(
-                  thickness: 2,
-                  color: Colors.grey[700],
-                ),
-                SizedBox(
-                  height: 30,
-                  width: double.infinity,
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: <Widget>[
-                        GestureDetector(
-                          onTap: () {
-                            // displayAmount =
-                            //     widget.dsix.gm.selectedCharacter.amount;
-                            // displayXp =
-                            //     widget.dsix.gm.selectedCharacter.totalXp;
-                            // displayLoot =
-                            //     widget.dsix.gm.selectedCharacter.totalLoot;
-                            showAlertDialogAmount(context);
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: <Widget>[
-                              SvgPicture.asset(
-                                'assets/gm/character/race/icon/${widget.dsix.gm.selectedCharacter.icon}.svg',
-                                color: Colors.grey[700],
-                                width: MediaQuery.of(context).size.width * 0.06,
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-                                child: Text(
-                                  '${widget.dsix.gm.selectedCharacter.amount}',
-                                  style: TextStyle(
-                                    fontFamily: 'Headline',
-                                    height: 1,
-                                    fontSize: 15,
-                                    color: Colors.white,
-                                    letterSpacing: 3,
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.38,
+                          // color: Colors.amberAccent,
+                          child: Stack(
+                            alignment: Alignment.topRight,
+                            children: [
+                              Container(
+                                width: double.infinity,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.3,
+                                // color: Colors.green,
+                                child: Padding(
+                                  padding:
+                                      const EdgeInsets.fromLTRB(10, 20, 10, 0),
+                                  child: SvgPicture.asset(
+                                    'assets/gm/character/race/image/${widget.dsix.gm.selectedCharacter.image}.svg',
+                                    color: Colors.grey[700],
                                   ),
                                 ),
                               ),
                             ],
                           ),
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/pDamage.svg',
-                              color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${widget.dsix.gm.selectedCharacter.pDamage}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
+                      ],
+                    ),
+                  ],
+                ),
+                // color: Colors.green,
+              ),
+            ),
+            Divider(
+              thickness: 2,
+              color: Colors.grey[700],
+            ),
+            SizedBox(
+              height: 30,
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(20, 3, 20, 3),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    GestureDetector(
+                      onTap: () {
+                        showAlertDialogAmount(context);
+                      },
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: <Widget>[
+                          SvgPicture.asset(
+                            'assets/gm/character/race/icon/${widget.dsix.gm.selectedCharacter.icon}.svg',
+                            color: Colors.grey[700],
+                            width: MediaQuery.of(context).size.width * 0.06,
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+                            child: Text(
+                              '${widget.dsix.gm.selectedCharacter.amount}',
+                              style: TextStyle(
+                                fontFamily: 'Headline',
+                                height: 1,
+                                fontSize: 15,
+                                color: Colors.white,
+                                letterSpacing: 3,
                               ),
                             ),
-                          ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/item/pDamage.svg',
+                          color: Colors.grey[700],
+                          width: MediaQuery.of(context).size.width * 0.055,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/mDamage.svg',
-                              color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.065,
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                          child: Text(
+                            '${widget.dsix.gm.selectedCharacter.pDamage}',
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1,
+                              fontSize: 15,
+                              color: Colors.white,
+                              letterSpacing: 3,
                             ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${widget.dsix.gm.selectedCharacter.mDamage}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/pArmor.svg',
-                              color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${widget.dsix.gm.selectedCharacter.pArmor}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: <Widget>[
-                            SvgPicture.asset(
-                              'assets/item/mArmor.svg',
-                              color: Colors.grey[700],
-                              width: MediaQuery.of(context).size.width * 0.055,
-                            ),
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
-                              child: Text(
-                                '${widget.dsix.gm.selectedCharacter.mArmor}',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 15,
-                                  color: Colors.white,
-                                  letterSpacing: 3,
-                                ),
-                              ),
-                            ),
-                          ],
+                          ),
                         ),
                       ],
                     ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/item/mDamage.svg',
+                          color: Colors.grey[700],
+                          width: MediaQuery.of(context).size.width * 0.065,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                          child: Text(
+                            '${widget.dsix.gm.selectedCharacter.mDamage}',
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1,
+                              fontSize: 15,
+                              color: Colors.white,
+                              letterSpacing: 3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/item/pArmor.svg',
+                          color: Colors.grey[700],
+                          width: MediaQuery.of(context).size.width * 0.055,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                          child: Text(
+                            '${widget.dsix.gm.selectedCharacter.pArmor}',
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1,
+                              fontSize: 15,
+                              color: Colors.white,
+                              letterSpacing: 3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: <Widget>[
+                        SvgPicture.asset(
+                          'assets/item/mArmor.svg',
+                          color: Colors.grey[700],
+                          width: MediaQuery.of(context).size.width * 0.055,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(5, 0, 3, 0),
+                          child: Text(
+                            '${widget.dsix.gm.selectedCharacter.mArmor}',
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1,
+                              fontSize: 15,
+                              color: Colors.white,
+                              letterSpacing: 3,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            Divider(
+              thickness: 2,
+              color: Colors.grey[700],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.33,
+                  // height: MediaQuery.of(context).size.height * 0.25,
+                  // color: Colors.amberAccent,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            widget.dsix.gm.selectedCharacter.changeHealth(10);
+                          });
+                        },
+                        onTap: () {
+                          setState(() {
+                            widget.dsix.gm.selectedCharacter.changeHealth(1);
+                          });
+                        },
+                        child: Container(
+                          child: Icon(
+                            Icons.keyboard_arrow_up,
+                            color: Colors.white,
+                            size: 45,
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Container(
+                          // color: Colors.amber,
+                          width: 100,
+                          height: 85,
+                          child: AnimatedSwitcher(
+                            duration: const Duration(milliseconds: 100),
+                            transitionBuilder: (Widget child,
+                                    Animation<double> animation) =>
+                                ScaleTransition(child: child, scale: animation),
+                            child: _healthOrLoot,
+                          ),
+                        ),
+                      ),
+                      GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            widget.dsix.gm.selectedCharacter.changeHealth(-10);
+                          });
+                        },
+                        onTap: () {
+                          setState(() {
+                            widget.dsix.gm.selectedCharacter.changeHealth(-1);
+                          });
+                        },
+                        child: Container(
+                          child: Icon(
+                            Icons.keyboard_arrow_down,
+                            color: Colors.white,
+                            size: 45,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ),
-                Divider(
-                  thickness: 2,
-                  color: Colors.grey[700],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      // height: MediaQuery.of(context).size.height * 0.25,
-                      // color: Colors.amberAccent,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          GestureDetector(
-                            onLongPress: () {
-                              setState(() {
-                                widget.dsix.gm.selectedCharacter
-                                    .changeHealth(10);
-                              });
-                            },
-                            onTap: () {
-                              setState(() {
-                                widget.dsix.gm.selectedCharacter
-                                    .changeHealth(1);
-                              });
-                            },
-                            child: Container(
-                              child: Icon(
-                                Icons.keyboard_arrow_up,
-                                color: Colors.white,
-                                size: 45,
-                              ),
-                            ),
-                          ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            child: Container(
-                              // color: Colors.amber,
-                              width: 100,
-                              height: 85,
-                              child: AnimatedSwitcher(
-                                duration: const Duration(milliseconds: 100),
-                                transitionBuilder: (Widget child,
-                                        Animation<double> animation) =>
-                                    ScaleTransition(
-                                        child: child, scale: animation),
-                                child: _healthOrLoot,
-                              ),
-                            ),
-                          ),
-                          GestureDetector(
-                            onLongPress: () {
-                              setState(() {
-                                widget.dsix.gm.selectedCharacter
-                                    .changeHealth(-10);
-                              });
-                            },
-                            onTap: () {
-                              setState(() {
-                                widget.dsix.gm.selectedCharacter
-                                    .changeHealth(-1);
-                              });
-                            },
-                            child: Container(
-                              child: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.white,
-                                size: 45,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      height: MediaQuery.of(context).size.height * 0.25,
+                Container(
+                  width: MediaQuery.of(context).size.width * 0.33,
+                  height: MediaQuery.of(context).size.height * 0.25,
 
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
-                            child: Center(
-                              child: Text(
-                                'Skills',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  height: 1,
-                                  fontSize: 16,
-                                  color: Colors.grey[700],
-                                  letterSpacing: 3,
-                                ),
-                              ),
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 10, 15, 10),
+                        child: Center(
+                          child: Text(
+                            'Skills',
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              height: 1,
+                              fontSize: 16,
+                              color: Colors.grey[700],
+                              letterSpacing: 3,
                             ),
                           ),
-                          Padding(
-                            padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
-                            child: GridView.count(
-                              shrinkWrap: true,
-                              physics: ScrollPhysics(),
-                              crossAxisCount: 2,
-                              children: List.generate(
-                                  widget.dsix.gm.selectedCharacter
-                                      .selectedSkills.length, (index) {
-                                return GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      openSkill(widget.dsix.gm.selectedCharacter
-                                          .selectedSkills[index]);
-                                    });
-                                  },
-                                  child: Center(
-                                    child: SvgPicture.asset(
-                                      'assets/gm/character/skill/${widget.dsix.gm.selectedCharacter.selectedSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.selectedSkills[index].icon}.svg',
-                                      color: Colors.grey[400],
-                                      width: MediaQuery.of(context).size.width *
-                                          0.1,
-                                    ),
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
-                        ],
+                        ),
                       ),
-                      // color: Colors.purple,
-                    ),
-                    Container(
-                      height: MediaQuery.of(context).size.height * 0.25,
-                      width: MediaQuery.of(context).size.width * 0.33,
-                      child: Center(
-                        child: GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              characterAction();
-                            });
-                          },
-                          child: Container(
-                            width: 80,
-                            height: 80,
-                            color: Colors.grey[700],
-                            child: Center(
-                              child: Text(
-                                '$actionResult',
-                                style: TextStyle(
-                                  fontFamily: 'Headline',
-                                  fontSize: 35,
-                                  color: Colors.black,
-                                  letterSpacing: 3,
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(15, 0, 15, 0),
+                        child: GridView.count(
+                          shrinkWrap: true,
+                          physics: ScrollPhysics(),
+                          crossAxisCount: 2,
+                          children: List.generate(
+                              widget.dsix.gm.selectedCharacter.selectedSkills
+                                  .length, (index) {
+                            return GestureDetector(
+                              onTap: () {
+                                setState(() {
+                                  openSkill(widget.dsix.gm.selectedCharacter
+                                      .selectedSkills[index]);
+                                });
+                              },
+                              child: Center(
+                                child: SvgPicture.asset(
+                                  'assets/gm/character/skill/${widget.dsix.gm.selectedCharacter.selectedSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.selectedSkills[index].icon}.svg',
+                                  color: Colors.grey[400],
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.1,
                                 ),
                               ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                  // color: Colors.purple,
+                ),
+                Container(
+                  height: MediaQuery.of(context).size.height * 0.25,
+                  width: MediaQuery.of(context).size.width * 0.33,
+                  child: Center(
+                    child: GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          characterAction();
+                        });
+                      },
+                      child: Container(
+                        width: 80,
+                        height: 80,
+                        color: Colors.grey[700],
+                        child: Center(
+                          child: Text(
+                            '$actionResult',
+                            style: TextStyle(
+                              fontFamily: 'Headline',
+                              fontSize: 35,
+                              color: Colors.black,
+                              letterSpacing: 3,
                             ),
                           ),
                         ),
                       ),
                     ),
-                  ],
-                )
+                  ),
+                ),
               ],
-            ),
+            )
           ],
         ),
       ],

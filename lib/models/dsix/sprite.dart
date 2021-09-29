@@ -27,6 +27,10 @@ class _SpriteState extends State<Sprite> {
     widget.size = 0;
   }
 
+  void markForDelete() {
+    widget.color = Colors.red;
+  }
+
   @override
   Widget build(BuildContext context) {
     if (widget.location.dx > widget.canvasSize - widget.size) {
@@ -50,9 +54,20 @@ class _SpriteState extends State<Sprite> {
           left: widget.location.dx,
           top: widget.location.dy,
           child: GestureDetector(
+            onDoubleTap: () {
+              setState(() {
+                if (widget.color == Colors.red) {
+                  widget.color = Colors.black;
+                }
+              });
+            },
             onLongPress: () {
               setState(() {
-                deleteMe();
+                if (widget.color == Colors.red) {
+                  deleteMe();
+                } else {
+                  markForDelete();
+                }
               });
             },
             onPanUpdate: (details) {

@@ -40,31 +40,41 @@ class Shop {
     return [];
   }
 
-  Item randomResourceRange(int min, int max) {
-    int randomNumber = 0;
-    bool itemNotFound = true;
+  Item randomItemRange(int min, int max, String itemType) {
+    List<String> shopMenu = [];
+    switch (itemType) {
+      case 'armor':
+        shopMenu = [
+          'armor',
+        ];
+        break;
 
-    while (itemNotFound) {
-      randomNumber = Random().nextInt(this.resources.length);
+      case 'weapon':
+        shopMenu = [
+          'lightWeapons',
+          'heavyWeapons',
+          'rangedWeapons',
+          'magicWeapons',
+        ];
+        break;
 
-      if (this.resources[randomNumber].value <= max &&
-          this.resources[randomNumber].value >= min) {
-        itemNotFound = false;
-        return this.resources[randomNumber];
-      }
+      case 'item':
+        shopMenu = [
+          'lightWeapons',
+          'heavyWeapons',
+          'rangedWeapons',
+          'magicWeapons',
+          'armor',
+        ];
+
+        break;
+
+      case 'resources':
+        shopMenu = [
+          'resources',
+        ];
+        break;
     }
-
-    return null;
-  }
-
-  Item randomItemRange(int min, int max) {
-    List<String> shopMenu = [
-      'lightWeapons',
-      'heavyWeapons',
-      'rangedWeapons',
-      'magicWeapons',
-      'armor',
-    ];
 
     int menuSelection;
     int randomItem;
@@ -126,6 +136,16 @@ class Shop {
               this.armor[randomItem].value >= min) {
             itemNotFound = false;
             return this.armor[randomItem];
+          }
+          break;
+
+        case 'resources':
+          randomItem = Random().nextInt(this.resources.length);
+
+          if (this.resources[randomItem].value <= max &&
+              this.resources[randomItem].value >= min) {
+            itemNotFound = false;
+            return this.resources[randomItem];
           }
           break;
       }
@@ -1285,7 +1305,7 @@ class Shop {
       mArmor: 0,
       weight: 0,
       uses: 1,
-      value: 200,
+      value: 100,
       enchant: 0,
     ),
     Item(
@@ -1317,7 +1337,7 @@ class Shop {
       mArmor: 0,
       weight: 0,
       uses: 1,
-      value: 600,
+      value: 300,
       enchant: 0,
     ),
   ];

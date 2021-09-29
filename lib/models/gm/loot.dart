@@ -12,12 +12,14 @@ class Loot {
 
   List<Item> itemList = [];
 
-  Loot rewardItemLoot(int rounds) {
-    int max = rounds * 300;
+  Loot rewardItemLoot(int rounds, String itemType) {
+    int max = rounds * 400;
     int min = rounds * 200;
 
     Loot newLoot = Loot().newLoot();
-    newLoot.itemList.add(this.shop.randomItemRange(min, max).copyItem());
+
+    newLoot.itemList
+        .add(this.shop.randomItemRange(min, max, itemType).copyItem());
     newLoot.name = newLoot.itemList.first.name;
     newLoot.icon = newLoot.itemList.first.icon;
     newLoot.lootDescription = 'Quest reward.';

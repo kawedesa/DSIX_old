@@ -1,12 +1,9 @@
 import 'dart:async';
-// import 'dart:typed_data';
-// import 'dart:ui' as ui;
 
 import 'drawn_line.dart';
 import 'sketcher.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-// import 'package:flutter/services.dart';
 
 class DrawingPage extends StatefulWidget {
   final double canvasSize;
@@ -35,31 +32,6 @@ class _DrawingPageState extends State<DrawingPage> {
       StreamController<List<DrawnLine>>.broadcast();
   StreamController<DrawnLine> currentLineStreamController =
       StreamController<DrawnLine>.broadcast();
-
-  // Future<void> save() async {
-  //   try {
-  //     RenderRepaintBoundary boundary = _globalKey.currentContext.findRenderObject() as RenderRepaintBoundary;
-  //     ui.Image image = await boundary.toImage();
-  //     ByteData byteData = await image.toByteData(format: ui.ImageByteFormat.png);
-  //     Uint8List pngBytes = byteData.buffer.asUint8List();
-  //     var saved = await ImageGallerySaver.saveImage(
-  //       pngBytes,
-  //       quality: 100,
-  //       name: DateTime.now().toIso8601String() + ".png",
-  //       isReturnImagePathOfIOS: true,
-  //     );
-  //     print(saved);
-  //   } catch (e) {
-  //     print(e);
-  //   }
-  // }
-
-  // Future<void> clear() async {
-  //   setState(() {
-  //     lines = [];
-  //     line = null;
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -146,122 +118,4 @@ class _DrawingPageState extends State<DrawingPage> {
 
     linesStreamController.add(widget.lines);
   }
-
-  // Widget buildStrokeToolbar() {
-  //   return Positioned(
-  //     top: 40,
-  //     right: 80.0,
-  //     child: Row(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       children: [
-  //         buildStrokeButton(5.0),
-  //         buildStrokeButton(10.0),
-  //         buildStrokeButton(15.0),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget buildStrokeButton(double strokeWidth) {
-  //   return GestureDetector(
-  //     onTap: () {
-  //       setState(() {
-  //         widget.selectedWidth = strokeWidth;
-  //       });
-  //     },
-  //     child: Padding(
-  //       padding: const EdgeInsets.all(4.0),
-  //       child: Container(
-  //         width: strokeWidth * 2,
-  //         height: strokeWidth * 2,
-  //         decoration: BoxDecoration(
-  //             color: widget.selectedColor, borderRadius: BorderRadius.circular(50.0)),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Widget buildColorToolbar() {
-  //   return Positioned(
-  //     top: 40.0,
-  //     right: 10.0,
-  //     child: Column(
-  //       crossAxisAlignment: CrossAxisAlignment.center,
-  //       mainAxisAlignment: MainAxisAlignment.start,
-  //       children: [
-  //         buildClearButton(),
-  //         // Divider(
-  //         //   height: 10.0,
-  //         // ),
-  //         // buildSaveButton(),
-  //         Divider(
-  //           height: 20.0,
-  //         ),
-  //         // buildColorButton(Colors.red),
-  //         buildColorButton(Colors.blueAccent),
-  //         buildColorButton(Colors.deepOrange),
-  //         // buildColorButton(Colors.green),
-  //         // buildColorButton(Colors.lightBlue),
-  //         buildColorButton(Colors.black),
-  //         buildColorButton(Colors.white),
-  //       ],
-  //     ),
-  //   );
-  // }
-
-  // Widget buildColorButton(Color color) {
-  //   return Padding(
-  //     padding: const EdgeInsets.all(4.0),
-  //     child: FloatingActionButton(
-  //       mini: true,
-  //       backgroundColor: color,
-  //       child: Container(),
-  //       onPressed: () {
-  //         setState(() {
-  //           widget.selectedColor = color;
-  //         });
-  //       },
-  //     ),
-  //   );
-  // }
-
-  // Widget buildSaveButton() {
-  //   return GestureDetector(
-  //     onTap: save,
-  //     child: CircleAvatar(
-  //       child: Icon(
-  //         Icons.save,
-  //         size: 20.0,
-  //         color: Colors.white,
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // void drawMode() {
-  //   if (widget.drawMode) {
-  //     widget.drawMode = false;
-  //   } else {
-  //     widget.drawMode = true;
-  //   }
-  //   print(widget.drawMode);
-  // }
-
-  // Widget buildClearButton() {
-  //   return GestureDetector(
-  //     onLongPress: clear,
-  //     // onTap: () {
-  //     //   drawMode();
-  //     // },
-  //     // onTap: clear,
-  //     child: CircleAvatar(
-  //       child: Icon(
-  //         Icons.create,
-  //         size: 20.0,
-  //         color: Colors.white,
-  //       ),
-  //     ),
-  //   );
-  // }
 }

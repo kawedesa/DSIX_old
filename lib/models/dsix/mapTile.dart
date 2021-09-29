@@ -27,7 +27,7 @@ class MapTile {
           height: mapSize,
           child: SvgPicture.asset(
             'assets/map/grassland/1_mountain.svg',
-            color: Color(0xffB75955),
+            color: Color(0xff7F4122),
           ),
         ),
         Container(
@@ -35,7 +35,7 @@ class MapTile {
           height: mapSize,
           child: SvgPicture.asset(
             'assets/map/grassland/1_vegetation.svg',
-            color: Color(0xff538E40),
+            color: Color(0xff538E2D),
           ),
         ),
         Container(
