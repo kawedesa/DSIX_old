@@ -24,19 +24,9 @@ dependencies:
   flutter:
     sdk: flutter
 
-  firebase_core: ^1.0.4
-  firebase_auth: ^1.1.0
-  cloud_firestore: ^1.0.6
-  provider: ^5.0.0
-  flutter_spinkit: ^5.0.0
-  vibration: ^1.7.3
-
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
+  flare_flutter: ^1.8.3
   flutter_svg: ^0.21.0+1
   cupertino_icons: ^0.1.3
-  flare_flutter: ^1.8.3
 
 dev_dependencies:
   flutter_test:
@@ -54,29 +44,15 @@ flutter:
   uses-material-design: true
 
   assets:
+    - assets/icon/ui/
+    - assets/icon/character/
+    - assets/icon/background/
+    - assets/icon/action/
+    - assets/icon/effect/
+    - assets/icon/item/
 
-  - assets/ui/
-  - assets/races/
-  - assets/map/grassland/
-  - assets/player/
-  - assets/player/race/
-  - assets/player/background/
-  - assets/player/effect/
-  - assets/player/action/
-  - assets/item/
-  - assets/logo/
-  - assets/animation/
-  - assets/gm/
-  - assets/gm/settings/
-  - assets/gm/situation/
-  - assets/gm/story/quest/
-  - assets/gm/character/
-  - assets/gm/character/skill/pSkill/
-  - assets/gm/character/skill/mSkill/
-  - assets/gm/character/race/icon/
-  - assets/gm/character/race/image/
+    - assets/animation/dice/
 
-  
   fonts:
   - family: Headline
     fonts:
@@ -86,9 +62,9 @@ flutter:
     fonts:
     - asset: fonts/calibri.ttf
 
-  - family: Headliner
-    fonts:
-    - asset: fonts/HeadlinerNo.45.ttf
+  # - family: Headliner
+  #   fonts:
+  #   - asset: fonts/HeadlinerNo.45.ttf
 
   - family: Santana
     fonts:
