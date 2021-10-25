@@ -1,7 +1,8 @@
 import 'package:dsixv02app/core/app_colors.dart';
-import 'package:dsixv02app/core/app_text_styles.dart';
 import 'package:dsixv02app/widgets/buttons/button.dart';
+import 'package:dsixv02app/widgets/buttons/goBackButton.dart';
 import 'package:dsixv02app/widgets/dialogs/confirmDialog.dart';
+import 'package:dsixv02app/widgets/pageTitle.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
@@ -25,14 +26,21 @@ class _PlayersPageState extends State<PlayersPage> {
     return new Scaffold(
       backgroundColor: Colors.black,
       appBar: AppBar(
+        // leadingWidth: MediaQuery.of(context).size.width * 0.1,
+        // leading: Padding(
+        //   padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+        //   child: GoBackButton(
+        //     buttonColor: AppColors.neutral01,
+        //   ),
+        // ),
+
+        titleSpacing: 10,
         automaticallyImplyLeading: false,
-        titleSpacing: 0,
         backgroundColor: AppColors.neutral00,
         centerTitle: true,
-        title: new Text(
-          'choose your player'.toUpperCase(),
-          textAlign: TextAlign.center,
-          style: AppTextStyles.neutralTitle,
+        title: PageTitle(
+          title: 'choose your player',
+          color: AppColors.neutral03,
         ),
       ),
       body: new SafeArea(
@@ -63,7 +71,7 @@ class _PlayersPageState extends State<PlayersPage> {
                               context: context,
                               builder: (BuildContext context) {
                                 return ConfirmDialog(
-                                    player: widget.dsix.getCurrentPlayer(),
+                                    title: 'delete player?',
                                     color: widget.dsix
                                         .getCurrentPlayer()
                                         .primaryColor,
@@ -95,62 +103,10 @@ class _PlayersPageState extends State<PlayersPage> {
                 Button(
                   buttonText: 'gm',
                   buttonIcon: 'right',
+                  onTapAction: () async {
+                    playersPageVM.goToGmUI(context, widget.dsix);
+                  },
                 ),
-
-                // GestureDetector(
-                //   onLongPress: () {
-                //     setState(() {
-                //       showAlertDialogDeleteStory(context);
-                //     });
-                //   },
-                //   onTap: () {
-                //     Navigator.of(context).push(_createRouteGmUI());
-                //   },
-                //   child: Container(
-                //     height: MediaQuery.of(context).size.height * 0.1,
-                //     width: MediaQuery.of(context).size.width * 0.65,
-                //     decoration: BoxDecoration(
-                //       border: Border.all(
-                //         color: Colors.grey[600],
-                //         width: 2.5, //                   <--- border width here
-                //       ),
-                //     ),
-                //     child: Stack(
-                //       alignment: AlignmentDirectional.centerEnd,
-                //       children: [
-                //         Column(
-                //           mainAxisAlignment: MainAxisAlignment.center,
-                //           crossAxisAlignment: CrossAxisAlignment.start,
-                //           children: <Widget>[
-                //             Padding(
-                //               padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
-                //               child: Icon(
-                //                 Icons.keyboard_arrow_right,
-                //                 color: Colors.grey[600],
-                //                 size: 30,
-                //               ),
-                //             ),
-                //           ],
-                //         ),
-                //         Padding(
-                //           padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-                //           child: Center(
-                //             child: Text(
-                //               'GM',
-                //               style: TextStyle(
-                //                 fontSize: 15,
-                //                 fontWeight: FontWeight.bold,
-                //                 letterSpacing: 1.5,
-                //                 fontFamily: 'Calibri',
-                //                 color: Colors.grey[600],
-                //               ),
-                //             ),
-                //           ),
-                //         ),
-                //       ],
-                //     ),
-                //   ),
-                // ),
               ],
             ),
           ),

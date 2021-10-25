@@ -2,16 +2,16 @@ import 'dart:ui';
 
 import 'package:dsixv02app/core/app_colors.dart';
 import 'package:dsixv02app/core/app_text_styles.dart';
-import 'package:dsixv02app/models/player/player.dart';
+
 import 'package:dsixv02app/widgets/buttons/dialogButton.dart';
 import 'package:flutter/material.dart';
 
 class ConfirmDialog extends StatelessWidget {
   const ConfirmDialog(
-      {@required this.player, @required this.color, @required this.confirm});
+      {@required this.color, @required this.title, @required this.confirm});
 
-  final Player player;
   final Color color;
+  final String title;
   final Function() confirm;
 
   @override
@@ -39,7 +39,7 @@ class ConfirmDialog extends StatelessWidget {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                       child: Center(
-                        child: Text('are you sure?'.toUpperCase(),
+                        child: Text(title.toUpperCase(),
                             style: AppTextStyles.dialogTitleStyle),
                       ),
                     ),

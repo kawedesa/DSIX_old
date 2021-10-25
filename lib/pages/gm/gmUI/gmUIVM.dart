@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 class GmUIVM {
-  PageController pageController = PageController(initialPage: 1);
+  PageController pageController = PageController(initialPage: 0);
 
-  int selectedPage = 1;
+  int pageIndex = 0;
 
   changePage(int index) {
-    this.selectedPage = index;
+    this.pageIndex = index;
     this.pageController.animateToPage(index,
         duration: Duration(milliseconds: 500), curve: Curves.ease);
   }

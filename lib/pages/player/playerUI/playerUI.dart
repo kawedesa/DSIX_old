@@ -1,13 +1,13 @@
 import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:dsixv02app/widgets/buttons/appBarItem.dart';
-import 'package:dsixv02app/widgets/buildPageView.dart';
 import 'package:dsixv02app/widgets/dialogs/healthDialog.dart';
 import 'package:dsixv02app/widgets/buttons/homeButton.dart';
 import 'package:dsixv02app/widgets/dialogs/goldDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'playerBuildPageView.dart';
 import 'playerUIVM.dart';
 
 class PlayerUI extends StatefulWidget {
@@ -172,7 +172,7 @@ class _PlayerUIState extends State<PlayerUI> {
         ],
       ),
       body: new SafeArea(
-        child: BuildPageView(
+        child: PlayerBuildPageView(
           pageController: _playerUIVM.pageController,
           dsix: widget.dsix,
           refresh: () async {

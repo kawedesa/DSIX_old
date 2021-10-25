@@ -9,7 +9,7 @@ class AppTextStyles {
     fontWeight: FontWeight.bold,
     letterSpacing: 1.5,
     fontFamily: 'Calibri',
-    color: AppColors.neutral01,
+    color: AppColors.neutral03,
   );
 
   static final whiteButtonStyle = TextStyle(
@@ -27,6 +27,15 @@ class AppTextStyles {
     letterSpacing: 1.2,
     fontFamily: 'Santana',
     color: AppColors.neutral02,
+  );
+
+  //SubTitle
+
+  static final subTitle = TextStyle(
+    letterSpacing: 3,
+    fontSize: 18,
+    fontFamily: 'Headline',
+    color: AppColors.white01,
   );
 
 //Description Dialog
@@ -63,6 +72,27 @@ class AppTextStyles {
     fontSize: 60,
     fontFamily: 'Calibri',
     color: Colors.white,
+  );
+
+//Buildind Dialog
+  static final buildingDialogStatStyle = TextStyle(
+    fontFamily: 'Santana',
+    height: 1,
+    fontSize: 20,
+    color: AppColors.white01,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 3,
+  );
+
+  //Menu Item Stats
+
+  static final menuItemStatStyle = TextStyle(
+    fontFamily: 'Santana',
+    height: 1,
+    fontSize: 25,
+    color: AppColors.white01,
+    fontWeight: FontWeight.bold,
+    letterSpacing: 3,
   );
 
 //Appbar

@@ -9,8 +9,6 @@ class Dsix {
 
   Shop shop = new Shop();
 
-  Gm gm = new Gm();
-
   bool gameStarted = false;
 
   void newGame() {
@@ -18,6 +16,7 @@ class Dsix {
     gameStarted = true;
   }
 
+// Players
   List<Player> players = [];
 
   Player createPlayer(String color) {
@@ -100,11 +99,26 @@ class Dsix {
   }
 
   void createNewPlayers() {
+    if (this.players.isNotEmpty) {
+      return;
+    }
     this.players.add(createPlayer('pink'));
     this.players.add(createPlayer('blue'));
     this.players.add(createPlayer('green'));
     this.players.add(createPlayer('yellow'));
     this.players.add(createPlayer('purple'));
+  }
+
+  int checkPlayers() {
+    int numberPlayers = 0;
+
+    this.players.forEach((element) {
+      if (element.playerCreated) {
+        numberPlayers++;
+      }
+    });
+
+    return numberPlayers;
   }
 
 // Get Player
@@ -118,4 +132,8 @@ class Dsix {
   Player getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];
   }
+
+// GM
+
+  Gm gm = new Gm();
 }

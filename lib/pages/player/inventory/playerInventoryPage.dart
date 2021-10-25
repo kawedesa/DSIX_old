@@ -1,4 +1,5 @@
 import 'package:dsixv02app/core/app_images.dart';
+import 'package:dsixv02app/core/app_text_styles.dart';
 import 'package:dsixv02app/models/player/itemSlot.dart';
 import 'package:dsixv02app/widgets/dialogs/itemDialog.dart';
 import 'package:flutter/material.dart';
@@ -46,14 +47,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
                         '${widget.dsix.getCurrentPlayer().pDamageTotal}',
-                        style: TextStyle(
-                          fontFamily: 'Santana',
-                          height: 1,
-                          fontSize: 25,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 3,
-                        ),
+                        style: AppTextStyles.menuItemStatStyle,
                       ),
                     ),
                   ],
@@ -71,14 +65,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
                         '${widget.dsix.getCurrentPlayer().mDamageTotal}',
-                        style: TextStyle(
-                          fontFamily: 'Santana',
-                          height: 1,
-                          fontSize: 25.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 3,
-                        ),
+                        style: AppTextStyles.menuItemStatStyle,
                       ),
                     ),
                   ],
@@ -96,14 +83,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
                         '${widget.dsix.getCurrentPlayer().pArmorTotal}',
-                        style: TextStyle(
-                          fontFamily: 'Santana',
-                          height: 1,
-                          fontSize: 25.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 3,
-                        ),
+                        style: AppTextStyles.menuItemStatStyle,
                       ),
                     ),
                   ],
@@ -121,14 +101,7 @@ class _InventoryStatePage extends State<InventoryPage> {
                       padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                       child: Text(
                         '${widget.dsix.getCurrentPlayer().mArmorTotal}',
-                        style: TextStyle(
-                          fontFamily: 'Santana',
-                          height: 1,
-                          fontSize: 25.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 3,
-                        ),
+                        style: AppTextStyles.menuItemStatStyle,
                       ),
                     ),
                   ],

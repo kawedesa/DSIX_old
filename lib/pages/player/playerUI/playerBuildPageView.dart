@@ -4,8 +4,8 @@ import 'package:dsixv02app/pages/player/inventory/playerInventoryPage.dart';
 import 'package:dsixv02app/pages/player/shop/shopPage.dart';
 import 'package:flutter/material.dart';
 
-class BuildPageView extends StatefulWidget {
-  BuildPageView(
+class PlayerBuildPageView extends StatefulWidget {
+  PlayerBuildPageView(
       {@required this.pageController, @required this.dsix, this.refresh});
 
   final PageController pageController;
@@ -13,10 +13,10 @@ class BuildPageView extends StatefulWidget {
   final Dsix dsix;
 
   @override
-  State<BuildPageView> createState() => _BuildPageViewState();
+  State<PlayerBuildPageView> createState() => _PlayerBuildPageViewState();
 }
 
-class _BuildPageViewState extends State<BuildPageView> {
+class _PlayerBuildPageViewState extends State<PlayerBuildPageView> {
   @override
   Widget build(BuildContext context) {
     return PageView(

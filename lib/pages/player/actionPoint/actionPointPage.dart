@@ -8,6 +8,7 @@ import 'package:dsixv02app/widgets/buttons/goBackButton.dart';
 import 'package:dsixv02app/widgets/buttons/nextButton.dart';
 import 'package:dsixv02app/widgets/pageTitle.dart';
 import 'package:dsixv02app/widgets/dialogs/textInputDialog.dart';
+import 'package:dsixv02app/widgets/subTitle.dart';
 import 'package:flutter/material.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -234,15 +235,9 @@ class _ActionPointPageState extends State<ActionPointPage> {
                       ),
                       Padding(
                         padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
-                        child: Text(
-                          'Points left: ${widget.dsix.getCurrentPlayer().actionPoints}',
-                          textAlign: TextAlign.justify,
-                          style: TextStyle(
-                            letterSpacing: 3,
-                            fontSize: 18,
-                            fontFamily: 'Headline',
-                            color: Colors.white,
-                          ),
+                        child: SubTitle(
+                          text:
+                              'Points left: ${widget.dsix.getCurrentPlayer().actionPoints}',
                         ),
                       ),
                       (actionPointPageVM.selector.items.contains(true))

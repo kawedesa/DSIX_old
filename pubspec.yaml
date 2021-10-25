@@ -51,6 +51,11 @@ flutter:
     - assets/icon/effect/
     - assets/icon/item/
 
+    - assets/image/map/mountain/
+    - assets/image/map/island/
+    - assets/image/building/altar/
+    - assets/image/building/outpost/
+
     - assets/animation/dice/
 
   fonts:
@@ -61,10 +66,6 @@ flutter:
   - family: Calibri
     fonts:
     - asset: fonts/calibri.ttf
-
-  # - family: Headliner
-  #   fonts:
-  #   - asset: fonts/HeadlinerNo.45.ttf
 
   - family: Santana
     fonts:

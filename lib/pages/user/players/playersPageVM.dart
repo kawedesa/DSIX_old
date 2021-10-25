@@ -1,5 +1,6 @@
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/pages/gm/gmUI/gmUIPage.dart';
 import 'package:dsixv02app/pages/player/actionPoint/actionPointPageVM.dart';
 import 'package:dsixv02app/pages/player/background/backgroundPageVM.dart';
 import 'package:dsixv02app/pages/player/playerUI/playerUI.dart';
@@ -16,6 +17,28 @@ class PlayersPageVM {
     } else {
       goToRacePage(context, dsix, playerIndex);
     }
+  }
+
+  goToGmUI(BuildContext context, Dsix dsix) {
+    Route newRoute = PageRouteBuilder(
+      pageBuilder: (context, animation, secondaryAnimation) => GmUIPage(
+        dsix: dsix,
+      ),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+        var begin = Offset(1.0, 0.0);
+        var end = Offset(0.0, 0.0);
+        var curve = Curves.ease;
+        var tween =
+            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
+
+        return SlideTransition(
+          position: animation.drive(tween),
+          child: child,
+        );
+      },
+    );
+
+    Navigator.of(context).push(newRoute);
   }
 
   goToPlayerUI(BuildContext context, Dsix dsix, int playerIndex) {

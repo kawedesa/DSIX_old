@@ -68,7 +68,7 @@ class Button extends StatelessWidget {
           border: Border.all(
             color: (this.buttonColor != null)
                 ? this.buttonColor
-                : AppColors.neutral01,
+                : AppColors.neutral02,
             width: 2.5, //                   <--- border width here
           ),
         ),
@@ -86,7 +86,7 @@ class Button extends StatelessWidget {
                           _icon,
                           color: (this.buttonColor != null)
                               ? this.buttonColor
-                              : AppColors.neutral01,
+                              : AppColors.neutral02,
                         ),
                       )
                     : Container(),
