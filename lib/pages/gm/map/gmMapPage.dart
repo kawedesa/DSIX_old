@@ -1,5 +1,6 @@
 import 'package:dsixv02app/core/app_colors.dart';
 import 'package:dsixv02app/core/app_images.dart';
+
 import 'package:dsixv02app/pages/gm/map/gmMapPageVM.dart';
 import 'package:dsixv02app/pages/gm/map/instructionMenu.dart';
 import 'package:dsixv02app/widgets/description.dart';
@@ -30,162 +31,93 @@ class _GmMapPageState extends State<GmMapPage> {
     setState(() {});
   }
 
-  Widget gameCreationAction(int step) {
-    switch (step) {
-      case 0:
-        return InstructionMenu(
-          instruction: (widget.dsix.gm.buildings.isEmpty)
-              ? _gmMapPageVM.instructions[0]
-              : _gmMapPageVM.instructions[1],
-          subTitle: 'xp left: ${widget.dsix.gm.currentXp}',
-          ready: (widget.dsix.gm.currentXp > 0) ? false : true,
-          nextStep: () {
-            setState(() {
-              widget.dsix.gm.spawnCharacters();
-            });
-          },
-          action: () async {
-            showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return BuildingDialog(
-                    gm: widget.dsix.gm,
-                    refresh: () async {
-                      refreshMap();
-                    });
-              },
-            ).then((_) => setState(() {}));
-          },
-        );
-        break;
-      case 1:
-        return InstructionMenu(
-          instruction: _gmMapPageVM.instructions[2],
-          ready: true,
-          nextStep: () {
-            setState(() {});
-          },
-        );
-        break;
-      case 3:
-        break;
-      case 4:
-        break;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    _gmMapPageVM.interactiveViewerController = TransformationController(Matrix4(
-        3,
-        0,
-        0,
-        0,
-        0,
-        3,
-        0,
-        0,
-        0,
-        0,
-        3,
-        0,
-        -widget.dsix.gm.startLocation.dx,
-        -widget.dsix.gm.startLocation.dy,
-        0,
-        1));
-
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: <Widget>[
-        // (widget.dsix.gm.gameCreationStep > 5)
-        //     ? Container(
-        //         height: MediaQuery.of(context).size.height * 0.1,
-        //         // child: Row(
-        //         //   children: [
-        //         //     Padding(
-        //         //       padding: const EdgeInsets.fromLTRB(7, 0, 0, 0),
-        //         //       child: GestureDetector(
-        //         //         onLongPress: () {
-        //         //           setState(() {
-        //         //             widget.dsix.gm.shuffleTurn();
-        //         //           });
-        //         //         },
-        //         //         child: IconButton(
-        //         //             icon: Icon(
-        //         //               Icons.alarm,
-        //         //               color: Colors.grey[400],
-        //         //               size: 30,
-        //         //             ),
-        //         //             onPressed: () {
-        //         //               setState(() {
-        //         //                 widget.dsix.gm.addGmTurn();
-        //         //               });
-        //         //             }),
-        //         //       ),
-        //         //     ),
-        //         //     Expanded(
-        //         //       child: Padding(
-        //         //         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        //         //         child: ListView.separated(
-        //         //           shrinkWrap: true,
-        //         //           physics: ScrollPhysics(),
-        //         //           scrollDirection: Axis.horizontal,
-        //         //           padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
-        //         //           itemCount: widget.dsix.gm.turnOrder.length,
-        //         //           itemBuilder: (BuildContext context, int index) {
-        //         //             return GestureDetector(
-        //         //               onLongPress: () {
-        //         //                 setState(() {
-        //         //                   widget.dsix.gm.removeTurn(index);
-        //         //                 });
-        //         //               },
-        //         //               onDoubleTap: () {
-        //         //                 setState(() {
-        //         //                   widget.dsix.gm.chooseTurn(index);
-        //         //                 });
-        //         //               },
-        //         //               onTap: () {
-        //         //                 setState(() {
-        //         //                   goToPlayer(
-        //         //                       widget.dsix.gm.turnOrder[index].primaryColor);
-        //         //                 });
-        //         //               },
-        //         //               child: Container(
-        //         //                 height: 35,
-        //         //                 width: 35,
-        //         //                 // color: Colors.amber,
-        //         //                 child: SvgPicture.asset(
-        //         //                   'assets/player/race/${widget.dsix.gm.turnOrder[index].icon}.svg',
-        //         //                   color: widget.dsix.gm.turnOrder[index].primaryColor,
-        //         //                 ),
-        //         //               ),
-        //         //             );
-        //         //           },
-        //         //           separatorBuilder: (BuildContext context, int index) {
-        //         //             return SizedBox(
-        //         //               width: 5,
-        //         //             );
-        //         //           },
-        //         //         ),
-        //         //       ),
-        //         //     ),
-        //         //   ],
-        //         // ),
-        //       )
-        //     : Container(),
-        // Divider(
-        //   height: 0,
-        //   thickness: 2,
-        //   color: Colors.grey[700],
-        // ),
+        (widget.dsix.gm.turnOrder.isNotEmpty)
+            ? Container(
+                height: MediaQuery.of(context).size.height * 0.1,
+                child: Row(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(7, 0, 0, 0),
+                      child: GestureDetector(
+                        onLongPress: () {
+                          setState(() {
+                            widget.dsix.gm.turnOrder.shuffle();
+                          });
+                        },
+                        child: IconButton(
+                            icon: Icon(
+                              Icons.alarm,
+                              color: Colors.grey[400],
+                              size: 30,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                // widget.dsix.gm.addGmTurn();
+                              });
+                            }),
+                      ),
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: ListView.separated(
+                          shrinkWrap: true,
+                          physics: ScrollPhysics(),
+                          scrollDirection: Axis.horizontal,
+                          padding: const EdgeInsets.fromLTRB(13, 0, 0, 0),
+                          itemCount: widget.dsix.gm.turnOrder.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return GestureDetector(
+                              onLongPress: () {
+                                setState(() {
+                                  // widget.dsix.gm.removeTurn(index);
+                                });
+                              },
+                              onDoubleTap: () {
+                                setState(() {
+                                  // widget.dsix.gm.chooseTurn(index);
+                                });
+                              },
+                              onTap: () {
+                                // setState(() {
+                                //   goToPlayer(
+                                //       widget.dsix.gm.turnOrder[index].primaryColor);
+                                // });
+                              },
+                              child: Container(
+                                  width: 40,
+                                  child: widget.dsix.gm.turnOrder[index]),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return SizedBox(
+                              width: 5,
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            : Container(),
+        Divider(
+          height: 0,
+          thickness: 2,
+          color: Colors.grey[700],
+        ),
         Expanded(
           child: Container(
             width: MediaQuery.of(context).size.width,
             child: Stack(
               children: [
                 InteractiveViewer(
-                  transformationController:
-                      _gmMapPageVM.interactiveViewerController,
+                  transformationController: widget.dsix.gm.navigation,
                   constrained: false,
                   panEnabled: true,
                   maxScale: 20,
@@ -194,11 +126,96 @@ class _GmMapPageState extends State<GmMapPage> {
                     children: widget.dsix.gm.canvas,
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 25),
-                  child: Container(
-                    width: double.infinity,
-                    child: gameCreationAction(widget.dsix.gm.gameCreationStep),
+                Positioned(
+                  right: 25,
+                  top: MediaQuery.of(context).size.height * 0.05,
+                  child: (widget.dsix.gm.turnOrder.isNotEmpty)
+                      ? Container()
+                      : Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                              child: Container(
+                                width: 40,
+                                height: 40,
+                                child: FloatingActionButton(
+                                  mini: true,
+                                  backgroundColor: Colors.green,
+                                  child: Container(),
+                                  onPressed: () {
+                                    setState(() {
+                                      _gmMapPageVM.spawnPlayersInRandomLocation(
+                                          widget.dsix.players,
+                                          widget.dsix.gm,
+                                          context);
+                                      _gmMapPageVM.startGame(widget.dsix.gm);
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                ),
+                Positioned(
+                  right: 25,
+                  top: MediaQuery.of(context).size.height * 0.3,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          child: FloatingActionButton(
+                            mini: true,
+                            backgroundColor: Colors.red,
+                            child: Container(),
+                            onPressed: () {
+                              Scaffold.of(context).openEndDrawer();
+                            },
+                          ),
+                        ),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          child: FloatingActionButton(
+                            mini: true,
+                            backgroundColor: Colors.yellow,
+                            child: Container(),
+                            onPressed: () {
+                              setState(() {
+                                _gmMapPageVM.addLoot(widget.dsix.gm, context);
+                              });
+                            },
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                Positioned(
+                  right: 25,
+                  bottom: MediaQuery.of(context).size.height * 0.05,
+                  child: Column(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          child: FloatingActionButton(
+                            mini: true,
+                            backgroundColor: Colors.grey,
+                            child: Container(),
+                            onPressed: () {},
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 )
               ],

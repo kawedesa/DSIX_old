@@ -59,6 +59,11 @@ class ActionPointPageVM {
       player.actions[i].option.forEach((option) {
         option.value = player.actions[i].value;
       });
+
+      //set player vision
+
+      player.visionRange = 150 + (15.0 * player.actions[2].value);
+      player.walkRange = 100 + (10.0 * player.actions[4].value);
     }
 
     player.playerCreated = true;

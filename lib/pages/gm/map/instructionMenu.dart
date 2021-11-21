@@ -27,43 +27,43 @@ class InstructionMenu extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        (this.ready)
-            ? GestureDetector(
-                onTap: () async {
-                  this.nextStep();
-                },
-                child: CircleAvatar(
-                  radius: 25,
-                  backgroundColor: AppColors.separatorBlack,
-                  child: SvgPicture.asset(
-                    AppImages.confirmButton,
-                    width: 50,
-                    height: 50,
-                    color: AppColors.success,
-                  ),
-                ),
-              )
-            : GestureDetector(
-                onTap: () {
-                  this.action();
-                },
-                child: CircleAvatar(
-                  radius: 25,
-                  backgroundColor: AppColors.separatorBlack,
-                  child: SvgPicture.asset(
-                    AppImages.addButton,
-                    width: 50,
-                    height: 50,
-                    color: AppColors.neutral05,
-                  ),
-                ),
-              ),
+        // (this.ready)
+        //     ? GestureDetector(
+        //         onTap: () async {
+        //           this.nextStep();
+        //         },
+        //         child: CircleAvatar(
+        //           radius: 25,
+        //           backgroundColor: AppColors.separatorBlack,
+        //           child: SvgPicture.asset(
+        //             AppImages.confirmButton,
+        //             width: 50,
+        //             height: 50,
+        //             color: AppColors.success,
+        //           ),
+        //         ),
+        //       )
+        //     : GestureDetector(
+        //         onTap: () {
+        //           this.action();
+        //         },
+        //         child: CircleAvatar(
+        //           radius: 25,
+        //           backgroundColor: AppColors.separatorBlack,
+        //           child: SvgPicture.asset(
+        //             AppImages.addButton,
+        //             width: 50,
+        //             height: 50,
+        //             color: AppColors.neutral05,
+        //           ),
+        //         ),
+        //       ),
         Container(
             color: AppColors.separatorBlack,
             child: Padding(
               padding: const EdgeInsets.fromLTRB(15, 10, 15, 15),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Description(description: this.instruction),

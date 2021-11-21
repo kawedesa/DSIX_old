@@ -37,9 +37,25 @@ class AppImages {
   static final mainHandSlot = 'assets/icon/ui/mainHandSlot.svg';
   static final offHandSlot = 'assets/icon/ui/offHandSlot.svg';
 
+  static final playerVision = 'assets/icon/ui/playerVision.svg';
+
+//Player Races
+
+  static final human = 'assets/icon/sprite/human.svg';
+  static final orc = 'assets/icon/sprite/orc.svg';
+  static final dwarf = 'assets/icon/sprite/dwarf.svg';
+  static final goblin = 'assets/icon/sprite/goblin.svg';
+  static final elf = 'assets/icon/sprite/elf.svg';
+  static final hobbit = 'assets/icon/sprite/hobbit.svg';
+
 //Character
 
-  static final skeleton = 'assets/icon/character/skeleton.svg';
-  static final skeletonMage = 'assets/icon/character/skeletonMage.svg';
-  static final zombie = 'assets/icon/character/zombie.svg';
+  static final skeleton = 'assets/icon/sprite/skeleton.svg';
+  static final skeletonMage = 'assets/icon/sprite/skeletonMage.svg';
+  static final zombie = 'assets/icon/sprite/zombie.svg';
+
+  static final loot = 'assets/icon/sprite/loot.svg';
+
+  static final merchant = 'assets/icon/sprite/merchant.svg';
+  static final goal = 'assets/icon/sprite/goal.svg';
 }

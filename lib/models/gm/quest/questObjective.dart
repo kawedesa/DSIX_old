@@ -8,23 +8,24 @@ class QuestObjective {
 
   QuestObjective newRandomObjective() {
     QuestObjective newObjective = QuestObjective();
+
     List<QuestObjective> availableQuests = [
       QuestObjective(
-        objective: 'capture',
-        target: QuestTarget().newTarget('capture'),
+        objective: 'escort',
+        target: QuestTarget().newTarget('escort'),
       ),
-      QuestObjective(
-        objective: 'control',
-        target: QuestTarget().newTarget('control'),
-      ),
-      QuestObjective(
-        objective: 'destroy',
-        target: QuestTarget().newTarget('destroy'),
-      ),
-      QuestObjective(
-        objective: 'protect',
-        target: QuestTarget().newTarget('protect'),
-      ),
+      // QuestObjective(
+      //   objective: 'control',
+      //   target: QuestTarget().newTarget('control'),
+      // ),
+      // QuestObjective(
+      //   objective: 'destroy',
+      //   target: QuestTarget().newTarget('destroy'),
+      // ),
+      // QuestObjective(
+      //   objective: 'protect',
+      //   target: QuestTarget().newTarget('protect'),
+      // ),
     ];
 
     int randomNumber = Random().nextInt(availableQuests.length);

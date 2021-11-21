@@ -45,16 +45,18 @@ flutter:
 
   assets:
     - assets/icon/ui/
-    - assets/icon/character/
+    - assets/icon/sprite/
     - assets/icon/background/
     - assets/icon/action/
     - assets/icon/effect/
     - assets/icon/item/
 
-    - assets/image/map/mountain/
-    - assets/image/map/island/
-    - assets/image/building/altar/
-    - assets/image/building/outpost/
+    - assets/image/map/crossroads/
+
+    # - assets/image/map/mountain/
+    # - assets/image/map/island/
+    # - assets/image/building/altar/
+    # - assets/image/building/outpost/
 
     - assets/animation/dice/
 

@@ -1,7 +1,14 @@
+import 'package:dsixv02app/core/app_colors.dart';
+import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/player/playerRace.dart';
 import 'package:dsixv02app/models/player/bonus.dart';
+import 'package:dsixv02app/models/player/playerSprite.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class PlayerRaceList {
+  Color color;
+
   List<PlayerRace> races = [
     PlayerRace(
         icon: 'human',
@@ -10,6 +17,7 @@ class PlayerRaceList {
             'Humans are flexible and can adapt to anything. They have the worlds largest population.',
         maxHealth: 12,
         maxWeight: 12,
+        size: 20,
         availableActionPoints: 3,
         actionPoints: [
           1,
@@ -32,6 +40,7 @@ class PlayerRaceList {
             'Orcs are big and strong, making them good warriors, but easy targets.',
         maxHealth: 12,
         maxWeight: 16,
+        size: 25,
         availableActionPoints: 5,
         actionPoints: [
           1,
@@ -62,6 +71,7 @@ class PlayerRaceList {
             'Goblins are small vicious creatures with sharp teeth and quick feet.',
         maxHealth: 12,
         maxWeight: 8,
+        size: 15,
         availableActionPoints: 5,
         actionPoints: [
           1,
@@ -92,6 +102,7 @@ class PlayerRaceList {
             'Dwarfs have long beards and love to drink. They are small, tough and stubborn.',
         maxHealth: 16,
         maxWeight: 12,
+        size: 20,
         availableActionPoints: 5,
         actionPoints: [
           0,
@@ -118,6 +129,7 @@ class PlayerRaceList {
             'Hobbits are small curious creatures, always looking for something new to learn.',
         maxHealth: 12,
         maxWeight: 12,
+        size: 15,
         availableActionPoints: 5,
         actionPoints: [
           -1,
@@ -148,6 +160,7 @@ class PlayerRaceList {
             'Elves have quick reflexes and sharp senses, making them very agile and precise.',
         maxHealth: 12,
         maxWeight: 12,
+        size: 20,
         availableActionPoints: 5,
         actionPoints: [
           0,

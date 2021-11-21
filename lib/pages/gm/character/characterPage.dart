@@ -226,7 +226,7 @@ class _CharacterPageState extends State<CharacterPage> {
   //                                         CrossAxisAlignment.center,
   //                                     children: <Widget>[
   //                                       SvgPicture.asset(
-  //                                         'assets/gm/character/loot.svg',
+  //                                         'assets/gm/sprite/loot.svg',
   //                                         color: Colors.grey[700],
   //                                         width: MediaQuery.of(context)
   //                                                 .size
@@ -256,7 +256,7 @@ class _CharacterPageState extends State<CharacterPage> {
   //                                         CrossAxisAlignment.center,
   //                                     children: <Widget>[
   //                                       SvgPicture.asset(
-  //                                         'assets/gm/character/xp.svg',
+  //                                         'assets/gm/sprite/xp.svg',
   //                                         color: Colors.grey[700],
   //                                         width: MediaQuery.of(context)
   //                                                 .size
@@ -553,7 +553,7 @@ class _CharacterPageState extends State<CharacterPage> {
 //         child: Padding(
 //           padding: const EdgeInsets.fromLTRB(7, 0, 7, 5),
 //           child: SvgPicture.asset(
-//             'assets/gm/character/loot.svg',
+//             'assets/gm/sprite/loot.svg',
 //             color: Colors.grey[700],
 //           ),
 //         ),
@@ -564,7 +564,7 @@ class _CharacterPageState extends State<CharacterPage> {
 //           Padding(
 //             padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
 //             child: SvgPicture.asset(
-//               'assets/gm/character/health.svg',
+//               'assets/gm/sprite/health.svg',
 //               color: Colors.grey[700],
 //             ),
 //           ),
@@ -644,7 +644,7 @@ class _CharacterPageState extends State<CharacterPage> {
           //                 height: 35,
           //                 width: 35,
           //                 child: SvgPicture.asset(
-          //                   'assets/gm/character/race/icon/${widget.dsix.gm.story.quest.threatList[index].icon}.svg',
+          //                   'assets/gm/sprite/race/icon/${widget.dsix.gm.story.quest.threatList[index].icon}.svg',
           //                   color: characterSelection[index]
           //                       ? Colors.grey[400]
           //                       : Colors.grey[700],
@@ -713,7 +713,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     //                       CrossAxisAlignment.center,
                     //                   children: <Widget>[
                     //                     SvgPicture.asset(
-                    //                       'assets/gm/character/loot.svg',
+                    //                       'assets/gm/sprite/loot.svg',
                     //                       color: Colors.grey[700],
                     //                       width: MediaQuery.of(context)
                     //                               .size
@@ -746,7 +746,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     //                         CrossAxisAlignment.center,
                     //                     children: <Widget>[
                     //                       SvgPicture.asset(
-                    //                         'assets/gm/character/xp.svg',
+                    //                         'assets/gm/sprite/xp.svg',
                     //                         color: Colors.grey[700],
                     //                         width: MediaQuery.of(context)
                     //                                 .size
@@ -801,7 +801,7 @@ class _CharacterPageState extends State<CharacterPage> {
                     //               padding:
                     //                   const EdgeInsets.fromLTRB(10, 20, 10, 0),
                     //               child: SvgPicture.asset(
-                    //                 'assets/gm/character/race/image/${widget.dsix.gm.selectedCharacter.image}.svg',
+                    //                 'assets/gm/sprite/race/image/${widget.dsix.gm.selectedCharacter.image}.svg',
                     //                 color: Colors.grey[700],
                     //               ),
                     //             ),
@@ -837,7 +837,7 @@ class _CharacterPageState extends State<CharacterPage> {
               //           crossAxisAlignment: CrossAxisAlignment.center,
               //           children: <Widget>[
               //             SvgPicture.asset(
-              //               'assets/gm/character/race/icon/${widget.dsix.gm.selectedCharacter.icon}.svg',
+              //               'assets/gm/sprite/race/icon/${widget.dsix.gm.selectedCharacter.icon}.svg',
               //               color: Colors.grey[700],
               //               width: MediaQuery.of(context).size.width * 0.06,
               //             ),
@@ -1067,7 +1067,7 @@ class _CharacterPageState extends State<CharacterPage> {
                 //                 },
                 //                 child: Center(
                 //                   child: SvgPicture.asset(
-                //                     'assets/gm/character/skill/${widget.dsix.gm.selectedCharacter.selectedSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.selectedSkills[index].icon}.svg',
+                //                     'assets/gm/sprite/skill/${widget.dsix.gm.selectedCharacter.selectedSkills[index].skillType}/${widget.dsix.gm.selectedCharacter.selectedSkills[index].icon}.svg',
                 //                     color: Colors.grey[400],
                 //                     width:
                 //                         MediaQuery.of(context).size.width * 0.1,

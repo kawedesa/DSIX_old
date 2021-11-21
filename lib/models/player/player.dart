@@ -1,10 +1,19 @@
 import 'dart:math';
+import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/dsix/item.dart';
 import 'package:dsixv02app/models/dsix/effect.dart';
+import 'package:dsixv02app/models/gm/character/character.dart';
+import 'package:dsixv02app/models/gm/character/characterSprite.dart';
+import 'package:dsixv02app/models/gm/gm.dart';
+import 'package:dsixv02app/models/gm/loot/loot.dart';
+import 'package:dsixv02app/models/gm/map/mapTile.dart';
 import 'package:dsixv02app/models/player/action/playerAction.dart';
+import 'package:dsixv02app/models/player/enemySprite.dart';
 import 'package:dsixv02app/models/player/playerBackground.dart';
 import 'package:dsixv02app/models/player/playerRace.dart';
+import 'package:dsixv02app/models/player/playerSprite.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class Player {
 //Check player
@@ -305,6 +314,107 @@ class Player {
       return false;
     }
   }
+
+  double visionRange;
+  double walkRange;
+
+  void buildCanvas() {
+    this.canvas = [];
+    this.canvas.add(this.map);
+
+    //Add enemies
+    this.enemy.forEach((element) {
+      if ((element.location - this.location).distance <= this.visionRange / 2) {
+        this.canvas.add(element);
+      }
+    });
+
+    //Add self
+    this.canvas.add(this.sprite);
+
+    //Add loot
+    this.loot.forEach((element) {
+      this.canvas.add(element);
+    });
+  }
+
+  MapTile map;
+
+  PlayerSprite sprite;
+
+  List<EnemySprite> enemy = [];
+  List<Loot> loot = [];
+
+  // PlayerSprite newSprite = PlayerSprite(
+  //   image: element.race.sprite.layers,
+  //   size: element.race.size,
+  //   visionRange: element.actions[2].value * 300.0,
+  //   location: element.location,
+  //   updateLocation: (details) async {
+  //     print(element.location);
+
+  //     element.location = Offset(element.location.dx + details.dx,
+  //         element.location.dy + details.dy);
+
+  //     element.navigation = TransformationController(Matrix4(
+  //         3,
+  //         0,
+  //         0,
+  //         0,
+  //         0,
+  //         3,
+  //         0,
+  //         0,
+  //         0,
+  //         0,
+  //         3,
+  //         0,
+  //         -element.location.dx * 3 +
+  //             (MediaQuery.of(context).size.width * 1.45) / 3 -
+  //             element.race.size / 2,
+  //         -element.location.dy * 3 +
+  //             (MediaQuery.of(context).size.height * 1.2) / 3 -
+  //             element.race.size / 2,
+  //         0,
+  //         1));
+
+  //     print(element.location);
+  //   },
+  // );
+  // element.canvas.add(newSprite);
+
+  Offset location = Offset(0, 0);
+
+  void updateLocation(Offset newPosition) {
+    this.location = Offset(
+        this.location.dx + newPosition.dx, this.location.dy + newPosition.dy);
+  }
+
+  TransformationController navigation = TransformationController(
+      Matrix4(3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3));
+
+  List<Widget> canvas = [];
+
+  // Widget vision = Container();
+
+  // void setVision() {
+  //   double visionRange = 300 + 60 * this.race.actionPoints[2].toDouble();
+
+  //   this.vision = Positioned(
+  //     left: this.race.sprite.location.dx -
+  //         visionRange / 2 +
+  //         this.race.sprite.size / 2,
+  //     top: this.race.sprite.location.dy -
+  //         visionRange / 2 +
+  //         this.race.sprite.size / 2,
+  //     child: SvgPicture.asset(
+  //       AppImages.playerVision,
+  //       color: Colors.black,
+  //       width: visionRange,
+  //       height: visionRange,
+  //     ),
+  //   );
+  // }
 
   Player(
       {String name,

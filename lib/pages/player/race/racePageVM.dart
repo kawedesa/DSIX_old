@@ -1,11 +1,14 @@
 import 'dart:math';
+import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/playerRace.dart';
 import 'package:dsixv02app/models/player/bonus.dart';
+import 'package:dsixv02app/models/player/playerSprite.dart';
 import 'package:dsixv02app/pages/player/background/backgroundPage.dart';
 import 'package:dsixv02app/widgets/selector.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'playerRaceList.dart';
 
 class RacePageVM {
@@ -27,10 +30,11 @@ class RacePageVM {
 
   void chooseRace(Player player, int index) {
     selector.select(index);
-    player.race = this.availableRaces.races[index];
+    player.race = this.availableRaces.races[index].copyRace();
     player.health = player.race.maxHealth;
     chooseSex(player);
     this.selectedRace = player.race;
+    player.race.setSprite(player.primaryColor);
   }
 
   void chooseSex(Player player) {

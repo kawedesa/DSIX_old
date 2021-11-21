@@ -10,15 +10,17 @@ class Description extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: MediaQuery.of(context).size.width * 0.65,
-      child: Text(
-        this.description,
-        textAlign: TextAlign.justify,
-        style: TextStyle(
-          height: 1.3,
-          letterSpacing: 1.1,
-          fontSize: 18,
-          fontFamily: 'Calibri',
-          color: AppColors.white01,
+      child: Center(
+        child: Text(
+          this.description,
+          textAlign: TextAlign.justify,
+          style: TextStyle(
+            height: 1.3,
+            letterSpacing: 1.1,
+            fontSize: 18,
+            fontFamily: 'Calibri',
+            color: AppColors.white01,
+          ),
         ),
       ),
     );

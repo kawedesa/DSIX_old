@@ -1,62 +1,76 @@
 import 'dart:math';
 
 import 'package:dsixv02app/core/app_colors.dart';
+import 'package:dsixv02app/models/dsix/sprite.dart';
+import 'package:dsixv02app/models/gm/map/mapTile.dart';
 import 'package:dsixv02app/models/gm/building/building.dart';
 import 'package:dsixv02app/models/gm/quest/quest.dart';
+import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter/material.dart';
 
 import 'character/character.dart';
+import 'loot/loot.dart';
+import 'loot/loot_old.dart';
 
 class Gm {
   Color primaryColor = AppColors.gmPrimaryColor;
   Color secondaryColor = AppColors.gmSecondaryColor;
   Color tertiaryColor = AppColors.gmTertiaryColor;
 
-  int round = 0;
-  int roundXp;
-  int currentXp;
-  int roundGold;
+  bool gameSelected = false;
 
-  Quest quest = Quest().emptyQuest();
-  List<Quest> questCompleted;
+  MapTile map;
+
+  // int round = 0;
+  // int roundXp;
+  // int currentXp;
+  // int roundGold;
+
+  // Quest quest = Quest().emptyQuest();
+  // List<Quest> questCompleted;
 
   //Canvas
 
-  Offset startLocation;
+  TransformationController navigation = TransformationController(
+      Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
 
-  int gameCreationStep = 0;
+  // void spawnCharacters() {
+  //   this.gameCreationStep++;
 
-  void spawnCharacters() {
-    this.gameCreationStep++;
-    this.buildings.forEach((element) {
-      element.sprite.drag = false;
+  //   this.buildings.forEach((element) {
+  //     element.sprite.drag = false;
 
-      Character newCharacter = Character();
+  //     while (element.xp > 0) {
+  //       Character newCharacter = Character();
+  //       newCharacter = element.availableCharacters[
+  //               Random().nextInt(element.availableCharacters.length)]
+  //           .copy();
 
-      while (element.xp > 0) {
-        newCharacter = element.availableCharacters[
-            Random().nextInt(element.availableCharacters.length)];
+  //       newCharacter.sprite.location = Offset(
+  //           Random().nextDouble() * element.sprite.size +
+  //               element.sprite.location.dx -
+  //               newCharacter.sprite.size / 2,
+  //           Random().nextDouble() * element.sprite.size +
+  //               element.sprite.location.dy -
+  //               newCharacter.sprite.size / 2);
 
-        newCharacter.sprite.location = Offset(
-            Random().nextDouble() * element.sprite.size +
-                element.sprite.location.dx,
-            Random().nextDouble() * element.sprite.size +
-                element.sprite.location.dy);
+  //       if (newCharacter.xp <= element.xp) {
+  //         this.characters.add(newCharacter);
+  //         element.xp -= newCharacter.xp;
+  //       }
+  //     }
+  //   });
 
-        if (newCharacter.xp <= element.xp) {
-          this.characters.add(newCharacter.copy());
-          element.xp -= newCharacter.xp;
-        }
-      }
-    });
-    buildCanvas();
-  }
+  //   print(this.characters);
+  //   // print(this.buildings);
+  //   buildCanvas();
+  // }
 
-  void deleteBuilding(Building building) {
-    this.buildings.remove(building);
-    this.currentXp += building.xp;
-    buildCanvas();
-  }
+  // void deleteBuilding(Building building) {
+  //   this.buildings.remove(building);
+  //   this.currentXp += building.xp;
+  //   buildCanvas();
+  // }
 
   Widget separator = Container(
     width: 640,
@@ -64,38 +78,78 @@ class Gm {
     color: AppColors.separator,
   );
 
-  void newRound() {
-    this.round++;
-    this.canvas = [];
-    this.buildings = [];
-    this.characters = [];
-  }
+  // void newRound() {
+  //   this.round++;
+  //   this.canvas = [];
+  //   // this.buildings = [];
+  //   this.targets = [];
+  //   this.goals = [];
+  //   this.players = [];
+  //   this.enemies = [];
+  // }
 
   void buildCanvas() {
     this.canvas = [];
-    switch (this.gameCreationStep) {
-      case 0:
-        this.canvas.add(this.quest.location.map);
-        this.canvas.add(this.separator);
-        this.buildings.forEach((element) {
-          this.canvas.add(element.sprite);
-        });
-        break;
-      case 1:
-        this.canvas.add(this.quest.location.map);
 
-        this.buildings.forEach((element) {
-          this.canvas.add(element.sprite);
+    //Add Map
+    this.canvas.add(this.map);
+
+    //Add Players
+    this.players.forEach((element) {
+      Sprite newSprite = Sprite(
+        layers: element.race.sprite.layers,
+        size: element.race.size,
+        location: element.location,
+      );
+
+      this.canvas.add(newSprite);
+    });
+
+    //Add Enemies
+    this.enemy.forEach((element) {
+      this.canvas.add(element.sprite);
+    });
+
+    //Add Loot
+    this.loot.forEach((element) {
+      this.canvas.add(element);
+    });
+  }
+
+  void takeTurn(Player player) {
+    this.turnOrder.remove(player.race.sprite);
+    checkTurn();
+  }
+
+  void checkTurn() {
+    if (this.turnOrder.isEmpty) {
+      newTurn();
+    }
+  }
+
+  void newTurn() {
+    this.turnOrder = [];
+
+    if (this.players.isNotEmpty) {
+      this.players.forEach((element) {
+        this.turnOrder.add(element.race.sprite);
+      });
+
+      if (this.enemy.isNotEmpty) {
+        this.enemy.forEach((element) {
+          this.turnOrder.add(element.sprite);
         });
-        this.canvas.add(this.separator);
-        this.characters.forEach((element) {
-          this.canvas.add(element.sprite);
-        });
-        break;
+      }
+
+      this.turnOrder.shuffle();
     }
   }
 
   List<Widget> canvas = [];
-  List<Building> buildings = [];
-  List<Character> characters = [];
+
+  List<Player> players = [];
+  List<Character> enemy = [];
+  List<Loot> loot = [];
+
+  List<Widget> turnOrder = [];
 }

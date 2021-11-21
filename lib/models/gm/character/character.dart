@@ -1,17 +1,21 @@
-import 'characterSprite.dart';
+import 'package:dsixv02app/models/dsix/sprite.dart';
 
 class Character {
   String icon;
   String name;
   int xp;
-  CharacterSprite sprite;
+  Sprite sprite;
 
   Character copy() {
     Character newCharacter = Character(
       icon: this.icon,
       name: this.name,
       xp: this.xp,
-      sprite: this.sprite,
+      sprite: Sprite(
+        layers: this.sprite.layers,
+        size: this.sprite.size,
+        location: this.sprite.location,
+      ),
     );
     return newCharacter;
   }
@@ -20,7 +24,7 @@ class Character {
     String icon,
     String name,
     int xp,
-    CharacterSprite sprite,
+    Sprite sprite,
   }) {
     this.icon = icon;
     this.name = name;

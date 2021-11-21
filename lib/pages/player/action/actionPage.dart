@@ -173,6 +173,7 @@ class _ActionPageState extends State<ActionPage> {
                                         action: _actionPageVM
                                             .selectedAction.option[index],
                                         player: widget.dsix.getCurrentPlayer(),
+                                        gm: widget.dsix.gm,
                                       );
                                     },
                                   ).then((_) => setState(() {}));

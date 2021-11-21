@@ -4,6 +4,7 @@ import 'package:dsixv02app/core/app_text_styles.dart';
 import 'package:dsixv02app/models/dsix/dice.dart';
 import 'package:dsixv02app/models/dsix/item.dart';
 import 'package:dsixv02app/models/dsix/shop.dart';
+import 'package:dsixv02app/models/gm/gm.dart';
 import 'package:dsixv02app/models/player/action/actionOutcome.dart';
 import 'package:dsixv02app/models/player/action/actionResult.dart';
 import 'package:dsixv02app/models/player/action/actionOption.dart';
@@ -19,11 +20,13 @@ class ActionDialog extends StatefulWidget {
     @required this.action,
     @required this.player,
     @required this.shop,
+    @required this.gm,
   });
 
   final ActionOption action;
   final Player player;
   final Shop shop;
+  final Gm gm;
 
   @override
   State<ActionDialog> createState() => _ActionDialogState();
@@ -133,6 +136,7 @@ class _ActionDialogState extends State<ActionDialog> {
   }
 
   void takeAction() {
+    widget.gm.takeTurn(widget.player);
     this.result.diceResult = [];
     diceList.forEach((element) {
       this.result.diceResult.add(element.die);

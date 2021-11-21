@@ -8,6 +8,6 @@ class PlayerUIVM {
   changePage(int index) {
     this.selectedPage = index;
     this.pageController.animateToPage(index,
-        duration: Duration(milliseconds: 500), curve: Curves.ease);
+        duration: Duration(milliseconds: 250), curve: Curves.ease);
   }
 }

@@ -90,7 +90,7 @@ class _RacePageState extends State<RacePage> {
                             });
                           },
                           child: SvgPicture.asset(
-                            'assets/icon/character/${racePageVM.availableRaces.races[index].icon}.svg',
+                            'assets/icon/sprite/${racePageVM.availableRaces.races[index].icon}.svg',
                             color: racePageVM.selector.items[index]
                                 ? widget.dsix.getCurrentPlayer().primaryColor
                                 : AppColors.white01,

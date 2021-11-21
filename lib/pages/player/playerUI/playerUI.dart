@@ -1,5 +1,9 @@
 import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/dsix/dsix.dart';
+import 'package:dsixv02app/pages/player/action/actionPage.dart';
+import 'package:dsixv02app/pages/player/inventory/playerInventoryPage.dart';
+import 'package:dsixv02app/pages/player/map/playerMapPage.dart';
+import 'package:dsixv02app/pages/player/shop/shopPage.dart';
 import 'package:dsixv02app/widgets/buttons/appBarItem.dart';
 import 'package:dsixv02app/widgets/dialogs/healthDialog.dart';
 import 'package:dsixv02app/widgets/buttons/homeButton.dart';
@@ -7,7 +11,7 @@ import 'package:dsixv02app/widgets/dialogs/goldDialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'playerBuildPageView.dart';
+
 import 'playerUIVM.dart';
 
 class PlayerUI extends StatefulWidget {
@@ -172,12 +176,38 @@ class _PlayerUIState extends State<PlayerUI> {
         ],
       ),
       body: new SafeArea(
-        child: PlayerBuildPageView(
-          pageController: _playerUIVM.pageController,
-          dsix: widget.dsix,
-          refresh: () async {
-            refresh();
+        child: PageView(
+          controller: _playerUIVM.pageController,
+          physics: (_playerUIVM.selectedPage == 3)
+              ? NeverScrollableScrollPhysics()
+              : ScrollPhysics(),
+          onPageChanged: (index) {
+            setState(() {
+              _playerUIVM.changePage(index);
+            });
           },
+          children: <Widget>[
+            ShopPage(
+              dsix: this.widget.dsix,
+              refresh: refresh,
+              // alert: displayAlert,
+            ),
+            InventoryPage(
+              dsix: this.widget.dsix,
+              refresh: refresh,
+              // alert: displayAlert,
+            ),
+            ActionPage(
+              dsix: this.widget.dsix,
+              refresh: refresh,
+              // alert: displayAlert,
+            ),
+            PlayerMapPage(
+              dsix: this.widget.dsix,
+              refresh: refresh,
+              // alert: displayAlert,
+            ),
+          ],
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
@@ -186,6 +216,7 @@ class _PlayerUIState extends State<PlayerUI> {
             _playerUIVM.changePage(value);
           });
         },
+        type: BottomNavigationBarType.fixed,
         showSelectedLabels: false,
         showUnselectedLabels: false,
         currentIndex: _playerUIVM.selectedPage,
@@ -228,6 +259,19 @@ class _PlayerUIState extends State<PlayerUI> {
               AppImages.action,
               color: widget.dsix.getCurrentPlayer().tertiaryColor,
               width: MediaQuery.of(context).size.width * 0.070,
+            ),
+          ),
+          BottomNavigationBarItem(
+            label: 'map',
+            activeIcon: SvgPicture.asset(
+              AppImages.map,
+              color: widget.dsix.getCurrentPlayer().secondaryColor,
+              width: MediaQuery.of(context).size.width * 0.095,
+            ),
+            icon: SvgPicture.asset(
+              AppImages.map,
+              color: widget.dsix.getCurrentPlayer().tertiaryColor,
+              width: MediaQuery.of(context).size.width * 0.095,
             ),
           ),
         ],

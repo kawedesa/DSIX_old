@@ -39,15 +39,20 @@
 //     );
 //   }
 // }
+import 'package:dsixv02app/models/gm/character/character.dart';
 import 'package:flutter/material.dart';
 
 class MapTile extends StatelessWidget {
   const MapTile({
+    @required this.name,
     @required this.layers,
+    @required this.availableCharacters,
     @required this.size,
   });
 
+  final String name;
   final List<Widget> layers;
+  final List<Character> availableCharacters;
   final double size;
 
   @override

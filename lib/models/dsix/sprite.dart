@@ -1,5 +1,6 @@
 // ignore_for_file: must_be_immutable
 
+import 'package:dsixv02app/core/app_colors.dart';
 import 'package:flutter/material.dart';
 
 class Sprite extends StatefulWidget {
@@ -11,6 +12,7 @@ class Sprite extends StatefulWidget {
 
   final List<Widget> layers;
   final double size;
+
   Offset location;
 
   @override
@@ -28,14 +30,6 @@ class _SpriteState extends State<Sprite> {
       left: widget.location.dx,
       top: widget.location.dy,
       child: GestureDetector(
-        onPanEnd: (details) {
-          setState(() {
-            widget.location = Offset(
-              (widget.location.dx / 2).roundToDouble() * 2,
-              (widget.location.dy / 2).roundToDouble() * 2,
-            );
-          });
-        },
         onPanUpdate: (details) {
           double dx = details.delta.dx;
           double dy = details.delta.dy;

@@ -1,68 +1,68 @@
-import 'dart:math';
+// import 'dart:math';
 
-import 'package:dsixv02app/core/app_colors.dart';
-import 'package:dsixv02app/models/dsix/dsix.dart';
-import 'package:dsixv02app/models/gm/gm.dart';
-import 'package:dsixv02app/models/gm/quest/quest.dart';
-import 'package:dsixv02app/models/gm/storySettings.dart';
-import 'package:flutter/material.dart';
+// import 'package:dsixv02app/core/app_colors.dart';
+// import 'package:dsixv02app/models/dsix/dsix.dart';
+// import 'package:dsixv02app/models/gm/gm.dart';
+// import 'package:dsixv02app/models/gm/quest/quest.dart';
+// import 'package:dsixv02app/models/gm/storySettings.dart';
+// import 'package:flutter/material.dart';
 
-class StoryPageVM {
-  StorySettings storySettings = StorySettings().defaultSettings();
+// class StoryPageVM {
+//   StorySettings storySettings = StorySettings().defaultSettings();
 
-  int layout;
+//   int layout;
 
-  void newGame(Dsix dsix) {
-    dsix.gm.round = 0;
-    newRound(dsix);
-  }
+//   void newGame(Dsix dsix) {
+//     dsix.gm.round = 0;
+//     newRound(dsix);
+//   }
 
-  Quest selectedQuest;
+//   Quest selectedQuest;
 
-  List<Quest> availableQuests = [];
+//   List<Quest> availableQuests = [];
 
-  void cancelQuest(Gm gm) {
-    this.availableQuests = [];
-    gm.quest = gm.quest.emptyQuest();
-  }
+//   void cancelQuest(Gm gm) {
+//     this.availableQuests = [];
+//     gm.quest = gm.quest.emptyQuest();
+//   }
 
-  void startQuest(Dsix dsix) {
-    dsix.gm.quest.questStart = true;
-    dsix.gm.gameCreationStep = 0;
+//   void startQuest(Dsix dsix) {
+//     dsix.gm.quest.questStart = true;
 
-    double x = ((Random().nextDouble() * 1200) / 5).roundToDouble() * 5;
-    double y = ((Random().nextDouble() * 1200) / 5).roundToDouble() * 5;
+//     double x = (Random().nextDouble() * 200);
+//     double y = 0;
 
-    dsix.gm.startLocation = Offset(x, y);
+//     dsix.gm.navigation = TransformationController(
+//         Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, -x, -y, 0, 1));
 
-    dsix.gm.buildCanvas();
-  }
+//     dsix.gm.buildCanvas();
+//   }
 
-  void finishQuest(Dsix dsix) {
-    this.availableQuests = [];
-    dsix.gm.quest = dsix.gm.quest.emptyQuest();
-  }
+//   void finishQuest(Dsix dsix) {
+//     this.availableQuests = [];
+//     dsix.gm.quest = dsix.gm.quest.emptyQuest();
+//   }
 
-  void newRound(Dsix dsix) {
-    dsix.gm.newRound();
-    setRoundXpAndGold(dsix);
-    createNewQuest();
-  }
+//   void newRound(Dsix dsix) {
+//     dsix.gm.newRound();
+//     setRoundXpAndGold(dsix);
+//     createNewQuest();
+//   }
 
-  void setRoundXpAndGold(Dsix dsix) {
-    dsix.gm.roundXp =
-        dsix.gm.round * dsix.checkPlayers() * storySettings.questXp;
-    dsix.gm.roundGold = dsix.gm.round * storySettings.questGold;
-    dsix.gm.currentXp = dsix.gm.roundXp;
-  }
+//   void setRoundXpAndGold(Dsix dsix) {
+//     dsix.gm.roundXp =
+//         dsix.gm.round * dsix.checkPlayers() * storySettings.questXp;
+//     dsix.gm.roundGold = dsix.gm.round * storySettings.questGold;
+//     dsix.gm.currentXp = dsix.gm.roundXp;
+//   }
 
-  void createNewQuest() {
-    this.availableQuests = [];
-    Quest newQuest = Quest();
+//   void createNewQuest() {
+//     this.availableQuests = [];
+//     Quest newQuest = Quest();
 
-    while (this.availableQuests.length < 3) {
-      newQuest = newQuest.newQuest();
-      availableQuests.add(newQuest);
-    }
-  }
-}
+//     while (this.availableQuests.length < 3) {
+//       newQuest = newQuest.newQuest();
+//       availableQuests.add(newQuest);
+//     }
+//   }
+// }

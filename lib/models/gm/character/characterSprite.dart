@@ -62,7 +62,7 @@ class _CharacterSpriteState extends State<CharacterSprite> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: AppColors.grey_01,
+                      color: AppColors.selectedBorder,
                       width: 0.5, //                   <--- border width here
                     ),
                   ),
@@ -90,7 +90,7 @@ class _CharacterSpriteState extends State<CharacterSprite> {
                 child: Container(
                   decoration: BoxDecoration(
                     border: Border.all(
-                      color: AppColors.grey_01,
+                      color: AppColors.selectedBorder,
                       width: 0.5, //                   <--- border width here
                     ),
                   ),

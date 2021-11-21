@@ -35,11 +35,18 @@ class HomeButton extends StatelessWidget {
 
         Navigator.of(context).push(newRoute);
       },
-      child: SvgPicture.asset(
-        AppImages.arrowLeft,
+      child: Icon(
+        Icons.exit_to_app,
         color:
             (this.buttonColor != null) ? this.buttonColor : AppColors.neutral01,
+        size: 35,
       ),
+
+      // SvgPicture.asset(
+      //   AppImages.arrowLeft,
+      //   color:
+      //       (this.buttonColor != null) ? this.buttonColor : AppColors.neutral01,
+      // ),
     );
   }
 }
