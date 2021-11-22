@@ -46,6 +46,16 @@ class _PlayerSpriteState extends State<PlayerSprite> {
   Widget menu = Container();
   bool menuOpen = false;
 
+  double checkWalkDistance() {
+    double distance =
+        widget.walkRange - (originalLocation - widget.location).distance + 1;
+    if (distance < 0) {
+      distance = 0;
+    }
+
+    return distance;
+  }
+
   void openMenu(bool open) {
     if (open) {
       menu = Container(
@@ -174,12 +184,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  width: widget.walkRange -
-                      (originalLocation - widget.location).distance +
-                      1,
-                  height: widget.walkRange -
-                      (originalLocation - widget.location).distance +
-                      1,
+                  width: checkWalkDistance(),
+                  height: checkWalkDistance(),
                   decoration: (widget.drag && menuOpen == false)
                       ? BoxDecoration(
                           shape: BoxShape.circle,

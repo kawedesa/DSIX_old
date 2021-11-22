@@ -3,6 +3,7 @@ import 'package:dsixv02app/models/gm/gm.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/world/world.dart';
 import 'package:dsixv02app/core/app_colors.dart';
+import 'package:flutter/material.dart';
 
 class Dsix {
   World world = new World();
@@ -127,6 +128,15 @@ class Dsix {
 
   void setCurrentPlayer(int playerIndex) {
     this.currentPlayerIndex = playerIndex;
+  }
+
+  int getPlayerIndex(Color color) {
+    for (int i = 0; i < this.players.length; i++) {
+      if (this.players[i].primaryColor == color) {
+        return i;
+      }
+    }
+    return 0;
   }
 
   Player getCurrentPlayer() {

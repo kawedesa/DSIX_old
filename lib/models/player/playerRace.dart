@@ -1,3 +1,4 @@
+import 'package:dsixv02app/core/app_icon.dart';
 import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/dsix/sprite.dart';
 import 'package:dsixv02app/models/player/bonus.dart';
@@ -5,9 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class PlayerRace {
-  String icon;
+  AppIcon icon;
   String name;
-  Sprite sprite;
   String description;
   String sex;
   int maxHealth;
@@ -45,74 +45,28 @@ class PlayerRace {
   void setSprite(Color color) {
     switch (this.name) {
       case 'human':
-        this.sprite = new Sprite(
-          layers: [
-            SvgPicture.asset(
-              AppImages.human,
-              color: color,
-              width: double.infinity,
-              height: double.infinity,
-            ),
-          ],
-          size: this.size,
-        );
+        this.icon = AppIcon(icon: AppImages.human, color: color);
         break;
       case 'orc':
-        this.sprite = new Sprite(layers: [
-          SvgPicture.asset(
-            AppImages.orc,
-            color: color,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ], size: this.size);
+        this.icon = AppIcon(icon: AppImages.orc, color: color);
         break;
       case 'goblin':
-        this.sprite = new Sprite(layers: [
-          SvgPicture.asset(
-            AppImages.goblin,
-            color: color,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ], size: this.size);
+        this.icon = AppIcon(icon: AppImages.goblin, color: color);
         break;
       case 'dwarf':
-        this.sprite = new Sprite(layers: [
-          SvgPicture.asset(
-            AppImages.dwarf,
-            color: color,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ], size: this.size);
+        this.icon = AppIcon(icon: AppImages.dwarf, color: color);
         break;
       case 'hobbit':
-        this.sprite = new Sprite(layers: [
-          SvgPicture.asset(
-            AppImages.hobbit,
-            color: color,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ], size: this.size);
+        this.icon = AppIcon(icon: AppImages.hobbit, color: color);
         break;
       case 'elf':
-        this.sprite = new Sprite(layers: [
-          SvgPicture.asset(
-            AppImages.elf,
-            color: color,
-            width: double.infinity,
-            height: double.infinity,
-          ),
-        ], size: this.size);
+        this.icon = AppIcon(icon: AppImages.elf, color: color);
         break;
     }
   }
 
   PlayerRace(
-      {Sprite sprite,
-      String icon,
+      {AppIcon icon,
       String name,
       String description,
       String sex,
@@ -122,7 +76,6 @@ class PlayerRace {
       int availableActionPoints,
       List<int> actionPoints,
       List<Bonus> bonus}) {
-    this.sprite = sprite;
     this.icon = icon;
     this.name = name;
     this.description = description;

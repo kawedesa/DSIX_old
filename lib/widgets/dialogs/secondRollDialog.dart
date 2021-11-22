@@ -33,7 +33,7 @@ class _SecondRollDialogState extends State<SecondRollDialog> {
       return;
     }
 
-    int randomNumber = Random().nextInt(6) + 1;
+    int randomNumber = Random().nextInt(3) + 1;
 
     diceList[index].die = randomNumber;
     diceList[index].animationLines = 0;

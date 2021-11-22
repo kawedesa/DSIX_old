@@ -74,6 +74,15 @@ class AppTextStyles {
     color: Colors.white,
   );
 
+  //Amount Dialog
+
+  static final amountDialogStyle = TextStyle(
+    height: 1.25,
+    fontSize: 60,
+    fontFamily: 'Calibri',
+    color: Colors.white,
+  );
+
 //Buildind Dialog
   static final buildingDialogStatStyle = TextStyle(
     fontFamily: 'Santana',

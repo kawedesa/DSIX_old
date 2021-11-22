@@ -217,17 +217,17 @@ class CharacterDialog extends StatelessWidget {
                       onTap: () {
                         Character newCharacter = this.character.copy();
 
-                        newCharacter.sprite.location = Offset(
+                        newCharacter.location = Offset(
                             -gm.navigation.value.row0.a /
                                     gm.navigation.value.row0.r +
                                 (MediaQuery.of(context).size.width * 0.45) /
                                     gm.navigation.value.row0.r -
-                                newCharacter.sprite.size / 2,
+                                newCharacter.size / 2,
                             -gm.navigation.value.row1.a /
                                     gm.navigation.value.row0.r +
                                 (MediaQuery.of(context).size.height * 0.37) /
                                     gm.navigation.value.row0.r -
-                                newCharacter.sprite.size / 2);
+                                newCharacter.size / 2);
 
                         // newCharacter.sprite.location = Offset(
                         //     MediaQuery.of(context).size.width / 2 -

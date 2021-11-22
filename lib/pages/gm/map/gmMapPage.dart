@@ -4,6 +4,7 @@ import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/pages/gm/map/gmMapPageVM.dart';
 import 'package:dsixv02app/pages/gm/map/instructionMenu.dart';
 import 'package:dsixv02app/widgets/description.dart';
+import 'package:dsixv02app/widgets/dialogs/amountDialog.dart';
 import 'package:dsixv02app/widgets/dialogs/buildingDialog.dart';
 import 'package:dsixv02app/widgets/subTitle.dart';
 import 'package:flutter/cupertino.dart';
@@ -80,7 +81,11 @@ class _GmMapPageState extends State<GmMapPage> {
                               },
                               onDoubleTap: () {
                                 setState(() {
-                                  // widget.dsix.gm.chooseTurn(index);
+                                  _gmMapPageVM.goToPlayer(
+                                      context,
+                                      widget.dsix,
+                                      widget.dsix.getPlayerIndex(widget
+                                          .dsix.gm.turnOrder[index].color));
                                 });
                               },
                               onTap: () {
@@ -188,7 +193,18 @@ class _GmMapPageState extends State<GmMapPage> {
                             child: Container(),
                             onPressed: () {
                               setState(() {
-                                _gmMapPageVM.addLoot(widget.dsix.gm, context);
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return AmountDialog(
+                                      confirm: (numberLoot) async {
+                                        _gmMapPageVM.createRandomLoot(context,
+                                            widget.dsix.gm, numberLoot);
+                                      },
+                                      color: widget.dsix.gm.primaryColor,
+                                    );
+                                  },
+                                ).then((_) => setState(() {}));
                               });
                             },
                           ),

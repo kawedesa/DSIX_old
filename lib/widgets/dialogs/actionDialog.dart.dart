@@ -8,6 +8,7 @@ import 'package:dsixv02app/models/gm/gm.dart';
 import 'package:dsixv02app/models/player/action/actionOutcome.dart';
 import 'package:dsixv02app/models/player/action/actionResult.dart';
 import 'package:dsixv02app/models/player/action/actionOption.dart';
+import 'package:dsixv02app/models/player/effectSystem.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/widgets/buttons/dialogButton.dart';
 import 'package:dsixv02app/widgets/dialogs/actionOptionDialog.dart';
@@ -136,7 +137,8 @@ class _ActionDialogState extends State<ActionDialog> {
   }
 
   void takeAction() {
-    widget.gm.takeTurn(widget.player);
+    // widget.gm.takeTurn(widget.player);
+
     this.result.diceResult = [];
     diceList.forEach((element) {
       this.result.diceResult.add(element.die);

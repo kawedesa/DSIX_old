@@ -1,16 +1,20 @@
 import 'dart:math';
 
 import 'package:dsixv02app/core/app_colors.dart';
+import 'package:dsixv02app/core/app_icon.dart';
+import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/dsix/sprite.dart';
 import 'package:dsixv02app/models/gm/map/mapTile.dart';
 import 'package:dsixv02app/models/gm/building/building.dart';
 import 'package:dsixv02app/models/gm/quest/quest.dart';
+import 'package:dsixv02app/models/player/effectSystem.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'character/character.dart';
+import 'loot/gmLootSprite.dart';
 import 'loot/loot.dart';
-import 'loot/loot_old.dart';
 
 class Gm {
   Color primaryColor = AppColors.gmPrimaryColor;
@@ -97,7 +101,7 @@ class Gm {
     //Add Players
     this.players.forEach((element) {
       Sprite newSprite = Sprite(
-        layers: element.race.sprite.layers,
+        layers: [element.race.icon],
         size: element.race.size,
         location: element.location,
       );
@@ -105,25 +109,81 @@ class Gm {
       this.canvas.add(newSprite);
     });
 
-    //Add Enemies
-    this.enemy.forEach((element) {
-      this.canvas.add(element.sprite);
-    });
+    // //Add Enemies
+    // this.enemy.forEach((element) {
+    //   this.canvas.add(element.sprite);
+    // });
 
     //Add Loot
+    spawnLoot();
+  }
+
+  void spawnLoot() {
     this.loot.forEach((element) {
-      this.canvas.add(element);
+      GmLootSprite newLootSprite = GmLootSprite(
+        gold: element.gold,
+        size: element.size,
+        location: element.location,
+        confirm: () async {},
+        updateLocation: (details) async {
+          element.location = Offset(element.location.dx + details.dx,
+              element.location.dy + details.dy);
+        },
+      );
+      this.canvas.add(newLootSprite);
     });
   }
 
-  void takeTurn(Player player) {
-    this.turnOrder.remove(player.race.sprite);
+  void killPlayer(Player player) {
+    this.players.remove(player);
+    if (this.turnOrder.contains(player.race.icon)) {
+      this.turnOrder.remove(player.race.icon);
+    }
+    this.deadPlayers.add(player);
+    Loot playerCorpse = Loot(
+      image: SvgPicture.asset(
+        AppImages.grave,
+        color: player.primaryColor,
+        width: player.race.size,
+        height: player.race.size,
+      ),
+      name: 'corpse',
+      size: player.race.size,
+      opened: false,
+      gold: player.gold,
+      location: player.location,
+    );
+    this.loot.add(playerCorpse);
+    if (this.turnOrder.contains(player.race.icon)) {
+      this.turnOrder.remove(player.race.icon);
+    }
+
+    buildCanvas();
+  }
+
+  List<Player> deadPlayers = [];
+
+  EffectSystem _effectSystem = EffectSystem();
+  void takeTurn() {
+    List<AppIcon> playerToRemove = [];
+    this.players.forEach((element) {
+      if (element.race.icon == this.turnOrder.first) {
+        _effectSystem.runEffects(element);
+        playerToRemove.add(element.race.icon);
+      }
+    });
+
+    playerToRemove.forEach((element) {
+      this.turnOrder.remove(element);
+    });
+
     checkTurn();
   }
 
   void checkTurn() {
     if (this.turnOrder.isEmpty) {
       newTurn();
+      return;
     }
   }
 
@@ -132,12 +192,12 @@ class Gm {
 
     if (this.players.isNotEmpty) {
       this.players.forEach((element) {
-        this.turnOrder.add(element.race.sprite);
+        this.turnOrder.add(element.race.icon);
       });
 
       if (this.enemy.isNotEmpty) {
         this.enemy.forEach((element) {
-          this.turnOrder.add(element.sprite);
+          this.turnOrder.add(element.icon);
         });
       }
 
@@ -151,5 +211,5 @@ class Gm {
   List<Character> enemy = [];
   List<Loot> loot = [];
 
-  List<Widget> turnOrder = [];
+  List<AppIcon> turnOrder = [];
 }

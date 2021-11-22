@@ -35,28 +35,97 @@ class EffectSystem {
 
         break;
       case 'negative':
+        this.negativeEffects.forEach((element) {
+          if (element.name == name) {
+            newEffect = element;
+          }
+        });
         break;
     }
 
     newEffect.copyEffect();
+    newEffect.duration = duration;
     newTemporaryEffect(name, duration, player);
     player.currentEffects.add(newEffect);
     player.updateStats();
   }
 
-  List<Effect> negativeEffects = [];
+  List<Effect> negativeEffects = [
+    Effect(
+      icon: 'weak',
+      name: 'weak',
+      description: 'You are weak.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'vulnerable',
+      name: 'vulnerable',
+      description: 'You are vulnerable.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'dull',
+      name: 'dull',
+      description: 'You are dull.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'inconvenient',
+      name: 'inconvenient',
+      description: 'You are inconvenient.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'slow',
+      name: 'slow',
+      description: 'You are slow.',
+      value: 2,
+    ),
+  ];
   List<Effect> positiveEffects = [
+//Actions
+    Effect(
+      icon: 'powerful',
+      name: 'powerful',
+      description: 'You are powerful.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'defensive',
+      name: 'defensive',
+      description: 'You are defensive.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'perceptive',
+      name: 'perceptive',
+      description: 'You are perceptive.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'charismatic',
+      name: 'charismatic',
+      description: 'You are charismatic.',
+      value: 2,
+    ),
+    Effect(
+      icon: 'fast',
+      name: 'fast',
+      description: 'You are fast.',
+      value: 2,
+    ),
+
 //Armor
 
     Effect(
-      icon: 'mArmor',
+      icon: 'magicResistance',
       name: 'magic resistance',
       description: 'Increase your magic resistance.',
       value: 2,
     ),
 
     Effect(
-      icon: 'pArmor',
+      icon: 'armor',
       name: 'Armor',
       description: 'Increase your armor.',
       value: 2,
@@ -65,14 +134,14 @@ class EffectSystem {
 //Damage
 
     Effect(
-      icon: 'mDamage',
+      icon: 'empowered',
       name: 'empowered',
       description: 'Increase your magic damage.',
       value: 2,
     ),
 
     Effect(
-      icon: 'pDamage',
+      icon: 'powerful',
       name: 'powerful',
       description: 'Increase your phisical damage.',
       value: 2,
@@ -341,8 +410,8 @@ class EffectSystem {
     switch (name) {
       case 'powerful':
         {
-          player.actions[5].value++;
-          player.actions[5].option.forEach((element) {
+          player.actions[0].value++;
+          player.actions[0].option.forEach((element) {
             element.value = player.actions[5].value;
           });
         }
@@ -777,14 +846,32 @@ class EffectSystem {
     }
   }
 
+//Run Effects
+
+  void runEffects(Player player) {
+    List<Effect> effectsToRemove = [];
+
+    player.currentEffects.forEach((element) {
+      element.duration--;
+      if (element.duration < 1) {
+        removeTemporaryEffect(element.name, player);
+        effectsToRemove.add(element);
+      }
+    });
+
+    effectsToRemove.forEach((element) {
+      player.currentEffects.remove(element);
+    });
+  }
+
   //REMOVE EFFECTS
 
   void removeTemporaryEffect(String name, Player player) {
     switch (name) {
       case 'powerful':
         {
-          player.actions[5].value--;
-          player.actions[5].option.forEach((element) {
+          player.actions[0].value--;
+          player.actions[0].option.forEach((element) {
             element.value = player.actions[5].value;
           });
         }

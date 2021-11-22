@@ -65,6 +65,22 @@ class _ActionPageState extends State<ActionPage> {
                                 widget.dsix.getCurrentPlayer(), index);
                           });
                         },
+                        onDoubleTap: () {
+                          setState(() {
+                            _actionPageVM.changeActionPointValue(
+                                1,
+                                widget.dsix.getCurrentPlayer(),
+                                _actionPageVM.selectedAction);
+                          });
+                        },
+                        onLongPress: () {
+                          setState(() {
+                            _actionPageVM.changeActionPointValue(
+                                -1,
+                                widget.dsix.getCurrentPlayer(),
+                                _actionPageVM.selectedAction);
+                          });
+                        },
                         child: SvgPicture.asset(
                           'assets/icon/action/${widget.dsix.getCurrentPlayer().actions[index].icon}.svg',
                           color: _actionPageVM.selector.items[index]
@@ -106,7 +122,20 @@ class _ActionPageState extends State<ActionPage> {
                           // color: Colors.amber,
                           child: GestureDetector(
                             // onTap: () {
-                            //   showEffect(index);
+                            //   setState(() {
+                            //     _actionPageVM.changeActionPointValue(
+                            //         1,
+                            //         widget.dsix.getCurrentPlayer(),
+                            //         _actionPageVM.selectedAction);
+                            //   });
+                            // },
+                            // onDoubleTap: () {
+                            //   setState(() {
+                            //     _actionPageVM.changeActionPointValue(
+                            //         -1,
+                            //         widget.dsix.getCurrentPlayer(),
+                            //         _actionPageVM.selectedAction);
+                            //   });
                             // },
                             child: SvgPicture.asset(
                               'assets/icon/effect/${widget.dsix.getCurrentPlayer().currentEffects[index].icon}.svg',

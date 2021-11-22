@@ -6,6 +6,7 @@ import 'package:dsixv02app/models/gm/gm.dart';
 import 'package:dsixv02app/models/gm/map/availableMaps.dart';
 import 'package:dsixv02app/models/gm/quest/quest.dart';
 import 'package:dsixv02app/models/gm/storySettings.dart';
+import 'package:dsixv02app/pages/gm/map/gmMapPageVM.dart';
 import 'package:flutter/material.dart';
 
 class GameModePageVM {
@@ -26,6 +27,8 @@ class GameModePageVM {
   //   this.availableQuests = [];
   //   gm.quest = gm.quest.emptyQuest();
   // }
+
+  GmMapPageVM _gmMapPageVM = GmMapPageVM();
 
   void newBattleRoyaleGame(Dsix dsix) {
     dsix.gm.map = AvailableMaps.crossroads;

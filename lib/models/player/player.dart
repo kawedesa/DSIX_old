@@ -5,11 +5,13 @@ import 'package:dsixv02app/models/dsix/effect.dart';
 import 'package:dsixv02app/models/gm/character/character.dart';
 import 'package:dsixv02app/models/gm/character/characterSprite.dart';
 import 'package:dsixv02app/models/gm/gm.dart';
+import 'package:dsixv02app/models/gm/loot/gmLootSprite.dart';
 import 'package:dsixv02app/models/gm/loot/loot.dart';
 import 'package:dsixv02app/models/gm/map/mapTile.dart';
 import 'package:dsixv02app/models/player/action/playerAction.dart';
 import 'package:dsixv02app/models/player/enemySprite.dart';
 import 'package:dsixv02app/models/player/playerBackground.dart';
+import 'package:dsixv02app/models/player/playerLootSprite.dart';
 import 'package:dsixv02app/models/player/playerRace.dart';
 import 'package:dsixv02app/models/player/playerSprite.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class Player {
 //Check player
   bool playerCreated = false;
+
+  bool alive = true;
 
 //Name and color
 
@@ -267,6 +271,7 @@ class Player {
     unequipItem(item, itemSlot);
     this.gold += item.value ~/ 2;
     this.bag.remove(item);
+    this.weight -= item.weight;
   }
 
   void useItem(Item item) {
@@ -320,6 +325,7 @@ class Player {
 
   void buildCanvas() {
     this.canvas = [];
+
     this.canvas.add(this.map);
 
     //Add enemies
@@ -332,7 +338,7 @@ class Player {
     //Add self
     this.canvas.add(this.sprite);
 
-    //Add loot
+    //Add Loot
     this.loot.forEach((element) {
       this.canvas.add(element);
     });
@@ -343,7 +349,8 @@ class Player {
   PlayerSprite sprite;
 
   List<EnemySprite> enemy = [];
-  List<Loot> loot = [];
+
+  List<PlayerLootSprite> loot = [];
 
   // PlayerSprite newSprite = PlayerSprite(
   //   image: element.race.sprite.layers,

@@ -1,34 +1,36 @@
+import 'package:dsixv02app/core/app_icon.dart';
 import 'package:dsixv02app/models/dsix/sprite.dart';
+import 'package:flutter/cupertino.dart';
 
 class Character {
-  String icon;
+  AppIcon icon;
   String name;
   int xp;
-  Sprite sprite;
+  double size;
+  Offset location;
 
   Character copy() {
     Character newCharacter = Character(
       icon: this.icon,
       name: this.name,
       xp: this.xp,
-      sprite: Sprite(
-        layers: this.sprite.layers,
-        size: this.sprite.size,
-        location: this.sprite.location,
-      ),
+      size: this.size,
+      location: this.location,
     );
     return newCharacter;
   }
 
   Character({
-    String icon,
+    AppIcon icon,
     String name,
     int xp,
-    Sprite sprite,
+    double size,
+    Offset location,
   }) {
     this.icon = icon;
     this.name = name;
     this.xp = xp;
-    this.sprite = sprite;
+    this.size = size;
+    this.location = location;
   }
 }

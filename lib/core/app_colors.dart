@@ -85,6 +85,7 @@ class AppColors {
   static final ally = Color.fromRGBO(38, 83, 35, 1);
 
   static final loot = Color.fromRGBO(139, 101, 2, 1);
+  static final lootOpened = Color.fromRGBO(60, 60, 50, 1);
 
 //Map
 

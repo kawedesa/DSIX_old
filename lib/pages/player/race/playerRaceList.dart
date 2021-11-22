@@ -11,13 +11,12 @@ class PlayerRaceList {
 
   List<PlayerRace> races = [
     PlayerRace(
-        icon: 'human',
         name: 'human',
         description:
             'Humans are flexible and can adapt to anything. They have the worlds largest population.',
         maxHealth: 12,
         maxWeight: 12,
-        size: 20,
+        size: 15,
         availableActionPoints: 3,
         actionPoints: [
           1,
@@ -34,13 +33,12 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        icon: 'orc',
         name: 'orc',
         description:
             'Orcs are big and strong, making them good warriors, but easy targets.',
         maxHealth: 12,
         maxWeight: 16,
-        size: 25,
+        size: 17,
         availableActionPoints: 5,
         actionPoints: [
           1,
@@ -65,13 +63,12 @@ class PlayerRaceList {
           ),
         ]),
     PlayerRace(
-        icon: 'goblin',
         name: 'goblin',
         description:
             'Goblins are small vicious creatures with sharp teeth and quick feet.',
         maxHealth: 12,
         maxWeight: 8,
-        size: 15,
+        size: 13,
         availableActionPoints: 5,
         actionPoints: [
           1,
@@ -96,7 +93,6 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        icon: 'dwarf',
         name: 'dwarf',
         description:
             'Dwarfs have long beards and love to drink. They are small, tough and stubborn.',
@@ -123,13 +119,12 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        icon: 'hobbit',
         name: 'hobbit',
         description:
             'Hobbits are small curious creatures, always looking for something new to learn.',
         maxHealth: 12,
         maxWeight: 12,
-        size: 15,
+        size: 13,
         availableActionPoints: 5,
         actionPoints: [
           -1,
@@ -154,13 +149,12 @@ class PlayerRaceList {
           )
         ]),
     PlayerRace(
-        icon: 'elf',
         name: 'elf',
         description:
             'Elves have quick reflexes and sharp senses, making them very agile and precise.',
         maxHealth: 12,
         maxWeight: 12,
-        size: 20,
+        size: 15,
         availableActionPoints: 5,
         actionPoints: [
           0,

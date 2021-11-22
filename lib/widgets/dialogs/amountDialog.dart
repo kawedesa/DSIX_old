@@ -1,61 +1,29 @@
 import 'package:dsixv02app/core/app_colors.dart';
 import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/core/app_text_styles.dart';
-import 'package:dsixv02app/models/dsix/dsix.dart';
-import 'package:dsixv02app/models/gm/gm.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/pages/player/map/playerMapPageVM.dart';
-import 'package:dsixv02app/pages/user/players/playersPage.dart';
-import 'package:dsixv02app/pages/user/players/playersPageVM.dart';
+import 'package:dsixv02app/widgets/buttons/dialogButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class HealthDialog extends StatefulWidget {
-  const HealthDialog({
-    @required this.player,
-    @required this.dsix,
-    @required this.gm,
-    @required this.color,
-  });
-
-  final Player player;
-  final Dsix dsix;
-  final Gm gm;
+class AmountDialog extends StatefulWidget {
+  const AmountDialog({@required this.color, @required this.confirm});
+  final Function(int) confirm;
   final Color color;
 
   @override
-  State<HealthDialog> createState() => _HealthDialogState();
+  State<AmountDialog> createState() => _AmountDialogState();
 }
 
-class _HealthDialogState extends State<HealthDialog> {
-  PlayersPageVM _playersPageVM = PlayersPageVM();
-  PlayerMapPageVM _playerMapPageVM = PlayerMapPageVM();
+class _AmountDialogState extends State<AmountDialog> {
+  int amount = 0;
 
-  void killPlayer() {
-    widget.player.alive = false;
-    widget.gm.killPlayer(widget.player);
-
-    _playersPageVM.deletePlayer(
-        widget.dsix, widget.dsix.getPlayerIndex(widget.color));
-    Route newRoute = PageRouteBuilder(
-      pageBuilder: (context, animation, secondaryAnimation) => PlayersPage(
-        dsix: widget.dsix,
-      ),
-      transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
-        var end = Offset(0.0, 0.0);
-        var curve = Curves.ease;
-        var tween =
-            Tween(begin: begin, end: end).chain(CurveTween(curve: curve));
-
-        return SlideTransition(
-          position: animation.drive(tween),
-          child: child,
-        );
-      },
-    );
-
-    Navigator.of(context).push(newRoute).then((_) => setState(() {}));
+  void changeAmount(int value) {
+    if (this.amount + value < 0) {
+      amount = 0;
+    } else {
+      this.amount += value;
+    }
   }
 
   @override
@@ -83,7 +51,7 @@ class _HealthDialogState extends State<HealthDialog> {
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                       child: Center(
-                        child: Text('HEALTH',
+                        child: Text('amount',
                             style: AppTextStyles.dialogTitleStyle),
                       ),
                     ),
@@ -99,7 +67,12 @@ class _HealthDialogState extends State<HealthDialog> {
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                this.widget.player.changeHealth(-1);
+                                changeAmount(-1);
+                              });
+                            },
+                            onLongPress: () {
+                              setState(() {
+                                changeAmount(-10);
                               });
                             },
                             child: Container(
@@ -111,35 +84,20 @@ class _HealthDialogState extends State<HealthDialog> {
                               ),
                             ),
                           ),
-                          (widget.player.health < 1)
-                              ? GestureDetector(
-                                  onTap: () {
-                                    Navigator.pop(context);
-                                    killPlayer();
-                                  },
-                                  child: SvgPicture.asset(
-                                    AppImages.grave,
-                                    color: AppColors.white01,
-                                    width: 100,
-                                    height: 100,
-                                  ),
-                                )
-                              : Container(
-                                  width: 100,
-                                  height: 100,
-                                  child: Center(
-                                    child: Text(
-                                      this.widget.player.health.toString(),
-                                      textAlign: TextAlign.justify,
-                                      style: AppTextStyles
-                                          .healthAndGoldDialogStyle,
-                                    ),
-                                  ),
-                                ),
+                          Text(
+                            this.amount.toString(),
+                            textAlign: TextAlign.justify,
+                            style: AppTextStyles.amountDialogStyle,
+                          ),
                           GestureDetector(
                             onTap: () {
                               setState(() {
-                                this.widget.player.changeHealth(1);
+                                changeAmount(1);
+                              });
+                            },
+                            onLongPress: () {
+                              setState(() {
+                                changeAmount(10);
                               });
                             },
                             child: Container(
@@ -153,6 +111,19 @@ class _HealthDialogState extends State<HealthDialog> {
                           ),
                         ],
                       ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                    child: DialogButton(
+                      buttonText: 'confirm',
+                      buttonColor: widget.color,
+                      buttonTextColor: AppColors.white01,
+                      buttonIcon: 'confirm',
+                      onTapAction: () {
+                        widget.confirm(this.amount);
+                        Navigator.pop(context);
+                      },
                     ),
                   ),
                 ],

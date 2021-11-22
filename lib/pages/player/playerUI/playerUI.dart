@@ -100,7 +100,9 @@ class _PlayerUIState extends State<PlayerUI> {
                           context: context,
                           builder: (BuildContext context) {
                             return HealthDialog(
+                              dsix: widget.dsix,
                               player: widget.dsix.getCurrentPlayer(),
+                              gm: widget.dsix.gm,
                               color:
                                   widget.dsix.getCurrentPlayer().primaryColor,
                             );

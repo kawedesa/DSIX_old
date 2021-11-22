@@ -55,6 +55,16 @@ class MapTile extends StatelessWidget {
   final List<Character> availableCharacters;
   final double size;
 
+  MapTile copy() {
+    MapTile newMapTile = MapTile(
+        name: this.name,
+        layers: this.layers,
+        availableCharacters: this.availableCharacters,
+        size: this.size);
+
+    return newMapTile;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(

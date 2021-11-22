@@ -31,7 +31,9 @@ class PlayerMapPage extends StatefulWidget {
 class _PlayerMapPageState extends State<PlayerMapPage> {
   PlayerMapPageVM _playerMapPageVM = PlayerMapPageVM();
   void refresh() {
-    setState(() {});
+    setState(() {
+      widget.refresh();
+    });
   }
 
   @override
@@ -82,19 +84,20 @@ class _PlayerMapPageState extends State<PlayerMapPage> {
                             return GestureDetector(
                               onLongPress: () {
                                 setState(() {
-                                  // widget.dsix.gm.removeTurn(index);
+                                  widget.dsix.gm.takeTurn();
                                 });
                               },
                               onDoubleTap: () {
                                 setState(() {
-                                  // widget.dsix.gm.chooseTurn(index);
+                                  widget.dsix.setCurrentPlayer(widget.dsix
+                                      .getPlayerIndex(widget
+                                          .dsix.gm.turnOrder[index].color));
+
+                                  widget.refresh();
                                 });
                               },
                               onTap: () {
-                                // setState(() {
-                                //   goToPlayer(
-                                //       widget.dsix.gm.turnOrder[index].primaryColor);
-                                // });
+                                setState(() {});
                               },
                               child: Container(
                                   width: 40,

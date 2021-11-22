@@ -1,14 +1,18 @@
 import 'package:dsixv02app/core/app_colors.dart';
 import 'package:dsixv02app/core/app_images.dart';
 import 'package:dsixv02app/models/gm/gm.dart';
+import 'package:dsixv02app/models/gm/loot/gmLootSprite.dart';
 import 'package:dsixv02app/models/gm/loot/loot.dart';
+import 'package:dsixv02app/models/player/effectSystem.dart';
 import 'package:dsixv02app/models/player/enemySprite.dart';
 import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/player/playerLootSprite.dart';
 import 'package:dsixv02app/models/player/playerSprite.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class PlayerMapPageVM {
+  EffectSystem _effectSystem = EffectSystem();
   void addEnemy(Gm gm) {
 //Add Player Enemy
 
@@ -80,15 +84,72 @@ class PlayerMapPageVM {
     }
   }
 
-  void search(Gm gm, Player player) {
-    player.loot = [];
+  // void search(Gm gm, Player player, Function() refresh) {
+  //   gm.loot.forEach((element) {
+  //     if ((element.location - player.location).distance <=
+  //         player.visionRange / 2) {
+  //       player.visibleLoot.add(element);
+  //     }
+  //   });
+
+  //   spawnLoot(
+  //     gm,
+  //     player,
+  //     refresh,
+  //   );
+
+  //   gm.takeTurn(player);
+  //   player.buildCanvas();
+  // }
+
+  void spawnLoot(Gm gm, Player player, Function() refresh) {
     gm.loot.forEach((element) {
       if ((element.location - player.location).distance <=
           player.visionRange / 2) {
-        player.loot.add(element);
+        switch (element.name) {
+          case 'corpse':
+            PlayerLootSprite newLootSprite = PlayerLootSprite(
+              type: 'corpse',
+              gold: element.gold,
+              size: element.size,
+              location: element.location,
+              opened: element.opened,
+              open: () async {
+                if ((element.location - player.location).distance <= 30) {
+                  player.gold += element.gold;
+                  element.gold = 0;
+                  element.opened = true;
+                  print('opened');
+                  refresh();
+                } else {
+                  print('too far');
+                }
+              },
+            );
+            player.loot.add(newLootSprite);
+            break;
+          case 'chest':
+            PlayerLootSprite newLootSprite = PlayerLootSprite(
+              type: 'chest',
+              gold: element.gold,
+              size: element.size,
+              location: element.location,
+              opened: element.opened,
+              open: () async {
+                if ((element.location - player.location).distance <= 30) {
+                  player.gold += element.gold;
+                  element.gold = 0;
+                  element.opened = true;
+
+                  refresh();
+                } else {}
+              },
+            );
+            player.loot.add(newLootSprite);
+            break;
+        }
       }
     });
-    player.buildCanvas();
   }
 
   void spawnEnemy(Gm gm) {
@@ -169,22 +230,23 @@ class PlayerMapPageVM {
   void setCanvas(context, Player player, Gm gm, Function refresh) {
     //Spawn Self
     PlayerSprite newSprite = new PlayerSprite(
-      image: player.race.sprite.layers,
+      image: [player.race.icon],
       size: player.race.size,
       visionRange: player.visionRange,
       location: player.location,
       color: player.tertiaryColor,
       walkRange: player.walkRange,
       playerActions: player.actions,
-      drag: (gm.turnOrder.first == player.race.sprite) ? true : false,
+      drag: (gm.turnOrder.first == player.race.icon) ? true : false,
       search: () async {
-        search(gm, player);
+        // search(gm, player, refresh);
       },
       refresh: () async {
         refresh();
       },
       playerTurn: () async {
-        gm.takeTurn(player);
+        // gm.takeTurn(player);
+        // _effectSystem.runEffects(player);
       },
       updateLocation: (details) async {
         player.location = Offset(
@@ -218,25 +280,28 @@ class PlayerMapPageVM {
     //Spawn Enemy
     spawnEnemy(gm);
 
+    //Spawn Loot
+    spawnLoot(gm, player, refresh);
+
     //Player Navigation
     player.navigation = TransformationController(Matrix4(
-        2,
+        1.5,
         0,
         0,
         0,
         0,
-        2,
+        1.5,
         0,
         0,
         0,
         0,
-        2,
+        1.5,
         0,
-        -player.location.dx * 2 -
-            (player.race.size * 2) / 2 +
+        -player.location.dx * 1.5 -
+            (player.race.size * 1.5) / 2 +
             (MediaQuery.of(context).size.width * 0.5),
-        -player.location.dy * 2 -
-            (player.race.size * 2) / 2 +
+        -player.location.dy * 1.5 -
+            (player.race.size * 1.5) / 2 +
             (MediaQuery.of(context).size.height * 0.38),
         0,
         1));

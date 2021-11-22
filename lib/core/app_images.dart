@@ -39,6 +39,8 @@ class AppImages {
 
   static final playerVision = 'assets/icon/ui/playerVision.svg';
 
+  static final grave = 'assets/icon/sprite/grave.svg';
+
 //Player Races
 
   static final human = 'assets/icon/sprite/human.svg';
