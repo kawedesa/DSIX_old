@@ -20,12 +20,14 @@ class Dsix {
 // Players
   List<Player> players = [];
 
-  Player createPlayer(String color) {
+  Player createPlayer(int index) {
     Player newPlayer;
 
-    switch (color) {
-      case 'pink':
+    switch (index) {
+      case 0:
         newPlayer = Player(
+            playerCreated: false,
+            index: 0,
             name: 'pink',
             primaryColor: AppColors.pinkPrimaryColor,
             secondaryColor: AppColors.pinkSecondaryColor,
@@ -33,8 +35,10 @@ class Dsix {
 
         return newPlayer;
         break;
-      case 'blue':
+      case 1:
         newPlayer = Player(
+            playerCreated: false,
+            index: 1,
             name: 'blue',
             primaryColor: AppColors.bluePrimaryColor,
             secondaryColor: AppColors.blueSecondaryColor,
@@ -42,8 +46,10 @@ class Dsix {
 
         return newPlayer;
         break;
-      case 'green':
+      case 2:
         newPlayer = Player(
+            playerCreated: false,
+            index: 2,
             name: 'green',
             primaryColor: AppColors.greenPrimaryColor,
             secondaryColor: AppColors.greenSecondaryColor,
@@ -51,8 +57,10 @@ class Dsix {
 
         return newPlayer;
         break;
-      case 'yellow':
+      case 3:
         newPlayer = Player(
+            playerCreated: false,
+            index: 3,
             name: 'yellow',
             primaryColor: AppColors.yellowPrimaryColor,
             secondaryColor: AppColors.yellowSecondaryColor,
@@ -60,8 +68,10 @@ class Dsix {
 
         return newPlayer;
         break;
-      case 'purple':
+      case 4:
         newPlayer = Player(
+            playerCreated: false,
+            index: 4,
             name: 'purple',
             primaryColor: AppColors.purplePrimaryColor,
             secondaryColor: AppColors.purpleSecondaryColor,
@@ -73,41 +83,34 @@ class Dsix {
     return newPlayer;
   }
 
-  Player deletePlayer(Player player) {
-    Player newPlayer = Player();
+  void resetPlayer(int index) {
+    List<Player> keepPlayers = [];
 
-    if (player.primaryColor == AppColors.pinkPrimaryColor) {
-      newPlayer = createPlayer('pink');
-      return newPlayer;
-    }
-    if (player.primaryColor == AppColors.bluePrimaryColor) {
-      newPlayer = createPlayer('blue');
-      return newPlayer;
-    }
-    if (player.primaryColor == AppColors.greenPrimaryColor) {
-      newPlayer = createPlayer('green');
-      return newPlayer;
-    }
-    if (player.primaryColor == AppColors.yellowPrimaryColor) {
-      newPlayer = createPlayer('yellow');
-      return newPlayer;
-    }
-    if (player.primaryColor == AppColors.purplePrimaryColor) {
-      newPlayer = createPlayer('purple');
-      return newPlayer;
-    }
-    return newPlayer;
+    this.players.forEach((element) {
+      if (element.index != index) {
+        keepPlayers.add(element);
+      } else {
+        Player newPlayer = createPlayer(index);
+        keepPlayers.add(newPlayer);
+      }
+    });
+
+    this.players = [];
+
+    keepPlayers.forEach((element) {
+      this.players.add(element);
+    });
   }
 
   void createNewPlayers() {
     if (this.players.isNotEmpty) {
       return;
     }
-    this.players.add(createPlayer('pink'));
-    this.players.add(createPlayer('blue'));
-    this.players.add(createPlayer('green'));
-    this.players.add(createPlayer('yellow'));
-    this.players.add(createPlayer('purple'));
+    this.players.add(createPlayer(0));
+    this.players.add(createPlayer(1));
+    this.players.add(createPlayer(2));
+    this.players.add(createPlayer(3));
+    this.players.add(createPlayer(4));
   }
 
   int checkPlayers() {
@@ -130,14 +133,14 @@ class Dsix {
     this.currentPlayerIndex = playerIndex;
   }
 
-  int getPlayerIndex(Color color) {
-    for (int i = 0; i < this.players.length; i++) {
-      if (this.players[i].primaryColor == color) {
-        return i;
-      }
-    }
-    return 0;
-  }
+  // int getPlayerIndex(Color color) {
+  //   for (int i = 0; i < this.players.length; i++) {
+  //     if (this.players[i].primaryColor == color) {
+  //       return i;
+  //     }
+  //   }
+  //   return 0;
+  // }
 
   Player getCurrentPlayer() {
     return this.players[this.currentPlayerIndex];

@@ -121,10 +121,8 @@ class Gm {
   void spawnLoot() {
     this.loot.forEach((element) {
       GmLootSprite newLootSprite = GmLootSprite(
-        gold: element.gold,
-        size: element.size,
+        size: 15,
         location: element.location,
-        confirm: () async {},
         updateLocation: (details) async {
           element.location = Offset(element.location.dx + details.dx,
               element.location.dy + details.dy);
@@ -135,25 +133,26 @@ class Gm {
   }
 
   void killPlayer(Player player) {
+    player.alive = false;
     this.players.remove(player);
     if (this.turnOrder.contains(player.race.icon)) {
       this.turnOrder.remove(player.race.icon);
     }
     this.deadPlayers.add(player);
+
+    player.unequipAllItems();
+
     Loot playerCorpse = Loot(
-      image: SvgPicture.asset(
-        AppImages.grave,
-        color: player.primaryColor,
-        width: player.race.size,
-        height: player.race.size,
-      ),
-      name: 'corpse',
-      size: player.race.size,
+      type: 'grave',
+      name: '${player.name} grave',
       opened: false,
-      gold: player.gold,
       location: player.location,
+      item: player.bag,
+      gold: player.gold,
     );
+
     this.loot.add(playerCorpse);
+
     if (this.turnOrder.contains(player.race.icon)) {
       this.turnOrder.remove(player.race.icon);
     }

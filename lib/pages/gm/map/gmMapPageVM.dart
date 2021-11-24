@@ -48,10 +48,13 @@ class GmMapPageVM {
     gm.newTurn();
   }
 
-  void spawnPlayersInRandomLocation(List<Player> players, Gm gm, context) {
+  void spawnPlayersInRandomLocation(List<Player> players, Gm gm) {
     if (players.isEmpty) {
       return;
     }
+
+    gm.players = [];
+
     players.forEach((element) {
       if (element.playerCreated) {
         double randomX = Random().nextDouble() * (gm.map.size - 300) + 150;
@@ -67,23 +70,42 @@ class GmMapPageVM {
   }
 
   void createRandomLoot(context, Gm gm, int number) {
-    int i = 0;
+    List<String> possibleLoot = [
+      'gold',
+      'item',
+    ];
 
+    int i = 0;
     while (i < number) {
-      addLoot(context, gm);
+      int randomLoot = Random().nextInt(possibleLoot.length);
+
+      newLoot(context, gm, possibleLoot[randomLoot]);
       i++;
     }
   }
 
-  void addLoot(context, Gm gm) {
-    int gold = (Random().nextInt(7) + 1) * 50;
+  void newLoot(context, Gm gm, String type) {
+    //Location
+    double randomX = Random().nextDouble() * (gm.map.size);
+    double randomY = Random().nextDouble() * (gm.map.size);
 
-    double size = 15;
+    Offset spawnLocation = Offset(randomX, randomY);
 
-    double randomX = Random().nextDouble() * gm.map.size;
-    double randomY = Random().nextDouble() * gm.map.size;
+    Loot newLoot = Loot(
+      type: type,
+      name: '$type chest',
+      opened: false,
+      location: spawnLocation,
+    );
 
-    // //Middle of screen
+    gm.loot.add(newLoot);
+
+    gm.buildCanvas();
+  }
+}
+
+
+   // //Middle of screen
     // Offset spawnLocation = Offset(
     //     -gm.navigation.value.row0.a / gm.navigation.value.row0.r +
     //         (MediaQuery.of(context).size.width * 0.45) /
@@ -93,104 +115,3 @@ class GmMapPageVM {
     //         (MediaQuery.of(context).size.height * 0.37) /
     //             gm.navigation.value.row0.r -
     //         size / 2);
-
-    Offset spawnLocation = Offset(randomX, randomY);
-
-    Loot newLoot = Loot(
-      image: SvgPicture.asset(
-        AppImages.loot,
-        width: size,
-        height: size,
-      ),
-      name: 'chest',
-      size: size,
-      opened: false,
-      gold: gold,
-      location: spawnLocation,
-      item: [],
-    );
-
-    gm.loot.add(newLoot);
-    gm.buildCanvas();
-  }
-
-  // void mapInteraction(Offset position, Gm gm) {
-  //   instructions[gm.quest.gameCreationStep].action(position, gm);
-  // }
-
-  // List<Instruction> instructions = [];
-  // Widget gameCreationAction(Gm gm) {
-  //   switch (gm.quest.objective.objective) {
-  //     case 'escort':
-  //       instructions = [
-  //         Instruction(
-  //             'Double tap the map to place the .', spawnTargetObjective),
-  //         Instruction(
-  //             'Place the \'s destination. The mission ends when they reach their destination.',
-  //             spawnTargetGoal),
-  //         Instruction('Place the players starting location.', spawnPlayers),
-  //         Instruction(
-  //             'Place the enemies. You can change them with a double tap. Spend all your points.',
-  //             spawnMenu),
-  //       ];
-  //       break;
-  //   }
-
-  //   return InstructionMenu(
-  //     instruction: instructions[gm.quest.gameCreationStep].text,
-  //     // subTitle: 'Points left: ${gm.currentXp}',
-  //     // ready: false,
-  //     // nextStep: () {
-  //     //   setState(() {
-  //     //     widget.dsix.gm.spawnCharacters();
-  //     //   });
-  //     // },
-  //     // action: () async {
-  //     //   instructions[gm.quest.gameCreationStep].action();
-  //     // },
-  //   );
-  // }
-
-  // void spawnTargetObjective(Offset position, Gm gm) {
-  //   gm.targets = [];
-
-  //   Character newCharacter = AvailableCharacters.merchant.copy();
-
-  //   newCharacter.sprite.location = position;
-
-  //   gm.targets.add(newCharacter);
-  //   gm.buildCanvas();
-  //   // gm.quest.objective.target.characters.forEach((element) {
-  //   //   gm.targets.add(element);
-  //   // });
-  //   gm.quest.gameCreationStep++;
-  // }
-
-  // void spawnTargetGoal(Offset position, Gm gm) {
-  //   gm.goals = [];
-
-  //   Character newCharacter = AvailableCharacters.goal.copy();
-
-  //   newCharacter.sprite.location = position;
-
-  //   gm.goals.add(newCharacter);
-  //   gm.buildCanvas();
-  //   gm.quest.gameCreationStep++;
-  // }
-
-  // void spawnPlayers(Offset position, Gm gm) {
-  //   gm.players = [];
-
-  //   Character newCharacter = AvailableCharacters.skeletonMage.copy();
-
-  //   newCharacter.sprite.location = position;
-
-  //   gm.players.add(newCharacter);
-  //   gm.buildCanvas();
-  //   gm.quest.gameCreationStep++;
-  // }
-
-  // void spawnMenu(Offset position, Gm gm) {
-  //   int totalSpawns = gm.currentXp ~/ 25;
-  // }
-}

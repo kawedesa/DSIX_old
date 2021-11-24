@@ -15,8 +15,8 @@ class PlayerRaceList {
         description:
             'Humans are flexible and can adapt to anything. They have the worlds largest population.',
         maxHealth: 12,
-        maxWeight: 12,
-        size: 15,
+        maxWeight: 16,
+        size: 16,
         availableActionPoints: 3,
         actionPoints: [
           1,
@@ -37,7 +37,7 @@ class PlayerRaceList {
         description:
             'Orcs are big and strong, making them good warriors, but easy targets.',
         maxHealth: 12,
-        maxWeight: 16,
+        maxWeight: 20,
         size: 17,
         availableActionPoints: 5,
         actionPoints: [
@@ -67,7 +67,7 @@ class PlayerRaceList {
         description:
             'Goblins are small vicious creatures with sharp teeth and quick feet.',
         maxHealth: 12,
-        maxWeight: 8,
+        maxWeight: 12,
         size: 13,
         availableActionPoints: 5,
         actionPoints: [
@@ -97,8 +97,8 @@ class PlayerRaceList {
         description:
             'Dwarfs have long beards and love to drink. They are small, tough and stubborn.',
         maxHealth: 16,
-        maxWeight: 12,
-        size: 20,
+        maxWeight: 16,
+        size: 15,
         availableActionPoints: 5,
         actionPoints: [
           0,
@@ -123,8 +123,8 @@ class PlayerRaceList {
         description:
             'Hobbits are small curious creatures, always looking for something new to learn.',
         maxHealth: 12,
-        maxWeight: 12,
-        size: 13,
+        maxWeight: 16,
+        size: 14,
         availableActionPoints: 5,
         actionPoints: [
           -1,
@@ -153,8 +153,8 @@ class PlayerRaceList {
         description:
             'Elves have quick reflexes and sharp senses, making them very agile and precise.',
         maxHealth: 12,
-        maxWeight: 12,
-        size: 15,
+        maxWeight: 16,
+        size: 16,
         availableActionPoints: 5,
         actionPoints: [
           0,

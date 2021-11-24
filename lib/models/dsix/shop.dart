@@ -171,6 +171,8 @@ class Shop {
       uses: 0,
       value: 100,
       enchant: 0,
+      maxRange: 20,
+      minRange: 0,
     ),
     Item(
       icon: 'dagger',
@@ -187,6 +189,8 @@ class Shop {
       uses: 0,
       value: 100,
       enchant: 0,
+      maxRange: 20,
+      minRange: 0,
     ),
     Item(
       icon: 'mace',
@@ -203,6 +207,8 @@ class Shop {
       uses: 0,
       value: 100,
       enchant: 0,
+      maxRange: 20,
+      minRange: 0,
     ),
     Item(
       icon: 'claw',
@@ -219,6 +225,8 @@ class Shop {
       uses: 0,
       value: 200,
       enchant: 0,
+      maxRange: 20,
+      minRange: 0,
     ),
     Item(
       icon: 'axe',
@@ -235,6 +243,8 @@ class Shop {
       uses: 0,
       value: 200,
       enchant: 0,
+      maxRange: 25,
+      minRange: 0,
     ),
     Item(
       icon: 'shortSword',
@@ -251,6 +261,8 @@ class Shop {
       uses: 0,
       value: 300,
       enchant: 0,
+      maxRange: 25,
+      minRange: 0,
     ),
     Item(
       icon: 'shortSpear',
@@ -267,6 +279,8 @@ class Shop {
       uses: 0,
       value: 300,
       enchant: 0,
+      maxRange: 30,
+      minRange: 0,
     ),
     Item(
       icon: 'rapier',
@@ -283,6 +297,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 25,
+      minRange: 0,
     ),
     Item(
       icon: 'sword',
@@ -299,6 +315,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 30,
+      minRange: 0,
     ),
     Item(
       icon: 'morningStar',
@@ -315,6 +333,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 30,
+      minRange: 0,
     ),
     Item(
       icon: 'saber',
@@ -331,6 +351,8 @@ class Shop {
       uses: 0,
       value: 500,
       enchant: 0,
+      maxRange: 30,
+      minRange: 0,
     ),
     Item(
       icon: 'longSword',
@@ -347,6 +369,8 @@ class Shop {
       uses: 0,
       value: 500,
       enchant: 0,
+      maxRange: 35,
+      minRange: 0,
     ),
   ];
 
@@ -366,6 +390,8 @@ class Shop {
       uses: 0,
       value: 300,
       enchant: 0,
+      maxRange: 35,
+      minRange: 0,
     ),
     Item(
       icon: 'quarterstaff',
@@ -382,6 +408,8 @@ class Shop {
       uses: 0,
       value: 300,
       enchant: 0,
+      maxRange: 35,
+      minRange: 0,
     ),
     Item(
       icon: 'doubleSword',
@@ -398,6 +426,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 35,
+      minRange: 0,
     ),
     Item(
       icon: 'trident',
@@ -414,6 +444,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 40,
+      minRange: 0,
     ),
     Item(
       icon: 'battleAxe',
@@ -430,6 +462,8 @@ class Shop {
       uses: 0,
       value: 500,
       enchant: 0,
+      maxRange: 40,
+      minRange: 0,
     ),
     Item(
       icon: 'halberd',
@@ -446,6 +480,8 @@ class Shop {
       uses: 0,
       value: 500,
       enchant: 0,
+      maxRange: 45,
+      minRange: 0,
     ),
     Item(
       icon: 'warHammer',
@@ -462,6 +498,8 @@ class Shop {
       uses: 0,
       value: 600,
       enchant: 0,
+      maxRange: 40,
+      minRange: 0,
     ),
     Item(
       icon: 'greatSword',
@@ -478,6 +516,8 @@ class Shop {
       uses: 0,
       value: 600,
       enchant: 0,
+      maxRange: 45,
+      minRange: 0,
     ),
   ];
 
@@ -497,6 +537,8 @@ class Shop {
       uses: 0,
       value: 100,
       enchant: 0,
+      maxRange: 120,
+      minRange: 0,
     ),
     Item(
       icon: 'boomerang',
@@ -513,6 +555,8 @@ class Shop {
       uses: 0,
       value: 100,
       enchant: 0,
+      maxRange: 100,
+      minRange: 0,
     ),
     Item(
       icon: 'javelins',
@@ -529,6 +573,8 @@ class Shop {
       uses: 5,
       value: 200,
       enchant: 0,
+      maxRange: 100,
+      minRange: 0,
     ),
     Item(
       icon: 'shortBow',
@@ -545,6 +591,8 @@ class Shop {
       uses: 0,
       value: 300,
       enchant: 0,
+      maxRange: 140,
+      minRange: 0,
     ),
     Item(
       icon: 'kunai',
@@ -561,6 +609,8 @@ class Shop {
       uses: 3,
       value: 300,
       enchant: 0,
+      maxRange: 100,
+      minRange: 0,
     ),
     Item(
       icon: 'handCrossbow',
@@ -577,6 +627,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 100,
+      minRange: 0,
     ),
     Item(
       icon: 'longBow',
@@ -593,6 +645,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 160,
+      minRange: 0,
     ),
     Item(
       icon: 'greatBow',
@@ -609,6 +663,8 @@ class Shop {
       uses: 0,
       value: 500,
       enchant: 0,
+      maxRange: 180,
+      minRange: 0,
     ),
     Item(
       icon: 'lightCrossbow',
@@ -625,6 +681,8 @@ class Shop {
       uses: 0,
       value: 500,
       enchant: 0,
+      maxRange: 130,
+      minRange: 0,
     ),
     Item(
       icon: 'handCannon',
@@ -641,6 +699,8 @@ class Shop {
       uses: 0,
       value: 600,
       enchant: 0,
+      maxRange: 120,
+      minRange: 0,
     ),
     Item(
       icon: 'heavyCrossbow',
@@ -657,6 +717,8 @@ class Shop {
       uses: 0,
       value: 600,
       enchant: 0,
+      maxRange: 140,
+      minRange: 0,
     ),
     Item(
       icon: 'musket',
@@ -673,6 +735,8 @@ class Shop {
       uses: 0,
       value: 700,
       enchant: 0,
+      maxRange: 140,
+      minRange: 0,
     ),
   ];
 
@@ -692,6 +756,8 @@ class Shop {
       uses: 0,
       value: 200,
       enchant: 0,
+      maxRange: 100,
+      minRange: 0,
     ),
     Item(
       icon: 'grenades',
@@ -708,6 +774,8 @@ class Shop {
       uses: 5,
       value: 200,
       enchant: 0,
+      maxRange: 100,
+      minRange: 0,
     ),
     Item(
       icon: 'wand',
@@ -724,6 +792,8 @@ class Shop {
       uses: 0,
       value: 300,
       enchant: 0,
+      maxRange: 110,
+      minRange: 0,
     ),
     Item(
       icon: 'ritualDagger',
@@ -740,6 +810,8 @@ class Shop {
       uses: 0,
       value: 300,
       enchant: 0,
+      maxRange: 30,
+      minRange: 0,
     ),
     Item(
       icon: 'magicSword',
@@ -756,6 +828,8 @@ class Shop {
       uses: 0,
       value: 400,
       enchant: 0,
+      maxRange: 40,
+      minRange: 0,
     ),
     Item(
       icon: 'spellBook',
@@ -772,6 +846,8 @@ class Shop {
       uses: 0,
       value: 500,
       enchant: 0,
+      maxRange: 120,
+      minRange: 0,
     ),
     Item(
       icon: 'magicAxe',
@@ -788,6 +864,8 @@ class Shop {
       uses: 0,
       value: 600,
       enchant: 0,
+      maxRange: 35,
+      minRange: 0,
     ),
     Item(
       icon: 'magicStaff',
@@ -804,6 +882,8 @@ class Shop {
       uses: 0,
       value: 700,
       enchant: 0,
+      maxRange: 130,
+      minRange: 0,
     ),
     Item(
       icon: 'ancientSword',
@@ -820,6 +900,8 @@ class Shop {
       uses: 0,
       value: 1600,
       enchant: 0,
+      maxRange: 55,
+      minRange: 0,
     ),
     Item(
       icon: 'ancientBow',
@@ -836,6 +918,8 @@ class Shop {
       uses: 0,
       value: 1600,
       enchant: 0,
+      maxRange: 220,
+      minRange: 0,
     ),
     Item(
       icon: 'ancientWarAxe',
@@ -852,6 +936,8 @@ class Shop {
       uses: 0,
       value: 1700,
       enchant: 0,
+      maxRange: 60,
+      minRange: 0,
     ),
     Item(
       icon: 'ancientSpellbook',
@@ -868,6 +954,8 @@ class Shop {
       uses: 0,
       value: 1900,
       enchant: 0,
+      maxRange: 150,
+      minRange: 0,
     ),
   ];
 
@@ -1110,7 +1198,7 @@ class Shop {
       mArmor: 2,
       weight: 2,
       uses: 0,
-      value: 1500,
+      value: 1200,
       enchant: 0,
     ),
     Item(

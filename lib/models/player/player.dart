@@ -23,6 +23,8 @@ class Player {
 
   bool alive = true;
 
+  int index;
+
 //Name and color
 
   String name;
@@ -116,6 +118,11 @@ class Player {
     this.pDamageItem += item.pDamage;
     this.mArmorItem += item.mArmor;
     this.mDamageItem += item.mDamage;
+
+    if (item.maxRange != null) {
+      this.attackRange += item.maxRange;
+    }
+
     updateStats();
   }
 
@@ -124,7 +131,43 @@ class Player {
     this.pDamageItem -= item.pDamage;
     this.mArmorItem -= item.mArmor;
     this.mDamageItem -= item.mDamage;
+
+    if (item.maxRange != null) {
+      this.attackRange -= item.maxRange;
+    }
     updateStats();
+  }
+
+  void unequipAllItems() {
+    //Head
+    if (this.headSlot.icon != '') {
+      unequipItem(this.headSlot, 'head');
+    }
+
+    //Body
+    if (this.bodySlot.icon != '') {
+      unequipItem(this.bodySlot, 'body');
+    }
+
+    //Feet
+    if (this.feetSlot.icon != '') {
+      unequipItem(this.feetSlot, 'feet');
+    }
+
+    //Hands
+    if (this.handSlot.icon != '') {
+      unequipItem(this.handSlot, 'hands');
+    }
+
+    //Main Hand
+    if (this.mainHandSlot.icon != '') {
+      unequipItem(this.mainHandSlot, 'mainHand');
+    }
+
+    //Off Hand
+    if (this.offHandSlot.icon != '') {
+      unequipItem(this.offHandSlot, 'offHand');
+    }
   }
 
   void unequipItem(Item item, String itemSlot) {
@@ -133,6 +176,7 @@ class Player {
     }
 
     removeItemStats(item);
+
     this.bag.add(item);
     switch (item.inventorySpace) {
       case 'head':
@@ -280,6 +324,7 @@ class Player {
 
   void buyItem(Item item) {
     if (checkWeight(item)) {
+      print('Too heavy');
       //TODO snackbars
 
       return;
@@ -289,6 +334,11 @@ class Player {
     }
 
     this.gold -= item.value;
+    this.weight += item.weight;
+    this.bag.add(item.copyItem());
+  }
+
+  void lootItem(Item item) {
     this.weight += item.weight;
     this.bag.add(item.copyItem());
   }
@@ -322,11 +372,17 @@ class Player {
 
   double visionRange;
   double walkRange;
+  double attackRange;
 
   void buildCanvas() {
     this.canvas = [];
 
     this.canvas.add(this.map);
+
+    //Add Loot
+    this.loot.forEach((element) {
+      this.canvas.add(element);
+    });
 
     //Add enemies
     this.enemy.forEach((element) {
@@ -337,11 +393,6 @@ class Player {
 
     //Add self
     this.canvas.add(this.sprite);
-
-    //Add Loot
-    this.loot.forEach((element) {
-      this.canvas.add(element);
-    });
   }
 
   MapTile map;
@@ -398,7 +449,7 @@ class Player {
   }
 
   TransformationController navigation = TransformationController(
-      Matrix4(3, 0, 0, 0, 0, 3, 0, 0, 0, 0, 2, 0, 0, 0, 0, 3));
+      Matrix4(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1));
 
   List<Widget> canvas = [];
 
@@ -424,10 +475,14 @@ class Player {
   // }
 
   Player(
-      {String name,
+      {bool playerCreated,
+      int index,
+      String name,
       Color primaryColor,
       Color secondaryColor,
       Color tertiaryColor}) {
+    this.playerCreated = this.playerCreated;
+    this.index = index;
     this.name = name;
     this.primaryColor = primaryColor;
     this.secondaryColor = secondaryColor;

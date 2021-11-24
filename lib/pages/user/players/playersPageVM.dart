@@ -12,9 +12,11 @@ import 'dart:math';
 
 class PlayersPageVM {
   checkCharacter(BuildContext context, Dsix dsix, int playerIndex) {
-    if (dsix.players[playerIndex].playerCreated) {
+    if (dsix.players[playerIndex].playerCreated &&
+        dsix.players[playerIndex].alive) {
       goToPlayerUI(context, dsix, playerIndex);
     } else {
+      dsix.resetPlayer(playerIndex);
       goToRacePage(context, dsix, playerIndex);
     }
   }
@@ -85,11 +87,6 @@ class PlayersPageVM {
     );
 
     Navigator.of(context).push(newRoute);
-  }
-
-  deletePlayer(Dsix dsix, int playerIndex) {
-    Player newPlayer = dsix.deletePlayer(dsix.players[playerIndex]);
-    dsix.players.replaceRange(playerIndex, playerIndex + 1, [newPlayer]);
   }
 
   RacePageVM _racePageVM = RacePageVM();

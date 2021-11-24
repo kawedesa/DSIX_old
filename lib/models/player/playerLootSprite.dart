@@ -6,16 +6,15 @@ import 'package:flutter_svg/svg.dart';
 
 class PlayerLootSprite extends StatefulWidget {
   PlayerLootSprite(
-      {@required this.gold,
-      @required this.size,
+      {@required this.size,
       @required this.location,
-      @required this.open,
+      @required this.openAction,
       @required this.type,
       @required this.opened});
-  int gold;
+
   final double size;
   Offset location;
-  Function() open;
+  Function() openAction;
   String type;
   bool opened;
 
@@ -29,53 +28,65 @@ class _PlayerLootSpriteState extends State<PlayerLootSprite> {
   @override
   Widget build(BuildContext context) {
     switch (widget.type) {
-      case 'chest':
-        this.image = (widget.opened)
-            ? SvgPicture.asset(
-                AppImages.loot,
-                color: AppColors.lootOpened,
-                width: double.infinity,
-                height: double.infinity,
-              )
-            : SvgPicture.asset(
-                AppImages.loot,
-                color: AppColors.loot,
-                width: double.infinity,
-                height: double.infinity,
-              );
+      case 'item':
+        this.image = SvgPicture.asset(
+          AppImages.loot,
+          color:
+              (widget.opened) ? AppColors.itemChestOpened : AppColors.itemChest,
+          width: double.infinity,
+          height: double.infinity,
+        );
         break;
-      case 'corpse':
-        this.image = (widget.opened)
-            ? SvgPicture.asset(
-                AppImages.grave,
-                color: AppColors.lootOpened,
-                width: double.infinity,
-                height: double.infinity,
-              )
-            : SvgPicture.asset(
-                AppImages.grave,
-                color: AppColors.loot,
-                width: double.infinity,
-                height: double.infinity,
-              );
+      case 'gold':
+        this.image = SvgPicture.asset(
+          AppImages.loot,
+          color:
+              (widget.opened) ? AppColors.goldChestOpened : AppColors.goldChest,
+          width: double.infinity,
+          height: double.infinity,
+        );
+        break;
+      case 'grave':
+        this.image = SvgPicture.asset(
+          AppImages.grave,
+          color: (widget.opened) ? AppColors.graveOpened : AppColors.grave,
+          width: double.infinity,
+          height: double.infinity,
+        );
         break;
     }
 
     return Positioned(
-      left: widget.location.dx,
-      top: widget.location.dy,
+      left: widget.location.dx - 2,
+      top: widget.location.dy - 2,
       child: GestureDetector(
         onTap: () {
           setState(() {
-            widget.open();
+            if (widget.opened == false) {
+              widget.openAction();
+            }
           });
         },
         child: Container(
-          width: widget.size,
-          height: widget.size,
-          child: Stack(children: [
-            this.image,
-          ]),
+          width: widget.size + 15,
+          height: widget.size + 15,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(
+              color: AppColors.rangeOutline,
+              width: 0.5,
+            ),
+            color: AppColors.chestRange,
+          ),
+          child: Center(
+            child: Container(
+              width: widget.size,
+              height: widget.size,
+              child: Stack(children: [
+                this.image,
+              ]),
+            ),
+          ),
         ),
       ),
     );

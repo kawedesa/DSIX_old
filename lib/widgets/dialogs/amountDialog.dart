@@ -7,20 +7,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AmountDialog extends StatefulWidget {
-  const AmountDialog({@required this.color, @required this.confirm});
+  const AmountDialog(
+      {@required this.color,
+      @required this.confirm,
+      @required this.max,
+      @required this.min});
   final Function(int) confirm;
   final Color color;
+  final int max;
+  final int min;
 
   @override
   State<AmountDialog> createState() => _AmountDialogState();
 }
 
 class _AmountDialogState extends State<AmountDialog> {
-  int amount = 0;
+  int amount;
 
   void changeAmount(int value) {
-    if (this.amount + value < 0) {
-      amount = 0;
+    if (this.amount + value < widget.min) {
+      this.amount = widget.min;
+    } else if (this.amount + value > widget.max) {
+      this.amount = widget.max;
     } else {
       this.amount += value;
     }
@@ -28,6 +36,10 @@ class _AmountDialogState extends State<AmountDialog> {
 
   @override
   Widget build(BuildContext context) {
+    if (this.amount == null) {
+      this.amount = widget.min;
+    }
+
     return AlertDialog(
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       content: Container(
@@ -121,8 +133,8 @@ class _AmountDialogState extends State<AmountDialog> {
                       buttonTextColor: AppColors.white01,
                       buttonIcon: 'confirm',
                       onTapAction: () {
-                        widget.confirm(this.amount);
                         Navigator.pop(context);
+                        widget.confirm(this.amount);
                       },
                     ),
                   ),

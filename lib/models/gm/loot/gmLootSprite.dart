@@ -6,13 +6,11 @@ import 'package:flutter_svg/svg.dart';
 
 class GmLootSprite extends StatefulWidget {
   GmLootSprite({
-    @required this.gold,
     @required this.size,
     @required this.location,
-    @required this.confirm,
     this.updateLocation,
   });
-  int gold;
+
   final double size;
   Offset location;
   Function() confirm;

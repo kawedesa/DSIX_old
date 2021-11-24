@@ -81,11 +81,8 @@ class _GmMapPageState extends State<GmMapPage> {
                               },
                               onDoubleTap: () {
                                 setState(() {
-                                  _gmMapPageVM.goToPlayer(
-                                      context,
-                                      widget.dsix,
-                                      widget.dsix.getPlayerIndex(widget
-                                          .dsix.gm.turnOrder[index].color));
+                                  _gmMapPageVM.goToPlayer(context, widget.dsix,
+                                      widget.dsix.gm.turnOrder.first.index);
                                 });
                               },
                               onTap: () {
@@ -150,9 +147,7 @@ class _GmMapPageState extends State<GmMapPage> {
                                   onPressed: () {
                                     setState(() {
                                       _gmMapPageVM.spawnPlayersInRandomLocation(
-                                          widget.dsix.players,
-                                          widget.dsix.gm,
-                                          context);
+                                          widget.dsix.players, widget.dsix.gm);
                                       _gmMapPageVM.startGame(widget.dsix.gm);
                                     });
                                   },
@@ -197,6 +192,8 @@ class _GmMapPageState extends State<GmMapPage> {
                                   context: context,
                                   builder: (BuildContext context) {
                                     return AmountDialog(
+                                      min: 1,
+                                      max: 100,
                                       confirm: (numberLoot) async {
                                         _gmMapPageVM.createRandomLoot(context,
                                             widget.dsix.gm, numberLoot);

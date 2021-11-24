@@ -35,8 +35,7 @@ class _HealthDialogState extends State<HealthDialog> {
     widget.player.alive = false;
     widget.gm.killPlayer(widget.player);
 
-    _playersPageVM.deletePlayer(
-        widget.dsix, widget.dsix.getPlayerIndex(widget.color));
+    widget.dsix.resetPlayer(widget.player.index);
     Route newRoute = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => PlayersPage(
         dsix: widget.dsix,

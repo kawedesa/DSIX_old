@@ -34,7 +34,7 @@ class RacePageVM {
     player.health = player.race.maxHealth;
     chooseSex(player);
     this.selectedRace = player.race;
-    player.race.setSprite(player.primaryColor);
+    player.race.setSprite(player.primaryColor, player.index);
   }
 
   void chooseSex(Player player) {

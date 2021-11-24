@@ -185,7 +185,7 @@ class _PlayerUIState extends State<PlayerUI> {
               : ScrollPhysics(),
           onPageChanged: (index) {
             setState(() {
-              _playerUIVM.changePage(index);
+              _playerUIVM.selectedPage = index;
             });
           },
           children: <Widget>[
@@ -213,9 +213,9 @@ class _PlayerUIState extends State<PlayerUI> {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-        onTap: (value) {
+        onTap: (index) {
           setState(() {
-            _playerUIVM.changePage(value);
+            _playerUIVM.changePage(index);
           });
         },
         type: BottomNavigationBarType.fixed,

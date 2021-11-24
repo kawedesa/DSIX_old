@@ -63,7 +63,8 @@ class ActionPointPageVM {
       //set player vision
 
       player.visionRange = 150 + (30.0 * player.actions[2].value);
-      player.walkRange = 100 + (20.0 * player.actions[4].value);
+      player.walkRange = 90 + (20.0 * player.actions[4].value);
+      player.attackRange = 10;
     }
     player.alive = true;
     player.playerCreated = true;

@@ -6,11 +6,13 @@ class EnemySprite extends StatefulWidget {
     this.image,
     @required this.size,
     @required this.location,
+    this.attacked,
   });
 
   List<Widget> image;
   final double size;
   Offset location;
+  final Function() attacked;
 
   @override
   State<EnemySprite> createState() => _EnemySpriteState();
@@ -23,6 +25,11 @@ class _EnemySpriteState extends State<EnemySprite> {
       left: widget.location.dx,
       top: widget.location.dy,
       child: GestureDetector(
+        onTap: () {
+          setState(() {
+            widget.attacked();
+          });
+        },
         child: Container(
           width: widget.size,
           height: widget.size,

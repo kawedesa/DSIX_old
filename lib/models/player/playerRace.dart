@@ -42,25 +42,49 @@ class PlayerRace {
     return newPlayerRace;
   }
 
-  void setSprite(Color color) {
+  void setSprite(Color color, int playerIndex) {
     switch (this.name) {
       case 'human':
-        this.icon = AppIcon(icon: AppImages.human, color: color);
+        this.icon = AppIcon(
+          icon: AppImages.human,
+          color: color,
+          index: playerIndex,
+        );
         break;
       case 'orc':
-        this.icon = AppIcon(icon: AppImages.orc, color: color);
+        this.icon = AppIcon(
+          icon: AppImages.orc,
+          color: color,
+          index: playerIndex,
+        );
         break;
       case 'goblin':
-        this.icon = AppIcon(icon: AppImages.goblin, color: color);
+        this.icon = AppIcon(
+          icon: AppImages.goblin,
+          color: color,
+          index: playerIndex,
+        );
         break;
       case 'dwarf':
-        this.icon = AppIcon(icon: AppImages.dwarf, color: color);
+        this.icon = AppIcon(
+          icon: AppImages.dwarf,
+          color: color,
+          index: playerIndex,
+        );
         break;
       case 'hobbit':
-        this.icon = AppIcon(icon: AppImages.hobbit, color: color);
+        this.icon = AppIcon(
+          icon: AppImages.hobbit,
+          color: color,
+          index: playerIndex,
+        );
         break;
       case 'elf':
-        this.icon = AppIcon(icon: AppImages.elf, color: color);
+        this.icon = AppIcon(
+          icon: AppImages.elf,
+          color: color,
+          index: playerIndex,
+        );
         break;
     }
   }

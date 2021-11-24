@@ -89,9 +89,8 @@ class _PlayerMapPageState extends State<PlayerMapPage> {
                               },
                               onDoubleTap: () {
                                 setState(() {
-                                  widget.dsix.setCurrentPlayer(widget.dsix
-                                      .getPlayerIndex(widget
-                                          .dsix.gm.turnOrder[index].color));
+                                  widget.dsix.setCurrentPlayer(
+                                      widget.dsix.gm.turnOrder[index].index);
 
                                   widget.refresh();
                                 });
@@ -131,8 +130,8 @@ class _PlayerMapPageState extends State<PlayerMapPage> {
                       widget.dsix.getCurrentPlayer().navigation,
                   constrained: false,
                   panEnabled: true,
-                  maxScale: 2,
-                  minScale: 2,
+                  maxScale: _playerMapPageVM.canvasZoom,
+                  minScale: _playerMapPageVM.canvasZoom,
                   child: Stack(
                     children: widget.dsix.getCurrentPlayer().canvas,
                   ),

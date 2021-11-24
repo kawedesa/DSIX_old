@@ -9,18 +9,23 @@ class DialogButton extends StatelessWidget {
   final Color buttonTextColor;
   final Color buttonColor;
   final Color buttonFillColor;
+  final Color iconFillColor;
   final String buttonIcon;
+
   final TextStyle buttonTextStyle;
   final Function() onTapAction;
+  final int value;
 
   const DialogButton({
     @required this.buttonText,
     this.buttonTextColor,
     this.buttonColor,
     this.buttonFillColor,
+    this.iconFillColor,
     this.buttonIcon,
     this.buttonTextStyle,
     this.onTapAction,
+    this.value,
   });
 
   @override
@@ -55,6 +60,9 @@ class DialogButton extends StatelessWidget {
         case 'action':
           _icon = AppImages.action;
           break;
+        case 'weight':
+          _icon = AppImages.weight;
+          break;
       }
     }
 
@@ -81,15 +89,36 @@ class DialogButton extends StatelessWidget {
               Align(
                 alignment: Alignment.centerRight,
                 child: Padding(
+                  padding: const EdgeInsets.fromLTRB(0, 3, 40, 0),
+                  child: (this.value != null)
+                      ? Container(
+                          width: MediaQuery.of(context).size.width * 0.04,
+                          child: Text(
+                            '${this.value}',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.5,
+                              fontFamily: 'Calibri',
+                              color: this.buttonTextColor,
+                            ),
+                          ),
+                        )
+                      : Container(),
+                ),
+              ),
+              Align(
+                alignment: Alignment.centerRight,
+                child: Padding(
                   padding: const EdgeInsets.fromLTRB(0, 0, 25, 0),
                   child: (this.buttonIcon != null)
                       ? Container(
                           width: MediaQuery.of(context).size.width * 0.04,
                           child: SvgPicture.asset(
                             _icon,
-                            color: (this.buttonColor != null)
-                                ? this.buttonColor
-                                : AppColors.neutral01,
+                            color: (this.iconFillColor != null)
+                                ? this.iconFillColor
+                                : this.buttonFillColor,
                           ),
                         )
                       : Container(),

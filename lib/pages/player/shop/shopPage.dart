@@ -83,7 +83,12 @@ class _ShopPageState extends State<ShopPage> {
                   child: Padding(
                     padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                     child: (_shopPageVM.selectedMenu.isEmpty)
-                        ? Description(description: _shopPageVM.description)
+                        ? Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Description(description: _shopPageVM.description),
+                            ],
+                          )
                         : Container(
                             child: GridView.count(
                               crossAxisCount: 4,

@@ -76,8 +76,7 @@ class _PlayersPageState extends State<PlayersPage> {
                                         .getCurrentPlayer()
                                         .primaryColor,
                                     confirm: () async {
-                                      playersPageVM.deletePlayer(
-                                          widget.dsix, index);
+                                      widget.dsix.resetPlayer(index);
                                     });
                               },
                             ).then((_) => setState(() {}));
