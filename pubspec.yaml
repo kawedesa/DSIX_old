@@ -18,17 +18,22 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.10.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
 
   cupertino_icons: ^0.1.3
-  flare_flutter: ^1.8.3
   flutter_svg: ^0.21.0+1
-  dotted_border: ^2.0.0+1
-  transparent_pointer: ^1.0.0
+  rive: ^0.7.33    
+  
+  responsive_flutter: ^0.0.4  
+
+  provider: ^6.0.1
+  firebase_core: ^1.10.0
+  cloud_firestore: ^3.1.0
+
 
 dev_dependencies:
   flutter_test:
@@ -46,22 +51,13 @@ flutter:
   uses-material-design: true
 
   assets:
-    - assets/icon/ui/
-    - assets/icon/sprite/
-    - assets/icon/background/
-    - assets/icon/action/
-    - assets/icon/effect/
-    - assets/icon/item/
-
+    - assets/icon/
     - assets/image/map/crossroads/
-    - assets/image/sprite/
+    - assets/image/sprite/orc/
+    - assets/image/sprite/dwarf/
 
-    # - assets/image/map/mountain/
-    # - assets/image/map/island/
-    # - assets/image/building/altar/
-    # - assets/image/building/outpost/
+    - assets/animation/
 
-    - assets/animation/dice/
 
   fonts:
   - family: Headline
