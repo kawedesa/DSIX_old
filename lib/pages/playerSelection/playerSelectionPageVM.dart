@@ -1,5 +1,5 @@
+import 'package:dsixv02app/pages/map/mapPage.dart';
 import 'package:flutter/material.dart';
-import 'mapPage.dart';
 
 class PlayerSelectionPageVM {
   void goToMapPage(context) {

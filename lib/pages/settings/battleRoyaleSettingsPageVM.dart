@@ -1,20 +1,24 @@
 import 'package:dsixv02app/models/dsix.dart';
-import 'package:dsixv02app/pages/playerSelectionPage.dart';
+import 'package:dsixv02app/models/gameMap.dart';
+import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
+
 import 'package:flutter/material.dart';
 
 class BattleRoyaleSettingsPageVM {
-  void newGame(context, Dsix dsix, int numberOfPlayers) {
-    dsix.newBattleRoyaleGame(numberOfPlayers);
-    goToPlayerSelectionPage(context);
-  }
-
-  void continueGame(context, Dsix dsix) {
-    dsix.joinGame();
+  void newGame(context, Dsix dsix, GameMap map, int numberOfPlayers) {
+    dsix.createRandomPlayersInRandomLocations(numberOfPlayers);
+    dsix.newMap();
     goToPlayerSelectionPage(context);
   }
 
   void deleteGame(Dsix dsix) {
-    dsix.deleteGame();
+    dsix.deleteMap();
+    dsix.deleteAllPlayersFromDataBase();
+    dsix.deleteTurnOrder();
+  }
+
+  void joinGame(context) {
+    goToPlayerSelectionPage(context);
   }
 
   void goToPlayerSelectionPage(context) {

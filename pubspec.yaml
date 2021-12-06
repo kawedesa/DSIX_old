@@ -28,7 +28,8 @@ dependencies:
   flutter_svg: ^0.21.0+1
   rive: ^0.7.33    
   
-  responsive_flutter: ^0.0.4  
+  responsive_flutter: ^0.0.4
+  dotted_border: ^2.0.0+1 
 
   provider: ^6.0.1
   firebase_core: ^1.10.0

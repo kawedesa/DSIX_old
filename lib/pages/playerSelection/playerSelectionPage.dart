@@ -1,9 +1,10 @@
-import 'package:dsixv02app/core/app_Colors.dart';
-import 'package:dsixv02app/core/widgets/button.dart';
-import 'package:dsixv02app/core/widgets/goToPageButton.dart';
+import 'package:dsixv02app/pages/shared/app_Colors.dart';
 import 'package:dsixv02app/models/dsix.dart';
 import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/pages/battleRoyaleSettingsPage.dart';
+import 'package:dsixv02app/pages/settings/battleRoyaleSettingsPage.dart';
+import 'package:dsixv02app/pages/shared/widgets/button.dart';
+import 'package:dsixv02app/pages/shared/widgets/goToPageButton.dart';
+import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'playerSelectionPageVM.dart';
@@ -13,9 +14,11 @@ class PlayerSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final listOfPlayers = Provider.of<List<Player>>(context);
-    final dsix = Provider.of<Dsix>(context);
     PlayerSelectionPageVM _selectPlayerPageVM = PlayerSelectionPageVM();
+    UIColor _uiColor = UIColor();
+    final dsix = Provider.of<Dsix>(context);
+    final players = Provider.of<List<Player>>(context);
+    final turnOrder = Provider.of<List<Turn>>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -36,17 +39,21 @@ class PlayerSelectionPage extends StatelessWidget {
                 child: ListView.builder(
                   shrinkWrap: true,
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  itemCount: listOfPlayers.length,
+                  itemCount: players.length,
                   itemBuilder: (BuildContext context, int index) {
                     return Padding(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                       child: Button(
-                        buttonText: '${dsix.listOfPlayers[index].id}',
-                        buttonColor: dsix.listOfPlayers[index].color.primary,
+                        buttonText: '${players[index].id}',
+                        buttonColor:
+                            _uiColor.setUIColor(players[index].id, 'primary'),
                         buttonTextColor:
-                            dsix.listOfPlayers[index].color.primary,
+                            _uiColor.setUIColor(players[index].id, 'primary'),
                         onTapAction: () async {
                           dsix.selectPlayer(index);
+                          if (turnOrder.isEmpty) {
+                            dsix.newTurnOrder(players);
+                          }
                           _selectPlayerPageVM.goToMapPage(context);
                         },
                       ),

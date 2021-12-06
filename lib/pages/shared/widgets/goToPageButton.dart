@@ -1,4 +1,4 @@
-import 'package:dsixv02app/core/app_Colors.dart';
+import 'package:dsixv02app/pages/shared/app_Colors.dart';
 import 'package:flutter/material.dart';
 
 class GoToPagePageButton extends StatelessWidget {

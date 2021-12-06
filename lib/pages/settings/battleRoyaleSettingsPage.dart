@@ -1,26 +1,22 @@
-import 'package:dsixv02app/core/app_Colors.dart';
-import 'package:dsixv02app/core/widgets/button.dart';
+import 'package:dsixv02app/pages/shared/app_Colors.dart';
 import 'package:dsixv02app/models/dsix.dart';
+import 'package:dsixv02app/models/gameMap.dart';
 import 'package:dsixv02app/models/player.dart';
+import 'package:dsixv02app/pages/shared/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'battleRoyaleSettingsPageVM.dart';
 
-class BattleRoyaleSettingsPage extends StatefulWidget {
+class BattleRoyaleSettingsPage extends StatelessWidget {
   const BattleRoyaleSettingsPage({Key key}) : super(key: key);
 
-  @override
-  State<BattleRoyaleSettingsPage> createState() =>
-      _BattleRoyaleSettingsPageState();
-}
-
-class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
   @override
   Widget build(BuildContext context) {
     BattleRoyaleSettingsPageVM _battleRoyaleSettingsPage =
         BattleRoyaleSettingsPageVM();
     final dsix = Provider.of<Dsix>(context);
-    final listOfPlayers = Provider.of<List<Player>>(context);
+    final map = Provider.of<GameMap>(context);
+    final players = Provider.of<List<Player>>(context);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -32,34 +28,27 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  (listOfPlayers.isNotEmpty)
+                  (players.isNotEmpty)
                       ? Button(
                           buttonText: 'join game',
                           onTapAction: () {
-                            setState(() {
-                              _battleRoyaleSettingsPage.continueGame(
-                                  context, dsix);
-                            });
+                            _battleRoyaleSettingsPage.joinGame(context);
                           },
                         )
                       : Button(
                           buttonText: 'new game',
                           onTapAction: () {
-                            setState(() {
-                              _battleRoyaleSettingsPage.newGame(
-                                  context, dsix, 5);
-                            });
+                            _battleRoyaleSettingsPage.newGame(
+                                context, dsix, map, 5);
                           },
                         ),
-                  (listOfPlayers.isNotEmpty)
+                  (players.isNotEmpty)
                       ? Padding(
                           padding: const EdgeInsets.only(top: 5),
                           child: Button(
                               buttonText: 'delete game',
                               onTapAction: () {
-                                setState(() {
-                                  _battleRoyaleSettingsPage.deleteGame(dsix);
-                                });
+                                _battleRoyaleSettingsPage.deleteGame(dsix);
                               }),
                         )
                       : Container(),

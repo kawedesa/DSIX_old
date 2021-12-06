@@ -1,59 +1,51 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'gameMap.dart';
 import 'player.dart';
 
 class Dsix {
   final db = FirebaseFirestore.instance;
-
   int selectedPlayerIndex;
-  List<Player> listOfPlayers = [];
 
-  Stream<List<Player>> getAvailablePlayers() {
+  //Map
+  Stream<GameMap> pullMapFromDataBase() {
+    return db
+        .collection('map')
+        .doc('mapID')
+        .snapshots()
+        .map((game) => GameMap.fromMap(game.data()));
+  }
+
+  void newMap() {
+    db.collection('map').doc('mapID').set(
+        GameMap().saveToDataBase(GameMap(map: 'crossroads', mapSize: 640)));
+  }
+
+  void deleteMap() {
+    db.collection('map').doc('mapID').delete();
+  }
+
+//Players
+  Stream<List<Player>> pullPlayersFromDataBase() {
     return db.collection('players').snapshots().map((querySnapshot) =>
         querySnapshot.docs
             .map((player) => Player.fromMap(player.data()))
             .toList());
   }
 
-  void pullPlayersFromDataBase() {
-    this.listOfPlayers = [];
-    db
-        .collection('players')
-        .snapshots()
-        .map((querySnapshot) => querySnapshot.docs.forEach((doc) {
-              addPlayer(Player.fromMap(doc.data()));
-            }));
+  void createRandomPlayersInRandomLocations(int numberOfPlayers) {
+    for (int i = 0; i < numberOfPlayers; i++) {
+      addPlayerToDataBase(
+          Player.newRandomPlayer(randomLocation(), randomLocation(), i));
+    }
   }
 
-  void addPlayer(Player player) {
-    this.listOfPlayers.add(player);
-  }
-
-  void setColorForAllPlayers() {
-    this.listOfPlayers.forEach((player) {
-      player.setColor();
-    });
-  }
-
-  void addListOfPlayersToDataBase() {
-    this.listOfPlayers.forEach((element) {
-      addPlayerToDataBase(element);
-    });
+  double randomLocation() {
+    return (Random().nextDouble() * 640 * 0.8) + (640 * 0.1);
   }
 
   void addPlayerToDataBase(Player player) {
     db.collection('players').doc(player.id).set(player.saveToDataBase(player));
-  }
-
-  void joinGame() {
-    pullPlayersFromDataBase();
-    setColorForAllPlayers();
-  }
-
-  void deleteGame() {
-    this.listOfPlayers = [];
-    deleteAllPlayersFromDataBase();
   }
 
   void deleteAllPlayersFromDataBase() async {
@@ -67,58 +59,92 @@ class Dsix {
     batch.commit();
   }
 
-  void createListOfRandomPlayers(int numberOfPlayers) {
-    for (int i = 0; i < numberOfPlayers; i++) {
-      newRandomPlayer(i);
+  void changeToPlayer(List<Player> players, String playerID) {
+    for (int i = 0; i < players.length; i++) {
+      if (players[i].id == playerID) {
+        selectPlayer(i);
+      }
     }
-  }
-
-  void newRandomPlayer(int playerIndex) {
-    Player newRandomPlayer = Player().newPlayer(playerIndex);
-    addPlayer(newRandomPlayer);
   }
 
   void selectPlayer(int playerIndex) {
     this.selectedPlayerIndex = playerIndex;
   }
 
-  void newBattleRoyaleGame(int numberOfPlayers) {
-    createListOfRandomPlayers(numberOfPlayers);
-    setColorForAllPlayers();
-    preparePlayersForBattleRoyale();
-    addListOfPlayersToDataBase();
-  }
-
-  void preparePlayersForBattleRoyale() {
-    this.listOfPlayers.forEach((player) {
-      spawnPlayerInRandomLocation(player);
-      assignRandomRaceToPlayer(player);
-    });
-  }
-
-  void spawnPlayerInRandomLocation(Player player) {
-    //This is used to spawn people close to the center using the map size
-    double dx = (Random().nextDouble() * 640 * 0.8) + (640 * 0.1);
-    double dy = (Random().nextDouble() * 640 * 0.8) + (640 * 0.1);
-    player.dx = dx;
-    player.dy = dy;
-  }
-
-  void assignRandomRaceToPlayer(Player player) {
-    List<String> availableRaces = [
-      'orc',
-      'dwarf',
-    ];
-    int randomRace = Random().nextInt(availableRaces.length);
-    player.race = availableRaces[randomRace];
-    player.setAttributeBasedOnRace();
-  }
-
-  void updateSelectedPlayerLocation(double dx, double dy, String playerID) {
+  void updateSelectedPlayerLocation(
+      double dx, double dy, String playerID) async {
     final batch = db.batch();
     final document =
         FirebaseFirestore.instance.collection('players').doc(playerID);
     batch.update(document, {'dx': dx, 'dy': dy});
-    batch.commit();
+    await batch.commit();
+  }
+
+  //TurnOrder
+  Stream<List<Turn>> pullTurnOrderFromDataBase() {
+    return db.collection('turnOrder').snapshots().map((querySnapshot) =>
+        querySnapshot.docs
+            .map((player) => Turn.fromMap(player.data()))
+            .toList());
+  }
+
+  void newTurnOrder(List<Player> players) {
+    players.shuffle();
+    players.forEach((player) {
+      addTurnToDataBase(Turn(id: player.id, firstAction: true));
+    });
+  }
+
+  void addTurnToDataBase(Turn turn) async {
+    await db
+        .collection('turnOrder')
+        .doc(turn.id)
+        .set(turn.saveToDataBase(turn));
+  }
+
+  void deleteTurnOrder() async {
+    await db.collection('turnOrder').get().then((snapshot) {
+      snapshot.docs.forEach((document) {
+        document.reference.delete();
+      });
+    });
+  }
+
+  bool checkPlayerTurn(List<Turn> turnOrder, Player player) {
+    if (turnOrder.first.id == player.id) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  void takeTurn(
+      List<Turn> turnOrder, List<Player> players, String playerID) async {
+    if (turnOrder.length == 1) {
+      newTurnOrder(players);
+    } else {
+      await db.collection('turnOrder').doc(playerID).delete();
+    }
+  }
+}
+
+class Turn {
+  String id;
+  bool firstAction;
+  Turn({String id, bool firstAction}) {
+    this.id = id;
+    this.firstAction = firstAction;
+  }
+  factory Turn.fromMap(Map data) {
+    return Turn(
+      id: data['id'],
+      firstAction: data['firstAction'],
+    );
+  }
+  Map<String, dynamic> saveToDataBase(Turn turn) {
+    return {
+      'id': turn.id,
+      'firstAction': turn.firstAction,
+    };
   }
 }

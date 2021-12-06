@@ -2,8 +2,9 @@ import 'package:dsixv02app/models/dsix.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'models/gameMap.dart';
 import 'models/player.dart';
-import 'pages/battleRoyaleSettingsPage.dart';
+import 'pages/settings/battleRoyaleSettingsPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +21,15 @@ class DsixApp extends StatelessWidget {
       providers: [
         StreamProvider<List<Player>>(
           initialData: [],
-          create: (context) => dsix.getAvailablePlayers(),
+          create: (context) => dsix.pullPlayersFromDataBase(),
+        ),
+        StreamProvider<GameMap>(
+          initialData: GameMap(map: '', mapSize: 0.0),
+          create: (context) => dsix.pullMapFromDataBase(),
+        ),
+        StreamProvider<List<Turn>>(
+          initialData: [],
+          create: (context) => dsix.pullTurnOrderFromDataBase(),
         ),
         Provider(create: (context) => dsix),
       ],

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 
 class AppColors {
   //UI
-
   static final black00 = Colors.black;
   static final grey00 = Colors.grey[900];
   static final grey01 = Colors.grey[800];
@@ -44,7 +43,10 @@ class AppColors {
   static final crossroadsTree02 = Color.fromRGBO(158, 122, 66, 1);
 
   //CHARACTERS
-  static final characterShadow00 = Color.fromRGBO(25, 0, 0, 0.3);
+  static final playerShadow00 = Color.fromRGBO(25, 0, 0, 0.1);
+  static final playerRange00 = Colors.grey[200].withAlpha(100);
+  static final enemyShadow00 = Color.fromRGBO(150, 0, 0, 0.3);
+  static final enemyRange00 = Color.fromRGBO(255, 100, 100, 0.75);
 
   //ORC
   static final orcArmor00 = Color.fromRGBO(84, 49, 41, 1);

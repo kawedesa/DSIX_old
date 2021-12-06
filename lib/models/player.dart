@@ -1,27 +1,32 @@
-import 'package:dsixv02app/core/app_Colors.dart';
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Player {
   String id;
-  PlayerColor color;
+
   double dx;
   double dy;
   String race;
+  double vision;
+  double walkRange;
   int life;
   int maxLife;
   Player(
       {String id,
-      PlayerColor color,
       double dx,
       double dy,
       String race,
+      double vision,
+      double walkRange,
       int life,
       int maxLife}) {
     this.id = id;
-    this.color = color;
     this.dx = dx;
     this.dy = dy;
     this.race = race;
+    this.vision = vision;
+    this.walkRange = walkRange;
     this.life = life;
     this.maxLife = maxLife;
   }
@@ -32,8 +37,8 @@ class Player {
       'dx': player.dx,
       'dy': player.dy,
       'race': player.race,
-      'life': player.life,
-      'maxLife': player.maxLife,
+      'vision': player.vision,
+      'walkRange': player.walkRange,
     };
   }
 
@@ -43,112 +48,34 @@ class Player {
       dx: data['dx'] * 1.0,
       dy: data['dy'] * 1.0,
       race: data['race'],
-      life: data['life'],
-      maxLife: data['maxLife'],
+      vision: data['vision'] * 1.0,
+      walkRange: data['walkRange'] * 1.0,
     );
   }
 
-  Player newPlayer(int playerIndex) {
-    switch (playerIndex) {
-      case 0:
-        {
-          return Player(
-            id: 'blue',
-          );
-        }
-        break;
-      case 1:
-        {
-          return Player(
-            id: 'pink',
-          );
-        }
-        break;
-      case 2:
-        {
-          return Player(
-            id: 'green',
-          );
-        }
-        break;
-      case 3:
-        {
-          return Player(
-            id: 'yellow',
-          );
-        }
-        break;
-      case 4:
-        {
-          return Player(
-            id: 'purple',
-          );
-        }
-        break;
-    }
+  factory Player.newRandomPlayer(double dx, double dy, int playerIndex) {
+    List<String> id = [
+      'blue',
+      'pink',
+      'green',
+      'yellow',
+      'purple',
+    ];
+
+    List<String> races = [
+      'orc',
+      'dwarf',
+    ];
+    int randomRace = Random().nextInt(races.length);
+
     return Player(
-      id: 'blue',
+      id: id[playerIndex],
+      dx: dx,
+      dy: dy,
+      race: races[randomRace],
+      vision: 100,
+      walkRange: 50,
     );
-  }
-
-  void setColor() {
-    if (this.color != null) {
-      return;
-    }
-    switch (this.id) {
-      case 'blue':
-        {
-          this.color = PlayerColor(
-              primary: AppColors.bluePlayerPrimary,
-              secondary: AppColors.bluePlayerSecondary);
-        }
-        break;
-      case 'pink':
-        {
-          this.color = PlayerColor(
-              primary: AppColors.pinkPlayerPrimary,
-              secondary: AppColors.pinkPlayerSecondary);
-        }
-        break;
-      case 'green':
-        {
-          this.color = PlayerColor(
-              primary: AppColors.greenPlayerPrimary,
-              secondary: AppColors.greenPlayerSecondary);
-        }
-        break;
-      case 'yellow':
-        {
-          this.color = PlayerColor(
-              primary: AppColors.yellowPlayerPrimary,
-              secondary: AppColors.yellowPlayerSecondary);
-        }
-        break;
-      case 'purple':
-        {
-          this.color = PlayerColor(
-              primary: AppColors.purplePlayerPrimary,
-              secondary: AppColors.purplePlayerSecondary);
-        }
-        break;
-    }
-  }
-
-  void setAttributeBasedOnRace() {
-    switch (this.race) {
-      case 'dwarf':
-        {
-          this.maxLife = 16;
-          this.life = maxLife;
-        }
-        break;
-      case 'orc':
-        {
-          this.maxLife = 12;
-          this.life = maxLife;
-        }
-        break;
-    }
   }
 
   int getCurrentLife() {
@@ -169,15 +96,6 @@ class Player {
     } else {
       return false;
     }
-  }
-}
-
-class PlayerColor {
-  Color primary;
-  Color secondary;
-  PlayerColor({Color primary, Color secondary}) {
-    this.primary = primary;
-    this.secondary = secondary;
   }
 }
 
