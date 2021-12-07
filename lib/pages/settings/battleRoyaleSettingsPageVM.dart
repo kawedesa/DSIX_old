@@ -14,7 +14,7 @@ class BattleRoyaleSettingsPageVM {
   void deleteGame(Dsix dsix) {
     dsix.deleteMap();
     dsix.deleteAllPlayersFromDataBase();
-    dsix.deleteTurnOrder();
+    dsix.deleteRound();
   }
 
   void joinGame(context) {

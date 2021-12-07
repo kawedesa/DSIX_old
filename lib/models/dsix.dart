@@ -88,63 +88,99 @@ class Dsix {
             .toList());
   }
 
-  void newTurnOrder(List<Player> players) {
-    players.shuffle();
+  void takeTurn(List<Turn> round, List<Player> players) async {
+    round.first.takeTurn();
+    if (round.first.turnIsNotOver()) {
+      return;
+    }
+    if (round.length == 1) {
+      newRound(players);
+    } else {
+      await db.collection('turnOrder').doc('${round.first.index}').delete();
+    }
+  }
+
+  void newRound(List<Player> players) {
+    List<Player> randomOrder = [];
     players.forEach((player) {
-      addTurnToDataBase(Turn(id: player.id, firstAction: true));
+      randomOrder.add(player);
     });
+
+    print(randomOrder);
+    randomOrder.shuffle();
+    print(randomOrder);
+
+    for (int i = 0; i < randomOrder.length; i++) {
+      addTurnToDataBase(Turn().newTurn(randomOrder[i].id, i));
+    }
   }
 
   void addTurnToDataBase(Turn turn) async {
     await db
         .collection('turnOrder')
-        .doc(turn.id)
+        .doc('${turn.index}')
         .set(turn.saveToDataBase(turn));
   }
 
-  void deleteTurnOrder() async {
+  void deleteRound() async {
     await db.collection('turnOrder').get().then((snapshot) {
       snapshot.docs.forEach((document) {
         document.reference.delete();
       });
     });
   }
-
-  bool checkPlayerTurn(List<Turn> turnOrder, Player player) {
-    if (turnOrder.first.id == player.id) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  void takeTurn(
-      List<Turn> turnOrder, List<Player> players, String playerID) async {
-    if (turnOrder.length == 1) {
-      newTurnOrder(players);
-    } else {
-      await db.collection('turnOrder').doc(playerID).delete();
-    }
-  }
 }
 
 class Turn {
+  int index;
   String id;
   bool firstAction;
-  Turn({String id, bool firstAction}) {
+  bool secondAction;
+  Turn({int index, String id, bool firstAction, bool secondAction}) {
+    this.index = index;
     this.id = id;
     this.firstAction = firstAction;
+    this.secondAction = secondAction;
   }
   factory Turn.fromMap(Map data) {
     return Turn(
+      index: data['index'],
       id: data['id'],
       firstAction: data['firstAction'],
+      secondAction: data['secondAction'],
     );
   }
   Map<String, dynamic> saveToDataBase(Turn turn) {
     return {
+      'index': turn.index,
       'id': turn.id,
       'firstAction': turn.firstAction,
+      'secondAction': turn.secondAction,
     };
+  }
+
+  Turn newTurn(String playerID, int index) {
+    return Turn(
+      index: index,
+      id: playerID,
+      firstAction: true,
+      secondAction: true,
+    );
+  }
+
+  void takeTurn() {
+    if (this.firstAction) {
+      this.firstAction = false;
+    } else {
+      this.secondAction = false;
+    }
+  }
+
+  bool turnIsNotOver() {
+    if (this.secondAction) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }

@@ -15,16 +15,23 @@ class AppColors {
   static final white00 = Colors.white;
 
   //PLAYERS
+  static final playerShadow00 = Color.fromRGBO(25, 0, 0, 0.1);
+  static final playerRange00 = Colors.grey[200].withAlpha(100);
   static final bluePlayerPrimary = Colors.indigoAccent;
   static final bluePlayerSecondary = Colors.indigo[800];
+  static final bluePlayerShadow = Color.fromRGBO(0, 50, 255, 0.3);
   static final pinkPlayerPrimary = Colors.pinkAccent;
   static final pinkPlayerSecondary = Colors.pink[800];
+  static final pinkPlayerShadow = Color.fromRGBO(255, 0, 0, 0.3);
   static final yellowPlayerPrimary = Colors.orange;
   static final yellowPlayerSecondary = Colors.orange[800];
+  static final yellowPlayerShadow = Color.fromRGBO(250, 150, 0, 0.3);
   static final greenPlayerPrimary = Colors.teal;
   static final greenPlayerSecondary = Colors.teal[800];
+  static final greenPlayerShadow = Color.fromRGBO(150, 250, 0, 0.3);
   static final purplePlayerPrimary = Colors.purple;
   static final purplePlayerSecondary = Colors.purple[800];
+  static final purplePlayerShadow = Color.fromRGBO(250, 0, 250, 0.3);
 
   //MAPS
   //Crossroads
@@ -42,9 +49,7 @@ class AppColors {
   static final crossroadsTree01 = Color.fromRGBO(134, 87, 58, 1);
   static final crossroadsTree02 = Color.fromRGBO(158, 122, 66, 1);
 
-  //CHARACTERS
-  static final playerShadow00 = Color.fromRGBO(25, 0, 0, 0.1);
-  static final playerRange00 = Colors.grey[200].withAlpha(100);
+  //ENEMY
   static final enemyShadow00 = Color.fromRGBO(150, 0, 0, 0.3);
   static final enemyRange00 = Color.fromRGBO(255, 100, 100, 0.75);
 

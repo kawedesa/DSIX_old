@@ -52,7 +52,7 @@ class PlayerSelectionPage extends StatelessWidget {
                         onTapAction: () async {
                           dsix.selectPlayer(index);
                           if (turnOrder.isEmpty) {
-                            dsix.newTurnOrder(players);
+                            dsix.newRound(players);
                           }
                           _selectPlayerPageVM.goToMapPage(context);
                         },

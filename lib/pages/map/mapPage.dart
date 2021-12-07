@@ -4,9 +4,11 @@ import 'package:dsixv02app/models/player.dart';
 import 'package:dsixv02app/pages/map/widget/mapTile.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/pages/shared/app_Colors.dart';
+import 'package:dsixv02app/pages/shared/app_Icons.dart';
 import 'package:dsixv02app/pages/shared/widgets/goToPageButton.dart';
 import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'canvas.dart';
 import 'widget/playerSprite.dart';
@@ -30,16 +32,13 @@ class _MapPageState extends State<MapPage> {
     final turnOrder = Provider.of<List<Turn>>(context);
     final dsix = Provider.of<Dsix>(context);
     final map = Provider.of<GameMap>(context);
-    if (turnOrder.isEmpty) {
-      dsix.newTurnOrder(players);
-    }
-
-    _canvas.updateEnemiesAroundPlayer(
-        players, players[dsix.selectedPlayerIndex]);
     _canvas.updateCanvasController(
         context,
         players[dsix.selectedPlayerIndex].dx,
         players[dsix.selectedPlayerIndex].dy);
+
+    _canvas.updateEnemyPlayersInSight(
+        players, players[dsix.selectedPlayerIndex]);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -88,10 +87,8 @@ class _MapPageState extends State<MapPage> {
                         Consumer<PlayerTemporaryLocation>(
                             builder: (context, playerLocation, ___) {
                           return PlayerSprite(
-                            location: playerLocation,
+                            newLocation: playerLocation,
                             player: players[dsix.selectedPlayerIndex],
-                            isPlayerTurn: dsix.checkPlayerTurn(
-                                turnOrder, players[dsix.selectedPlayerIndex]),
                           );
                         }),
                       ],
@@ -121,13 +118,18 @@ class _MapPageState extends State<MapPage> {
                           onDoubleTap: () {
                             setState(() {
                               dsix.changeToPlayer(players, turnOrder[index].id);
+                              _canvas.goToPlayer(
+                                  context, players, turnOrder[index].id);
                             });
                           },
                           child: Container(
                             width: MediaQuery.of(context).size.height * 0.03,
                             height: MediaQuery.of(context).size.height * 0.03,
-                            color: _uiColor.setUIColor(
-                                turnOrder[index].id, 'primary'),
+                            child: SvgPicture.asset(
+                              AppIcons.turn,
+                              color: _uiColor.setUIColor(
+                                  turnOrder[index].id, 'primary'),
+                            ),
                           ),
                         ),
                       );
