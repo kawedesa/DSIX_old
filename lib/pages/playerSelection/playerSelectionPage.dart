@@ -1,5 +1,5 @@
+import 'package:dsixv02app/models/user.dart';
 import 'package:dsixv02app/pages/shared/app_Colors.dart';
-import 'package:dsixv02app/models/dsix.dart';
 import 'package:dsixv02app/models/player.dart';
 import 'package:dsixv02app/pages/settings/battleRoyaleSettingsPage.dart';
 import 'package:dsixv02app/pages/shared/widgets/button.dart';
@@ -16,9 +16,8 @@ class PlayerSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     PlayerSelectionPageVM _selectPlayerPageVM = PlayerSelectionPageVM();
     UIColor _uiColor = UIColor();
-    final dsix = Provider.of<Dsix>(context);
+    final user = Provider.of<User>(context);
     final players = Provider.of<List<Player>>(context);
-    final turnOrder = Provider.of<List<Turn>>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -50,10 +49,7 @@ class PlayerSelectionPage extends StatelessWidget {
                         buttonTextColor:
                             _uiColor.setUIColor(players[index].id, 'primary'),
                         onTapAction: () async {
-                          dsix.selectPlayer(index);
-                          if (turnOrder.isEmpty) {
-                            dsix.newRound(players);
-                          }
+                          user.selectPlayer(index);
                           _selectPlayerPageVM.goToMapPage(context);
                         },
                       ),

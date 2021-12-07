@@ -1,20 +1,12 @@
-import 'package:dsixv02app/models/dsix.dart';
-import 'package:dsixv02app/models/gameMap.dart';
+import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 
 import 'package:flutter/material.dart';
 
 class BattleRoyaleSettingsPageVM {
-  void newGame(context, Dsix dsix, GameMap map, int numberOfPlayers) {
-    dsix.createRandomPlayersInRandomLocations(numberOfPlayers);
-    dsix.newMap();
+  void newGame(context, Game game, int numberOfPlayers) {
+    game.newGameBattleRoyaleGame(numberOfPlayers);
     goToPlayerSelectionPage(context);
-  }
-
-  void deleteGame(Dsix dsix) {
-    dsix.deleteMap();
-    dsix.deleteAllPlayersFromDataBase();
-    dsix.deleteRound();
   }
 
   void joinGame(context) {
@@ -26,7 +18,7 @@ class BattleRoyaleSettingsPageVM {
       pageBuilder: (context, animation, secondaryAnimation) =>
           PlayerSelectionPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
+        var begin = Offset(1.0, 0.0);
         var end = Offset(0.0, 0.0);
         var curve = Curves.ease;
         var tween =

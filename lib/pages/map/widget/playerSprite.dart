@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/dsix.dart';
+import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/models/player.dart';
 import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
@@ -189,7 +189,7 @@ class PlayerSpriteWalkMode extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dsix = Provider.of<Dsix>(context);
+    final game = Provider.of<Game>(context);
     final round = Provider.of<List<Turn>>(context);
     final players = Provider.of<List<Player>>(context);
 
@@ -222,9 +222,9 @@ class PlayerSpriteWalkMode extends StatelessWidget {
                                 details.delta.dx, details.delta.dy);
                           },
                     onPanEnd: (details) {
-                      dsix.updateSelectedPlayerLocation(
-                          newLocation.dx, newLocation.dy, playerID);
-                      dsix.takeTurn(round, players);
+                      game.updateSelectedPlayerLocation(
+                          newLocation.dx, newLocation.dy, this.playerID);
+                      game.takeTurn(round, players, game.round);
                     },
                     child: SpriteImage(image: image)),
               ),

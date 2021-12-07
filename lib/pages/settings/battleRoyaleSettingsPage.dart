@@ -1,6 +1,5 @@
 import 'package:dsixv02app/pages/shared/app_Colors.dart';
-import 'package:dsixv02app/models/dsix.dart';
-import 'package:dsixv02app/models/gameMap.dart';
+import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/models/player.dart';
 import 'package:dsixv02app/pages/shared/widgets/button.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +13,8 @@ class BattleRoyaleSettingsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     BattleRoyaleSettingsPageVM _battleRoyaleSettingsPage =
         BattleRoyaleSettingsPageVM();
-    final dsix = Provider.of<Dsix>(context);
-    final map = Provider.of<GameMap>(context);
+
+    final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
 
     return Scaffold(
@@ -38,8 +37,7 @@ class BattleRoyaleSettingsPage extends StatelessWidget {
                       : Button(
                           buttonText: 'new game',
                           onTapAction: () {
-                            _battleRoyaleSettingsPage.newGame(
-                                context, dsix, map, 5);
+                            _battleRoyaleSettingsPage.newGame(context, game, 5);
                           },
                         ),
                   (players.isNotEmpty)
@@ -48,7 +46,7 @@ class BattleRoyaleSettingsPage extends StatelessWidget {
                           child: Button(
                               buttonText: 'delete game',
                               onTapAction: () {
-                                _battleRoyaleSettingsPage.deleteGame(dsix);
+                                game.deleteGame();
                               }),
                         )
                       : Container(),

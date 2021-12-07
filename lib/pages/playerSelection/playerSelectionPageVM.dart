@@ -6,7 +6,7 @@ class PlayerSelectionPageVM {
     Route newRoute = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => MapPage(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        var begin = Offset(-1.0, 0.0);
+        var begin = Offset(1.0, 0.0);
         var end = Offset(0.0, 0.0);
         var curve = Curves.ease;
         var tween =

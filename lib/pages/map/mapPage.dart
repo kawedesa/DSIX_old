@@ -1,6 +1,6 @@
-import 'package:dsixv02app/models/dsix.dart';
-import 'package:dsixv02app/models/gameMap.dart';
+import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/models/player.dart';
+import 'package:dsixv02app/models/user.dart';
 import 'package:dsixv02app/pages/map/widget/mapTile.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/pages/shared/app_Colors.dart';
@@ -13,10 +13,9 @@ import 'package:provider/provider.dart';
 import 'canvas.dart';
 import 'widget/playerSprite.dart';
 
+// ignore: must_be_immutable
 class MapPage extends StatefulWidget {
-  const MapPage({
-    Key key,
-  }) : super(key: key);
+  MapPage({Key key}) : super(key: key);
 
   @override
   State<MapPage> createState() => _MapPageState();
@@ -30,15 +29,15 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     final players = Provider.of<List<Player>>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
-    final dsix = Provider.of<Dsix>(context);
-    final map = Provider.of<GameMap>(context);
+    final game = Provider.of<Game>(context);
+    final user = Provider.of<User>(context);
+
     _canvas.updateCanvasController(
         context,
-        players[dsix.selectedPlayerIndex].dx,
-        players[dsix.selectedPlayerIndex].dy);
-
+        players[user.selectedPlayerIndex].dx,
+        players[user.selectedPlayerIndex].dy);
     _canvas.updateEnemyPlayersInSight(
-        players, players[dsix.selectedPlayerIndex]);
+        players, players[user.selectedPlayerIndex]);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -47,10 +46,10 @@ class _MapPageState extends State<MapPage> {
         leading: GoToPagePageButton(
           goToPage: PlayerSelectionPage(),
           buttonColor: _uiColor.setUIColor(
-              players[dsix.selectedPlayerIndex].id, 'secondary'),
+              players[user.selectedPlayerIndex].id, 'secondary'),
         ),
         backgroundColor: _uiColor.setUIColor(
-            players[dsix.selectedPlayerIndex].id, 'primary'),
+            players[user.selectedPlayerIndex].id, 'primary'),
       ),
       body: SafeArea(
         child:
@@ -58,8 +57,8 @@ class _MapPageState extends State<MapPage> {
           create: (context) => PlayerTemporaryLocation(),
           update: (context, __, playerLocation) => playerLocation
             ..updatePlayerSprite(
-              players[dsix.selectedPlayerIndex].dx,
-              players[dsix.selectedPlayerIndex].dy,
+              players[user.selectedPlayerIndex].dx,
+              players[user.selectedPlayerIndex].dy,
             ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -74,12 +73,12 @@ class _MapPageState extends State<MapPage> {
                   maxScale: _canvas.maxZoom,
                   minScale: _canvas.minZoom,
                   child: SizedBox(
-                    width: map.mapSize,
-                    height: map.mapSize,
+                    width: game.mapSize,
+                    height: game.mapSize,
                     child: Stack(
                       children: [
                         MapTile(
-                          name: map.map,
+                          name: game.map,
                         ),
                         Stack(
                           children: _canvas.enemy,
@@ -88,7 +87,7 @@ class _MapPageState extends State<MapPage> {
                             builder: (context, playerLocation, ___) {
                           return PlayerSprite(
                             newLocation: playerLocation,
-                            player: players[dsix.selectedPlayerIndex],
+                            player: players[user.selectedPlayerIndex],
                           );
                         }),
                       ],
@@ -100,7 +99,7 @@ class _MapPageState extends State<MapPage> {
                 thickness: 2,
                 height: 2,
                 color: _uiColor.setUIColor(
-                    players[dsix.selectedPlayerIndex].id, 'primary'),
+                    players[user.selectedPlayerIndex].id, 'primary'),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.04,
@@ -117,7 +116,8 @@ class _MapPageState extends State<MapPage> {
                         child: GestureDetector(
                           onDoubleTap: () {
                             setState(() {
-                              dsix.changeToPlayer(players, turnOrder[index].id);
+                              user.changeSelectPlayer(
+                                  players, turnOrder[index].id);
                               _canvas.goToPlayer(
                                   context, players, turnOrder[index].id);
                             });
@@ -141,7 +141,7 @@ class _MapPageState extends State<MapPage> {
                 thickness: 2,
                 height: 2,
                 color: _uiColor.setUIColor(
-                    players[dsix.selectedPlayerIndex].id, 'primary'),
+                    players[user.selectedPlayerIndex].id, 'primary'),
               ),
             ],
           ),

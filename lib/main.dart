@@ -1,9 +1,9 @@
-import 'package:dsixv02app/models/dsix.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'models/gameMap.dart';
+import 'models/game.dart';
 import 'models/player.dart';
+import 'models/user.dart';
 import 'pages/settings/battleRoyaleSettingsPage.dart';
 
 Future<void> main() async {
@@ -15,23 +15,24 @@ Future<void> main() async {
 class DsixApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    Dsix dsix = Dsix();
+    Game game = Game();
+    User user = User();
 
     return MultiProvider(
       providers: [
         StreamProvider<List<Player>>(
           initialData: [],
-          create: (context) => dsix.pullPlayersFromDataBase(),
+          create: (context) => game.pullPlayersFromDataBase(),
         ),
-        StreamProvider<GameMap>(
-          initialData: GameMap(map: '', mapSize: 0.0),
-          create: (context) => dsix.pullMapFromDataBase(),
+        StreamProvider<Game>(
+          initialData: Game(map: '', mapSize: 0.0),
+          create: (context) => game.pullGameFromDataBase(),
         ),
         StreamProvider<List<Turn>>(
           initialData: [],
-          create: (context) => dsix.pullTurnOrderFromDataBase(),
+          create: (context) => game.pullTurnOrderFromDataBase(),
         ),
-        Provider(create: (context) => dsix),
+        Provider(create: (context) => user),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
