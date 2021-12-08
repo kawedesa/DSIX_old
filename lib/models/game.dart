@@ -63,11 +63,11 @@ class Game {
   }
 
   void newGameBattleRoyaleGame(int numberOfPlayers) {
-    newMap();
+    newGame();
     startGame(createListOfRandomPlayersInRandomLocations(numberOfPlayers));
   }
 
-  void newMap() {
+  void newGame() {
     db.collection('game').doc('alpha').set(Game().saveToDataBase(
         Game(id: 'alpha', round: 0, map: 'crossroads', mapSize: 640)));
   }
@@ -76,7 +76,26 @@ class Game {
     players.forEach((player) {
       addPlayerToDataBase(player);
     });
-    newTurnOrder(players);
+    createTurnOrder(players);
+  }
+
+  void createTurnOrder(List<Player> players) {
+    List<Player> randomOrder = [];
+    players.forEach((player) {
+      randomOrder.add(player);
+    });
+    randomOrder.shuffle();
+
+    for (int i = 0; i < randomOrder.length; i++) {
+      addTurnToDataBase(Turn().newTurn(randomOrder[i].id, i));
+    }
+  }
+
+  void addTurnToDataBase(Turn turn) async {
+    await db
+        .collection('turnOrder')
+        .doc('${turn.index}')
+        .set(turn.saveToDataBase(turn));
   }
 
   List<Player> createListOfRandomPlayersInRandomLocations(int numberOfPlayers) {
@@ -96,29 +115,9 @@ class Game {
     db.collection('players').doc(player.id).set(player.saveToDataBase(player));
   }
 
-  void newRound(List<Player> players, int currentRound) {
+  void newRound(int currentRound) {
     int newRoundNumber = currentRound + 1;
     db.collection('game').doc('alpha').update({'round': newRoundNumber});
-    newTurnOrder(players);
-  }
-
-  void newTurnOrder(List<Player> players) {
-    List<Player> randomOrder = [];
-    players.forEach((player) {
-      randomOrder.add(player);
-    });
-    randomOrder.shuffle();
-
-    for (int i = 0; i < randomOrder.length; i++) {
-      addTurnToDataBase(Turn().newTurn(randomOrder[i].id, i));
-    }
-  }
-
-  void addTurnToDataBase(Turn turn) async {
-    await db
-        .collection('turnOrder')
-        .doc('${turn.index}')
-        .set(turn.saveToDataBase(turn));
   }
 
   void deleteGame() {
@@ -158,32 +157,6 @@ class Game {
     });
 
     batch.commit();
-  }
-
-  void updateSelectedPlayerLocation(
-      double dx, double dy, String playerID) async {
-    final batch = db.batch();
-    final document =
-        FirebaseFirestore.instance.collection('players').doc(playerID);
-    batch.update(document, {'dx': dx, 'dy': dy});
-    await batch.commit();
-  }
-
-  void takeTurn(
-      List<Turn> turnOrder, List<Player> players, int currentRound) async {
-    turnOrder.first.takeTurn();
-    if (turnOrder.first.turnIsNotOver()) {
-      return;
-    }
-    if (turnOrder.length == 1) {
-      newRound(players, currentRound);
-    } else {
-      removeTurnFromDataBase(turnOrder.first.index);
-    }
-  }
-
-  void removeTurnFromDataBase(int index) async {
-    await db.collection('turnOrder').doc('$index').delete();
   }
 }
 

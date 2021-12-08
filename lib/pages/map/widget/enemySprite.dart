@@ -38,25 +38,25 @@ class EnemySprite extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(top: 13),
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: _uiColor.setUIColor(playerID, 'shadow'),
-                    border: Border.all(
-                      color: _uiColor.setUIColor(playerID, 'rangeOutline'),
-                      width: 0.3,
-                    ),
+              child: Container(
+                width: 8,
+                height: 8,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: _uiColor.setUIColor(playerID, 'shadow'),
+                  border: Border.all(
+                    color: _uiColor.setUIColor(playerID, 'rangeOutline'),
+                    width: 0.3,
                   ),
                 ),
               ),
             ),
             Align(
               alignment: Alignment.center,
-              child: GestureDetector(child: SpriteImage(image: this.race)),
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: GestureDetector(child: SpriteImage(image: this.race)),
+              ),
             )
           ],
         ),

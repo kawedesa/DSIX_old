@@ -13,6 +13,9 @@ class UIColor {
             case 'secondary':
               return AppColors.bluePlayerSecondary;
               break;
+            case 'tertiary':
+              return AppColors.bluePlayerTertiary;
+              break;
             case 'shadow':
               return AppColors.bluePlayerSecondary.withAlpha(75);
               break;
@@ -30,6 +33,9 @@ class UIColor {
               break;
             case 'secondary':
               return AppColors.pinkPlayerSecondary;
+              break;
+            case 'tertiary':
+              return AppColors.pinkPlayerTertiary;
               break;
             case 'shadow':
               return AppColors.pinkPlayerSecondary.withAlpha(75);
@@ -50,6 +56,9 @@ class UIColor {
             case 'secondary':
               return AppColors.greenPlayerSecondary;
               break;
+            case 'tertiary':
+              return AppColors.greenPlayerTertiary;
+              break;
             case 'shadow':
               return AppColors.greenPlayerSecondary.withAlpha(75);
               break;
@@ -68,6 +77,9 @@ class UIColor {
             case 'secondary':
               return AppColors.yellowPlayerSecondary;
               break;
+            case 'tertiary':
+              return AppColors.yellowPlayerTertiary;
+              break;
             case 'shadow':
               return AppColors.yellowPlayerSecondary.withAlpha(75);
               break;
@@ -85,6 +97,9 @@ class UIColor {
               break;
             case 'secondary':
               return AppColors.purplePlayerSecondary;
+              break;
+            case 'tertiary':
+              return AppColors.purplePlayerTertiary;
               break;
             case 'shadow':
               return AppColors.purplePlayerSecondary.withAlpha(75);

@@ -86,7 +86,7 @@ class _MapPageState extends State<MapPage> {
                         Consumer<PlayerTemporaryLocation>(
                             builder: (context, playerLocation, ___) {
                           return PlayerSprite(
-                            newLocation: playerLocation,
+                            temporaryLocation: playerLocation,
                             player: players[user.selectedPlayerIndex],
                           );
                         }),
@@ -118,6 +118,7 @@ class _MapPageState extends State<MapPage> {
                             setState(() {
                               user.changeSelectPlayer(
                                   players, turnOrder[index].id);
+                              user.checkForPlayerTurn(turnOrder);
                               _canvas.goToPlayer(
                                   context, players, turnOrder[index].id);
                             });
