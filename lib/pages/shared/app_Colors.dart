@@ -15,8 +15,9 @@ class AppColors {
   static final white00 = Colors.white;
 
   //PLAYERS
-  static final playerShadow00 = Color.fromRGBO(25, 0, 0, 0.1);
-  static final playerRange00 = Colors.grey[200].withAlpha(100);
+
+  static final attackMode = Color.fromRGBO(150, 0, 0, 1);
+
   static final bluePlayerPrimary = Colors.indigoAccent;
   static final bluePlayerSecondary = Colors.indigo[800];
   static final bluePlayerTertiary = Colors.indigo[900];
@@ -26,15 +27,15 @@ class AppColors {
   static final pinkPlayerTertiary = Colors.pink[900];
   static final pinkPlayerShadow = Color.fromRGBO(255, 0, 0, 0.3);
   static final yellowPlayerPrimary = Colors.orange;
-  static final yellowPlayerSecondary = Colors.orange[800];
-  static final yellowPlayerTertiary = Colors.orange[900];
+  static final yellowPlayerSecondary = Color.fromRGBO(215, 112, 0, 1);
+  static final yellowPlayerTertiary = Color.fromRGBO(155, 75, 7, 1);
   static final yellowPlayerShadow = Color.fromRGBO(250, 150, 0, 0.3);
   static final greenPlayerPrimary = Colors.teal;
   static final greenPlayerSecondary = Colors.teal[800];
   static final greenPlayerTertiary = Colors.teal[900];
   static final greenPlayerShadow = Color.fromRGBO(150, 250, 0, 0.3);
   static final purplePlayerPrimary = Colors.purple;
-  static final purplePlayerSecondary = Colors.purple[800];
+  static final purplePlayerSecondary = Color.fromRGBO(102, 20, 115, 1);
   static final purplePlayerTertiary = Colors.purple[900];
   static final purplePlayerShadow = Color.fromRGBO(250, 0, 250, 0.3);
 

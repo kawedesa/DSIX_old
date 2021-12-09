@@ -1,6 +1,7 @@
 import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/models/player.dart';
 import 'package:dsixv02app/models/user.dart';
+import 'package:dsixv02app/pages/shared/app_Colors.dart';
 import 'package:dsixv02app/pages/shared/app_Icons.dart';
 import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
@@ -79,6 +80,10 @@ class PlayerSpriteController extends StatefulWidget {
 }
 
 class _PlayerSpriteControllerState extends State<PlayerSpriteController> {
+  void refresh() {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
@@ -95,6 +100,20 @@ class _PlayerSpriteControllerState extends State<PlayerSpriteController> {
         child: Stack(
           children: [
             Align(
+              alignment: Alignment.center,
+              child: Padding(
+                padding: const EdgeInsets.only(bottom: 12),
+                child: AnimatedContainer(
+                    curve: Curves.fastLinearToSlowEaseIn,
+                    duration: Duration(milliseconds: 400),
+                    width: (user.playerMode == 'menu') ? 55 : 0.0,
+                    height: (user.playerMode == 'menu') ? 55 : 0.0,
+                    child: PlayerSpriteMenu(refresh: () {
+                      refresh();
+                    })),
+              ),
+            ),
+            Align(
                 alignment: Alignment.center,
                 child: VisionRange(vision: this.widget.vision)),
             Align(
@@ -105,14 +124,8 @@ class _PlayerSpriteControllerState extends State<PlayerSpriteController> {
             ),
             Align(
               alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 12),
-                child: AnimatedContainer(
-                    curve: Curves.fastLinearToSlowEaseIn,
-                    duration: Duration(milliseconds: 400),
-                    width: (user.playerMode == 'menu') ? 55 : 0.0,
-                    height: (user.playerMode == 'menu') ? 55 : 0.0,
-                    child: PlayerSpriteMenu()),
+              child: AttackRange(
+                attackRange: 50,
               ),
             ),
             Align(
@@ -165,37 +178,57 @@ class _PlayerSpriteControllerState extends State<PlayerSpriteController> {
 }
 
 class PlayerSpriteMenu extends StatelessWidget {
-  const PlayerSpriteMenu({Key key}) : super(key: key);
+  final Function() refresh;
+  const PlayerSpriteMenu({Key key, this.refresh})
+      : super(
+          key: key,
+        );
 
   @override
   Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
     return Stack(
       children: [
         Align(
           alignment: Alignment.topCenter,
-          child: ActionButton(
-            action: 'attack',
-            onTap: () {},
-          ),
+          child: (user.playerTurn)
+              ? ActionButton(
+                  action: 'attack',
+                  onTap: () {
+                    user.attackMode();
+                    refresh();
+                  },
+                )
+              : InactiveActionButton(
+                  action: 'attack',
+                ),
         ),
         Align(
           alignment: Alignment.centerLeft,
-          child: ActionButton(
-            action: 'defend',
-            onTap: () {},
-          ),
+          child: (user.playerTurn)
+              ? ActionButton(
+                  action: 'defend',
+                  onTap: () {},
+                )
+              : InactiveActionButton(
+                  action: 'defend',
+                ),
         ),
         Align(
           alignment: Alignment.centerRight,
-          child: ActionButton(
-            action: 'look',
-            onTap: () {},
-          ),
+          child: (user.playerTurn)
+              ? ActionButton(
+                  action: 'look',
+                  onTap: () {},
+                )
+              : InactiveActionButton(
+                  action: 'look',
+                ),
         ),
         Align(
           alignment: Alignment.bottomCenter,
           child: ActionButton(
-            action: 'move',
+            action: 'bag',
             onTap: () {},
           ),
         ),
@@ -220,6 +253,7 @@ class ActionButton extends StatefulWidget {
 
 class _ActionButtonState extends State<ActionButton> {
   Artboard _artboard;
+  UIColor _uiColor = UIColor();
 
   @override
   void initState() {
@@ -257,8 +291,8 @@ class _ActionButtonState extends State<ActionButton> {
       case 'look':
         return AppIcons.look;
         break;
-      case 'move':
-        return AppIcons.move;
+      case 'bag':
+        return AppIcons.bag;
         break;
     }
     return AppIcons.attack;
@@ -267,7 +301,6 @@ class _ActionButtonState extends State<ActionButton> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    UIColor _uiColor = UIColor();
 
     return GestureDetector(
       onTap: () {
@@ -302,11 +335,116 @@ class _ActionButtonState extends State<ActionButton> {
         ),
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: _uiColor.setUIColor(user.selectedPlayer.id, 'secondary'),
+          color: _uiColor
+              .setUIColor(user.selectedPlayer.id, 'secondary')
+              .withAlpha(215),
           border: Border.all(
-            color: _uiColor.setUIColor(user.selectedPlayer.id, 'tertiary'),
+            color: _uiColor
+                .setUIColor(user.selectedPlayer.id, 'secondary')
+                .withAlpha(250),
             width: .5,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class InactiveActionButton extends StatelessWidget {
+  final String action;
+  const InactiveActionButton({Key key, this.action}) : super(key: key);
+
+  String setIcon(String action) {
+    switch (action) {
+      case 'attack':
+        return AppIcons.attack;
+        break;
+      case 'defend':
+        return AppIcons.defend;
+        break;
+      case 'look':
+        return AppIcons.look;
+        break;
+      case 'bag':
+        return AppIcons.bag;
+        break;
+    }
+    return AppIcons.attack;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+
+    return AnimatedContainer(
+      curve: Curves.fastLinearToSlowEaseIn,
+      duration: Duration(milliseconds: 500),
+      width: (user.playerMode == 'menu') ? 17 : 0.0,
+      height: (user.playerMode == 'menu') ? 17 : 0.0,
+      child: Stack(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(4),
+            child: SvgPicture.asset(
+              setIcon(action),
+              color: AppColors.grey04,
+            ),
+          ),
+        ],
+      ),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: AppColors.grey02.withAlpha(215),
+        border: Border.all(
+          color: AppColors.grey03.withAlpha(250),
+          width: .5,
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class AttackRange extends StatelessWidget {
+  double attackRange;
+  AttackRange({
+    Key key,
+    @required this.attackRange,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+    double setWalkRange(String mode) {
+      switch (mode) {
+        case 'walk':
+          return 0;
+          break;
+        case 'wait':
+          return 0;
+          break;
+        case 'menu':
+          return 0;
+          break;
+        case 'attack':
+          return attackRange;
+          break;
+      }
+
+      return 0.0;
+    }
+
+    return AnimatedContainer(
+      curve: Curves.fastLinearToSlowEaseIn,
+      duration: Duration(milliseconds: 250),
+      width: setWalkRange(user.playerMode),
+      height: setWalkRange(user.playerMode),
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Color.fromRGBO(200, 25, 25, 1).withAlpha(100),
+        border: Border.all(
+          color: Color.fromRGBO(200, 25, 25, 1).withAlpha(215),
+          width: 0.3,
         ),
       ),
     );

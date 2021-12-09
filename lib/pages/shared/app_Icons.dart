@@ -3,5 +3,5 @@ class AppIcons {
   static final attack = 'assets/icon/attack.svg';
   static final defend = 'assets/icon/defend.svg';
   static final look = 'assets/icon/look.svg';
-  static final move = 'assets/icon/move.svg';
+  static final bag = 'assets/icon/bag.svg';
 }

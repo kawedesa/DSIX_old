@@ -5,6 +5,7 @@ class User {
   int selectedPlayerIndex;
   Player selectedPlayer;
   String playerMode = 'walk';
+  bool playerTurn = false;
 
   void changeSelectPlayer(List<Player> players, String playerID) {
     for (int i = 0; i < players.length; i++) {
@@ -22,9 +23,11 @@ class User {
   void checkForPlayerTurn(List<Turn> turnOrder) {
     if (turnOrder.first.id != this.selectedPlayer.id) {
       this.playerMode = 'wait';
+      this.playerTurn = false;
       return;
     } else {
       this.playerMode = 'walk';
+      this.playerTurn = true;
     }
   }
 
@@ -45,6 +48,10 @@ class User {
     }
   }
 
+  void attackMode() {
+    this.playerMode = 'attack';
+  }
+
   void changeSelectedPlayerLocation(
     double dx,
     double dy,
@@ -62,6 +69,7 @@ class User {
 
   void wait() {
     this.playerMode = 'wait';
+    this.playerTurn = false;
   }
 
   void newTurnOrder(List<Player> players) {
