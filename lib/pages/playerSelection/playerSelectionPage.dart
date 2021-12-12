@@ -19,6 +19,7 @@ class PlayerSelectionPage extends StatelessWidget {
     UIColor _uiColor = UIColor();
 
     final players = Provider.of<List<Player>>(context);
+    final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     final user = Provider.of<User>(context);
 
@@ -56,7 +57,8 @@ class PlayerSelectionPage extends StatelessWidget {
                               players[index],
                               index,
                               user,
-                              turnOrder.first.isPlayerTurn(players[index].id));
+                              turnController.isPlayerTurn(
+                                  turnOrder, players[index].id));
 
                           _selectPlayerPageVM.goToMapPage(context);
                         },

@@ -13,6 +13,9 @@ class User {
   }
 
   void setPlayerModeBasedOnPlayerTurn(bool isPlayerTurn) {
+    if (this.playerMode == null) {
+      this.playerMode = 'wait';
+    }
     if (isPlayerTurn) {
       if (this.playerMode == 'wait') {
         walkMode();

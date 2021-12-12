@@ -24,9 +24,9 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
   Widget build(BuildContext context) {
     _battleRoyaleSettingsPage.setNumberOfPlayers();
     final game = Provider.of<Game>(context);
-    final playerManager = Provider.of<PlayerManager>(context);
+    final playerController = Provider.of<PlayerController>(context);
     final players = Provider.of<List<Player>>(context);
-    final turnManager = Provider.of<TurnManager>(context);
+    final turnController = Provider.of<TurnController>(context);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -104,8 +104,8 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                             _battleRoyaleSettingsPage.newBattleRoyaleGame(
                               context,
                               game,
-                              playerManager,
-                              turnManager,
+                              playerController,
+                              turnController,
                             );
                           },
                         ),
@@ -117,7 +117,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                               onTapAction: () {
                                 _battleRoyaleSettingsPage
                                     .deleteBattleRoyaleGame(
-                                        game, playerManager, turnManager);
+                                        game, playerController, turnController);
                               }),
                         )
                       : Container(),

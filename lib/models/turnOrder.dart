@@ -4,7 +4,7 @@ import 'package:dsixv02app/models/user.dart';
 
 import 'game.dart';
 
-class TurnManager {
+class TurnController {
   final db = FirebaseFirestore.instance;
 
   Stream<List<Turn>> pullTurnOrderFromDataBase() {
@@ -40,6 +40,9 @@ class TurnManager {
 
   void passTurnForDeadPlayers(
       List<Turn> turnOrder, List<Player> players, User user) {
+    if (turnOrder.isEmpty) {
+      return;
+    }
     players.forEach((player) {
       if (player.id != turnOrder.first.id) {
         return;
@@ -55,6 +58,18 @@ class TurnManager {
       return;
     }
     newTurnOrder(players);
+  }
+
+  bool isPlayerTurn(List<Turn> turnOrder, String id) {
+    if (turnOrder.isEmpty) {
+      return false;
+    }
+
+    if (id == turnOrder.first.id) {
+      return true;
+    } else {
+      return false;
+    }
   }
 
   void takeTurn(
@@ -145,14 +160,6 @@ class Turn {
 
   bool turnIsNotOver() {
     if (this.secondAction) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool isPlayerTurn(String id) {
-    if (id == this.id) {
       return true;
     } else {
       return false;

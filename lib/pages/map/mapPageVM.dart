@@ -49,29 +49,22 @@ class MapPageVM {
     updateCanvasController(context, player.dx, player.dy);
   }
 
-  void checkForLooseCondition(context, Player player) {
-    if (player.life < 1) {
-      createWinOrLooseButton(context, player.id, 'you loose');
-    }
-  }
-
-  void checkForWinCondition(context, List<Player> players, Player player) {
+  void checkForEndGame(context, List<Player> players, Player player) {
     int deadPlayers = 0;
     players.forEach((player) {
       if (player.life < 1) {
         deadPlayers++;
       }
     });
-    if (deadPlayers == players.length - 1) {
-      playerWin(context, player);
+    if (deadPlayers != players.length - 1) {
+      return;
     }
-  }
 
-  void playerWin(
-    context,
-    Player player,
-  ) {
-    createWinOrLooseButton(context, player.id, 'you win');
+    if (player.life < 1) {
+      createWinOrLooseButton(context, player.id, 'you loose');
+    } else {
+      createWinOrLooseButton(context, player.id, 'you win');
+    }
   }
 
   void createWinOrLooseButton(context, String id, String text) {

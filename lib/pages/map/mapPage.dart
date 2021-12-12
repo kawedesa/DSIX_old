@@ -37,18 +37,20 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
-    final turnManager = Provider.of<TurnManager>(context);
+    final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     final user = Provider.of<User>(context);
 
-    _mapPageVM.checkForLooseCondition(
-        context, players[user.selectedPlayerIndex]);
-    _mapPageVM.checkForWinCondition(
-        context, players, players[user.selectedPlayerIndex]);
-    turnManager.checkForNewTurn(turnOrder, players);
-    turnManager.passTurnForDeadPlayers(turnOrder, players, user);
+    _mapPageVM.checkForEndGame(
+      context,
+      players,
+      players[user.selectedPlayerIndex],
+    );
+    turnController.passTurnForDeadPlayers(turnOrder, players, user);
+    turnController.checkForNewTurn(turnOrder, players);
+
     user.setPlayerModeBasedOnPlayerTurn(
-        turnOrder.first.isPlayerTurn(user.selectedPlayer.id));
+        turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id));
     _mapPageVM.updateEnemyPlayersInSight(
         players, players[user.selectedPlayerIndex]);
     _mapPageVM.createCanvasController(
@@ -199,8 +201,10 @@ class _MapPageState extends State<MapPage> {
                           onDoubleTap: () async {
                             user.changeSelectPlayer(
                                 players, turnOrder[index].id);
-                            user.setPlayerModeBasedOnPlayerTurn(turnOrder.first
-                                .isPlayerTurn(user.selectedPlayer.id));
+
+                            user.setPlayerModeBasedOnPlayerTurn(
+                                turnController.isPlayerTurn(
+                                    turnOrder, user.selectedPlayer.id));
                             _mapPageVM.goToPlayer(context, user.selectedPlayer);
                             _mapPageVM.updateCanvasController(context,
                                 user.selectedPlayer.dx, user.selectedPlayer.dy);

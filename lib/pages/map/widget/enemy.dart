@@ -81,7 +81,7 @@ class _EnemyState extends State<Enemy> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    final turnManager = Provider.of<TurnManager>(context);
+    final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
@@ -156,7 +156,7 @@ class _EnemyState extends State<Enemy> {
 
                             _playDamageAnimation(damage);
 
-                            turnManager.takeTurn(
+                            turnController.takeTurn(
                                 game, players, turnOrder, user);
 
                             setState(() {});

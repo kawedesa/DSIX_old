@@ -17,8 +17,8 @@ class DsixApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Game game = Game();
-    PlayerManager playerManager = PlayerManager();
-    TurnManager turnManager = TurnManager();
+    PlayerController playerController = PlayerController();
+    TurnController turnController = TurnController();
     User user = User();
 
     return MultiProvider(
@@ -27,15 +27,15 @@ class DsixApp extends StatelessWidget {
           initialData: Game(map: '', mapSize: 0.0),
           create: (context) => game.pullGameFromDataBase(),
         ),
-        Provider(create: (context) => playerManager),
+        Provider(create: (context) => playerController),
         StreamProvider<List<Player>>(
           initialData: [],
-          create: (context) => playerManager.pullPlayersFromDataBase(),
+          create: (context) => playerController.pullPlayersFromDataBase(),
         ),
-        Provider(create: (context) => turnManager),
+        Provider(create: (context) => turnController),
         StreamProvider<List<Turn>>(
           initialData: [],
-          create: (context) => turnManager.pullTurnOrderFromDataBase(),
+          create: (context) => turnController.pullTurnOrderFromDataBase(),
         ),
         Provider(create: (context) => user),
       ],

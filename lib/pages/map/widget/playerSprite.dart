@@ -68,7 +68,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
   Widget build(BuildContext context) {
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
-    final turnManager = Provider.of<TurnManager>(context);
+    final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     final user = Provider.of<User>(context);
 
@@ -112,8 +112,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                 alignment: Alignment.center,
                 child: GestureDetector(
                     onTap: () {
-                      user.openOrCloseMenu(
-                          turnOrder.first.isPlayerTurn(user.selectedPlayer.id));
+                      user.openOrCloseMenu(turnController.isPlayerTurn(
+                          turnOrder, user.selectedPlayer.id));
                       widget.refresh();
                     },
                     onPanUpdate: (details) {
@@ -130,7 +130,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                         widget.temporaryLocation,
                       );
 
-                      turnManager.takeTurn(game, players, turnOrder, user);
+                      turnController.takeTurn(game, players, turnOrder, user);
 
                       widget.refresh();
                     },

@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class PlayerManager {
+class PlayerController {
   final db = FirebaseFirestore.instance;
   Stream<List<Player>> pullPlayersFromDataBase() {
     return db.collection('players').snapshots().map((querySnapshot) =>

@@ -166,6 +166,7 @@ class _ActionButtonState extends State<ActionButton> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+    final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     return AnimatedContainer(
       curve: Curves.fastLinearToSlowEaseIn,
@@ -178,22 +179,23 @@ class _ActionButtonState extends State<ActionButton> {
           : 0,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: (turnOrder.first.isPlayerTurn(user.selectedPlayer.id))
+        color: (turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id))
             ? _uiColor
                 .setUIColor(user.selectedPlayer.id, 'secondary')
                 .withAlpha(215)
             : AppColors.grey02.withAlpha(215),
         border: Border.all(
-          color: (turnOrder.first.isPlayerTurn(user.selectedPlayer.id))
-              ? _uiColor
-                  .setUIColor(user.selectedPlayer.id, 'secondary')
-                  .withAlpha(250)
-              : AppColors.grey02.withAlpha(250),
+          color:
+              (turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id))
+                  ? _uiColor
+                      .setUIColor(user.selectedPlayer.id, 'secondary')
+                      .withAlpha(250)
+                  : AppColors.grey02.withAlpha(250),
           width: 0.5,
         ),
       ),
       child: GestureDetector(
-        onTap: (turnOrder.first.isPlayerTurn(user.selectedPlayer.id))
+        onTap: (turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id))
             ? () {
                 setState(() {
                   widget.onTap();
@@ -213,7 +215,8 @@ class _ActionButtonState extends State<ActionButton> {
                 padding: const EdgeInsets.all(3),
                 child: SvgPicture.asset(
                   setIcon(widget.action),
-                  color: (turnOrder.first.isPlayerTurn(user.selectedPlayer.id))
+                  color: (turnController.isPlayerTurn(
+                          turnOrder, user.selectedPlayer.id))
                       ? _uiColor.setUIColor(user.selectedPlayer.id, 'primary')
                       : AppColors.grey04,
                 ),

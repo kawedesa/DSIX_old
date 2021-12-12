@@ -57,20 +57,20 @@ class BattleRoyaleSettingsPageVM {
   void newBattleRoyaleGame(
     context,
     Game game,
-    PlayerManager playerManager,
-    TurnManager turnManager,
+    PlayerController playerController,
+    TurnController turnController,
   ) {
     game.newGame();
-    playerManager
+    playerController
         .createListOfRandomPlayersInRandomLocations(this.numberOfPlayers);
-    turnManager.newTurnOrder(playerManager.listOfRandomPlayers);
+    turnController.newTurnOrder(playerController.listOfRandomPlayers);
     goToPlayerSelectionPage(context);
   }
 
-  void deleteBattleRoyaleGame(
-      Game game, PlayerManager playerManager, TurnManager turnManager) {
+  void deleteBattleRoyaleGame(Game game, PlayerController playerController,
+      TurnController turnController) {
     game.deleteGame();
-    playerManager.deleteAllPlayersFromDataBase();
-    turnManager.deleteTurnOrder();
+    playerController.deleteAllPlayersFromDataBase();
+    turnController.deleteTurnOrder();
   }
 }
