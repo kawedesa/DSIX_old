@@ -7,12 +7,14 @@ class Button extends StatefulWidget {
   final String buttonText;
   final Color buttonColor;
   final Color buttonTextColor;
+  final Color buttonFillColor;
   final Function() onTapAction;
 
   const Button({
     @required this.buttonText,
     this.buttonColor,
     this.buttonTextColor,
+    this.buttonFillColor,
     this.onTapAction,
   });
 
@@ -59,6 +61,9 @@ class _ButtonState extends State<Button> {
         height: MediaQuery.of(context).size.height * 0.09,
         width: MediaQuery.of(context).size.width * 0.65,
         decoration: BoxDecoration(
+          color: (this.widget.buttonFillColor != null)
+              ? this.widget.buttonFillColor
+              : AppColors.black00,
           border: Border.all(
             color: (widget.buttonColor != null)
                 ? this.widget.buttonColor

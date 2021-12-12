@@ -1,12 +1,32 @@
 import 'package:dsixv02app/models/game.dart';
+import 'package:dsixv02app/models/player.dart';
+import 'package:dsixv02app/models/turnOrder.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 
 import 'package:flutter/material.dart';
 
 class BattleRoyaleSettingsPageVM {
-  void newGame(context, Game game, int numberOfPlayers) {
-    game.newGameBattleRoyaleGame(numberOfPlayers);
-    goToPlayerSelectionPage(context);
+  int numberOfPlayers;
+
+  void setNumberOfPlayers() {
+    if (this.numberOfPlayers != null) {
+      return;
+    }
+    numberOfPlayers = 2;
+  }
+
+  void increaseNumberOfPlayers() {
+    this.numberOfPlayers++;
+    if (numberOfPlayers > 5) {
+      numberOfPlayers = 5;
+    }
+  }
+
+  void decreaseNumberOfPlayers() {
+    this.numberOfPlayers--;
+    if (numberOfPlayers < 2) {
+      numberOfPlayers = 2;
+    }
   }
 
   void joinGame(context) {
@@ -32,5 +52,25 @@ class BattleRoyaleSettingsPageVM {
     );
 
     Navigator.of(context).push(newRoute);
+  }
+
+  void newBattleRoyaleGame(
+    context,
+    Game game,
+    PlayerManager playerManager,
+    TurnManager turnManager,
+  ) {
+    game.newGame();
+    playerManager
+        .createListOfRandomPlayersInRandomLocations(this.numberOfPlayers);
+    turnManager.newTurnOrder(playerManager.listOfRandomPlayers);
+    goToPlayerSelectionPage(context);
+  }
+
+  void deleteBattleRoyaleGame(
+      Game game, PlayerManager playerManager, TurnManager turnManager) {
+    game.deleteGame();
+    playerManager.deleteAllPlayersFromDataBase();
+    turnManager.deleteTurnOrder();
   }
 }

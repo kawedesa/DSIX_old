@@ -59,6 +59,12 @@ class AppColors {
   static final enemyShadow00 = Color.fromRGBO(150, 0, 0, 0.3);
   static final enemyRange00 = Color.fromRGBO(255, 100, 100, 0.75);
 
+  //GRAVE
+  static final grave00 = Color.fromRGBO(91, 87, 85, 1);
+  static final grave01 = Color.fromRGBO(114, 110, 109, 1);
+  static final grave02 = Color.fromRGBO(147, 140, 135, 1);
+  static final grave03 = Color.fromRGBO(168, 159, 154, 1);
+
   //ORC
   static final orcArmor00 = Color.fromRGBO(84, 49, 41, 1);
   static final orcArmor01 = Color.fromRGBO(107, 69, 39, 1);

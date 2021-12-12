@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/game.dart';
+import 'package:dsixv02app/models/turnOrder.dart';
 import 'package:dsixv02app/models/user.dart';
 import 'package:dsixv02app/pages/shared/app_Colors.dart';
 import 'package:dsixv02app/models/player.dart';
@@ -17,9 +17,10 @@ class PlayerSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     PlayerSelectionPageVM _selectPlayerPageVM = PlayerSelectionPageVM();
     UIColor _uiColor = UIColor();
-    final user = Provider.of<User>(context);
+
     final players = Provider.of<List<Player>>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
+    final user = Provider.of<User>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -51,8 +52,12 @@ class PlayerSelectionPage extends StatelessWidget {
                         buttonTextColor:
                             _uiColor.setUIColor(players[index].id, 'primary'),
                         onTapAction: () async {
-                          user.selectPlayer(index, players[index]);
-                          user.checkForPlayerTurn(turnOrder);
+                          _selectPlayerPageVM.selectPlayer(
+                              players[index],
+                              index,
+                              user,
+                              turnOrder.first.isPlayerTurn(players[index].id));
+
                           _selectPlayerPageVM.goToMapPage(context);
                         },
                       ),

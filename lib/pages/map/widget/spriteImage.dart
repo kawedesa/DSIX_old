@@ -104,6 +104,35 @@ class SpriteImage extends StatelessWidget {
           ),
         ];
         break;
+      case 'grave':
+        this.size = 16;
+        this.layers = [
+          SvgPicture.asset(
+            'assets/image/sprite/grave/grave00.svg',
+            color: AppColors.grave00,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/grave/grave01.svg',
+            color: AppColors.grave01,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/grave/grave02.svg',
+            color: AppColors.grave02,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/grave/grave03.svg',
+            color: AppColors.grave03,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ];
+        break;
     }
 
     return Container(
