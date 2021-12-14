@@ -1,5 +1,6 @@
 import 'package:dsixv02app/models/turnOrder.dart';
 import 'package:dsixv02app/models/user.dart';
+import 'package:dsixv02app/pages/map/widget/iventory.dart';
 import 'package:dsixv02app/pages/shared/app_Colors.dart';
 import 'package:dsixv02app/pages/shared/app_Icons.dart';
 import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
@@ -283,6 +284,14 @@ class _IventoryButtonState extends State<IventoryButton> {
     return GestureDetector(
       onTap: () {
         setState(() {
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return Iventory(
+                player: user.selectedPlayer,
+              );
+            },
+          );
           _playOnTapAnimation();
         });
       },

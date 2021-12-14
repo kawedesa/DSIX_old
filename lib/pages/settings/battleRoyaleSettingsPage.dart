@@ -1,3 +1,4 @@
+import 'package:dsixv02app/models/loot.dart';
 import 'package:dsixv02app/models/turnOrder.dart';
 import 'package:dsixv02app/pages/shared/app_Colors.dart';
 import 'package:dsixv02app/models/game.dart';
@@ -27,6 +28,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
     final playerController = Provider.of<PlayerController>(context);
     final players = Provider.of<List<Player>>(context);
     final turnController = Provider.of<TurnController>(context);
+    final lootController = Provider.of<LootController>(context);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -106,6 +108,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                               game,
                               playerController,
                               turnController,
+                              lootController,
                             );
                           },
                         ),
@@ -117,7 +120,10 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                               onTapAction: () {
                                 _battleRoyaleSettingsPage
                                     .deleteBattleRoyaleGame(
-                                        game, playerController, turnController);
+                                        game,
+                                        playerController,
+                                        turnController,
+                                        lootController);
                               }),
                         )
                       : Container(),

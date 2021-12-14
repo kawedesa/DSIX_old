@@ -1,5 +1,6 @@
+import 'package:dsixv02app/models/loot.dart';
 import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/pages/map/mapPage.dart';
+
 import 'package:dsixv02app/pages/settings/battleRoyaleSettingsPage.dart';
 import 'package:dsixv02app/pages/shared/widgets/button.dart';
 import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
@@ -8,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'widget/enemy.dart';
 
 class MapPageVM {
-  Effects effects = Effects();
   TransformationController canvasController;
   UIColor _uiColor = UIColor();
   List<Widget> temporaryUI = [];
@@ -131,5 +131,21 @@ class MapPageVM {
     } else {
       return false;
     }
+  }
+
+  List<LootSprite> visibleLoot = [];
+
+  void updateLootInSight(List<Loot> loot, Player selectedPlayer) {
+    this.visibleLoot = [];
+    loot.forEach((target) {
+      if (checkIfPlayerCanSeeTheTarget(selectedPlayer, target.dx, target.dy)) {
+        this.visibleLoot.add(LootSprite(
+              lootID: target.id,
+              dx: target.dx,
+              dy: target.dy,
+              isClosed: target.isClosed,
+            ));
+      }
+    });
   }
 }

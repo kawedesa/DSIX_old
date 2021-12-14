@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'models/game.dart';
+import 'models/loot.dart';
 import 'models/player.dart';
 import 'models/turnOrder.dart';
 import 'models/user.dart';
@@ -19,6 +20,7 @@ class DsixApp extends StatelessWidget {
     Game game = Game();
     PlayerController playerController = PlayerController();
     TurnController turnController = TurnController();
+    LootController lootController = LootController();
     User user = User();
 
     return MultiProvider(
@@ -36,6 +38,11 @@ class DsixApp extends StatelessWidget {
         StreamProvider<List<Turn>>(
           initialData: [],
           create: (context) => turnController.pullTurnOrderFromDataBase(),
+        ),
+        Provider(create: (context) => lootController),
+        StreamProvider<List<Loot>>(
+          initialData: [],
+          create: (context) => lootController.pullLootFromDataBase(),
         ),
         Provider(create: (context) => user),
       ],

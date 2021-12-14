@@ -1,7 +1,8 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+
+import 'loot.dart';
 
 class PlayerController {
   final db = FirebaseFirestore.instance;
@@ -55,7 +56,6 @@ class PlayerController {
 
 class Player {
   String id;
-
   double dx;
   double dy;
   String race;
@@ -66,6 +66,13 @@ class Player {
   int maxLife;
   int weight;
   int maxWeight;
+  int pDamage;
+  int mDamage;
+  int pArmor;
+  int mArmor;
+  Item mainHandSlot;
+  Item offHandSlot;
+  List<Item> bag;
   Player(
       {String id,
       double dx,
@@ -77,7 +84,14 @@ class Player {
       int life,
       int maxLife,
       int weight,
-      int maxWeight}) {
+      int maxWeight,
+      int pDamage,
+      int mDamage,
+      int pArmor,
+      int mArmor,
+      Item mainHandSlot,
+      Item offHandSlot,
+      List<Item> bag}) {
     this.id = id;
     this.dx = dx;
     this.dy = dy;
@@ -89,11 +103,20 @@ class Player {
     this.maxLife = maxLife;
     this.weight = weight;
     this.maxWeight = maxWeight;
+    this.pDamage = pDamage;
+    this.mDamage = mDamage;
+    this.pArmor = pArmor;
+    this.mArmor = mArmor;
+    this.mainHandSlot = mainHandSlot;
+    this.offHandSlot = offHandSlot;
+    this.bag = bag;
   }
 
   final db = FirebaseFirestore.instance;
 
   Map<String, dynamic> saveToDataBase(Player player) {
+    var bag = player.bag.map((item) => item.toMap()).toList();
+
     return {
       'id': player.id,
       'dx': player.dx,
@@ -106,10 +129,23 @@ class Player {
       'maxLife': player.maxLife,
       'weight': player.weight,
       'maxWeight': player.maxWeight,
+      'pDamage': player.pDamage,
+      'mDamage': player.mDamage,
+      'pArmor': player.pArmor,
+      'mArmor': player.mArmor,
+      'mainHandSlot': player.mainHandSlot.toMap(),
+      'offHandSlot': player.offHandSlot.toMap(),
+      'bag': bag,
     };
   }
 
   factory Player.fromMap(Map data) {
+    List<Item> bag = [];
+    List<dynamic> bagMap = data['bag'];
+    bagMap.forEach((item) {
+      bag.add(new Item.fromMap(item));
+    });
+
     return Player(
       id: data['id'],
       dx: data['dx'] * 1.0,
@@ -122,6 +158,13 @@ class Player {
       maxLife: data['maxLife'],
       weight: data['weight'],
       maxWeight: data['maxWeight'],
+      pDamage: data['pDamage'],
+      mDamage: data['mDamage'],
+      pArmor: data['pArmor'],
+      mArmor: data['mArmor'],
+      mainHandSlot: Item.fromMap(data['mainHandSlot']),
+      offHandSlot: Item.fromMap(data['offHandSlot']),
+      bag: bag,
     );
   }
 
@@ -152,6 +195,13 @@ class Player {
       maxLife: 0,
       weight: 0,
       maxWeight: 0,
+      pDamage: 0,
+      mDamage: 0,
+      pArmor: 0,
+      mArmor: 0,
+      mainHandSlot: Item.emptyItem(),
+      offHandSlot: Item.emptyItem(),
+      bag: [],
     );
   }
 
@@ -212,6 +262,99 @@ class Player {
     int damage = Random().nextInt(6) + 1;
     print(damage);
     return damage;
+  }
+
+  void getItem(Item item) async {
+    this.weight += item.weight;
+    this.bag.add(item);
+    var updatedBag = this.bag.map((item) => item.toMap()).toList();
+    await db.collection('players').doc(this.id).update({
+      'bag': updatedBag,
+      'weight': this.weight,
+    });
+  }
+
+  void equipItem(Item item) async {
+    this.pDamage += item.pDamage;
+    this.mDamage += item.mDamage;
+    this.pArmor += item.pArmor;
+    this.mArmor += item.mArmor;
+    this.attackRange += item.weaponRange;
+
+    switch (item.itemSlot) {
+      case 'oneHand':
+        if (this.mainHandSlot.name != '' && this.offHandSlot.name != '') {
+          unequip(this.mainHandSlot, 'mainHandSlot');
+        }
+        if (this.mainHandSlot.name != '') {
+          this.offHandSlot = item;
+        } else {
+          this.mainHandSlot = item;
+        }
+        break;
+      case 'twoHands':
+        if (this.mainHandSlot.name != '') {
+          unequip(this.mainHandSlot, 'mainHandSlot');
+        }
+        if (this.offHandSlot.name != '') {
+          unequip(this.offHandSlot, 'offHandSlot');
+        }
+
+        this.mainHandSlot = item;
+        this.offHandSlot = item;
+
+        break;
+    }
+
+    this.bag.remove(item);
+    var updatedBag = this.bag.map((item) => item.toMap()).toList();
+
+    await db.collection('players').doc(this.id).update({
+      'bag': updatedBag,
+      'mainHandSlot': this.mainHandSlot.toMap(),
+      'offHandSlot': this.offHandSlot.toMap(),
+      'pDamage': this.pDamage,
+      'mDamage': this.mDamage,
+      'pArmor': this.pArmor,
+      'mArmor': this.mArmor,
+      'attackRange': this.attackRange,
+    });
+  }
+
+  void unequip(Item item, String itemSlot) async {
+    this.pDamage -= item.pDamage;
+    this.mDamage -= item.mDamage;
+    this.pArmor -= item.pArmor;
+    this.mArmor -= item.mArmor;
+    this.attackRange -= item.weaponRange;
+
+    switch (item.itemSlot) {
+      case 'oneHand':
+        if (itemSlot == 'mainHandSlot') {
+          this.mainHandSlot = Item.emptyItem();
+        } else {
+          this.offHandSlot = Item.emptyItem();
+        }
+        break;
+      case 'twoHands':
+        this.mainHandSlot = Item.emptyItem();
+        this.offHandSlot = Item.emptyItem();
+        break;
+    }
+
+    this.bag.add(item);
+    var updatedBag = this.bag.map((item) => item.toMap()).toList();
+
+    await db.collection('players').doc(this.id).update({
+      'bag': updatedBag,
+      'mainHandSlot': this.mainHandSlot.toMap(),
+      'offHandSlot': this.offHandSlot.toMap(),
+      'pDamage': this.pDamage,
+      'mDamage': this.mDamage,
+      'pArmor': this.pArmor,
+      'mArmor': this.mArmor,
+      'attackRange': this.attackRange,
+    });
   }
 }
 

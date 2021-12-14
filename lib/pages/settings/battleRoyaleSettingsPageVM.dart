@@ -1,4 +1,5 @@
 import 'package:dsixv02app/models/game.dart';
+import 'package:dsixv02app/models/loot.dart';
 import 'package:dsixv02app/models/player.dart';
 import 'package:dsixv02app/models/turnOrder.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
@@ -59,18 +60,25 @@ class BattleRoyaleSettingsPageVM {
     Game game,
     PlayerController playerController,
     TurnController turnController,
+    LootController lootController,
   ) {
     game.newGame();
     playerController
         .createListOfRandomPlayersInRandomLocations(this.numberOfPlayers);
     turnController.newTurnOrder(playerController.listOfRandomPlayers);
+    lootController.createListOfRandomLootInRandomLocation(10);
     goToPlayerSelectionPage(context);
   }
 
-  void deleteBattleRoyaleGame(Game game, PlayerController playerController,
-      TurnController turnController) {
+  void deleteBattleRoyaleGame(
+    Game game,
+    PlayerController playerController,
+    TurnController turnController,
+    LootController lootController,
+  ) {
     game.deleteGame();
     playerController.deleteAllPlayersFromDataBase();
     turnController.deleteTurnOrder();
+    lootController.deleteAllLootFromDataBase();
   }
 }

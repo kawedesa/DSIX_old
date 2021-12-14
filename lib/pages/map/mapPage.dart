@@ -1,4 +1,5 @@
 import 'package:dsixv02app/models/game.dart';
+import 'package:dsixv02app/models/loot.dart';
 import 'package:dsixv02app/models/player.dart';
 import 'package:dsixv02app/models/turnOrder.dart';
 import 'package:dsixv02app/models/user.dart';
@@ -10,10 +11,9 @@ import 'package:dsixv02app/pages/shared/app_Icons.dart';
 import 'package:dsixv02app/pages/shared/widgets/goToPageButton.dart';
 import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:rive/rive.dart';
+
 import 'mapPageVM.dart';
 import 'widget/playerSprite.dart';
 
@@ -39,6 +39,7 @@ class _MapPageState extends State<MapPage> {
     final players = Provider.of<List<Player>>(context);
     final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
+    final loot = Provider.of<List<Loot>>(context);
     final user = Provider.of<User>(context);
 
     _mapPageVM.checkForEndGame(
@@ -47,12 +48,13 @@ class _MapPageState extends State<MapPage> {
       players[user.selectedPlayerIndex],
     );
     turnController.passTurnForDeadPlayers(turnOrder, players, user);
-    turnController.checkForNewTurn(turnOrder, players);
 
+    turnController.checkForNewTurn(turnOrder, players);
     user.setPlayerModeBasedOnPlayerTurn(
         turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id));
     _mapPageVM.updateEnemyPlayersInSight(
         players, players[user.selectedPlayerIndex]);
+    _mapPageVM.updateLootInSight(loot, players[user.selectedPlayerIndex]);
     _mapPageVM.createCanvasController(
         context, user.selectedPlayer.dx, user.selectedPlayer.dy);
 
@@ -150,6 +152,9 @@ class _MapPageState extends State<MapPage> {
                           children: [
                             MapTile(
                               name: game.map,
+                            ),
+                            Stack(
+                              children: _mapPageVM.visibleLoot,
                             ),
                             Stack(
                               children: _mapPageVM.enemy,
@@ -254,73 +259,6 @@ class TurnButton extends StatelessWidget {
           AppIcons.turn,
           color: color,
         ),
-      ),
-    );
-  }
-}
-
-class Effects {
-  List<Widget> effects = [];
-
-  void newDamageEffect(int damage, Offset location) {
-    Widget newDamageEffect = Positioned(
-        left: location.dx,
-        top: location.dy,
-        child: DamageEffect(
-          damage: damage,
-        ));
-
-    this.effects.add(newDamageEffect);
-  }
-
-  void clearEffects() {
-    this.effects = [];
-  }
-}
-
-class DamageEffect extends StatefulWidget {
-  final int damage;
-  const DamageEffect({
-    Key key,
-    @required this.damage,
-  }) : super(key: key);
-
-  @override
-  _DamageEffectState createState() => _DamageEffectState();
-}
-
-class _DamageEffectState extends State<DamageEffect> {
-  Artboard _artboard;
-
-  @override
-  void initState() {
-    _loadRiverFile();
-    super.initState();
-  }
-
-  void _loadRiverFile() async {
-    final bytes = await rootBundle.load('assets/animation/damage.riv');
-    final file = RiveFile.import(bytes);
-    setState(() {
-      _artboard = file.mainArtboard;
-      _playDamageAnimation(widget.damage);
-    });
-  }
-
-  _playDamageAnimation(int damage) {
-    _artboard.addController(SimpleAnimation(
-      '$damage',
-    ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 10,
-      height: 20,
-      child: Rive(
-        artboard: _artboard,
-        fit: BoxFit.fill,
       ),
     );
   }
