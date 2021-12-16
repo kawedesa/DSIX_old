@@ -34,4 +34,10 @@ class AppIcons {
 
   //Heavy Weapons
   static final longSpear = 'assets/icon/item/longSpear.svg';
+
+  //Armor
+  static final helmet = 'assets/icon/item/helmet.svg';
+  static final gloves = 'assets/icon/item/gloves.svg';
+  static final boots = 'assets/icon/item/boots.svg';
+  static final lightArmor = 'assets/icon/item/lightArmor.svg';
 }

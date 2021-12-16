@@ -1,26 +1,27 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:dsixv02app/models/game.dart';
-import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/models/turnOrder.dart';
-import 'package:dsixv02app/models/user.dart';
-import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
+import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/turnOrder/turn.dart';
+import 'package:dsixv02app/models/player/user.dart';
+import 'package:dsixv02app/models/turnOrder/turnController.dart';
+import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
-import 'spriteImage.dart';
+import '../player/playerSpriteImage.dart';
 
 // ignore: must_be_immutable
-class Enemy extends StatefulWidget {
+class EnemyPlayerSprite extends StatefulWidget {
   String enemyID;
   double dx;
   double dy;
   String race;
   double vision;
   int life;
-  Enemy(
+  EnemyPlayerSprite(
       {Key key,
       this.enemyID,
       this.dx,
@@ -31,51 +32,19 @@ class Enemy extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<Enemy> createState() => _EnemyState();
+  State<EnemyPlayerSprite> createState() => _EnemyPlayerSpriteState();
 }
 
-class _EnemyState extends State<Enemy> {
+class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
   UIColor _uiColor = UIColor();
-  EnemyController _enemyController = EnemyController();
-
-  Artboard _artboard;
+  EnemyPlayerSpriteController _enemyController = EnemyPlayerSpriteController();
 
   @override
   void initState() {
-    _loadRiverFile();
-    super.initState();
-  }
-
-  void _loadRiverFile() async {
-    final bytes = await rootBundle.load('assets/animation/damage.riv');
-    final file = RiveFile.import(bytes);
     setState(() {
-      _artboard = file.mainArtboard;
-      _offAnimation();
+      _enemyController.loadRiverFile();
     });
-  }
-
-  _offAnimation() {
-    _artboard.addController(SimpleAnimation('off'));
-  }
-
-  _playDamageAnimation(int damage) {
-    _artboard.addController(OneShotAnimation(
-      '$damage',
-    ));
-  }
-
-  void updateEnemyLife(List<Player> player) {
-    player.forEach((player) {
-      if (player.id != widget.enemyID) {
-        return;
-      }
-
-      if (player.life != widget.life) {
-        int damage = widget.life - player.life;
-        _playDamageAnimation(damage);
-      }
-    });
+    super.initState();
   }
 
   @override
@@ -83,10 +52,11 @@ class _EnemyState extends State<Enemy> {
     final user = Provider.of<User>(context);
     final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
-    final game = Provider.of<Game>(context);
+    final gameController = Provider.of<GameController>(context);
     final players = Provider.of<List<Player>>(context);
 
-    updateEnemyLife(players);
+    _enemyController.updateEnemyLife(
+        _enemyController.getEnemyPlayer(players, widget.enemyID), widget.life);
 
     return Positioned(
       left: widget.dx - widget.vision / 2,
@@ -133,36 +103,30 @@ class _EnemyState extends State<Enemy> {
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 12),
                 child: (widget.life < 1)
-                    ? TransparentPointer(child: SpriteImage(image: 'grave'))
+                    ? TransparentPointer(
+                        child: PlayerSpriteImage(image: 'grave'))
                     : GestureDetector(
                         onTap: () {
-                          if (user.playerMode == 'attack') {
-                            if (_enemyController.enemyOutOfReach(
-                                Offset(widget.dx, widget.dy),
-                                players[user.selectedPlayerIndex].getLocation(),
-                                players[user.selectedPlayerIndex]
-                                    .attackRange)) {
-                              return;
-                            }
+                          switch (user.playerMode) {
+                            case 'attack':
+                              if (players[user.selectedPlayerIndex]
+                                  .cantAttack(Offset(widget.dx, widget.dy))) {
+                                return;
+                              }
 
-                            int damage =
-                                players[user.selectedPlayerIndex].dealDamage();
+                              _enemyController.takeDamage(
+                                  players[user.selectedPlayerIndex],
+                                  _enemyController.getEnemyPlayer(
+                                      players, widget.enemyID));
 
-                            _enemyController.receiveDamage(
-                              players,
-                              widget.enemyID,
-                              damage,
-                            );
+                              turnController.takeTurn(
+                                  gameController, players, turnOrder, user);
 
-                            _playDamageAnimation(damage);
-
-                            turnController.takeTurn(
-                                game, players, turnOrder, user);
-
-                            setState(() {});
+                              break;
                           }
+                          setState(() {});
                         },
-                        child: SpriteImage(image: widget.race),
+                        child: PlayerSpriteImage(image: widget.race),
                       ),
               ),
             ),
@@ -172,12 +136,12 @@ class _EnemyState extends State<Enemy> {
                 transparent: true,
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 25),
-                  child: (_artboard != null)
+                  child: (_enemyController.artboard != null)
                       ? SizedBox(
                           width: 10,
                           height: 20,
                           child: Rive(
-                            artboard: _artboard,
+                            artboard: _enemyController.artboard,
                             fit: BoxFit.fill,
                           ),
                         )
@@ -192,31 +156,49 @@ class _EnemyState extends State<Enemy> {
   }
 }
 
-class EnemyController {
+class EnemyPlayerSpriteController {
   final db = FirebaseFirestore.instance;
+  Artboard artboard;
 
-  // ignore: non_constant_identifier_names
-  bool enemyOutOfReach(
-      Offset enemyLocation, Offset playerLocation, double playerAttackRange) {
-    double distance = (enemyLocation - playerLocation).distance;
-    if (distance > playerAttackRange / 2) {
-      return true;
-    } else {
-      return false;
+  void loadRiverFile() async {
+    final bytes = await rootBundle.load('assets/animation/damage.riv');
+    final file = RiveFile.import(bytes);
+    artboard = file.mainArtboard;
+    offAnimation();
+  }
+
+  offAnimation() {
+    artboard.addController(SimpleAnimation('off'));
+  }
+
+  playDamageAnimation(int damage) {
+    artboard.addController(OneShotAnimation(
+      '$damage',
+    ));
+  }
+
+  // ignore: missing_return
+  Player getEnemyPlayer(List<Player> players, String enemyID) {
+    Player enemyPlayer;
+
+    players.forEach((player) {
+      if (player.id == enemyID) {
+        enemyPlayer = player;
+      }
+    });
+    return enemyPlayer;
+  }
+
+  void updateEnemyLife(Player enemyPlayer, int localLife) {
+    if (enemyPlayer.life != localLife) {
+      int damage = localLife - enemyPlayer.life;
+      playDamageAnimation(damage);
     }
   }
 
-  void receiveDamage(
-    List<Player> players,
-    String enemyID,
-    int damage,
-  ) {
-    players.forEach((player) {
-      if (player.id != enemyID) {
-        return;
-      }
-
-      player.reduceCurrentLife(damage);
-    });
+  void takeDamage(Player selectedPlayer, Player enemy) {
+    int damage = enemy.takeDamage(selectedPlayer.damageDiceRoll(),
+        selectedPlayer.pDamage, selectedPlayer.mDamage);
+    playDamageAnimation(damage);
   }
 }

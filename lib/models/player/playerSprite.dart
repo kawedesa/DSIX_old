@@ -1,24 +1,26 @@
-import 'package:dsixv02app/models/game.dart';
-import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/models/turnOrder.dart';
-import 'package:dsixv02app/models/user.dart';
-import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
+import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/turnOrder/turn.dart';
+import 'package:dsixv02app/models/player/user.dart';
+import 'package:dsixv02app/models/turnOrder/turnController.dart';
+import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
-import 'spriteImage.dart';
+import 'playerSpriteImage.dart';
+import 'player.dart';
+import 'playerTempLocation.dart';
 
 // ignore: must_be_immutable
 class PlayerSprite extends StatefulWidget {
   Function() refresh;
-  PlayerTemporaryLocation temporaryLocation;
+  PlayerTempLocation tempLocation;
   Player player;
   PlayerSprite({
     Key key,
     this.refresh,
-    @required this.temporaryLocation,
+    @required this.tempLocation,
     @required this.player,
   }) : super(key: key);
 
@@ -27,61 +29,33 @@ class PlayerSprite extends StatefulWidget {
 }
 
 class _PlayerSpriteState extends State<PlayerSprite> {
-  PlayerController playerController = PlayerController();
-
-  Artboard _artboard;
+  PlayerSpriteController playerSpriteController = PlayerSpriteController();
 
   @override
   void initState() {
-    _loadRiverFile();
+    playerSpriteController.loadRiverFile();
     super.initState();
-  }
-
-  void _loadRiverFile() async {
-    final bytes = await rootBundle.load('assets/animation/damage.riv');
-    final file = RiveFile.import(bytes);
-    setState(() {
-      _artboard = file.mainArtboard;
-      _offAnimation();
-    });
-  }
-
-  _offAnimation() {
-    _artboard.addController(SimpleAnimation('off'));
-  }
-
-  _playDamageAnimation(int damage) {
-    _artboard.addController(OneShotAnimation(
-      '$damage',
-    ));
-  }
-
-  void updatePlayerLife(Player player, User user) {
-    if (player.life != widget.player.life) {
-      int damage = widget.player.life - player.life;
-      _playDamageAnimation(damage);
-      user.updateSelectedPlayer(player);
-    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final game = Provider.of<Game>(context);
+    final gameController = Provider.of<GameController>(context);
     final players = Provider.of<List<Player>>(context);
     final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     final user = Provider.of<User>(context);
 
-    updatePlayerLife(players[user.selectedPlayerIndex], user);
+    playerSpriteController.updatePlayer(
+        players[user.selectedPlayerIndex], user);
 
     return Positioned(
-      left: playerController
+      left: playerSpriteController
           .calculateSpritePosition(
-              widget.temporaryLocation, widget.player.visionRange)
+              widget.tempLocation, widget.player.visionRange)
           .dx,
-      top: playerController
+      top: playerSpriteController
           .calculateSpritePosition(
-              widget.temporaryLocation, widget.player.visionRange)
+              widget.tempLocation, widget.player.visionRange)
           .dy,
       child: TransparentPointer(
         transparent: true,
@@ -96,8 +70,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                 alignment: Alignment.center,
                 child: WalkRange(
-                  walkRange: playerController.calculateWalkedDistance(
-                      widget.temporaryLocation,
+                  walkRange: playerSpriteController.calculateWalkedDistance(
+                      widget.tempLocation,
                       widget.player.getLocation(),
                       widget.player.walkRange),
                 ),
@@ -110,36 +84,56 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               ),
               Align(
                 alignment: Alignment.center,
-                child: GestureDetector(
-                    onTap: () {
-                      user.openOrCloseMenu(turnController.isPlayerTurn(
-                          turnOrder, user.selectedPlayer.id));
-                      widget.refresh();
-                    },
-                    onPanUpdate: (details) {
-                      playerController.walk(
-                          widget.temporaryLocation,
-                          widget.player.getLocation(),
-                          Offset(details.delta.dx, details.delta.dy),
-                          widget.player.walkRange,
-                          user.playerMode);
-                    },
-                    onPanEnd: (details) {
-                      playerController.endWalk(
-                        user,
-                        widget.temporaryLocation,
-                      );
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 9),
+                  child: Container(
+                    width: 5,
+                    height: 10,
+                    child: GestureDetector(
+                      onTap: () {
+                        user.openOrCloseMenu(turnController.isPlayerTurn(
+                            turnOrder, user.selectedPlayer.id));
+                        widget.refresh();
+                      },
+                      onPanUpdate: (details) {
+                        playerSpriteController.walk(
+                            widget.tempLocation,
+                            widget.player.getLocation(),
+                            Offset(details.delta.dx, details.delta.dy),
+                            widget.player.walkRange,
+                            user.playerMode);
+                      },
+                      onPanEnd: (details) {
+                        playerSpriteController.endWalk(
+                          user,
+                          widget.tempLocation,
+                        );
 
-                      turnController.takeTurn(game, players, turnOrder, user);
+                        turnController.takeTurn(
+                            gameController, players, turnOrder, user);
 
-                      widget.refresh();
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 12),
-                      child: (players[user.selectedPlayerIndex].life < 1)
-                          ? SpriteImage(image: 'grave')
-                          : SpriteImage(image: widget.player.race),
-                    )),
+                        widget.refresh();
+                      },
+                      // child: Container(
+                      //   color: Colors.grey,
+                      //   width: 4,
+                      //   height: 8,
+                      // ),
+                    ),
+                  ),
+                ),
+              ),
+              Align(
+                alignment: Alignment.center,
+                child: TransparentPointer(
+                  transparent: true,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: (players[user.selectedPlayerIndex].life < 1)
+                        ? PlayerSpriteImage(image: 'grave')
+                        : PlayerSpriteImage(image: widget.player.race),
+                  ),
+                ),
               ),
               Align(
                 alignment: Alignment.center,
@@ -147,12 +141,12 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                   transparent: true,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 25),
-                    child: (_artboard != null)
+                    child: (playerSpriteController.artboard != null)
                         ? SizedBox(
                             width: 10,
                             height: 20,
                             child: Rive(
-                              artboard: _artboard,
+                              artboard: playerSpriteController.artboard,
                               fit: BoxFit.fill,
                             ),
                           )
@@ -168,15 +162,44 @@ class _PlayerSpriteState extends State<PlayerSprite> {
   }
 }
 
-class PlayerController {
+class PlayerSpriteController {
+  Artboard artboard;
+
+  void loadRiverFile() async {
+    final bytes = await rootBundle.load('assets/animation/damage.riv');
+    final file = RiveFile.import(bytes);
+
+    artboard = file.mainArtboard;
+    offAnimation();
+  }
+
+  offAnimation() {
+    artboard.addController(SimpleAnimation('off'));
+  }
+
+  playDamageAnimation(int damage) {
+    artboard.addController(OneShotAnimation(
+      '$damage',
+    ));
+  }
+
+  void updatePlayer(Player player, User user) {
+    if (player.life == user.selectedPlayer.life) {
+      return;
+    }
+    int damage = user.selectedPlayer.life - player.life;
+    playDamageAnimation(damage);
+    user.updateSelectedPlayer(player);
+  }
+
   Offset calculateSpritePosition(
-      PlayerTemporaryLocation temporaryLocation, double visionRange) {
+      PlayerTempLocation temporaryLocation, double visionRange) {
     return Offset(temporaryLocation.dx - visionRange / 2,
         temporaryLocation.dy - visionRange / 2);
   }
 
-  double calculateWalkedDistance(PlayerTemporaryLocation temporaryLocation,
-      playerLocation, double walkRange) {
+  double calculateWalkedDistance(
+      PlayerTempLocation temporaryLocation, playerLocation, double walkRange) {
     double totalWalkDistance =
         (Offset(temporaryLocation.dx, temporaryLocation.dy) - playerLocation)
                 .distance *
@@ -190,7 +213,7 @@ class PlayerController {
     return totalWalkDistance;
   }
 
-  void walk(PlayerTemporaryLocation temporaryLocation, Offset playerLocation,
+  void walk(PlayerTempLocation temporaryLocation, Offset playerLocation,
       Offset newLocation, walkRange, String playerMode) {
     if (calculateWalkedDistance(temporaryLocation, playerLocation, walkRange) <
             1 ||
@@ -203,7 +226,7 @@ class PlayerController {
 
   void endWalk(
     User user,
-    PlayerTemporaryLocation temporaryLocation,
+    PlayerTempLocation temporaryLocation,
   ) {
     if (user.playerMode != 'walk') {
       return;

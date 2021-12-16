@@ -1,10 +1,9 @@
-import 'package:dsixv02app/models/player.dart';
-
-import 'package:dsixv02app/pages/shared/app_Colors.dart';
-import 'package:dsixv02app/pages/shared/app_Icons.dart';
-import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
+import 'package:dsixv02app/shared/app_Colors.dart';
+import 'package:dsixv02app/shared/app_Icons.dart';
+import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import '../player.dart';
 
 class Iventory extends StatefulWidget {
   final Player player;
@@ -230,18 +229,35 @@ class _IventoryState extends State<Iventory> {
                               ),
                               Expanded(
                                 flex: 1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: _uiColor.setUIColor(
-                                          widget.player.id, 'primary'),
-                                      width: 1,
+                                child: GestureDetector(
+                                  onDoubleTap: () {
+                                    setState(() {
+                                      widget.player.unequip(
+                                          widget.player.handSlot, 'handSlot');
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: _uiColor.setUIColor(
+                                            widget.player.id, 'primary'),
+                                        width: 1,
+                                      ),
                                     ),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    AppIcons.handSlot,
-                                    color: _uiColor.setUIColor(
-                                        widget.player.id, 'primary'),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: SvgPicture.asset(
+                                        (widget.player.handSlot.name != '')
+                                            ? widget.player.handSlot.icon
+                                            : AppIcons.handSlot,
+                                        width: double.infinity,
+                                        color: (widget.player.handSlot.name !=
+                                                '')
+                                            ? AppColors.white00
+                                            : _uiColor.setUIColor(
+                                                widget.player.id, 'primary'),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -255,35 +271,69 @@ class _IventoryState extends State<Iventory> {
                             children: [
                               Expanded(
                                 flex: 1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: _uiColor.setUIColor(
-                                          widget.player.id, 'primary'),
-                                      width: 1,
+                                child: GestureDetector(
+                                  onDoubleTap: () {
+                                    setState(() {
+                                      widget.player.unequip(
+                                          widget.player.headSlot, 'headSlot');
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: _uiColor.setUIColor(
+                                            widget.player.id, 'primary'),
+                                        width: 1,
+                                      ),
                                     ),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    AppIcons.headSlot,
-                                    color: _uiColor.setUIColor(
-                                        widget.player.id, 'primary'),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: SvgPicture.asset(
+                                        (widget.player.headSlot.name != '')
+                                            ? widget.player.headSlot.icon
+                                            : AppIcons.headSlot,
+                                        width: double.infinity,
+                                        color: (widget.player.headSlot.name !=
+                                                '')
+                                            ? AppColors.white00
+                                            : _uiColor.setUIColor(
+                                                widget.player.id, 'primary'),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
                               Expanded(
                                 flex: 2,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: _uiColor.setUIColor(
-                                          widget.player.id, 'primary'),
-                                      width: 1,
+                                child: GestureDetector(
+                                  onDoubleTap: () {
+                                    setState(() {
+                                      widget.player.unequip(
+                                          widget.player.bodySlot, 'bodySlot');
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: _uiColor.setUIColor(
+                                            widget.player.id, 'primary'),
+                                        width: 1,
+                                      ),
                                     ),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    AppIcons.bodySlot,
-                                    color: _uiColor.setUIColor(
-                                        widget.player.id, 'primary'),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: SvgPicture.asset(
+                                        (widget.player.bodySlot.name != '')
+                                            ? widget.player.bodySlot.icon
+                                            : AppIcons.bodySlot,
+                                        width: double.infinity,
+                                        color: (widget.player.bodySlot.name !=
+                                                '')
+                                            ? AppColors.white00
+                                            : _uiColor.setUIColor(
+                                                widget.player.id, 'primary'),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),
@@ -333,18 +383,35 @@ class _IventoryState extends State<Iventory> {
                               ),
                               Expanded(
                                 flex: 1,
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                      color: _uiColor.setUIColor(
-                                          widget.player.id, 'primary'),
-                                      width: 1,
+                                child: GestureDetector(
+                                  onDoubleTap: () {
+                                    setState(() {
+                                      widget.player.unequip(
+                                          widget.player.feetSlot, 'feetSlot');
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                        color: _uiColor.setUIColor(
+                                            widget.player.id, 'primary'),
+                                        width: 1,
+                                      ),
                                     ),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    AppIcons.feetSlot,
-                                    color: _uiColor.setUIColor(
-                                        widget.player.id, 'primary'),
+                                    child: Padding(
+                                      padding: const EdgeInsets.all(10.0),
+                                      child: SvgPicture.asset(
+                                        (widget.player.feetSlot.name != '')
+                                            ? widget.player.feetSlot.icon
+                                            : AppIcons.feetSlot,
+                                        width: double.infinity,
+                                        color: (widget.player.feetSlot.name !=
+                                                '')
+                                            ? AppColors.white00
+                                            : _uiColor.setUIColor(
+                                                widget.player.id, 'primary'),
+                                      ),
+                                    ),
                                   ),
                                 ),
                               ),

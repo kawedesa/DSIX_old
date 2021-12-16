@@ -1,4 +1,4 @@
-import 'package:dsixv02app/pages/shared/app_Colors.dart';
+import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';

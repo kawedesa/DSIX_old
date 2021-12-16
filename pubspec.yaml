@@ -58,6 +58,8 @@ flutter:
     - assets/image/map/crossroads/
     - assets/image/sprite/orc/
     - assets/image/sprite/dwarf/
+    - assets/image/sprite/elf/
+    - assets/image/sprite/chest/
     - assets/image/sprite/grave/
 
     - assets/animation/

@@ -1,5 +1,5 @@
-import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/models/user.dart';
+import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/pages/map/mapPage.dart';
 import 'package:flutter/material.dart';
 

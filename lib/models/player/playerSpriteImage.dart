@@ -1,13 +1,13 @@
-import 'package:dsixv02app/pages/shared/app_Colors.dart';
+import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 // ignore: must_be_immutable
-class SpriteImage extends StatelessWidget {
+class PlayerSpriteImage extends StatelessWidget {
   String image;
   double size;
   List<Widget> layers;
-  SpriteImage({
+  PlayerSpriteImage({
     @required this.image,
     this.size,
     this.layers,
@@ -104,6 +104,61 @@ class SpriteImage extends StatelessWidget {
           ),
         ];
         break;
+
+      case 'elf':
+        this.size = 16;
+        this.layers = [
+          SvgPicture.asset(
+            'assets/image/sprite/elf/armor00.svg',
+            color: AppColors.elfArmor00,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/elf/armor01.svg',
+            color: AppColors.elfArmor01,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/elf/skin00.svg',
+            color: AppColors.elfSkin00,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/elf/skin01.svg',
+            color: AppColors.elfSkin01,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/elf/clothes00.svg',
+            color: AppColors.elfClothes00,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/elf/clothes01.svg',
+            color: AppColors.elfClothes01,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/elf/detail01.svg',
+            color: AppColors.elfDetail01,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+          SvgPicture.asset(
+            'assets/image/sprite/elf/hair00.svg',
+            color: AppColors.elfHair00,
+            width: double.infinity,
+            height: double.infinity,
+          ),
+        ];
+        break;
+
       case 'grave':
         this.size = 16;
         this.layers = [

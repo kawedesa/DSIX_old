@@ -1,58 +1,7 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/shop/item.dart';
 import 'package:flutter/material.dart';
-
-import 'loot.dart';
-
-class PlayerController {
-  final db = FirebaseFirestore.instance;
-  Stream<List<Player>> pullPlayersFromDataBase() {
-    return db.collection('players').snapshots().map((querySnapshot) =>
-        querySnapshot.docs
-            .map((player) => Player.fromMap(player.data()))
-            .toList());
-  }
-
-  List<Player> listOfRandomPlayers = [];
-  void createListOfRandomPlayersInRandomLocations(int numberOfPlayers) {
-    listOfRandomPlayers = [];
-    for (int i = 0; i < numberOfPlayers; i++) {
-      listOfRandomPlayers
-          .add(Player.newRandomPlayer(randomLocation(), randomLocation(), i));
-    }
-
-    listOfRandomPlayers.forEach((player) {
-      player.setLife();
-      player.setWeight();
-      player.setAttackRange();
-      player.setVisionRange();
-      player.setWalkRange();
-      addPlayerToDataBase(player);
-    });
-  }
-
-  double randomLocation() {
-    //For dev
-    return (Random().nextDouble() * 640 * 0.1) + (640 * 0.35);
-    //Original
-    // return (Random().nextDouble() * 640 * 0.8) + (640 * 0.1);
-  }
-
-  void addPlayerToDataBase(Player player) {
-    db.collection('players').doc(player.id).set(player.saveToDataBase(player));
-  }
-
-  void deleteAllPlayersFromDataBase() async {
-    var batch = db.batch();
-    await db.collection('players').get().then((snapshot) {
-      snapshot.docs.forEach((document) {
-        batch.delete(document.reference);
-      });
-    });
-
-    batch.commit();
-  }
-}
 
 class Player {
   String id;
@@ -72,6 +21,10 @@ class Player {
   int mArmor;
   Item mainHandSlot;
   Item offHandSlot;
+  Item headSlot;
+  Item bodySlot;
+  Item handSlot;
+  Item feetSlot;
   List<Item> bag;
   Player(
       {String id,
@@ -91,6 +44,10 @@ class Player {
       int mArmor,
       Item mainHandSlot,
       Item offHandSlot,
+      Item headSlot,
+      Item bodySlot,
+      Item handSlot,
+      Item feetSlot,
       List<Item> bag}) {
     this.id = id;
     this.dx = dx;
@@ -109,12 +66,16 @@ class Player {
     this.mArmor = mArmor;
     this.mainHandSlot = mainHandSlot;
     this.offHandSlot = offHandSlot;
+    this.headSlot = headSlot;
+    this.bodySlot = bodySlot;
+    this.handSlot = handSlot;
+    this.feetSlot = feetSlot;
     this.bag = bag;
   }
 
   final db = FirebaseFirestore.instance;
 
-  Map<String, dynamic> saveToDataBase(Player player) {
+  Map<String, dynamic> toMap(Player player) {
     var bag = player.bag.map((item) => item.toMap()).toList();
 
     return {
@@ -135,6 +96,10 @@ class Player {
       'mArmor': player.mArmor,
       'mainHandSlot': player.mainHandSlot.toMap(),
       'offHandSlot': player.offHandSlot.toMap(),
+      'headSlot': player.headSlot.toMap(),
+      'bodySlot': player.bodySlot.toMap(),
+      'handSlot': player.handSlot.toMap(),
+      'feetSlot': player.feetSlot.toMap(),
       'bag': bag,
     };
   }
@@ -164,6 +129,10 @@ class Player {
       mArmor: data['mArmor'],
       mainHandSlot: Item.fromMap(data['mainHandSlot']),
       offHandSlot: Item.fromMap(data['offHandSlot']),
+      headSlot: Item.fromMap(data['headSlot']),
+      bodySlot: Item.fromMap(data['bodySlot']),
+      handSlot: Item.fromMap(data['handSlot']),
+      feetSlot: Item.fromMap(data['feetSlot']),
       bag: bag,
     );
   }
@@ -180,6 +149,7 @@ class Player {
     List<String> races = [
       'orc',
       'dwarf',
+      'elf',
     ];
     int randomRace = Random().nextInt(races.length);
 
@@ -201,11 +171,19 @@ class Player {
       mArmor: 0,
       mainHandSlot: Item.emptyItem(),
       offHandSlot: Item.emptyItem(),
+      headSlot: Item.emptyItem(),
+      bodySlot: Item.emptyItem(),
+      handSlot: Item.emptyItem(),
+      feetSlot: Item.emptyItem(),
       bag: [],
     );
   }
 
   void setVisionRange() {
+    if (this.race == 'elf') {
+      this.visionRange = 130.0;
+      return;
+    }
     this.visionRange = 100.0;
   }
 
@@ -254,14 +232,77 @@ class Player {
     }
   }
 
+  bool cantCarry(int newWeight) {
+    if (this.weight + newWeight > this.maxWeight) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool cantReach(Offset targetLocation) {
+    double distance = (targetLocation - getLocation()).distance;
+    if (distance > 15) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool cantSee(Offset targetLocation) {
+    double distance = (targetLocation - getLocation()).distance;
+    if (distance > this.visionRange / 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  bool cantAttack(Offset targetLocation) {
+    double distance = (targetLocation - getLocation()).distance;
+    if (distance > this.attackRange / 2) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   Offset getLocation() {
     return Offset(this.dx, this.dy);
   }
 
-  int dealDamage() {
-    int damage = Random().nextInt(6) + 1;
-    print(damage);
-    return damage;
+  int damageDiceRoll() {
+    int trueDamage = Random().nextInt(6) + 1;
+    return trueDamage;
+  }
+
+  int takeDamage(int trueDamage, pDamage, mDamage) {
+    int positiveBonus = 0;
+    int negativeBonus = 0;
+
+    int pDamageCalculation = pDamage - this.pArmor;
+
+    if (pDamageCalculation >= 0) {
+      positiveBonus += pDamageCalculation;
+    } else {
+      negativeBonus += pDamageCalculation;
+    }
+
+    int mDamageCalculation = mDamage - this.mArmor;
+
+    if (mDamageCalculation >= 0) {
+      positiveBonus += mDamageCalculation;
+    } else {
+      negativeBonus += mDamageCalculation;
+    }
+    int partialSum = trueDamage + negativeBonus;
+    if (partialSum < 0) {
+      partialSum = 0;
+    }
+    int totalDamageReceived = partialSum + positiveBonus;
+    reduceCurrentLife(totalDamageReceived);
+
+    return totalDamageReceived;
   }
 
   void getItem(Item item) async {
@@ -304,21 +345,41 @@ class Player {
         this.offHandSlot = item;
 
         break;
+      case 'head':
+        if (this.headSlot.name != '') {
+          unequip(this.headSlot, 'headSlot');
+        }
+        this.headSlot = item;
+
+        break;
+      case 'body':
+        if (this.bodySlot.name != '') {
+          unequip(this.bodySlot, 'bodySlot');
+        }
+        this.bodySlot = item;
+
+        break;
+      case 'hands':
+        if (this.handSlot.name != '') {
+          unequip(this.handSlot, 'handSlot');
+        }
+        this.handSlot = item;
+
+        break;
+      case 'feet':
+        if (this.feetSlot.name != '') {
+          unequip(this.feetSlot, 'feetSlot');
+        }
+        this.feetSlot = item;
+
+        break;
     }
 
     this.bag.remove(item);
-    var updatedBag = this.bag.map((item) => item.toMap()).toList();
 
-    await db.collection('players').doc(this.id).update({
-      'bag': updatedBag,
-      'mainHandSlot': this.mainHandSlot.toMap(),
-      'offHandSlot': this.offHandSlot.toMap(),
-      'pDamage': this.pDamage,
-      'mDamage': this.mDamage,
-      'pArmor': this.pArmor,
-      'mArmor': this.mArmor,
-      'attackRange': this.attackRange,
-    });
+    List<Map<String, dynamic>> updatedBag =
+        this.bag.map((item) => item.toMap()).toList();
+    updateIventory(updatedBag);
   }
 
   void unequip(Item item, String itemSlot) async {
@@ -340,48 +401,45 @@ class Player {
         this.mainHandSlot = Item.emptyItem();
         this.offHandSlot = Item.emptyItem();
         break;
+
+      case 'head':
+        this.headSlot = Item.emptyItem();
+
+        break;
+      case 'body':
+        this.bodySlot = Item.emptyItem();
+
+        break;
+      case 'hands':
+        this.handSlot = Item.emptyItem();
+
+        break;
+      case 'feet':
+        this.feetSlot = Item.emptyItem();
+
+        break;
     }
 
     this.bag.add(item);
-    var updatedBag = this.bag.map((item) => item.toMap()).toList();
+    List<Map<String, dynamic>> updatedBag =
+        this.bag.map((item) => item.toMap()).toList();
+    updateIventory(updatedBag);
+  }
 
+  void updateIventory(List<Map<String, dynamic>> updatedBag) async {
     await db.collection('players').doc(this.id).update({
       'bag': updatedBag,
       'mainHandSlot': this.mainHandSlot.toMap(),
       'offHandSlot': this.offHandSlot.toMap(),
+      'headSlot': this.headSlot.toMap(),
+      'bodySlot': this.bodySlot.toMap(),
+      'handSlot': this.handSlot.toMap(),
+      'feetSlot': this.feetSlot.toMap(),
       'pDamage': this.pDamage,
       'mDamage': this.mDamage,
       'pArmor': this.pArmor,
       'mArmor': this.mArmor,
       'attackRange': this.attackRange,
     });
-  }
-}
-
-class PlayerTemporaryLocation extends ChangeNotifier {
-  final db = FirebaseFirestore.instance;
-  double dx = 0;
-  double dy = 0;
-
-  void walk(double dx, double dy) {
-    this.dx += dx;
-    this.dy += dy;
-    notifyListeners();
-  }
-
-  void endWalk(String id) async {
-    final batch = db.batch();
-    final document = db.collection('players').doc(id);
-    batch.update(document, {'dx': this.dx, 'dy': this.dy});
-    await batch.commit();
-  }
-
-  void updatePlayerLocation(
-    double dx,
-    double dy,
-  ) {
-    this.dx = dx;
-    this.dy = dy;
-    notifyListeners();
   }
 }

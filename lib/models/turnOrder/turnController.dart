@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/models/user.dart';
-
-import 'game.dart';
+import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/player/user.dart';
+import 'turn.dart';
 
 class TurnController {
   final db = FirebaseFirestore.instance;
@@ -72,8 +72,8 @@ class TurnController {
     }
   }
 
-  void takeTurn(
-      Game game, List<Player> players, List<Turn> turnOrder, User user) async {
+  void takeTurn(GameController gameController, List<Player> players,
+      List<Turn> turnOrder, User user) async {
     turnOrder.first.takeTurn();
 
     if (turnOrder.first.turnIsNotOver()) {
@@ -83,8 +83,7 @@ class TurnController {
 
     if (turnOrder.length == 1) {
       passTurn(turnOrder.first.index);
-
-      game.newRound();
+      gameController.newRound();
       newTurnOrder(players);
     } else {
       passTurn(turnOrder.first.index);
@@ -104,65 +103,5 @@ class TurnController {
     });
 
     batch.commit();
-  }
-}
-
-class Turn {
-  int index;
-  String id;
-  bool firstAction;
-  bool secondAction;
-  Turn({int index, String id, bool firstAction, bool secondAction}) {
-    this.index = index;
-    this.id = id;
-    this.firstAction = firstAction;
-    this.secondAction = secondAction;
-  }
-
-  final db = FirebaseFirestore.instance;
-  factory Turn.fromMap(Map data) {
-    return Turn(
-      index: data['index'],
-      id: data['id'],
-      firstAction: data['firstAction'],
-      secondAction: data['secondAction'],
-    );
-  }
-  Map<String, dynamic> saveToDataBase(Turn turn) {
-    return {
-      'index': turn.index,
-      'id': turn.id,
-      'firstAction': turn.firstAction,
-      'secondAction': turn.secondAction,
-    };
-  }
-
-  Turn newTurn(String playerID, int index) {
-    return Turn(
-      index: index,
-      id: playerID,
-      firstAction: true,
-      secondAction: true,
-    );
-  }
-
-  void takeTurn() async {
-    if (this.firstAction) {
-      this.firstAction = false;
-      await db
-          .collection('turnOrder')
-          .doc('${this.index}')
-          .update({'firstAction': this.firstAction});
-    } else {
-      this.secondAction = false;
-    }
-  }
-
-  bool turnIsNotOver() {
-    if (this.secondAction) {
-      return true;
-    } else {
-      return false;
-    }
   }
 }

@@ -1,12 +1,11 @@
-import 'package:dsixv02app/models/loot.dart';
-import 'package:dsixv02app/models/player.dart';
-
+import 'package:dsixv02app/models/loot/loot.dart';
+import 'package:dsixv02app/models/loot/lootSprite.dart';
+import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/pages/settings/battleRoyaleSettingsPage.dart';
-import 'package:dsixv02app/pages/shared/widgets/button.dart';
-import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
+import 'package:dsixv02app/shared/widgets/button.dart';
+import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
-
-import 'widget/enemy.dart';
+import '../../models/enemy/enemyPlayerSprite.dart';
 
 class MapPageVM {
   TransformationController canvasController;
@@ -98,39 +97,26 @@ class MapPageVM {
     Navigator.of(context).push(newRoute);
   }
 
-  List<Enemy> enemy = [];
+  List<EnemyPlayerSprite> enemyPlayer = [];
 
   void updateEnemyPlayersInSight(List<Player> players, Player selectedPlayer) {
-    this.enemy = [];
+    this.enemyPlayer = [];
     players.forEach((target) {
       if (target.id == selectedPlayer.id) {
         return;
       }
-
-      if (checkIfPlayerCanSeeTheTarget(selectedPlayer, target.dx, target.dy)) {
-        enemy.add(Enemy(
-          enemyID: target.id,
-          dx: target.dx,
-          dy: target.dy,
-          race: target.race,
-          vision: target.visionRange,
-          life: target.life,
-        ));
+      if (selectedPlayer.cantSee(Offset(target.dx, target.dy))) {
+        return;
       }
+      this.enemyPlayer.add(EnemyPlayerSprite(
+            enemyID: target.id,
+            dx: target.dx,
+            dy: target.dy,
+            race: target.race,
+            vision: target.visionRange,
+            life: target.life,
+          ));
     });
-  }
-
-  bool checkIfPlayerCanSeeTheTarget(
-      Player player, double dxTarget, double dyTarget) {
-    Offset targetOffset = Offset(dxTarget, dyTarget);
-    Offset selectedPlayerOffset = Offset(player.dx, player.dy);
-    double distance = (targetOffset - selectedPlayerOffset).distance;
-
-    if (distance <= player.visionRange / 2) {
-      return true;
-    } else {
-      return false;
-    }
   }
 
   List<LootSprite> visibleLoot = [];
@@ -138,14 +124,15 @@ class MapPageVM {
   void updateLootInSight(List<Loot> loot, Player selectedPlayer) {
     this.visibleLoot = [];
     loot.forEach((target) {
-      if (checkIfPlayerCanSeeTheTarget(selectedPlayer, target.dx, target.dy)) {
-        this.visibleLoot.add(LootSprite(
-              lootID: target.id,
-              dx: target.dx,
-              dy: target.dy,
-              isClosed: target.isClosed,
-            ));
+      if (selectedPlayer.cantSee(Offset(target.dx, target.dy))) {
+        return;
       }
+      this.visibleLoot.add(LootSprite(
+            lootIndex: target.index,
+            dx: target.dx,
+            dy: target.dy,
+            isClosed: target.isClosed,
+          ));
     });
   }
 }

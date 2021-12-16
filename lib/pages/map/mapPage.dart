@@ -1,21 +1,22 @@
 import 'package:dsixv02app/models/game.dart';
-import 'package:dsixv02app/models/loot.dart';
-import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/models/turnOrder.dart';
-import 'package:dsixv02app/models/user.dart';
-import 'package:dsixv02app/pages/map/widget/mapTile.dart';
-import 'package:dsixv02app/pages/map/widget/playerMenu.dart';
+import 'package:dsixv02app/models/loot/loot.dart';
+import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/player/playerTempLocation.dart';
+import 'package:dsixv02app/models/turnOrder/turn.dart';
+import 'package:dsixv02app/models/player/user.dart';
+import 'package:dsixv02app/models/turnOrder/turnController.dart';
+import 'package:dsixv02app/pages/map/mapTile.dart';
+import 'package:dsixv02app/models/player/playerMenu/playerMenu.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
-import 'package:dsixv02app/pages/shared/app_Colors.dart';
-import 'package:dsixv02app/pages/shared/app_Icons.dart';
-import 'package:dsixv02app/pages/shared/widgets/goToPageButton.dart';
-import 'package:dsixv02app/pages/shared/widgets/uiColor.dart';
+import 'package:dsixv02app/shared/app_Colors.dart';
+import 'package:dsixv02app/shared/app_Icons.dart';
+import 'package:dsixv02app/shared/widgets/goToPageButton.dart';
+import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-
 import 'mapPageVM.dart';
-import 'widget/playerSprite.dart';
+import '../../models/player/playerSprite.dart';
 
 // ignore: must_be_immutable
 class MapPage extends StatefulWidget {
@@ -123,9 +124,8 @@ class _MapPageState extends State<MapPage> {
         backgroundColor: _uiColor.setUIColor(user.selectedPlayer.id, 'primary'),
       ),
       body: SafeArea(
-        child:
-            ChangeNotifierProxyProvider<List<Player>, PlayerTemporaryLocation>(
-          create: (context) => PlayerTemporaryLocation(),
+        child: ChangeNotifierProxyProvider<List<Player>, PlayerTempLocation>(
+          create: (context) => PlayerTempLocation(),
           update: (context, __, playerLocation) => playerLocation
             ..updatePlayerLocation(
               user.selectedPlayer.dx,
@@ -157,18 +157,17 @@ class _MapPageState extends State<MapPage> {
                               children: _mapPageVM.visibleLoot,
                             ),
                             Stack(
-                              children: _mapPageVM.enemy,
+                              children: _mapPageVM.enemyPlayer,
                             ),
-                            Consumer<PlayerTemporaryLocation>(
+                            Consumer<PlayerTempLocation>(
                                 builder: (context, playerLocation, ___) {
                               return PlayerSprite(
                                 refresh: () => refresh(),
-                                temporaryLocation: playerLocation,
+                                tempLocation: playerLocation,
                                 player: user.selectedPlayer,
                               );
                             }),
                             PlayerMenu(
-                              user: user,
                               refresh: () => refresh(),
                             ),
                           ],

@@ -1,10 +1,13 @@
-import 'package:dsixv02app/models/loot.dart';
-import 'package:dsixv02app/models/turnOrder.dart';
-import 'package:dsixv02app/pages/shared/app_Colors.dart';
+import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/loot/lootController.dart';
+import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/player/playerController.dart';
+import 'package:dsixv02app/models/turnOrder/turnController.dart';
+import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/models/game.dart';
-import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/pages/shared/app_Icons.dart';
-import 'package:dsixv02app/pages/shared/widgets/button.dart';
+
+import 'package:dsixv02app/shared/app_Icons.dart';
+import 'package:dsixv02app/shared/widgets/button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
@@ -24,9 +27,12 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
   @override
   Widget build(BuildContext context) {
     _battleRoyaleSettingsPage.setNumberOfPlayers();
+
     final game = Provider.of<Game>(context);
-    final playerController = Provider.of<PlayerController>(context);
     final players = Provider.of<List<Player>>(context);
+
+    final gameController = Provider.of<GameController>(context);
+    final playerController = Provider.of<PlayerController>(context);
     final turnController = Provider.of<TurnController>(context);
     final lootController = Provider.of<LootController>(context);
 
@@ -97,7 +103,8 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                       ? Button(
                           buttonText: 'join game',
                           onTapAction: () {
-                            _battleRoyaleSettingsPage.joinGame(context);
+                            _battleRoyaleSettingsPage.joinGame(
+                                context, game, gameController);
                           },
                         )
                       : Button(
@@ -105,7 +112,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                           onTapAction: () {
                             _battleRoyaleSettingsPage.newBattleRoyaleGame(
                               context,
-                              game,
+                              gameController,
                               playerController,
                               turnController,
                               lootController,
@@ -120,7 +127,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                               onTapAction: () {
                                 _battleRoyaleSettingsPage
                                     .deleteBattleRoyaleGame(
-                                        game,
+                                        gameController,
                                         playerController,
                                         turnController,
                                         lootController);

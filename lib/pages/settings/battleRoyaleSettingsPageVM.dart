@@ -1,7 +1,11 @@
 import 'package:dsixv02app/models/game.dart';
-import 'package:dsixv02app/models/loot.dart';
-import 'package:dsixv02app/models/player.dart';
-import 'package:dsixv02app/models/turnOrder.dart';
+import 'package:dsixv02app/models/gameController.dart';
+
+import 'package:dsixv02app/models/loot/lootController.dart';
+
+import 'package:dsixv02app/models/player/playerController.dart';
+
+import 'package:dsixv02app/models/turnOrder/turnController.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 
 import 'package:flutter/material.dart';
@@ -30,7 +34,8 @@ class BattleRoyaleSettingsPageVM {
     }
   }
 
-  void joinGame(context) {
+  void joinGame(context, Game game, GameController gameController) {
+    gameController.joinGame(game);
     goToPlayerSelectionPage(context);
   }
 
@@ -57,26 +62,27 @@ class BattleRoyaleSettingsPageVM {
 
   void newBattleRoyaleGame(
     context,
-    Game game,
+    GameController gameController,
     PlayerController playerController,
     TurnController turnController,
     LootController lootController,
   ) {
-    game.newGame();
-    playerController
-        .createListOfRandomPlayersInRandomLocations(this.numberOfPlayers);
+    gameController.newGame();
+    playerController.createListOfRandomPlayersInRandomLocations(
+        this.numberOfPlayers, gameController.game.mapSize);
     turnController.newTurnOrder(playerController.listOfRandomPlayers);
-    lootController.createListOfRandomLootInRandomLocation(10);
+    lootController.createListOfRandomLootInRandomLocation(
+        this.numberOfPlayers * 10, gameController.game.mapSize);
     goToPlayerSelectionPage(context);
   }
 
   void deleteBattleRoyaleGame(
-    Game game,
+    GameController gameController,
     PlayerController playerController,
     TurnController turnController,
     LootController lootController,
   ) {
-    game.deleteGame();
+    gameController.deleteGame();
     playerController.deleteAllPlayersFromDataBase();
     turnController.deleteTurnOrder();
     lootController.deleteAllLootFromDataBase();

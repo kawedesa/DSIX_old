@@ -14,6 +14,9 @@ class AppColors {
   static final grey08 = Colors.grey[100];
   static final white00 = Colors.white;
 
+  static final errorPrimary = Color.fromRGBO(225, 50, 50, 1);
+  static final errorSecondary = Color.fromRGBO(150, 0, 0, 1);
+
   //PLAYERS
 
   static final attackMode = Color.fromRGBO(150, 0, 0, 1);
@@ -60,10 +63,17 @@ class AppColors {
   static final enemyRange00 = Color.fromRGBO(255, 100, 100, 0.75);
 
   //GRAVE
-  static final grave00 = Color.fromRGBO(91, 87, 85, 1);
+  static final grave00 = Color.fromRGBO(87, 87, 85, 1);
   static final grave01 = Color.fromRGBO(114, 110, 109, 1);
   static final grave02 = Color.fromRGBO(147, 140, 135, 1);
   static final grave03 = Color.fromRGBO(168, 159, 154, 1);
+
+  //CHEST
+  static final chestInside00 = Color.fromRGBO(86, 80, 78, 1);
+  static final chestWood00 = Color.fromRGBO(107, 69, 40, 1);
+  static final chestWood01 = Color.fromRGBO(141, 84, 59, 1);
+  static final chestMetal00 = Color.fromRGBO(148, 141, 136, 1);
+  static final chestMetal01 = Color.fromRGBO(206, 193, 185, 1);
 
   //ORC
   static final orcArmor00 = Color.fromRGBO(84, 49, 41, 1);
@@ -81,4 +91,14 @@ class AppColors {
   static final dwarfDetail00 = Color.fromRGBO(137, 83, 42, 1);
   static final dwarfDetail01 = Color.fromRGBO(237, 228, 187, 1);
   static final dwarfBeard00 = Color.fromRGBO(166, 82, 37, 1);
+
+  //ELF
+  static final elfArmor00 = Color.fromRGBO(150, 137, 129, 1);
+  static final elfArmor01 = Color.fromRGBO(198, 182, 171, 1);
+  static final elfSkin00 = Color.fromRGBO(158, 107, 59, 1);
+  static final elfSkin01 = Color.fromRGBO(198, 148, 99, 1);
+  static final elfClothes00 = Color.fromRGBO(90, 99, 133, 1);
+  static final elfClothes01 = Color.fromRGBO(109, 115, 153, 1);
+  static final elfDetail01 = Color.fromRGBO(237, 228, 187, 1);
+  static final elfHair00 = Color.fromRGBO(224, 177, 46, 1);
 }
