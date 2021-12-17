@@ -107,7 +107,7 @@ class _LootDialogState extends State<LootDialog> {
                     },
                   ),
                 ),
-                (_lootDialogController.totalWeight == 0)
+                (_lootDialogController.numberOfSelectedItems < 1)
                     ? GestureDetector(
                         onTap: () {
                           Navigator.pop(context);
@@ -261,14 +261,17 @@ class LootDialogController {
   }
 
   int totalWeight = 0;
+  int numberOfSelectedItems = 0;
   String buttonText = 'choose';
 
   void selectOptions(int index, Item item) {
     buttonText = 'choose';
     if (this.options[index]) {
+      numberOfSelectedItems--;
       totalWeight -= item.weight;
       this.options[index] = false;
     } else {
+      numberOfSelectedItems++;
       totalWeight += item.weight;
       this.options[index] = true;
     }

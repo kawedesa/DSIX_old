@@ -10,7 +10,8 @@ class Player {
   String race;
   double visionRange;
   double walkRange;
-  double attackRange;
+  double maxAttackRange;
+  double minAttackRange;
   int life;
   int maxLife;
   int weight;
@@ -33,7 +34,8 @@ class Player {
       String race,
       double vision,
       double walkRange,
-      double attackRange,
+      double maxAttackRange,
+      double minAttackRange,
       int life,
       int maxLife,
       int weight,
@@ -55,7 +57,8 @@ class Player {
     this.race = race;
     this.visionRange = vision;
     this.walkRange = walkRange;
-    this.attackRange = attackRange;
+    this.maxAttackRange = maxAttackRange;
+    this.minAttackRange = minAttackRange;
     this.life = life;
     this.maxLife = maxLife;
     this.weight = weight;
@@ -85,7 +88,8 @@ class Player {
       'race': player.race,
       'visionRange': player.visionRange,
       'walkRange': player.walkRange,
-      'attackRange': player.attackRange,
+      'maxAttackRange': player.maxAttackRange,
+      'minAttackRange': player.minAttackRange,
       'life': player.life,
       'maxLife': player.maxLife,
       'weight': player.weight,
@@ -118,7 +122,8 @@ class Player {
       race: data['race'],
       vision: data['visionRange'] * 1.0,
       walkRange: data['walkRange'] * 1.0,
-      attackRange: data['attackRange'] * 1.0,
+      maxAttackRange: data['maxAttackRange'] * 1.0,
+      minAttackRange: data['minAttackRange'] * 1.0,
       life: data['life'],
       maxLife: data['maxLife'],
       weight: data['weight'],
@@ -160,7 +165,8 @@ class Player {
       race: races[randomRace],
       vision: 0,
       walkRange: 0,
-      attackRange: 0,
+      maxAttackRange: 0,
+      minAttackRange: 0,
       life: 0,
       maxLife: 0,
       weight: 0,
@@ -192,7 +198,8 @@ class Player {
   }
 
   void setAttackRange() {
-    this.attackRange = 30.0;
+    this.maxAttackRange = 30.0;
+    this.minAttackRange = 0.0;
   }
 
   void setLife() {
@@ -260,7 +267,8 @@ class Player {
 
   bool cantAttack(Offset targetLocation) {
     double distance = (targetLocation - getLocation()).distance;
-    if (distance > this.attackRange / 2) {
+    if (distance > this.maxAttackRange / 2 ||
+        distance < this.minAttackRange / 2) {
       return true;
     } else {
       return false;
@@ -320,7 +328,8 @@ class Player {
     this.mDamage += item.mDamage;
     this.pArmor += item.pArmor;
     this.mArmor += item.mArmor;
-    this.attackRange += item.weaponRange;
+    this.maxAttackRange += item.maxWeaponRange;
+    this.minAttackRange += item.minWeaponRange;
 
     switch (item.itemSlot) {
       case 'oneHand':
@@ -387,7 +396,8 @@ class Player {
     this.mDamage -= item.mDamage;
     this.pArmor -= item.pArmor;
     this.mArmor -= item.mArmor;
-    this.attackRange -= item.weaponRange;
+    this.maxAttackRange -= item.maxWeaponRange;
+    this.minAttackRange -= item.minWeaponRange;
 
     switch (item.itemSlot) {
       case 'oneHand':
@@ -439,7 +449,8 @@ class Player {
       'mDamage': this.mDamage,
       'pArmor': this.pArmor,
       'mArmor': this.mArmor,
-      'attackRange': this.attackRange,
+      'maxAttackRange': this.maxAttackRange,
+      'minAttackRange': this.minAttackRange,
     });
   }
 }

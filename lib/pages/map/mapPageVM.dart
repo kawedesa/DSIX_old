@@ -12,7 +12,7 @@ class MapPageVM {
   UIColor _uiColor = UIColor();
   List<Widget> temporaryUI = [];
 
-  double minZoom = 4;
+  double minZoom = 5;
   double maxZoom = 15;
 
   void createCanvasController(context, double dx, double dy) {

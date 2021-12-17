@@ -86,8 +86,8 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
             Align(
               alignment: Alignment.center,
               child: Container(
-                width: 8,
-                height: 8,
+                width: 6,
+                height: 6,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: _uiColor.setUIColor(widget.enemyID, 'shadow'),
@@ -101,7 +101,7 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
             Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.only(bottom: 12),
+                padding: const EdgeInsets.only(bottom: 14),
                 child: (widget.life < 1)
                     ? TransparentPointer(
                         child: PlayerSpriteImage(image: 'grave'))
@@ -121,6 +121,10 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
 
                               turnController.takeTurn(
                                   gameController, players, turnOrder, user);
+
+                              user.setPlayerModeBasedOnPlayerTurn(
+                                  turnController.isPlayerTurn(
+                                      turnOrder, user.selectedPlayer.id));
 
                               break;
                           }

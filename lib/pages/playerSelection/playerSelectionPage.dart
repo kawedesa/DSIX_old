@@ -26,11 +26,23 @@ class PlayerSelectionPage extends StatelessWidget {
 
     return Scaffold(
         appBar: AppBar(
+          centerTitle: true,
+          title: Text(
+            'select your player'.toUpperCase(),
+            textAlign: TextAlign.left,
+            style: TextStyle(
+              fontFamily: 'Santana',
+              height: 1,
+              fontSize: 27,
+              color: AppColors.grey00,
+              letterSpacing: 1.2,
+            ),
+          ),
           leading: Padding(
             padding: const EdgeInsets.only(left: 10),
             child: GoToPagePageButton(goToPage: BattleRoyaleSettingsPage()),
           ),
-          backgroundColor: AppColors.grey00,
+          backgroundColor: AppColors.grey02,
         ),
         backgroundColor: AppColors.black00,
         body: SafeArea(

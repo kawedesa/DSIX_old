@@ -64,7 +64,7 @@ class PlayerSpriteImage extends StatelessWidget {
         ];
         break;
       case 'orc':
-        this.size = 17;
+        this.size = 15;
         this.layers = [
           SvgPicture.asset(
             'assets/image/sprite/orc/armor00.svg',
@@ -106,7 +106,7 @@ class PlayerSpriteImage extends StatelessWidget {
         break;
 
       case 'elf':
-        this.size = 16;
+        this.size = 15;
         this.layers = [
           SvgPicture.asset(
             'assets/image/sprite/elf/armor00.svg',

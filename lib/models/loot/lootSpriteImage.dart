@@ -13,8 +13,8 @@ class LootSpriteImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 15,
-      height: 15,
+      width: 8,
+      height: 8,
       child: Stack(
         alignment: Alignment.topLeft,
         children: (isClosed)
@@ -34,12 +34,6 @@ class LootSpriteImage extends StatelessWidget {
                 SvgPicture.asset(
                   'assets/image/sprite/chest/closedChestMetal01.svg',
                   color: AppColors.chestMetal01,
-                  width: double.infinity,
-                  height: double.infinity,
-                ),
-                SvgPicture.asset(
-                  'assets/image/sprite/chest/closedChestWood00.svg',
-                  color: AppColors.chestWood00,
                   width: double.infinity,
                   height: double.infinity,
                 ),

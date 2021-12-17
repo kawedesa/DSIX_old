@@ -7,17 +7,22 @@ class Item {
   int pArmor;
   int mArmor;
   int weight;
-  double weaponRange;
-  Item(
-      {String icon,
-      String name,
-      String itemSlot,
-      int pDamage,
-      int mDamage,
-      int pArmor,
-      int mArmor,
-      int weight,
-      double weaponRange}) {
+  int value;
+  double maxWeaponRange;
+  double minWeaponRange;
+  Item({
+    String icon,
+    String name,
+    String itemSlot,
+    int pDamage,
+    int mDamage,
+    int pArmor,
+    int mArmor,
+    int weight,
+    int value,
+    double maxWeaponRange,
+    double minWeaponRange,
+  }) {
     this.icon = icon;
     this.name = name;
     this.itemSlot = itemSlot;
@@ -26,7 +31,9 @@ class Item {
     this.pArmor = pArmor;
     this.mArmor = mArmor;
     this.weight = weight;
-    this.weaponRange = weaponRange;
+    this.value = value;
+    this.maxWeaponRange = maxWeaponRange;
+    this.minWeaponRange = minWeaponRange;
   }
 
   factory Item.fromMap(
@@ -41,7 +48,9 @@ class Item {
       pArmor: data['pArmor'],
       mArmor: data['mArmor'],
       weight: data['weight'],
-      weaponRange: data['weaponRange'],
+      value: data['value'],
+      maxWeaponRange: data['maxWeaponRange'],
+      minWeaponRange: data['minWeaponRange'],
     );
   }
 
@@ -55,7 +64,9 @@ class Item {
       'pArmor': this.pArmor,
       'mArmor': this.mArmor,
       'weight': this.weight,
-      'weaponRange': this.weaponRange,
+      'value': this.value,
+      'maxWeaponRange': this.maxWeaponRange,
+      'minWeaponRange': this.minWeaponRange,
     };
   }
 
@@ -69,7 +80,9 @@ class Item {
       pArmor: 0,
       mArmor: 0,
       weight: 0,
-      weaponRange: 0,
+      value: 0,
+      maxWeaponRange: 0,
+      minWeaponRange: 0,
     );
   }
 }

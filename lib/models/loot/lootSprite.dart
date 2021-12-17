@@ -28,8 +28,8 @@ class LootSprite extends StatelessWidget {
     final user = Provider.of<User>(context);
 
     return Positioned(
-        left: dx - 7,
-        top: dy - 7,
+        left: dx - 4,
+        top: dy - 4,
         child: GestureDetector(
           onTap: () {
             if (user.playerMode != 'walk') {

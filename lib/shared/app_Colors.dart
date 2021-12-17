@@ -71,7 +71,7 @@ class AppColors {
   //CHEST
   static final chestInside00 = Color.fromRGBO(86, 80, 78, 1);
   static final chestWood00 = Color.fromRGBO(107, 69, 40, 1);
-  static final chestWood01 = Color.fromRGBO(141, 84, 59, 1);
+  static final chestWood01 = Color.fromRGBO(138, 57, 40, 1);
   static final chestMetal00 = Color.fromRGBO(148, 141, 136, 1);
   static final chestMetal01 = Color.fromRGBO(206, 193, 185, 1);
 
@@ -87,18 +87,18 @@ class AppColors {
   static final dwarfArmor00 = Color.fromRGBO(107, 79, 31, 1);
   static final dwarfArmor01 = Color.fromRGBO(177, 133, 44, 1);
   static final dwarfSkin00 = Color.fromRGBO(158, 107, 59, 1);
-  static final dwarfSkin01 = Color.fromRGBO(198, 148, 99, 1);
+  static final dwarfSkin01 = Color.fromRGBO(212, 157, 108, 1);
   static final dwarfDetail00 = Color.fromRGBO(137, 83, 42, 1);
   static final dwarfDetail01 = Color.fromRGBO(237, 228, 187, 1);
   static final dwarfBeard00 = Color.fromRGBO(166, 82, 37, 1);
 
   //ELF
-  static final elfArmor00 = Color.fromRGBO(150, 137, 129, 1);
-  static final elfArmor01 = Color.fromRGBO(198, 182, 171, 1);
-  static final elfSkin00 = Color.fromRGBO(158, 107, 59, 1);
-  static final elfSkin01 = Color.fromRGBO(198, 148, 99, 1);
-  static final elfClothes00 = Color.fromRGBO(90, 99, 133, 1);
+  static final elfArmor00 = Color.fromRGBO(141, 123, 114, 1);
+  static final elfArmor01 = Color.fromRGBO(198, 185, 175, 1);
+  static final elfSkin00 = Color.fromRGBO(201, 116, 82, 1);
+  static final elfSkin01 = Color.fromRGBO(239, 175, 131, 1);
+  static final elfClothes00 = Color.fromRGBO(65, 80, 132, 1);
   static final elfClothes01 = Color.fromRGBO(109, 115, 153, 1);
   static final elfDetail01 = Color.fromRGBO(237, 228, 187, 1);
-  static final elfHair00 = Color.fromRGBO(224, 177, 46, 1);
+  static final elfHair00 = Color.fromRGBO(196, 115, 41, 1);
 }

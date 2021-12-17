@@ -79,7 +79,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                 alignment: Alignment.center,
                 child: AttackRange(
-                  attackRange: widget.player.attackRange,
+                  maxAttackRange: widget.player.maxAttackRange,
+                  minAttackRange: widget.player.minAttackRange,
                 ),
               ),
               Align(
@@ -114,11 +115,6 @@ class _PlayerSpriteState extends State<PlayerSprite> {
 
                         widget.refresh();
                       },
-                      // child: Container(
-                      //   color: Colors.grey,
-                      //   width: 4,
-                      //   height: 8,
-                      // ),
                     ),
                   ),
                 ),
@@ -128,7 +124,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                 child: TransparentPointer(
                   transparent: true,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
+                    padding: const EdgeInsets.only(bottom: 14),
                     child: (players[user.selectedPlayerIndex].life < 1)
                         ? PlayerSpriteImage(image: 'grave')
                         : PlayerSpriteImage(image: widget.player.race),
@@ -240,16 +236,18 @@ class PlayerSpriteController {
 
 // ignore: must_be_immutable
 class AttackRange extends StatelessWidget {
-  double attackRange;
+  double maxAttackRange;
+  double minAttackRange;
   AttackRange({
     Key key,
-    @required this.attackRange,
+    @required this.maxAttackRange,
+    @required this.minAttackRange,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    double setAttackRange(String mode) {
+    double setMaxAttackRange(String mode) {
       switch (mode) {
         case 'walk':
           return 0;
@@ -261,27 +259,96 @@ class AttackRange extends StatelessWidget {
           return 0;
           break;
         case 'attack':
-          return attackRange;
+          return maxAttackRange;
           break;
       }
 
       return 0.0;
     }
 
-    return AnimatedContainer(
-      curve: Curves.fastLinearToSlowEaseIn,
-      duration: Duration(milliseconds: 250),
-      width: setAttackRange(user.playerMode),
-      height: setAttackRange(user.playerMode),
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: Color.fromRGBO(200, 25, 25, 1).withAlpha(35),
-        border: Border.all(
-          color: Color.fromRGBO(200, 25, 25, 1).withAlpha(125),
-          width: 0.3,
-        ),
+    double setMinAttackRange(String mode) {
+      switch (mode) {
+        case 'walk':
+          return 0;
+          break;
+        case 'wait':
+          return 0;
+          break;
+        case 'menu':
+          return 0;
+          break;
+        case 'attack':
+          return minAttackRange;
+          break;
+      }
+
+      return 0.0;
+    }
+
+    return (setMaxAttackRange(user.playerMode) < 1)
+        ? SizedBox()
+        : CustomPaint(
+            painter: AttackArea(
+              minRange: setMinAttackRange(user.playerMode),
+              maxRange: setMaxAttackRange(user.playerMode),
+            ),
+            child: AnimatedContainer(
+              curve: Curves.fastLinearToSlowEaseIn,
+              duration: Duration(milliseconds: 250),
+              width: setMaxAttackRange(user.playerMode),
+              height: setMaxAttackRange(user.playerMode),
+            ),
+          );
+  }
+}
+
+class AttackArea extends CustomPainter {
+  double minRange;
+  double maxRange;
+
+  AttackArea({double minRange, double maxRange}) {
+    this.minRange = minRange;
+    this.maxRange = maxRange;
+  }
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(maxRange / 2, maxRange / 2);
+
+    final fillColor = Paint()
+      ..color = Color.fromRGBO(200, 25, 25, 1).withAlpha(35);
+
+    canvas.drawPath(
+      Path.combine(
+        PathOperation.difference,
+        Path()..addOval(Rect.fromCircle(center: center, radius: maxRange / 2)),
+        Path()
+          ..addOval(Rect.fromCircle(center: center, radius: minRange / 2))
+          ..close(),
       ),
+      fillColor,
     );
+
+    final strokeColor = Paint()
+      ..color = Color.fromRGBO(200, 25, 25, 1).withAlpha(125)
+      ..strokeWidth = 0.3
+      ..style = PaintingStyle.stroke;
+
+    canvas.drawPath(
+      Path.combine(
+        PathOperation.difference,
+        Path()..addOval(Rect.fromCircle(center: center, radius: maxRange / 2)),
+        Path()
+          ..addOval(Rect.fromCircle(center: center, radius: minRange / 2))
+          ..close(),
+      ),
+      strokeColor,
+    );
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return null;
   }
 }
 
@@ -303,10 +370,10 @@ class WalkRange extends StatelessWidget {
           return walkRange;
           break;
         case 'wait':
-          return 8;
+          return 6;
           break;
         case 'menu':
-          return 8;
+          return 6;
           break;
         case 'attack':
           return 0.0;
@@ -354,7 +421,7 @@ class VisionRange extends StatelessWidget {
           return vision;
           break;
         case 'menu':
-          return 8;
+          return 6;
           break;
         case 'attack':
           return 0.0;

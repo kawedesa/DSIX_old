@@ -27,6 +27,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
   @override
   Widget build(BuildContext context) {
     _battleRoyaleSettingsPage.setNumberOfPlayers();
+    _battleRoyaleSettingsPage.setNumberOfLoot();
 
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
@@ -38,6 +39,22 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
 
     return Scaffold(
       backgroundColor: AppColors.black00,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        centerTitle: true,
+        title: Text(
+          'battle royale'.toUpperCase(),
+          textAlign: TextAlign.left,
+          style: TextStyle(
+            fontFamily: 'Santana',
+            height: 1,
+            fontSize: 27,
+            color: AppColors.grey00,
+            letterSpacing: 1.2,
+          ),
+        ),
+        backgroundColor: AppColors.grey02,
+      ),
       body: SafeArea(
         child: SizedBox(
             width: MediaQuery.of(context).size.width,
@@ -48,56 +65,141 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                 children: [
                   (players.isNotEmpty)
                       ? SizedBox()
-                      : SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _battleRoyaleSettingsPage
-                                        .decreaseNumberOfPlayers();
-                                  });
-                                },
-                                child: SvgPicture.asset(
-                                  AppIcons.leftArrow,
-                                  color: AppColors.grey03,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.07,
-                                ),
+                      : Column(
+                          children: [
+                            Text(
+                              'players'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontFamily: 'Santana',
+                                height: 1,
+                                fontSize: 35,
+                                color: AppColors.grey03,
+                                letterSpacing: 4,
                               ),
-                              SizedBox(
-                                width:
-                                    MediaQuery.of(context).size.height * 0.15,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.15,
-                                child: Center(
-                                    child: Text(
-                                  '${_battleRoyaleSettingsPage.numberOfPlayers}',
-                                  style: TextStyle(
-                                    fontFamily: 'Calibri',
-                                    fontSize: 75,
-                                    color: AppColors.white00,
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _battleRoyaleSettingsPage
+                                            .decreaseNumberOfPlayers();
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppIcons.leftArrow,
+                                      color: AppColors.grey03,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.07,
+                                    ),
                                   ),
-                                )),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.height *
+                                        0.15,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.15,
+                                    child: Center(
+                                        child: Text(
+                                      '${_battleRoyaleSettingsPage.numberOfPlayers}',
+                                      style: TextStyle(
+                                        fontFamily: 'Calibri',
+                                        fontSize: 75,
+                                        color: AppColors.white00,
+                                      ),
+                                    )),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _battleRoyaleSettingsPage
+                                            .increaseNumberOfPlayers();
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppIcons.rightArrow,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.07,
+                                      color: AppColors.grey03,
+                                    ),
+                                  ),
+                                ],
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _battleRoyaleSettingsPage
-                                        .increaseNumberOfPlayers();
-                                  });
-                                },
-                                child: SvgPicture.asset(
-                                  AppIcons.rightArrow,
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.07,
-                                  color: AppColors.grey03,
-                                ),
+                            ),
+                          ],
+                        ),
+                  (players.isNotEmpty)
+                      ? SizedBox()
+                      : Column(
+                          children: [
+                            Text(
+                              'loot'.toUpperCase(),
+                              textAlign: TextAlign.left,
+                              style: TextStyle(
+                                fontFamily: 'Santana',
+                                height: 1,
+                                fontSize: 35,
+                                color: AppColors.grey03,
+                                letterSpacing: 4,
                               ),
-                            ],
-                          ),
+                            ),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.5,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _battleRoyaleSettingsPage
+                                            .decreaseNumberOfLoot();
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppIcons.leftArrow,
+                                      color: AppColors.grey03,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.07,
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: MediaQuery.of(context).size.height *
+                                        0.15,
+                                    height: MediaQuery.of(context).size.height *
+                                        0.15,
+                                    child: Center(
+                                        child: Text(
+                                      '${_battleRoyaleSettingsPage.numberOfLoot}',
+                                      style: TextStyle(
+                                        fontFamily: 'Calibri',
+                                        fontSize: 75,
+                                        color: AppColors.white00,
+                                      ),
+                                    )),
+                                  ),
+                                  GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        _battleRoyaleSettingsPage
+                                            .increaseNumberOfLoot();
+                                      });
+                                    },
+                                    child: SvgPicture.asset(
+                                      AppIcons.rightArrow,
+                                      width: MediaQuery.of(context).size.width *
+                                          0.07,
+                                      color: AppColors.grey03,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                   (players.isNotEmpty)
                       ? Button(

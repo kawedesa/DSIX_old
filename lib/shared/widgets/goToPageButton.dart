@@ -31,7 +31,7 @@ class GoToPagePageButton extends StatelessWidget {
       },
       child: Icon(
         Icons.exit_to_app,
-        color: (this.buttonColor != null) ? this.buttonColor : AppColors.grey03,
+        color: (this.buttonColor != null) ? this.buttonColor : AppColors.grey00,
         size: MediaQuery.of(context).size.height * 0.05,
       ),
     );

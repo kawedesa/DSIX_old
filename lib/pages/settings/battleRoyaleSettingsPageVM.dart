@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 
 class BattleRoyaleSettingsPageVM {
   int numberOfPlayers;
+  int numberOfLoot;
 
   void setNumberOfPlayers() {
     if (this.numberOfPlayers != null) {
@@ -31,6 +32,27 @@ class BattleRoyaleSettingsPageVM {
     this.numberOfPlayers--;
     if (numberOfPlayers < 2) {
       numberOfPlayers = 2;
+    }
+  }
+
+  void setNumberOfLoot() {
+    if (this.numberOfLoot != null) {
+      return;
+    }
+    numberOfLoot = 5;
+  }
+
+  void increaseNumberOfLoot() {
+    this.numberOfLoot++;
+    if (numberOfLoot > 10) {
+      numberOfLoot = 10;
+    }
+  }
+
+  void decreaseNumberOfLoot() {
+    this.numberOfLoot--;
+    if (numberOfLoot < 5) {
+      numberOfLoot = 5;
     }
   }
 
@@ -72,7 +94,7 @@ class BattleRoyaleSettingsPageVM {
         this.numberOfPlayers, gameController.game.mapSize);
     turnController.newTurnOrder(playerController.listOfRandomPlayers);
     lootController.createListOfRandomLootInRandomLocation(
-        this.numberOfPlayers * 10, gameController.game.mapSize);
+        this.numberOfPlayers * this.numberOfLoot, gameController.game.mapSize);
     goToPlayerSelectionPage(context);
   }
 
