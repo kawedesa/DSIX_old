@@ -78,8 +78,6 @@ class _MapPageState extends State<MapPage> {
     }
 
     try {
-      print('passou');
-      print('aqui');
       turnController.checkForPlayerTurn(turnOrder, user.selectedPlayer.id);
     } on NotPlayerTurnException {
       user.endPlayerTurn();
