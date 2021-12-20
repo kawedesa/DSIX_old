@@ -40,6 +40,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
     return Scaffold(
       backgroundColor: AppColors.black00,
       appBar: AppBar(
+        toolbarHeight: MediaQuery.of(context).size.height * 0.06,
         automaticallyImplyLeading: false,
         centerTitle: true,
         title: Text(

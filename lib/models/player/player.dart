@@ -20,6 +20,7 @@ class Player {
   int mDamage;
   int pArmor;
   int mArmor;
+  int tempArmor;
   Item mainHandSlot;
   Item offHandSlot;
   Item headSlot;
@@ -44,6 +45,7 @@ class Player {
       int mDamage,
       int pArmor,
       int mArmor,
+      int tempArmor,
       Item mainHandSlot,
       Item offHandSlot,
       Item headSlot,
@@ -67,6 +69,7 @@ class Player {
     this.mDamage = mDamage;
     this.pArmor = pArmor;
     this.mArmor = mArmor;
+    this.tempArmor = tempArmor;
     this.mainHandSlot = mainHandSlot;
     this.offHandSlot = offHandSlot;
     this.headSlot = headSlot;
@@ -98,6 +101,7 @@ class Player {
       'mDamage': player.mDamage,
       'pArmor': player.pArmor,
       'mArmor': player.mArmor,
+      'tempArmor': player.tempArmor,
       'mainHandSlot': player.mainHandSlot.toMap(),
       'offHandSlot': player.offHandSlot.toMap(),
       'headSlot': player.headSlot.toMap(),
@@ -132,6 +136,7 @@ class Player {
       mDamage: data['mDamage'],
       pArmor: data['pArmor'],
       mArmor: data['mArmor'],
+      tempArmor: data['tempArmor'],
       mainHandSlot: Item.fromMap(data['mainHandSlot']),
       offHandSlot: Item.fromMap(data['offHandSlot']),
       headSlot: Item.fromMap(data['headSlot']),
@@ -175,6 +180,7 @@ class Player {
       mDamage: 0,
       pArmor: 0,
       mArmor: 0,
+      tempArmor: 0,
       mainHandSlot: Item.emptyItem(),
       offHandSlot: Item.emptyItem(),
       headSlot: Item.emptyItem(),
@@ -204,12 +210,12 @@ class Player {
 
   void setLife() {
     if (this.race == 'dwarf') {
-      this.maxLife = 16;
-      this.life = 16;
+      this.maxLife = 20;
+      this.life = 20;
       return;
     }
-    this.maxLife = 12;
-    this.life = 12;
+    this.maxLife = 16;
+    this.life = 16;
   }
 
   void setWeight() {
@@ -231,7 +237,7 @@ class Player {
     this.life += value;
   }
 
-  bool checkIfPlayerIsDead() {
+  bool isDead() {
     if (this.life < 1) {
       return true;
     } else {
@@ -247,15 +253,6 @@ class Player {
     }
   }
 
-  bool cantReach(Offset targetLocation) {
-    double distance = (targetLocation - getLocation()).distance;
-    if (distance > 15) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   bool cantSee(Offset targetLocation) {
     double distance = (targetLocation - getLocation()).distance;
     if (distance > this.visionRange / 2) {
@@ -265,8 +262,27 @@ class Player {
     }
   }
 
+  bool cantReach(Offset targetLocation) {
+    double distance = (targetLocation -
+            Offset(
+              getLocation().dx,
+              getLocation().dy - 5,
+            ))
+        .distance;
+    if (distance > 15) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   bool cantAttack(Offset targetLocation) {
-    double distance = (targetLocation - getLocation()).distance;
+    double distance = (targetLocation -
+            Offset(
+              getLocation().dx,
+              getLocation().dy,
+            ))
+        .distance;
     if (distance > this.maxAttackRange / 2 ||
         distance < this.minAttackRange / 2) {
       return true;
@@ -279,48 +295,81 @@ class Player {
     return Offset(this.dx, this.dy);
   }
 
-  int damageDiceRoll() {
-    int trueDamage = Random().nextInt(6) + 1;
-    return trueDamage;
+  int attack() {
+    int damage = Random().nextInt(6) + 1;
+    return damage;
   }
 
-  int takeDamage(int trueDamage, pDamage, mDamage) {
-    int positiveBonus = 0;
-    int negativeBonus = 0;
+  void defend() {
+    int protect = Random().nextInt(6) + 1;
+    increaseTempArmor(protect);
+  }
+
+  void increaseTempArmor(int value) async {
+    this.tempArmor += value;
+    await db
+        .collection('players')
+        .doc(this.id)
+        .update({'tempArmor': this.tempArmor});
+  }
+
+  void clearTempEffects() async {
+    this.tempArmor = 0;
+    await db
+        .collection('players')
+        .doc(this.id)
+        .update({'tempArmor': this.tempArmor});
+  }
+
+  void takeDamage(int damageRoll, pDamage, mDamage) {
+    int damageLeftOver = 0;
+    int protectionLeftOver = 0;
 
     int pDamageCalculation = pDamage - this.pArmor;
-
     if (pDamageCalculation >= 0) {
-      positiveBonus += pDamageCalculation;
+      damageLeftOver += pDamageCalculation;
     } else {
-      negativeBonus += pDamageCalculation;
+      protectionLeftOver -= pDamageCalculation;
     }
 
     int mDamageCalculation = mDamage - this.mArmor;
-
     if (mDamageCalculation >= 0) {
-      positiveBonus += mDamageCalculation;
+      damageLeftOver += mDamageCalculation;
     } else {
-      negativeBonus += mDamageCalculation;
+      protectionLeftOver -= mDamageCalculation;
     }
-    int partialSum = trueDamage + negativeBonus;
-    if (partialSum < 0) {
-      partialSum = 0;
-    }
-    int totalDamageReceived = partialSum + positiveBonus;
-    reduceCurrentLife(totalDamageReceived);
 
-    return totalDamageReceived;
+    int partialDamage = damageRoll - protectionLeftOver;
+    if (partialDamage < 1) {
+      partialDamage = 0;
+    }
+
+    partialDamage += damageLeftOver;
+
+    int totalDamageReceived = calculateTempArmor(partialDamage);
+
+    if (totalDamageReceived < 0) {
+      totalDamageReceived = 0;
+    }
+
+    reduceCurrentLife(totalDamageReceived);
   }
 
-  void getItem(Item item) async {
-    this.weight += item.weight;
-    this.bag.add(item);
-    var updatedBag = this.bag.map((item) => item.toMap()).toList();
-    await db.collection('players').doc(this.id).update({
-      'bag': updatedBag,
-      'weight': this.weight,
-    });
+  int calculateTempArmor(int damage) {
+    int damageCalculation = damage - this.tempArmor;
+    decreaseTempArmor(damage);
+    return damageCalculation;
+  }
+
+  void decreaseTempArmor(int value) async {
+    this.tempArmor -= value;
+    if (this.tempArmor < 0) {
+      this.tempArmor = 0;
+    }
+    await db
+        .collection('players')
+        .doc(this.id)
+        .update({'tempArmor': this.tempArmor});
   }
 
   void equipItem(Item item) async {
@@ -434,6 +483,27 @@ class Player {
     List<Map<String, dynamic>> updatedBag =
         this.bag.map((item) => item.toMap()).toList();
     updateIventory(updatedBag);
+  }
+
+  void getItem(Item item) {
+    this.weight += item.weight;
+    this.bag.add(item);
+    var updatedBag = this.bag.map((item) => item.toMap()).toList();
+    updateBag(updatedBag);
+  }
+
+  void destroyItem(Item item) {
+    this.weight -= item.weight;
+    this.bag.remove(item);
+    var updatedBag = this.bag.map((item) => item.toMap()).toList();
+    updateBag(updatedBag);
+  }
+
+  void updateBag(List<Map<String, dynamic>> updatedBag) async {
+    await db.collection('players').doc(this.id).update({
+      'bag': updatedBag,
+      'weight': this.weight,
+    });
   }
 
   void updateIventory(List<Map<String, dynamic>> updatedBag) async {

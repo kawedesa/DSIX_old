@@ -17,6 +17,10 @@ class AppColors {
   static final errorPrimary = Color.fromRGBO(225, 50, 50, 1);
   static final errorSecondary = Color.fromRGBO(150, 0, 0, 1);
 
+  static final goodEffectImage = Color.fromRGBO(150, 225, 60, 1);
+  static final goodEffectText = Color.fromRGBO(40, 75, 5, 1);
+  static final badEffectImage = Color.fromRGBO(150, 0, 0, 1);
+
   //PLAYERS
 
   static final attackMode = Color.fromRGBO(150, 0, 0, 1);

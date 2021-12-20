@@ -21,7 +21,7 @@ class Turn {
       secondAction: data['secondAction'],
     );
   }
-  Map<String, dynamic> saveToDataBase(Turn turn) {
+  Map<String, dynamic> toMap(Turn turn) {
     return {
       'index': turn.index,
       'id': turn.id,

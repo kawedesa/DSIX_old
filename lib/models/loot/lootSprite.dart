@@ -1,9 +1,8 @@
-import 'package:dsixv02app/models/gameController.dart';
 import 'package:dsixv02app/models/loot/lootSpriteImage.dart';
-import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/turnOrder/turn.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turnOrder/turnController.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'lootController.dart';
@@ -20,8 +19,6 @@ class LootSprite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final gameController = Provider.of<GameController>(context);
-    final players = Provider.of<List<Player>>(context);
     final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     final lootController = Provider.of<LootController>(context);
@@ -31,7 +28,7 @@ class LootSprite extends StatelessWidget {
         left: dx - 4,
         top: dy - 4,
         child: GestureDetector(
-          onTap: () {
+          onTap: () async {
             if (user.playerMode != 'walk') {
               return;
             }
@@ -61,7 +58,13 @@ class LootSprite extends StatelessWidget {
               );
             }
 
-            turnController.takeTurn(gameController, players, turnOrder, user);
+            try {
+              turnController.takeTurn(turnOrder);
+            } on PlayerTurnException {
+              user.walkMode();
+            } on NotPlayerTurnException {
+              user.endPlayerTurn();
+            }
           },
           child: LootSpriteImage(isClosed: isClosed),
         ));

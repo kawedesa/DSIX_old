@@ -26,7 +26,7 @@ class Game {
   }
 
   factory Game.newAlphaGame() {
-    return Game(id: 'alpha', round: 0, map: 'crossroads', mapSize: 640);
+    return Game(id: 'alpha', round: 0, map: 'ruins', mapSize: 320);
   }
 
   Map<String, dynamic> toMap(Game game) {

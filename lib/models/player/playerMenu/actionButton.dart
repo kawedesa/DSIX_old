@@ -1,24 +1,25 @@
-import 'package:dsixv02app/models/turnOrder/turn.dart';
-import 'package:dsixv02app/models/turnOrder/turnController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import '../user.dart';
 
 // ignore: must_be_immutable
 class ActionButton extends StatefulWidget {
   String action;
+  bool playerTurn;
   String playerMode;
+  String playerID;
+
   Function() onTap;
   ActionButton({
     Key key,
     @required this.action,
+    @required this.playerTurn,
     @required this.playerMode,
+    @required this.playerID,
     this.onTap,
   }) : super(key: key);
 
@@ -72,37 +73,29 @@ class _ActionButtonState extends State<ActionButton> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    final turnController = Provider.of<TurnController>(context);
-    final turnOrder = Provider.of<List<Turn>>(context);
     return AnimatedContainer(
       curve: Curves.fastLinearToSlowEaseIn,
       duration: Duration(milliseconds: 500),
-      width: (user.playerMode == 'menu')
-          ? MediaQuery.of(context).size.height * 0.025
+      width: (widget.playerMode == 'menu')
+          ? MediaQuery.of(context).size.height * 0.02
           : 0,
-      height: (user.playerMode == 'menu')
-          ? MediaQuery.of(context).size.height * 0.025
+      height: (widget.playerMode == 'menu')
+          ? MediaQuery.of(context).size.height * 0.02
           : 0,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: (turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id))
-            ? _uiColor
-                .setUIColor(user.selectedPlayer.id, 'secondary')
-                .withAlpha(215)
+        color: (widget.playerTurn)
+            ? _uiColor.setUIColor(widget.playerID, 'secondary').withAlpha(215)
             : AppColors.grey02.withAlpha(215),
         border: Border.all(
-          color:
-              (turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id))
-                  ? _uiColor
-                      .setUIColor(user.selectedPlayer.id, 'secondary')
-                      .withAlpha(250)
-                  : AppColors.grey02.withAlpha(250),
+          color: (widget.playerTurn)
+              ? _uiColor.setUIColor(widget.playerID, 'secondary').withAlpha(250)
+              : AppColors.grey02.withAlpha(250),
           width: 0.5,
         ),
       ),
       child: GestureDetector(
-        onTap: (turnController.isPlayerTurn(turnOrder, user.selectedPlayer.id))
+        onTap: (widget.playerTurn)
             ? () {
                 setState(() {
                   widget.onTap();
@@ -122,9 +115,8 @@ class _ActionButtonState extends State<ActionButton> {
                 padding: const EdgeInsets.all(3),
                 child: SvgPicture.asset(
                   setIcon(widget.action),
-                  color: (turnController.isPlayerTurn(
-                          turnOrder, user.selectedPlayer.id))
-                      ? _uiColor.setUIColor(user.selectedPlayer.id, 'primary')
+                  color: (widget.playerTurn)
+                      ? _uiColor.setUIColor(widget.playerID, 'primary')
                       : AppColors.grey04,
                 ),
               ),

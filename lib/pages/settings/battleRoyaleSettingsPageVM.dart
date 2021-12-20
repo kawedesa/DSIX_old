@@ -39,20 +39,20 @@ class BattleRoyaleSettingsPageVM {
     if (this.numberOfLoot != null) {
       return;
     }
-    numberOfLoot = 5;
+    numberOfLoot = 10;
   }
 
   void increaseNumberOfLoot() {
     this.numberOfLoot++;
-    if (numberOfLoot > 10) {
-      numberOfLoot = 10;
+    if (numberOfLoot > 20) {
+      numberOfLoot = 20;
     }
   }
 
   void decreaseNumberOfLoot() {
     this.numberOfLoot--;
-    if (numberOfLoot < 5) {
-      numberOfLoot = 5;
+    if (numberOfLoot < 10) {
+      numberOfLoot = 10;
     }
   }
 

@@ -1,15 +1,7 @@
-import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/pages/map/mapPage.dart';
 import 'package:flutter/material.dart';
 
 class PlayerSelectionPageVM {
-  void selectPlayer(
-      Player player, int playerIndex, User user, bool playerTurn) {
-    user.selectPlayer(player, playerIndex);
-    user.setPlayerModeBasedOnPlayerTurn(playerTurn);
-  }
-
   void goToMapPage(context) {
     Route newRoute = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) => MapPage(),

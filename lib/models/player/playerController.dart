@@ -33,10 +33,10 @@ class PlayerController {
   }
 
   double playerRandomLocation(double mapSize) {
-    //For dev (spawn players closer together)
-    return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
+    // //For dev (spawn players closer together)
+    // return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
     //Original
-    // return (Random().nextDouble() * 640 * 0.8) + (640 * 0.1);
+    return (Random().nextDouble() * mapSize * 0.8) + (mapSize * 0.1);
   }
 
   void addPlayerToDataBase(Player player) {

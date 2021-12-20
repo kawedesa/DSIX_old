@@ -55,7 +55,7 @@ flutter:
   assets:
     - assets/icon/
     - assets/icon/item/
-    - assets/image/map/crossroads/
+    - assets/image/map/ruins/
     - assets/image/sprite/orc/
     - assets/image/sprite/dwarf/
     - assets/image/sprite/elf/

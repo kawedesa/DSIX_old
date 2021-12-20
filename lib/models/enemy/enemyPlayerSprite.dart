@@ -1,35 +1,26 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
-import 'package:dsixv02app/models/gameController.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/turnOrder/turn.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turnOrder/turnController.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
+import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
 import '../player/playerSpriteImage.dart';
 
-// ignore: must_be_immutable
 class EnemyPlayerSprite extends StatefulWidget {
-  String enemyID;
-  double dx;
-  double dy;
-  String race;
-  double vision;
-  int life;
-  EnemyPlayerSprite(
-      {Key key,
-      this.enemyID,
-      this.dx,
-      this.dy,
-      this.race,
-      this.vision,
-      this.life})
-      : super(key: key);
+  final Player enemyPlayer;
+
+  EnemyPlayerSprite({
+    Key key,
+    this.enemyPlayer,
+  }) : super(key: key);
 
   @override
   State<EnemyPlayerSprite> createState() => _EnemyPlayerSpriteState();
@@ -52,37 +43,37 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
     final user = Provider.of<User>(context);
     final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
-    final gameController = Provider.of<GameController>(context);
     final players = Provider.of<List<Player>>(context);
 
-    _enemyController.updateEnemyLife(
-        _enemyController.getEnemyPlayer(players, widget.enemyID), widget.life);
+    _enemyController.checkEnemyPlayer(players, widget.enemyPlayer);
 
     return Positioned(
-      left: widget.dx - widget.vision / 2,
-      top: widget.dy - widget.vision / 2,
+      left: widget.enemyPlayer.dx - widget.enemyPlayer.visionRange / 2,
+      top: widget.enemyPlayer.dy - widget.enemyPlayer.visionRange / 2,
       child: SizedBox(
-        width: widget.vision,
-        height: widget.vision,
+        width: widget.enemyPlayer.visionRange,
+        height: widget.enemyPlayer.visionRange,
         child: Stack(
           children: [
+            //VISION RANGE
             TransparentPointer(
               transparent: true,
-              child: (widget.life < 1)
+              child: (widget.enemyPlayer.life < 1)
                   ? Container()
                   : DottedBorder(
                       dashPattern: [2, 2],
                       borderType: BorderType.Circle,
                       color: _uiColor
-                          .setUIColor(widget.enemyID, 'rangeOutline')
+                          .setUIColor(widget.enemyPlayer.id, 'rangeOutline')
                           .withAlpha(150),
                       strokeWidth: 0.3,
                       child: SizedBox(
-                        width: widget.vision,
-                        height: widget.vision,
+                        width: widget.enemyPlayer.visionRange,
+                        height: widget.enemyPlayer.visionRange,
                       ),
                     ),
             ),
+            //SHADOW
             Align(
               alignment: Alignment.center,
               child: Container(
@@ -90,50 +81,76 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
                 height: 6,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: _uiColor.setUIColor(widget.enemyID, 'shadow'),
+                  color: _uiColor.setUIColor(widget.enemyPlayer.id, 'shadow'),
                   border: Border.all(
-                    color: _uiColor.setUIColor(widget.enemyID, 'rangeOutline'),
+                    color: _uiColor.setUIColor(
+                        widget.enemyPlayer.id, 'rangeOutline'),
                     width: 0.3,
                   ),
                 ),
               ),
             ),
+            //IMAGE
             Align(
               alignment: Alignment.center,
               child: Padding(
                 padding: const EdgeInsets.only(bottom: 14),
-                child: (widget.life < 1)
+                child: (widget.enemyPlayer.life < 1)
                     ? TransparentPointer(
                         child: PlayerSpriteImage(image: 'grave'))
                     : GestureDetector(
                         onTap: () {
-                          switch (user.playerMode) {
-                            case 'attack':
-                              if (players[user.selectedPlayerIndex]
-                                  .cantAttack(Offset(widget.dx, widget.dy))) {
-                                return;
-                              }
-
-                              _enemyController.takeDamage(
-                                  players[user.selectedPlayerIndex],
-                                  _enemyController.getEnemyPlayer(
-                                      players, widget.enemyID));
-
-                              turnController.takeTurn(
-                                  gameController, players, turnOrder, user);
-
-                              user.setPlayerModeBasedOnPlayerTurn(
-                                  turnController.isPlayerTurn(
-                                      turnOrder, user.selectedPlayer.id));
-
-                              break;
+                          if (user.playerMode != 'attack') {
+                            return;
                           }
+
+                          if (players[user.selectedPlayerIndex].cantAttack(
+                              Offset(widget.enemyPlayer.dx,
+                                  widget.enemyPlayer.dy))) {
+                            return;
+                          }
+
+                          _enemyController.takeDamage(
+                              players[user.selectedPlayerIndex],
+                              widget.enemyPlayer);
+
+                          try {
+                            turnController.takeTurn(turnOrder);
+                          } on PlayerTurnException {
+                            user.walkMode();
+                          } on NotPlayerTurnException {
+                            user.endPlayerTurn();
+                          }
+
                           setState(() {});
                         },
-                        child: PlayerSpriteImage(image: widget.race),
+                        child:
+                            PlayerSpriteImage(image: widget.enemyPlayer.race),
                       ),
               ),
             ),
+
+            //  TEMP EFFECTS
+            Align(
+              alignment: Alignment.center,
+              child: TransparentPointer(
+                transparent: true,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 26),
+                  child: AnimatedContainer(
+                    duration: Duration(milliseconds: 250),
+                    width: (widget.enemyPlayer.tempArmor > 0) ? 3 : 0,
+                    height: (widget.enemyPlayer.tempArmor > 0) ? 3 : 0,
+                    child: SvgPicture.asset(
+                      AppIcons.tempArmor,
+                      color: Color.fromRGBO(250, 50, 10, 1),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+
+            //DAMAGE ANIMATION
             Align(
               alignment: Alignment.center,
               child: TransparentPointer(
@@ -152,7 +169,7 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
                       : SizedBox(),
                 ),
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -161,7 +178,6 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
 }
 
 class EnemyPlayerSpriteController {
-  final db = FirebaseFirestore.instance;
   Artboard artboard;
 
   void loadRiverFile() async {
@@ -181,28 +197,39 @@ class EnemyPlayerSpriteController {
     ));
   }
 
-  // ignore: missing_return
-  Player getEnemyPlayer(List<Player> players, String enemyID) {
-    Player enemyPlayer;
-
+  void checkEnemyPlayer(List<Player> players, Player enemyPlayer) {
     players.forEach((player) {
-      if (player.id == enemyID) {
-        enemyPlayer = player;
+      if (player.id != enemyPlayer.id) {
+        return;
       }
+      checkTempArmor(player.tempArmor, enemyPlayer.tempArmor);
+      checkLife(player.life, enemyPlayer.life);
+      enemyPlayer = player;
     });
-    return enemyPlayer;
   }
 
-  void updateEnemyLife(Player enemyPlayer, int localLife) {
-    if (enemyPlayer.life != localLife) {
-      int damage = localLife - enemyPlayer.life;
+  void checkTempArmor(int newArmor, oldArmor) {
+    if (oldArmor != newArmor) {
+      int damage = oldArmor - newArmor;
+      playDamageAnimation(damage);
+    }
+  }
+
+  void checkLife(int newLife, oldLife) {
+    if (oldLife != newLife) {
+      int damage = oldLife - newLife;
       playDamageAnimation(damage);
     }
   }
 
   void takeDamage(Player selectedPlayer, Player enemy) {
-    int damage = enemy.takeDamage(selectedPlayer.damageDiceRoll(),
-        selectedPlayer.pDamage, selectedPlayer.mDamage);
-    playDamageAnimation(damage);
+    int attackDamage = selectedPlayer.attack();
+    int itemDamage = selectedPlayer.pDamage + selectedPlayer.mDamage;
+    int totalAttackDamage = attackDamage + itemDamage;
+
+    enemy.takeDamage(
+        attackDamage, selectedPlayer.pDamage, selectedPlayer.mDamage);
+
+    playDamageAnimation(totalAttackDamage);
   }
 }

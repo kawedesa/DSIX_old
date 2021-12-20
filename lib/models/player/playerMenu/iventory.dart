@@ -449,6 +449,12 @@ class _IventoryState extends State<Iventory> {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: GestureDetector(
+                            onLongPress: () {
+                              setState(() {
+                                widget.player
+                                    .destroyItem(widget.player.bag[index]);
+                              });
+                            },
                             onDoubleTap: () {
                               setState(() {
                                 widget.player

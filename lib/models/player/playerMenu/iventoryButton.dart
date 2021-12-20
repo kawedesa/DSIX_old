@@ -56,10 +56,10 @@ class _IventoryButtonState extends State<IventoryButton> {
       curve: Curves.fastLinearToSlowEaseIn,
       duration: Duration(milliseconds: 500),
       width: (user.playerMode == 'menu')
-          ? MediaQuery.of(context).size.height * 0.025
+          ? MediaQuery.of(context).size.height * 0.02
           : 0,
       height: (user.playerMode == 'menu')
-          ? MediaQuery.of(context).size.height * 0.025
+          ? MediaQuery.of(context).size.height * 0.02
           : 0,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
@@ -92,7 +92,7 @@ class _IventoryButtonState extends State<IventoryButton> {
             Align(
               alignment: Alignment.center,
               child: Padding(
-                padding: const EdgeInsets.all(4.0),
+                padding: const EdgeInsets.all(3.0),
                 child: SvgPicture.asset(
                   AppIcons.bag,
                   color: _uiColor.setUIColor(user.selectedPlayer.id, 'primary'),

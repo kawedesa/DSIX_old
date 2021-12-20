@@ -1,7 +1,5 @@
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/models/turnOrder/turn.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turnOrder/turnController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/pages/settings/battleRoyaleSettingsPage.dart';
 import 'package:dsixv02app/shared/widgets/button.dart';
@@ -20,12 +18,11 @@ class PlayerSelectionPage extends StatelessWidget {
     UIColor _uiColor = UIColor();
 
     final players = Provider.of<List<Player>>(context);
-    final turnController = Provider.of<TurnController>(context);
-    final turnOrder = Provider.of<List<Turn>>(context);
     final user = Provider.of<User>(context);
 
     return Scaffold(
         appBar: AppBar(
+          toolbarHeight: MediaQuery.of(context).size.height * 0.06,
           centerTitle: true,
           title: Text(
             'select your player'.toUpperCase(),
@@ -38,10 +35,7 @@ class PlayerSelectionPage extends StatelessWidget {
               letterSpacing: 1.2,
             ),
           ),
-          leading: Padding(
-            padding: const EdgeInsets.only(left: 10),
-            child: GoToPagePageButton(goToPage: BattleRoyaleSettingsPage()),
-          ),
+          leading: GoToPagePageButton(goToPage: BattleRoyaleSettingsPage()),
           backgroundColor: AppColors.grey02,
         ),
         backgroundColor: AppColors.black00,
@@ -66,12 +60,10 @@ class PlayerSelectionPage extends StatelessWidget {
                         buttonTextColor:
                             _uiColor.setUIColor(players[index].id, 'primary'),
                         onTapAction: () async {
-                          _selectPlayerPageVM.selectPlayer(
-                              players[index],
-                              index,
-                              user,
-                              turnController.isPlayerTurn(
-                                  turnOrder, players[index].id));
+                          user.selectPlayer(
+                            players[index],
+                            index,
+                          );
 
                           _selectPlayerPageVM.goToMapPage(context);
                         },

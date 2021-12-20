@@ -21,6 +21,8 @@ class AppIcons {
   static final pArmor = 'assets/icon/pArmor.svg';
   static final pDamage = 'assets/icon/pDamage.svg';
 
+  static final tempArmor = 'assets/icon/tempArmor.svg';
+
   static final mainHandSlot = 'assets/icon/mainHandSlot.svg';
   static final offHandSlot = 'assets/icon/offHandSlot.svg';
   static final headSlot = 'assets/icon/headSlot.svg';
@@ -31,10 +33,12 @@ class AppIcons {
   //Item
   //Light Weapons
   static final dagger = 'assets/icon/item/dagger.svg';
+  static final ritualDagger = 'assets/icon/item/ritualDagger.svg';
   static final baton = 'assets/icon/item/baton.svg';
   static final mace = 'assets/icon/item/mace.svg';
   static final claw = 'assets/icon/item/claw.svg';
   static final axe = 'assets/icon/item/axe.svg';
+  static final magicAxe = 'assets/icon/item/magicAxe.svg';
   static final shortSword = 'assets/icon/item/shortSword.svg';
   static final shortSpear = 'assets/icon/item/shortSpear.svg';
   static final rapier = 'assets/icon/item/rapier.svg';
@@ -42,6 +46,7 @@ class AppIcons {
   static final morningStar = 'assets/icon/item/morningStar.svg';
   static final saber = 'assets/icon/item/saber.svg';
   static final longSword = 'assets/icon/item/longSword.svg';
+  static final magicSword = 'assets/icon/item/magicSword.svg';
 
   //Heavy Weapons
   static final longSpear = 'assets/icon/item/longSpear.svg';
@@ -52,6 +57,27 @@ class AppIcons {
   static final halberd = 'assets/icon/item/halberd.svg';
   static final warHammer = 'assets/icon/item/warHammer.svg';
   static final greatSword = 'assets/icon/item/greatSword.svg';
+
+  //Ranged Weapons
+  static final blowgun = 'assets/icon/item/blowgun.svg';
+  static final boomerang = 'assets/icon/item/boomerang.svg';
+  static final javelins = 'assets/icon/item/javelins.svg';
+  static final grenades = 'assets/icon/item/grenades.svg';
+  static final shortBow = 'assets/icon/item/shortBow.svg';
+  static final kunai = 'assets/icon/item/kunai.svg';
+  static final handCrossbow = 'assets/icon/item/handCrossbow.svg';
+  static final longBow = 'assets/icon/item/longBow.svg';
+  static final greatBow = 'assets/icon/item/greatBow.svg';
+  static final lightCrossbow = 'assets/icon/item/lightCrossbow.svg';
+  static final handCannon = 'assets/icon/item/handCannon.svg';
+  static final heavyCrossbow = 'assets/icon/item/heavyCrossbow.svg';
+  static final musket = 'assets/icon/item/musket.svg';
+
+//Magic Weapons
+  static final magicOrb = 'assets/icon/item/magicOrb.svg';
+  static final wand = 'assets/icon/item/wand.svg';
+  static final spellBook = 'assets/icon/item/spellBook.svg';
+  static final magicStaff = 'assets/icon/item/magicStaff.svg';
 
   //Armor
   static final helmet = 'assets/icon/item/helmet.svg';
@@ -66,9 +92,15 @@ class AppIcons {
   static final fullHelmet = 'assets/icon/item/fullHelmet.svg';
   static final magicShield = 'assets/icon/item/magicShield.svg';
   static final heavyArmor = 'assets/icon/item/heavyArmor.svg';
+
+  //Ancient
   static final ancientGloves = 'assets/icon/item/ancientGloves.svg';
   static final ancientBoots = 'assets/icon/item/ancientBoots.svg';
-  static final ancientHelmet = 'assets/icon/item/fullHelmet.svg';
-  static final ancientShield = 'assets/icon/item/magicShield.svg';
-  static final ancientArmor = 'assets/icon/item/heavyArmor.svg';
+  static final ancientHelmet = 'assets/icon/item/ancientHelmet.svg';
+  static final ancientShield = 'assets/icon/item/ancientShield.svg';
+  static final ancientArmor = 'assets/icon/item/ancientArmor.svg';
+  static final ancientSpellBook = 'assets/icon/item/ancientSpellbook.svg';
+  static final ancientSword = 'assets/icon/item/ancientSword.svg';
+  static final ancientWarAxe = 'assets/icon/item/ancientWarAxe.svg';
+  static final ancientBow = 'assets/icon/item/ancientBow.svg';
 }

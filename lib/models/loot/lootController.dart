@@ -1,8 +1,11 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/models/shop/shop.dart';
+import 'package:flutter/material.dart';
 import 'loot.dart';
+import 'lootSprite.dart';
 
 class LootController {
   final db = FirebaseFirestore.instance;
@@ -25,9 +28,9 @@ class LootController {
 
   double lootRandomLocation(double mapSize) {
     //For dev (spawn players closer together)
-    return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
+    // return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
     //Original
-    // return (Random().nextDouble() * 640 * 0.8) + (640 * 0.1);
+    return (Random().nextDouble() * mapSize * 0.8) + (mapSize * 0.1);
   }
 
   void addLootToDataBase(Loot loot) {
@@ -73,5 +76,22 @@ class LootController {
     });
 
     batch.commit();
+  }
+
+  List<LootSprite> loot = [];
+
+  void updateLootInSight(List<Loot> loot, Player selectedPlayer) {
+    this.loot = [];
+    loot.forEach((target) {
+      if (selectedPlayer.cantSee(Offset(target.dx, target.dy))) {
+        return;
+      }
+      this.loot.add(LootSprite(
+            lootIndex: target.index,
+            dx: target.dx,
+            dy: target.dy,
+            isClosed: target.isClosed,
+          ));
+    });
   }
 }

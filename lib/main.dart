@@ -2,6 +2,7 @@ import 'package:dsixv02app/models/gameController.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'models/enemy/enemyController.dart';
 import 'models/game.dart';
 import 'models/loot/loot.dart';
 import 'models/loot/lootController.dart';
@@ -25,31 +26,36 @@ class DsixApp extends StatelessWidget {
     PlayerController playerController = PlayerController();
     TurnController turnController = TurnController();
     LootController lootController = LootController();
+    EnemyController enemyController = EnemyController();
     User user = User();
 
     return MultiProvider(
       providers: [
+        //Controllers
         Provider(create: (context) => gameController),
+        Provider(create: (context) => playerController),
+        Provider(create: (context) => turnController),
+        Provider(create: (context) => lootController),
+        Provider(create: (context) => enemyController),
+        Provider(create: (context) => user),
+
+        //Streams
         StreamProvider<Game>(
           initialData: Game(map: '', mapSize: 0.0),
           create: (context) => gameController.pullGameFromDataBase(),
         ),
-        Provider(create: (context) => playerController),
         StreamProvider<List<Player>>(
           initialData: [],
           create: (context) => playerController.pullPlayersFromDataBase(),
         ),
-        Provider(create: (context) => turnController),
         StreamProvider<List<Turn>>(
           initialData: [],
           create: (context) => turnController.pullTurnOrderFromDataBase(),
         ),
-        Provider(create: (context) => lootController),
         StreamProvider<List<Loot>>(
           initialData: [],
           create: (context) => lootController.pullLootFromDataBase(),
         ),
-        Provider(create: (context) => user),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

@@ -1,10 +1,13 @@
-import 'package:dsixv02app/models/gameController.dart';
 import 'package:dsixv02app/models/turnOrder/turn.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turnOrder/turnController.dart';
+import 'package:dsixv02app/shared/app_Colors.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
+import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
@@ -39,7 +42,6 @@ class _PlayerSpriteState extends State<PlayerSprite> {
 
   @override
   Widget build(BuildContext context) {
-    final gameController = Provider.of<GameController>(context);
     final players = Provider.of<List<Player>>(context);
     final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
@@ -64,9 +66,11 @@ class _PlayerSpriteState extends State<PlayerSprite> {
           height: widget.player.visionRange,
           child: Stack(
             children: [
+              //VISION RANGE
               Align(
                   alignment: Alignment.center,
                   child: VisionRange(vision: widget.player.visionRange)),
+              //WALK RANGE
               Align(
                 alignment: Alignment.center,
                 child: WalkRange(
@@ -76,6 +80,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                       widget.player.walkRange),
                 ),
               ),
+
+              //ATTACK RANGE
               Align(
                 alignment: Alignment.center,
                 child: AttackRange(
@@ -83,6 +89,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                   minAttackRange: widget.player.minAttackRange,
                 ),
               ),
+              //HITBOX CONTROLLER
               Align(
                 alignment: Alignment.center,
                 child: Padding(
@@ -92,33 +99,36 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                     height: 10,
                     child: GestureDetector(
                       onTap: () {
-                        user.openOrCloseMenu(turnController.isPlayerTurn(
-                            turnOrder, user.selectedPlayer.id));
+                        user.openOrCloseMenu();
                         widget.refresh();
                       },
                       onPanUpdate: (details) {
+                        if (user.playerMode != 'walk') {
+                          return;
+                        }
                         playerSpriteController.walk(
                             widget.tempLocation,
                             widget.player.getLocation(),
                             Offset(details.delta.dx, details.delta.dy),
-                            widget.player.walkRange,
-                            user.playerMode);
+                            widget.player.walkRange);
                       },
-                      onPanEnd: (details) {
-                        playerSpriteController.endWalk(
-                          user,
-                          widget.tempLocation,
-                        );
+                      onPanEnd: (details) async {
+                        user.endWalk(
+                            widget.tempLocation.dx, widget.tempLocation.dy);
 
-                        turnController.takeTurn(
-                            gameController, players, turnOrder, user);
-
-                        widget.refresh();
+                        try {
+                          turnController.takeTurn(turnOrder);
+                        } on PlayerTurnException {
+                          user.walkMode();
+                        } on NotPlayerTurnException {
+                          user.endPlayerTurn();
+                        }
                       },
                     ),
                   ),
                 ),
               ),
+              //IMAGE
               Align(
                 alignment: Alignment.center,
                 child: TransparentPointer(
@@ -131,6 +141,42 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                   ),
                 ),
               ),
+              //TEMP EFFECTS
+              Align(
+                alignment: Alignment.center,
+                child: TransparentPointer(
+                  transparent: true,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 28),
+                    child: AnimatedContainer(
+                      duration: Duration(milliseconds: 250),
+                      width: (user.selectedPlayer.tempArmor > 0) ? 5 : 0,
+                      height: (user.selectedPlayer.tempArmor > 0) ? 5 : 0,
+                      child: Stack(children: [
+                        SvgPicture.asset(
+                          AppIcons.tempArmor,
+                          color: AppColors.goodEffectImage,
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: FittedBox(
+                              child: Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 1, 0, 3),
+                            child: Text(
+                              '${user.selectedPlayer.tempArmor}',
+                              style: TextStyle(
+                                fontFamily: 'Santana',
+                                color: AppColors.goodEffectText,
+                              ),
+                            ),
+                          )),
+                        ),
+                      ]),
+                    ),
+                  ),
+                ),
+              ),
+              //DAMAGE ANIMATION
               Align(
                 alignment: Alignment.center,
                 child: TransparentPointer(
@@ -149,7 +195,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                         : SizedBox(),
                   ),
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -173,19 +219,31 @@ class PlayerSpriteController {
     artboard.addController(SimpleAnimation('off'));
   }
 
+  void updatePlayer(Player player, User user) {
+    checkTempArmor(player.tempArmor, user.selectedPlayer.tempArmor);
+    checkLife(player.life, user.selectedPlayer.life);
+
+    user.updateSelectedPlayer(player);
+  }
+
+  void checkTempArmor(int newArmor, oldArmor) {
+    if (oldArmor != newArmor) {
+      int damage = oldArmor - newArmor;
+      playDamageAnimation(damage);
+    }
+  }
+
+  void checkLife(int newLife, oldLife) {
+    if (oldLife != newLife) {
+      int damage = oldLife - newLife;
+      playDamageAnimation(damage);
+    }
+  }
+
   playDamageAnimation(int damage) {
     artboard.addController(OneShotAnimation(
       '$damage',
     ));
-  }
-
-  void updatePlayer(Player player, User user) {
-    if (player.life == user.selectedPlayer.life) {
-      return;
-    }
-    int damage = user.selectedPlayer.life - player.life;
-    playDamageAnimation(damage);
-    user.updateSelectedPlayer(player);
   }
 
   Offset calculateSpritePosition(
@@ -210,27 +268,13 @@ class PlayerSpriteController {
   }
 
   void walk(PlayerTempLocation temporaryLocation, Offset playerLocation,
-      Offset newLocation, walkRange, String playerMode) {
+      Offset newLocation, walkRange) {
     if (calculateWalkedDistance(temporaryLocation, playerLocation, walkRange) <
-            1 ||
-        playerMode != 'walk') {
+        1) {
       return;
     }
 
     temporaryLocation.walk(newLocation.dx, newLocation.dy);
-  }
-
-  void endWalk(
-    User user,
-    PlayerTempLocation temporaryLocation,
-  ) {
-    if (user.playerMode != 'walk') {
-      return;
-    }
-
-    temporaryLocation.endWalk(user.selectedPlayer.id);
-    user.updateSelectedPlayerLocation(
-        temporaryLocation.dx, temporaryLocation.dy);
   }
 }
 
@@ -259,7 +303,12 @@ class AttackRange extends StatelessWidget {
           return 0;
           break;
         case 'attack':
-          return maxAttackRange;
+          if (maxAttackRange > user.selectedPlayer.visionRange) {
+            return user.selectedPlayer.visionRange;
+          } else {
+            return maxAttackRange;
+          }
+
           break;
       }
 
@@ -285,20 +334,16 @@ class AttackRange extends StatelessWidget {
       return 0.0;
     }
 
-    return (setMaxAttackRange(user.playerMode) < 1)
-        ? SizedBox()
-        : CustomPaint(
-            painter: AttackArea(
-              minRange: setMinAttackRange(user.playerMode),
-              maxRange: setMaxAttackRange(user.playerMode),
-            ),
-            child: AnimatedContainer(
-              curve: Curves.fastLinearToSlowEaseIn,
-              duration: Duration(milliseconds: 250),
-              width: setMaxAttackRange(user.playerMode),
-              height: setMaxAttackRange(user.playerMode),
-            ),
-          );
+    return CustomPaint(
+      painter: AttackArea(
+        minRange: setMinAttackRange(user.playerMode),
+        maxRange: setMaxAttackRange(user.playerMode),
+      ),
+      child: SizedBox(
+        width: setMaxAttackRange(user.playerMode),
+        height: setMaxAttackRange(user.playerMode),
+      ),
+    );
   }
 }
 
@@ -321,9 +366,12 @@ class AttackArea extends CustomPainter {
     canvas.drawPath(
       Path.combine(
         PathOperation.difference,
-        Path()..addOval(Rect.fromCircle(center: center, radius: maxRange / 2)),
         Path()
-          ..addOval(Rect.fromCircle(center: center, radius: minRange / 2))
+          ..addOval(
+              Rect.fromCircle(center: center, radius: maxRange / 2 + 0.02)),
+        Path()
+          ..addOval(
+              Rect.fromCircle(center: center, radius: minRange / 2 + 0.01))
           ..close(),
       ),
       fillColor,
@@ -337,9 +385,12 @@ class AttackArea extends CustomPainter {
     canvas.drawPath(
       Path.combine(
         PathOperation.difference,
-        Path()..addOval(Rect.fromCircle(center: center, radius: maxRange / 2)),
         Path()
-          ..addOval(Rect.fromCircle(center: center, radius: minRange / 2))
+          ..addOval(
+              Rect.fromCircle(center: center, radius: maxRange / 2 + 0.02)),
+        Path()
+          ..addOval(
+              Rect.fromCircle(center: center, radius: minRange / 2 + 0.01))
           ..close(),
       ),
       strokeColor,
@@ -348,7 +399,7 @@ class AttackArea extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) {
-    return null;
+    return false;
   }
 }
 
