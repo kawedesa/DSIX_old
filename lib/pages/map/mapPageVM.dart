@@ -1,32 +1,37 @@
+// import 'package:dsixv02app/models/player/player.dart';
+// import 'package:dsixv02app/pages/map/endGameButton.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/pages/map/endGameButton.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
+// import 'package:flutter/services.dart';
+// import 'package:rive/rive.dart';
 
 class MapPageVM {
-  TransformationController canvasController;
-  List<Widget> temporaryUI = [];
+  TransformationController? canvasController;
 
   double minZoom = 4.5;
   double maxZoom = 15;
 
-  void createCanvasController(context, double mapSize, double dx, double dy) {
+  void createCanvasController(
+      context, double mapSize, PlayerLocation? location) {
     if (canvasController != null) {
       return;
     }
-    updateCanvasController(context, mapSize, dx, dy);
+    updateCanvasController(context, mapSize, location);
   }
 
-  void updateCanvasController(context, double mapSize, double dx, double dy) {
-    double dxCanvas = dx * minZoom - MediaQuery.of(context).size.width / 2;
+  void updateCanvasController(
+      context, double? mapSize, PlayerLocation? location) {
+    double dxCanvas =
+        location!.dx! * minZoom - MediaQuery.of(context).size.width / 2;
     double dyCanvas =
-        dy * minZoom - MediaQuery.of(context).size.height * 0.8 / 2;
+        location.dy! * minZoom - MediaQuery.of(context).size.height * 0.8 / 2;
 
     if (dxCanvas < 0) {
       dxCanvas = 0;
     }
-    if (dxCanvas > mapSize * minZoom - MediaQuery.of(context).size.width) {
+    if (dxCanvas > mapSize! * minZoom - MediaQuery.of(context).size.width) {
       dxCanvas = mapSize * minZoom - MediaQuery.of(context).size.width;
     }
     if (dyCanvas < 0) {
@@ -42,47 +47,31 @@ class MapPageVM {
   }
 
   void goToPlayer(context, double mapSize, Player player) {
-    updateCanvasController(context, mapSize, player.dx, player.dy);
+    updateCanvasController(context, mapSize, player.location);
   }
 
-  void createEndGameButton(bool isDead) {
-    this.temporaryUI = [];
-    this.temporaryUI.add(EndGameButton(isDead: isDead));
-  }
+  //   List<Widget> temporaryUI = [];
 
-  Artboard artboard;
+//   void createEndGameButton(bool isDead) {
+//     this.temporaryUI = [];
+//     this.temporaryUI.add(EndGameButton(isDead: isDead));
+//   }
 
-  void loadRiverFile() async {
-    final bytes = await rootBundle.load('assets/animation/turn.riv');
-    final file = RiveFile.import(bytes);
-    artboard = file.mainArtboard;
-    offAnimation();
-  }
+// // ignore: must_be_immutable
+// class EffectSprite extends StatelessWidget {
+//   Offset location;
+//   EffectSprite({Key key, this.location}) : super(key: key);
 
-  offAnimation() {
-    artboard.addController(SimpleAnimation('off'));
-  }
-
-  playYourTurnAnimation() {
-    artboard.addController(OneShotAnimation('yourTurn'));
-  }
-}
-
-// ignore: must_be_immutable
-class EffectSprite extends StatelessWidget {
-  Offset location;
-  EffectSprite({Key key, this.location}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Positioned(
-      left: location.dx,
-      top: location.dy,
-      child: Container(
-        width: 20,
-        height: 20,
-        color: Colors.amber,
-      ),
-    );
-  }
+//   @override
+//   Widget build(BuildContext context) {
+//     return Positioned(
+//       left: location.dx,
+//       top: location.dy,
+//       child: Container(
+//         width: 20,
+//         height: 20,
+//         color: Colors.amber,
+//       ),
+//     );
+//   }
 }

@@ -1,20 +1,20 @@
-import 'package:flutter/material.dart';
+// import 'package:flutter/material.dart';
 
-class PlayerTempLocation extends ChangeNotifier {
-  double dx = 0;
-  double dy = 0;
+// class PlayerTempLocation extends ChangeNotifier {
+//   double dx = 0;
+//   double dy = 0;
 
-  void walk(double dx, double dy) {
-    this.dx += dx;
-    this.dy += dy;
-    notifyListeners();
-  }
+//   void walk(double dx, double dy) {
+//     this.dx += dx;
+//     this.dy += dy;
+//     notifyListeners();
+//   }
 
-  void updatePlayerLocation(
-    double dx,
-    double dy,
-  ) {
-    this.dx = dx;
-    this.dy = dy;
-  }
-}
+//   void updatePlayerLocation(
+//     double dx,
+//     double dy,
+//   ) {
+//     this.dx = dx;
+//     this.dy = dy;
+//   }
+// }

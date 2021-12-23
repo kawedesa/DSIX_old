@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TurnButton extends StatelessWidget {
-  final Function() onDoubleTap;
-  final Color color;
+  final Function()? onDoubleTap;
+  final Color? color;
   const TurnButton({
-    Key key,
+    Key? key,
     this.onDoubleTap,
     this.color,
   }) : super(key: key);
@@ -15,7 +15,7 @@ class TurnButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onDoubleTap: () {
-        onDoubleTap();
+        onDoubleTap!();
       },
       child: Container(
         width: MediaQuery.of(context).size.height * 0.03,

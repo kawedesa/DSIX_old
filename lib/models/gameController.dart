@@ -1,61 +1,51 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
 
 import 'game.dart';
-import 'player/player.dart';
 
 class GameController {
-  final db = FirebaseFirestore.instance;
+  final database = FirebaseFirestore.instance;
+
+  String gameID = 'alpha';
+
   Stream<Game> pullGameFromDataBase() {
-    return db
+    return database
         .collection('game')
-        .doc('alpha')
+        .doc(gameID)
         .snapshots()
         .map((game) => Game.fromMap(game.data()));
   }
 
-  Game game;
-  void newGame() {
-    game = Game.newAlphaGame();
-    db.collection('game').doc(game.id).set(Game().toMap(game));
-  }
+  void newGame(GameMap map) {
+    Game game = Game.newGame(this.gameID, map);
 
-  void joinGame(Game joinedGame) {
-    this.game = joinedGame;
-  }
-
-  void newRound() async {
-    this.game.round++;
-    await db.collection('game').doc('alpha').update({'round': this.game.round});
+    database.collection('game').doc(this.gameID).set(game.toMap());
   }
 
   void deleteGame() async {
-    this.game = null;
-    var batch = db.batch();
-    await db.collection('game').get().then((snapshot) {
-      snapshot.docs.forEach((document) {
-        batch.delete(document.reference);
-      });
-    });
-
-    batch.commit();
+    Game game = Game.newEmptyGame();
+    database.collection('game').doc(this.gameID).set(game.toMap());
   }
 
-  void checkForEndGame(List<Player> players) {
-    int deadPlayers = 0;
-    players.forEach((player) {
-      if (player.life < 1) {
-        deadPlayers++;
-      }
-    });
-    if (deadPlayers == players.length - 1) {
-      throw EndGameException();
-    }
+  void newRound(int currentRound) async {
+    int nextRound = currentRound + 1;
+    await database.collection('game').doc(gameID).update({'round': nextRound});
   }
 
-  double fogSize;
+  // void checkForEndGame(List<Player> players) {
+  //   int deadPlayers = 0;
+  //   players.forEach((player) {
+  //     if (player.life < 1) {
+  //       deadPlayers++;
+  //     }
+  //   });
+  //   if (deadPlayers == players.length - 1) {
+  //     throw EndGameException();
+  //   }
+  // }
 
-  void setFogSize() {
-    this.fogSize = game.mapSize - this.game.round * 5;
-  }
+  // double fogSize;
+
+  // void setFogSize() {
+  //   this.fogSize = game.mapSize - this.game.round * 5;
+  // }
 }

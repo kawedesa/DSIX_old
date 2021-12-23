@@ -1,27 +1,27 @@
 class Item {
-  String icon;
-  String name;
-  String itemSlot;
-  int pDamage;
-  int mDamage;
-  int pArmor;
-  int mArmor;
-  int weight;
-  int value;
-  double maxWeaponRange;
-  double minWeaponRange;
+  String? icon;
+  String? name;
+  String? itemSlot;
+  int? pDamage;
+  int? mDamage;
+  int? pArmor;
+  int? mArmor;
+  int? weight;
+  int? value;
+  double? maxWeaponRange;
+  double? minWeaponRange;
   Item({
-    String icon,
-    String name,
-    String itemSlot,
-    int pDamage,
-    int mDamage,
-    int pArmor,
-    int mArmor,
-    int weight,
-    int value,
-    double maxWeaponRange,
-    double minWeaponRange,
+    String? icon,
+    String? name,
+    String? itemSlot,
+    int? pDamage,
+    int? mDamage,
+    int? pArmor,
+    int? mArmor,
+    int? weight,
+    int? value,
+    double? maxWeaponRange,
+    double? minWeaponRange,
   }) {
     this.icon = icon;
     this.name = name;
@@ -36,21 +36,19 @@ class Item {
     this.minWeaponRange = minWeaponRange;
   }
 
-  factory Item.fromMap(
-    Map data,
-  ) {
+  factory Item.fromMap(Map<String, dynamic>? data) {
     return Item(
-      icon: data['icon'],
-      name: data['name'],
-      itemSlot: data['itemSlot'],
-      pDamage: data['pDamage'],
-      mDamage: data['mDamage'],
-      pArmor: data['pArmor'],
-      mArmor: data['mArmor'],
-      weight: data['weight'],
-      value: data['value'],
-      maxWeaponRange: data['maxWeaponRange'],
-      minWeaponRange: data['minWeaponRange'],
+      icon: data?['icon'],
+      name: data?['name'],
+      itemSlot: data?['itemSlot'],
+      pDamage: data?['pDamage'],
+      mDamage: data?['mDamage'],
+      pArmor: data?['pArmor'],
+      mArmor: data?['mArmor'],
+      weight: data?['weight'],
+      value: data?['value'],
+      maxWeaponRange: data?['maxWeaponRange'] * 1.0,
+      minWeaponRange: data?['minWeaponRange'] * 1.0,
     );
   }
 
@@ -70,7 +68,7 @@ class Item {
     };
   }
 
-  factory Item.emptyItem() {
+  factory Item.empty() {
     return Item(
       icon: '',
       name: '',

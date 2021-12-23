@@ -1,28 +1,50 @@
+// import 'dart:math';
+// import 'package:cloud_firestore/cloud_firestore.dart';
+// import 'package:dsixv02app/models/player/player.dart';
+// import 'package:dsixv02app/models/shop/item.dart';
+// import 'package:dsixv02app/models/shop/shop.dart';
+// import 'package:flutter/material.dart';
+// import 'loot.dart';
+// import 'lootSprite.dart';
+
 import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/models/shop/shop.dart';
-import 'package:flutter/material.dart';
+
 import 'loot.dart';
 import 'lootSprite.dart';
 
 class LootController {
-  final db = FirebaseFirestore.instance;
-  Shop _shop = Shop();
+  final firebase = FirebaseFirestore.instance;
 
-  Stream<List<Loot>> pullLootFromDataBase() {
-    return db.collection('loot').snapshots().map((querySnapshot) =>
-        querySnapshot.docs.map((loot) => Loot.fromMap(loot.data())).toList());
+  Stream<List<Loot>> pullLootFromDataBase(String gameID) {
+    return firebase
+        .collection('game')
+        .doc(gameID)
+        .collection('loot')
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((loot) => Loot.fromMap(loot.data()))
+            .toList());
   }
 
-  List<Loot> listOfRandomLoot = [];
-  void createListOfRandomLootInRandomLocation(
-      int numberOfLoot, double mapSize) {
-    listOfRandomLoot = [];
+  void newRandomLoot(
+    String gameID,
+    double mapSize,
+    int numberOfLoot,
+  ) {
     for (int i = 0; i < numberOfLoot; i++) {
-      addLootToDataBase(Loot.newLoot(
-          lootRandomLocation(mapSize), lootRandomLocation(mapSize), i));
+      LootLocation randomLocation = LootLocation(
+        dx: lootRandomLocation(mapSize),
+        dy: lootRandomLocation(mapSize),
+      );
+
+      Loot newLoot = Loot.newLoot(randomLocation, i);
+
+      addLootToDataBase(gameID, newLoot);
     }
   }
 
@@ -33,11 +55,18 @@ class LootController {
     return (Random().nextDouble() * mapSize * 0.8) + (mapSize * 0.1);
   }
 
-  void addLootToDataBase(Loot loot) {
-    db.collection('loot').doc('${loot.index}').set(loot.saveToDataBase(loot));
+  void addLootToDataBase(String gameID, Loot loot) {
+    firebase
+        .collection('game')
+        .doc(gameID)
+        .collection('loot')
+        .doc('${loot.index}')
+        .set(loot.toMap());
   }
 
-  void openLoot(int lootIndex) async {
+  Shop _shop = Shop();
+
+  void openLoot(String gameID, int lootIndex) async {
     List<Item> itemsInside = [];
 
     int numberOfLoot = Random().nextInt(3) + 1;
@@ -48,28 +77,38 @@ class LootController {
 
     var uploadItems = itemsInside.map((item) => item.toMap()).toList();
 
-    await db
+    await firebase
+        .collection('game')
+        .doc(gameID)
         .collection('loot')
         .doc('$lootIndex')
         .update({'isClosed': false, 'items': uploadItems});
   }
 
-  void updateLootItems(int lootIndex, List<Item> itemsInside) async {
+  void updateLootItems(
+      String gameID, int lootIndex, List<Item> itemsInside) async {
     if (itemsInside.isEmpty) {
       return;
     }
 
     var uploadItems = itemsInside.map((item) => item.toMap()).toList();
 
-    await db
+    await firebase
+        .collection('game')
+        .doc(gameID)
         .collection('loot')
         .doc('$lootIndex')
         .update({'isClosed': false, 'items': uploadItems});
   }
 
-  void deleteAllLootFromDataBase() async {
-    var batch = db.batch();
-    await db.collection('loot').get().then((snapshot) {
+  void deleteAllLoot(String gameID) async {
+    var batch = firebase.batch();
+    await firebase
+        .collection('game')
+        .doc(gameID)
+        .collection('loot')
+        .get()
+        .then((snapshot) {
       snapshot.docs.forEach((document) {
         batch.delete(document.reference);
       });
@@ -78,18 +117,21 @@ class LootController {
     batch.commit();
   }
 
-  List<LootSprite> loot = [];
+  List<LootSprite> visibleLoot = [];
 
-  void updateLootInSight(List<Loot> loot, Player selectedPlayer) {
-    this.loot = [];
+  void updateLootInSight(
+    List<Loot> loot,
+    Player selectedPlayer,
+  ) {
+    this.visibleLoot = [];
     loot.forEach((target) {
-      if (selectedPlayer.cantSee(Offset(target.dx, target.dy))) {
+      if (selectedPlayer.cantSee(target.location!.getLocation())) {
         return;
       }
-      this.loot.add(LootSprite(
+
+      this.visibleLoot.add(LootSprite(
             lootIndex: target.index,
-            dx: target.dx,
-            dy: target.dy,
+            location: target.location,
             isClosed: target.isClosed,
           ));
     });

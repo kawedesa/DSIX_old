@@ -2,9 +2,10 @@ import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:flutter/material.dart';
 
 class GoToPagePageButton extends StatelessWidget {
-  final Widget goToPage;
-  final Color buttonColor;
-  const GoToPagePageButton({Key key, @required this.goToPage, this.buttonColor})
+  final Widget? goToPage;
+  final Color? buttonColor;
+  const GoToPagePageButton(
+      {Key? key, @required this.goToPage, this.buttonColor})
       : super(key: key);
 
   @override
@@ -12,7 +13,7 @@ class GoToPagePageButton extends StatelessWidget {
     return GestureDetector(
       onTap: () {
         Route newRoute = PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) => goToPage,
+          pageBuilder: (context, animation, secondaryAnimation) => goToPage!,
           transitionsBuilder: (context, animation, secondaryAnimation, child) {
             var begin = Offset(-1.0, 0.0);
             var end = Offset(0.0, 0.0);
@@ -27,7 +28,7 @@ class GoToPagePageButton extends StatelessWidget {
           },
         );
 
-        Navigator.of(context).push(newRoute);
+        Navigator.of(context).pushReplacement(newRoute);
       },
       child: Icon(
         Icons.exit_to_app,
@@ -37,3 +38,7 @@ class GoToPagePageButton extends StatelessWidget {
     );
   }
 }
+
+
+// Navigator.of(context)
+//     .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);

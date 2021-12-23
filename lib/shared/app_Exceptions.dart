@@ -23,6 +23,16 @@ class StartPlayerTurnException implements Exception {
   StartPlayerTurnException();
 }
 
+class ContinuePlayerTurnException implements Exception {
+  String message = 'continue player turn';
+  ContinuePlayerTurnException();
+}
+
+class EndPlayerTurnException implements Exception {
+  String message = 'end player turn';
+  EndPlayerTurnException();
+}
+
 class EndGameException implements Exception {
   String message = 'end game';
   EndGameException();

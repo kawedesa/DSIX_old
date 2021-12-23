@@ -4,11 +4,10 @@ import 'package:flutter_svg/svg.dart';
 
 // ignore: must_be_immutable
 class MapTile extends StatelessWidget {
-  String name;
-  List<Widget> layers;
+  String? name;
+  List<Widget>? layers;
   MapTile({
     @required this.name,
-    this.layers,
   });
 
   @override
@@ -100,7 +99,7 @@ class MapTile extends StatelessWidget {
 
     return Stack(
       alignment: Alignment.topLeft,
-      children: this.layers,
+      children: this.layers!,
     );
   }
 }

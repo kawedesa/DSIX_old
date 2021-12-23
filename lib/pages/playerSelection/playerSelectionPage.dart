@@ -1,5 +1,7 @@
+import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/user.dart';
+import 'package:dsixv02app/models/turn.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/pages/settings/battleRoyaleSettingsPage.dart';
 import 'package:dsixv02app/shared/widgets/button.dart';
@@ -10,15 +12,15 @@ import 'package:provider/provider.dart';
 import 'playerSelectionPageVM.dart';
 
 class PlayerSelectionPage extends StatelessWidget {
-  const PlayerSelectionPage({Key key}) : super(key: key);
+  const PlayerSelectionPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     PlayerSelectionPageVM _selectPlayerPageVM = PlayerSelectionPageVM();
     UIColor _uiColor = UIColor();
-
-    final players = Provider.of<List<Player>>(context);
+    final turnOrder = Provider.of<List<Turn>>(context);
     final user = Provider.of<User>(context);
+    final players = Provider.of<List<Player>>(context);
 
     return Scaffold(
         appBar: AppBar(
@@ -61,10 +63,10 @@ class PlayerSelectionPage extends StatelessWidget {
                             _uiColor.setUIColor(players[index].id, 'primary'),
                         onTapAction: () async {
                           user.selectPlayer(
-                            players[index],
+                            players[index].id,
                             index,
+                            players[index],
                           );
-
                           _selectPlayerPageVM.goToMapPage(context);
                         },
                       ),

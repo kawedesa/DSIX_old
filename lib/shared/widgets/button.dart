@@ -4,11 +4,11 @@ import 'package:flutter/services.dart';
 import 'package:rive/rive.dart';
 
 class Button extends StatefulWidget {
-  final String buttonText;
-  final Color buttonColor;
-  final Color buttonTextColor;
-  final Color buttonFillColor;
-  final Function() onTapAction;
+  final String? buttonText;
+  final Color? buttonColor;
+  final Color? buttonTextColor;
+  final Color? buttonFillColor;
+  final Function()? onTapAction;
 
   const Button({
     @required this.buttonText,
@@ -23,7 +23,7 @@ class Button extends StatefulWidget {
 }
 
 class _ButtonState extends State<Button> {
-  Artboard _artboard;
+  Artboard? _artboard;
 
   @override
   void initState() {
@@ -34,18 +34,16 @@ class _ButtonState extends State<Button> {
   void _loadRiverFile() async {
     final bytes = await rootBundle.load('assets/animation/buttonAnimation.riv');
     final file = RiveFile.import(bytes);
-    setState(() {
-      _artboard = file.mainArtboard;
-      _playReflectionAnimation();
-    });
+    _artboard = file.mainArtboard;
+    _playReflectionAnimation();
   }
 
   _playReflectionAnimation() {
-    _artboard.addController(SimpleAnimation('reflection'));
+    _artboard?.addController(SimpleAnimation('reflection'));
   }
 
   _playOnTapAnimation() {
-    _artboard.addController(OneShotAnimation(
+    _artboard?.addController(OneShotAnimation(
       'onTap',
     ));
   }
@@ -55,7 +53,7 @@ class _ButtonState extends State<Button> {
     return GestureDetector(
       onTap: () {
         _playOnTapAnimation();
-        this.widget.onTapAction();
+        this.widget.onTapAction!();
       },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.09,
@@ -65,9 +63,7 @@ class _ButtonState extends State<Button> {
               ? this.widget.buttonFillColor
               : AppColors.black00,
           border: Border.all(
-            color: (widget.buttonColor != null)
-                ? this.widget.buttonColor
-                : AppColors.grey02,
+            color: this.widget.buttonColor!,
             width: 2.5,
           ),
         ),
@@ -76,7 +72,7 @@ class _ButtonState extends State<Button> {
           children: [
             (_artboard != null)
                 ? Rive(
-                    artboard: _artboard,
+                    artboard: _artboard!,
                     fit: BoxFit.fill,
                   )
                 : Container(),
@@ -89,9 +85,7 @@ class _ButtonState extends State<Button> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       fontFamily: 'Calibri',
-                      color: (widget.buttonTextColor != null)
-                          ? this.widget.buttonTextColor
-                          : AppColors.grey04,
+                      color: this.widget.buttonTextColor!,
                     )),
               ),
             ),

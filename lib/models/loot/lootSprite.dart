@@ -1,5 +1,7 @@
+import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/loot/loot.dart';
 import 'package:dsixv02app/models/loot/lootSpriteImage.dart';
-import 'package:dsixv02app/models/turnOrder/turn.dart';
+import 'package:dsixv02app/models/turn.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turnOrder/turnController.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
@@ -10,11 +12,14 @@ import 'lootDialog.dart';
 
 // ignore: must_be_immutable
 class LootSprite extends StatelessWidget {
-  int lootIndex;
-  double dx;
-  double dy;
-  bool isClosed;
-  LootSprite({Key key, this.lootIndex, this.dx, this.dy, this.isClosed})
+  int? lootIndex;
+  LootLocation? location;
+  bool? isClosed;
+  LootSprite(
+      {Key? key,
+      @required this.lootIndex,
+      @required this.location,
+      @required this.isClosed})
       : super(key: key);
 
   @override
@@ -22,21 +27,32 @@ class LootSprite extends StatelessWidget {
     final turnController = Provider.of<TurnController>(context);
     final turnOrder = Provider.of<List<Turn>>(context);
     final lootController = Provider.of<LootController>(context);
+    final gameController = Provider.of<GameController>(context);
     final user = Provider.of<User>(context);
 
     return Positioned(
-        left: dx - 4,
-        top: dy - 4,
+        left: location!.dx! - 4,
+        top: location!.dy! - 4,
         child: GestureDetector(
           onTap: () async {
             if (user.playerMode != 'walk') {
               return;
             }
-            if (user.selectedPlayer.cantReach(Offset(dx, dy))) {
+            if (user.selectedPlayer!.cantReach(location!.getLocation())) {
               return;
             }
-            if (isClosed) {
-              lootController.openLoot(lootIndex);
+
+            user.takeAction(
+              gameController.gameID,
+            );
+
+            if (user.selectedPlayer!.action!.outOfActions()) {
+              turnController.passTurnWhere(
+                  gameController.gameID, user.selectedPlayer!.id!);
+            }
+
+            if (isClosed!) {
+              lootController.openLoot(gameController.gameID, lootIndex!);
               showDialog(
                 barrierDismissible: false,
                 context: context,
@@ -56,14 +72,6 @@ class LootSprite extends StatelessWidget {
                   );
                 },
               );
-            }
-
-            try {
-              turnController.takeTurn(turnOrder);
-            } on PlayerTurnException {
-              user.walkMode();
-            } on NotPlayerTurnException {
-              user.endPlayerTurn();
             }
           },
           child: LootSpriteImage(isClosed: isClosed),

@@ -25,26 +25,25 @@ class AppColors {
 
   static final attackMode = Color.fromRGBO(150, 0, 0, 1);
 
-  static final bluePlayerPrimary = Colors.indigoAccent;
-  static final bluePlayerSecondary = Colors.indigo[800];
-  static final bluePlayerTertiary = Colors.indigo[900];
-  static final bluePlayerShadow = Color.fromRGBO(0, 50, 255, 0.3);
-  static final pinkPlayerPrimary = Colors.pinkAccent;
-  static final pinkPlayerSecondary = Colors.pink[800];
-  static final pinkPlayerTertiary = Colors.pink[900];
-  static final pinkPlayerShadow = Color.fromRGBO(255, 0, 0, 0.3);
-  static final yellowPlayerPrimary = Colors.orange;
+  static final bluePlayerPrimary = Color.fromRGBO(83, 109, 254, 1);
+  static final bluePlayerSecondary = Color.fromRGBO(40, 53, 147, 1);
+  static final bluePlayerTertiary = Color.fromRGBO(26, 35, 126, 1);
+
+  static final pinkPlayerPrimary = Color.fromRGBO(255, 64, 129, 1);
+  static final pinkPlayerSecondary = Color.fromRGBO(173, 20, 87, 1);
+  static final pinkPlayerTertiary = Color.fromRGBO(136, 14, 79, 1);
+
+  static final yellowPlayerPrimary = Color.fromRGBO(255, 152, 0, 1);
   static final yellowPlayerSecondary = Color.fromRGBO(215, 112, 0, 1);
   static final yellowPlayerTertiary = Color.fromRGBO(155, 75, 7, 1);
-  static final yellowPlayerShadow = Color.fromRGBO(250, 150, 0, 0.3);
-  static final greenPlayerPrimary = Colors.teal;
-  static final greenPlayerSecondary = Colors.teal[800];
-  static final greenPlayerTertiary = Colors.teal[900];
-  static final greenPlayerShadow = Color.fromRGBO(150, 250, 0, 0.3);
-  static final purplePlayerPrimary = Colors.purple;
+
+  static final greenPlayerPrimary = Color.fromRGBO(0, 150, 136, 1);
+  static final greenPlayerSecondary = Color.fromRGBO(0, 105, 92, 1);
+  static final greenPlayerTertiary = Color.fromRGBO(0, 77, 64, 1);
+
+  static final purplePlayerPrimary = Color.fromRGBO(156, 39, 176, 1);
   static final purplePlayerSecondary = Color.fromRGBO(102, 20, 115, 1);
-  static final purplePlayerTertiary = Colors.purple[900];
-  static final purplePlayerShadow = Color.fromRGBO(250, 0, 250, 0.3);
+  static final purplePlayerTertiary = Color.fromRGBO(74, 20, 140, 1);
 
   //MAPS
   //Crossroads

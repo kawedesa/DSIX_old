@@ -1,14 +1,16 @@
+import 'package:dsixv02app/models/gameController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import '../player.dart';
+import 'package:provider/provider.dart';
+import '../user.dart';
 
 class Iventory extends StatefulWidget {
-  final Player player;
-
-  const Iventory({@required this.player});
+  const Iventory({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<Iventory> createState() => _IventoryState();
@@ -19,6 +21,9 @@ class _IventoryState extends State<Iventory> {
 
   @override
   Widget build(BuildContext context) {
+    final gameController = Provider.of<GameController>(context);
+    final user = Provider.of<User>(context);
+
     return AlertDialog(
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       content: Container(
@@ -26,7 +31,7 @@ class _IventoryState extends State<Iventory> {
         decoration: BoxDecoration(
           color: AppColors.black00,
           border: Border.all(
-            color: _uiColor.setUIColor(widget.player.id, 'primary'),
+            color: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
             width: 2,
           ),
         ),
@@ -35,7 +40,7 @@ class _IventoryState extends State<Iventory> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              color: _uiColor.setUIColor(widget.player.id, 'primary'),
+              color: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                 child: Center(
@@ -44,8 +49,8 @@ class _IventoryState extends State<Iventory> {
                         fontFamily: 'Santana',
                         height: 1,
                         fontSize: 25,
-                        color:
-                            _uiColor.setUIColor(widget.player.id, 'secondary'),
+                        color: _uiColor.setUIColor(
+                            user.selectedPlayerID, 'secondary'),
                         fontWeight: FontWeight.bold,
                         letterSpacing: 3,
                       )),
@@ -70,14 +75,14 @@ class _IventoryState extends State<Iventory> {
                               SvgPicture.asset(
                                 AppIcons.pDamage,
                                 color: _uiColor.setUIColor(
-                                    widget.player.id, 'primary'),
+                                    user.selectedPlayerID, 'primary'),
                                 width:
                                     MediaQuery.of(context).size.height * 0.035,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                 child: Text(
-                                  '${widget.player.pDamage}',
+                                  '${user.selectedPlayer!.pDamage}',
                                   style: TextStyle(
                                     fontFamily: 'Santana',
                                     height: 1,
@@ -97,14 +102,14 @@ class _IventoryState extends State<Iventory> {
                               SvgPicture.asset(
                                 AppIcons.mDamage,
                                 color: _uiColor.setUIColor(
-                                    widget.player.id, 'primary'),
+                                    user.selectedPlayerID, 'primary'),
                                 width:
                                     MediaQuery.of(context).size.height * 0.035,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                 child: Text(
-                                  '${widget.player.mDamage}',
+                                  '${user.selectedPlayer!.mDamage}',
                                   style: TextStyle(
                                     fontFamily: 'Santana',
                                     height: 1,
@@ -124,14 +129,14 @@ class _IventoryState extends State<Iventory> {
                               SvgPicture.asset(
                                 AppIcons.pArmor,
                                 color: _uiColor.setUIColor(
-                                    widget.player.id, 'primary'),
+                                    user.selectedPlayerID, 'primary'),
                                 width:
                                     MediaQuery.of(context).size.height * 0.035,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                 child: Text(
-                                  '${widget.player.pArmor}',
+                                  '${user.selectedPlayer!.pArmor}',
                                   style: TextStyle(
                                     fontFamily: 'Santana',
                                     height: 1,
@@ -151,14 +156,14 @@ class _IventoryState extends State<Iventory> {
                               SvgPicture.asset(
                                 AppIcons.mArmor,
                                 color: _uiColor.setUIColor(
-                                    widget.player.id, 'primary'),
+                                    user.selectedPlayerID, 'primary'),
                                 width:
                                     MediaQuery.of(context).size.height * 0.035,
                               ),
                               Padding(
                                 padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
                                 child: Text(
-                                  '${widget.player.mArmor}',
+                                  '${user.selectedPlayer!.mArmor}',
                                   style: TextStyle(
                                     fontFamily: 'Santana',
                                     height: 1,
@@ -178,7 +183,8 @@ class _IventoryState extends State<Iventory> {
                   Divider(
                     height: 0,
                     thickness: 2,
-                    color: _uiColor.setUIColor(widget.player.id, 'primary'),
+                    color:
+                        _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
@@ -196,32 +202,38 @@ class _IventoryState extends State<Iventory> {
                                 child: GestureDetector(
                                   onDoubleTap: () {
                                     setState(() {
-                                      widget.player.unequip(
-                                          widget.player.mainHandSlot,
+                                      user.selectedPlayer!.unequip(
+                                          user.selectedPlayer!.mainHandSlot!,
                                           'mainHandSlot');
+                                      user.updateIventory(
+                                          gameController.gameID);
                                     });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: _uiColor.setUIColor(
-                                            widget.player.id, 'primary'),
+                                            user.selectedPlayerID, 'primary'),
                                         width: 1,
                                       ),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: SvgPicture.asset(
-                                        (widget.player.mainHandSlot.name != '')
-                                            ? widget.player.mainHandSlot.icon
+                                        (user.selectedPlayer!.mainHandSlot!
+                                                    .name !=
+                                                '')
+                                            ? user.selectedPlayer!.mainHandSlot!
+                                                .icon!
                                             : AppIcons.mainHandSlot,
                                         width: double.infinity,
-                                        color: (widget
-                                                    .player.mainHandSlot.name !=
+                                        color: (user.selectedPlayer!
+                                                    .mainHandSlot!.name !=
                                                 '')
                                             ? AppColors.white00
                                             : _uiColor.setUIColor(
-                                                widget.player.id, 'primary'),
+                                                user.selectedPlayerID,
+                                                'primary'),
                                       ),
                                     ),
                                   ),
@@ -232,30 +244,37 @@ class _IventoryState extends State<Iventory> {
                                 child: GestureDetector(
                                   onDoubleTap: () {
                                     setState(() {
-                                      widget.player.unequip(
-                                          widget.player.handSlot, 'handSlot');
+                                      user.selectedPlayer!.unequip(
+                                          user.selectedPlayer!.handSlot!,
+                                          'handSlot');
+                                      user.updateIventory(
+                                          gameController.gameID);
                                     });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: _uiColor.setUIColor(
-                                            widget.player.id, 'primary'),
+                                            user.selectedPlayerID, 'primary'),
                                         width: 1,
                                       ),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: SvgPicture.asset(
-                                        (widget.player.handSlot.name != '')
-                                            ? widget.player.handSlot.icon
+                                        (user.selectedPlayer!.handSlot!.name !=
+                                                '')
+                                            ? user
+                                                .selectedPlayer!.handSlot!.icon!
                                             : AppIcons.handSlot,
                                         width: double.infinity,
-                                        color: (widget.player.handSlot.name !=
+                                        color: (user.selectedPlayer!.handSlot!
+                                                    .name !=
                                                 '')
                                             ? AppColors.white00
                                             : _uiColor.setUIColor(
-                                                widget.player.id, 'primary'),
+                                                user.selectedPlayerID,
+                                                'primary'),
                                       ),
                                     ),
                                   ),
@@ -274,30 +293,37 @@ class _IventoryState extends State<Iventory> {
                                 child: GestureDetector(
                                   onDoubleTap: () {
                                     setState(() {
-                                      widget.player.unequip(
-                                          widget.player.headSlot, 'headSlot');
+                                      user.selectedPlayer!.unequip(
+                                          user.selectedPlayer!.headSlot!,
+                                          'headSlot');
+                                      user.updateIventory(
+                                          gameController.gameID);
                                     });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: _uiColor.setUIColor(
-                                            widget.player.id, 'primary'),
+                                            user.selectedPlayerID, 'primary'),
                                         width: 1,
                                       ),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: SvgPicture.asset(
-                                        (widget.player.headSlot.name != '')
-                                            ? widget.player.headSlot.icon
+                                        (user.selectedPlayer!.headSlot!.name !=
+                                                '')
+                                            ? user
+                                                .selectedPlayer!.headSlot!.icon!
                                             : AppIcons.headSlot,
                                         width: double.infinity,
-                                        color: (widget.player.headSlot.name !=
+                                        color: (user.selectedPlayer!.headSlot!
+                                                    .name !=
                                                 '')
                                             ? AppColors.white00
                                             : _uiColor.setUIColor(
-                                                widget.player.id, 'primary'),
+                                                user.selectedPlayerID,
+                                                'primary'),
                                       ),
                                     ),
                                   ),
@@ -308,30 +334,37 @@ class _IventoryState extends State<Iventory> {
                                 child: GestureDetector(
                                   onDoubleTap: () {
                                     setState(() {
-                                      widget.player.unequip(
-                                          widget.player.bodySlot, 'bodySlot');
+                                      user.selectedPlayer!.unequip(
+                                          user.selectedPlayer!.bodySlot!,
+                                          'bodySlot');
+                                      user.updateIventory(
+                                          gameController.gameID);
                                     });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: _uiColor.setUIColor(
-                                            widget.player.id, 'primary'),
+                                            user.selectedPlayerID, 'primary'),
                                         width: 1,
                                       ),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: SvgPicture.asset(
-                                        (widget.player.bodySlot.name != '')
-                                            ? widget.player.bodySlot.icon
+                                        (user.selectedPlayer!.bodySlot!.name !=
+                                                '')
+                                            ? user
+                                                .selectedPlayer!.bodySlot!.icon!
                                             : AppIcons.bodySlot,
                                         width: double.infinity,
-                                        color: (widget.player.bodySlot.name !=
+                                        color: (user.selectedPlayer!.bodySlot!
+                                                    .name !=
                                                 '')
                                             ? AppColors.white00
                                             : _uiColor.setUIColor(
-                                                widget.player.id, 'primary'),
+                                                user.selectedPlayerID,
+                                                'primary'),
                                       ),
                                     ),
                                   ),
@@ -350,32 +383,37 @@ class _IventoryState extends State<Iventory> {
                                 child: GestureDetector(
                                   onDoubleTap: () {
                                     setState(() {
-                                      widget.player.unequip(
-                                          widget.player.offHandSlot,
+                                      user.selectedPlayer!.unequip(
+                                          user.selectedPlayer!.offHandSlot!,
                                           'offHandSlot');
+                                      user.updateIventory(
+                                          gameController.gameID);
                                     });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: _uiColor.setUIColor(
-                                            widget.player.id, 'primary'),
+                                            user.selectedPlayerID, 'primary'),
                                         width: 1,
                                       ),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: SvgPicture.asset(
-                                        (widget.player.offHandSlot.name != '')
-                                            ? widget.player.offHandSlot.icon
+                                        (user.selectedPlayer!.offHandSlot!.name !=
+                                                '')
+                                            ? user.selectedPlayer!.offHandSlot!
+                                                .icon!
                                             : AppIcons.offHandSlot,
                                         width: double.infinity,
-                                        color: (widget
-                                                    .player.offHandSlot.name !=
+                                        color: (user.selectedPlayer!
+                                                    .offHandSlot!.name !=
                                                 '')
                                             ? AppColors.white00
                                             : _uiColor.setUIColor(
-                                                widget.player.id, 'primary'),
+                                                user.selectedPlayerID,
+                                                'primary'),
                                       ),
                                     ),
                                   ),
@@ -386,30 +424,37 @@ class _IventoryState extends State<Iventory> {
                                 child: GestureDetector(
                                   onDoubleTap: () {
                                     setState(() {
-                                      widget.player.unequip(
-                                          widget.player.feetSlot, 'feetSlot');
+                                      user.selectedPlayer!.unequip(
+                                          user.selectedPlayer!.feetSlot!,
+                                          'feetSlot');
+                                      user.updateIventory(
+                                          gameController.gameID);
                                     });
                                   },
                                   child: Container(
                                     decoration: BoxDecoration(
                                       border: Border.all(
                                         color: _uiColor.setUIColor(
-                                            widget.player.id, 'primary'),
+                                            user.selectedPlayerID, 'primary'),
                                         width: 1,
                                       ),
                                     ),
                                     child: Padding(
                                       padding: const EdgeInsets.all(10.0),
                                       child: SvgPicture.asset(
-                                        (widget.player.feetSlot.name != '')
-                                            ? widget.player.feetSlot.icon
+                                        (user.selectedPlayer!.feetSlot!.name !=
+                                                '')
+                                            ? user
+                                                .selectedPlayer!.feetSlot!.icon!
                                             : AppIcons.feetSlot,
                                         width: double.infinity,
-                                        color: (widget.player.feetSlot.name !=
+                                        color: (user.selectedPlayer!.feetSlot!
+                                                    .name !=
                                                 '')
                                             ? AppColors.white00
                                             : _uiColor.setUIColor(
-                                                widget.player.id, 'primary'),
+                                                user.selectedPlayerID,
+                                                'primary'),
                                       ),
                                     ),
                                   ),
@@ -422,7 +467,8 @@ class _IventoryState extends State<Iventory> {
                     ),
                   ),
                   Container(
-                    color: _uiColor.setUIColor(widget.player.id, 'primary'),
+                    color:
+                        _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                       child: Center(
@@ -432,7 +478,7 @@ class _IventoryState extends State<Iventory> {
                               height: 1,
                               fontSize: 25,
                               color: _uiColor.setUIColor(
-                                  widget.player.id, 'secondary'),
+                                  user.selectedPlayerID, 'secondary'),
                               fontWeight: FontWeight.bold,
                               letterSpacing: 3,
                             )),
@@ -444,25 +490,27 @@ class _IventoryState extends State<Iventory> {
                     child: GridView.count(
                       shrinkWrap: true,
                       crossAxisCount: 6,
-                      children:
-                          List.generate(widget.player.bag.length, (index) {
+                      children: List.generate(user.selectedPlayer!.bag!.length,
+                          (index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: GestureDetector(
                             onLongPress: () {
                               setState(() {
-                                widget.player
-                                    .destroyItem(widget.player.bag[index]);
+                                user.selectedPlayer!.destroyItem(
+                                    user.selectedPlayer!.bag![index]);
+                                user.updateIventory(gameController.gameID);
                               });
                             },
                             onDoubleTap: () {
                               setState(() {
-                                widget.player
-                                    .equipItem(widget.player.bag[index]);
+                                user.selectedPlayer!.equipItem(
+                                    user.selectedPlayer!.bag![index]);
+                                user.updateIventory(gameController.gameID);
                               });
                             },
                             child: SvgPicture.asset(
-                              widget.player.bag[index].icon,
+                              user.selectedPlayer!.bag![index].icon!,
                               color: Colors.white,
                             ),
                           ),

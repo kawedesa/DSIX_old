@@ -1,70 +1,66 @@
 import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/player/playerSprite.dart';
 import 'package:dsixv02app/models/shop/item.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 
 class Player {
-  String id;
-  double dx;
-  double dy;
-  String race;
-  double visionRange;
-  double walkRange;
-  double maxAttackRange;
-  double minAttackRange;
-  int life;
-  int maxLife;
-  int weight;
-  int maxWeight;
-  int pDamage;
-  int mDamage;
-  int pArmor;
-  int mArmor;
-  int tempArmor;
-  Item mainHandSlot;
-  Item offHandSlot;
-  Item headSlot;
-  Item bodySlot;
-  Item handSlot;
-  Item feetSlot;
-  List<Item> bag;
-  Player(
-      {String id,
-      double dx,
-      double dy,
-      String race,
-      double vision,
-      double walkRange,
-      double maxAttackRange,
-      double minAttackRange,
-      int life,
-      int maxLife,
-      int weight,
-      int maxWeight,
-      int pDamage,
-      int mDamage,
-      int pArmor,
-      int mArmor,
-      int tempArmor,
-      Item mainHandSlot,
-      Item offHandSlot,
-      Item headSlot,
-      Item bodySlot,
-      Item handSlot,
-      Item feetSlot,
-      List<Item> bag}) {
+  int? index;
+  String? id;
+  PlayerLocation? location;
+  String? race;
+  PlayerVisionRange? visionRange;
+  PlayerWalkRange? walkRange;
+  PlayerAttackRange? attackRange;
+  PlayerLife? life;
+  PlayerWeight? weight;
+  int? pDamage;
+  int? mDamage;
+  int? pArmor;
+  int? mArmor;
+  int? tempArmor;
+  Item? mainHandSlot;
+  Item? offHandSlot;
+  Item? headSlot;
+  Item? bodySlot;
+  Item? handSlot;
+  Item? feetSlot;
+  List<Item>? bag;
+  PlayerAction? action;
+  Player({
+    int? index,
+    String? id,
+    PlayerLocation? location,
+    String? race,
+    PlayerVisionRange? visionRange,
+    PlayerWalkRange? walkRange,
+    PlayerAttackRange? attackRange,
+    PlayerLife? life,
+    PlayerWeight? weight,
+    int? pDamage,
+    int? mDamage,
+    int? pArmor,
+    int? mArmor,
+    int? tempArmor,
+    Item? mainHandSlot,
+    Item? offHandSlot,
+    Item? headSlot,
+    Item? bodySlot,
+    Item? handSlot,
+    Item? feetSlot,
+    List<Item>? bag,
+    PlayerAction? action,
+  }) {
+    this.index = index;
     this.id = id;
-    this.dx = dx;
-    this.dy = dy;
+    this.location = location;
     this.race = race;
-    this.visionRange = vision;
+    this.visionRange = visionRange;
     this.walkRange = walkRange;
-    this.maxAttackRange = maxAttackRange;
-    this.minAttackRange = minAttackRange;
+    this.attackRange = attackRange;
     this.life = life;
-    this.maxLife = maxLife;
     this.weight = weight;
-    this.maxWeight = maxWeight;
     this.pDamage = pDamage;
     this.mDamage = mDamage;
     this.pArmor = pArmor;
@@ -77,77 +73,72 @@ class Player {
     this.handSlot = handSlot;
     this.feetSlot = feetSlot;
     this.bag = bag;
+    this.action = action;
   }
 
-  final db = FirebaseFirestore.instance;
-
-  Map<String, dynamic> toMap(Player player) {
-    var bag = player.bag.map((item) => item.toMap()).toList();
+  Map<String, dynamic> toMap() {
+    var bag = this.bag?.map((item) => item.toMap()).toList();
 
     return {
-      'id': player.id,
-      'dx': player.dx,
-      'dy': player.dy,
-      'race': player.race,
-      'visionRange': player.visionRange,
-      'walkRange': player.walkRange,
-      'maxAttackRange': player.maxAttackRange,
-      'minAttackRange': player.minAttackRange,
-      'life': player.life,
-      'maxLife': player.maxLife,
-      'weight': player.weight,
-      'maxWeight': player.maxWeight,
-      'pDamage': player.pDamage,
-      'mDamage': player.mDamage,
-      'pArmor': player.pArmor,
-      'mArmor': player.mArmor,
-      'tempArmor': player.tempArmor,
-      'mainHandSlot': player.mainHandSlot.toMap(),
-      'offHandSlot': player.offHandSlot.toMap(),
-      'headSlot': player.headSlot.toMap(),
-      'bodySlot': player.bodySlot.toMap(),
-      'handSlot': player.handSlot.toMap(),
-      'feetSlot': player.feetSlot.toMap(),
+      'index': this.index,
+      'id': this.id,
+      'location': this.location?.toMap(),
+      'race': this.race,
+      'visionRange': this.visionRange?.toMap(),
+      'walkRange': this.walkRange?.toMap(),
+      'attackRange': this.attackRange?.toMap(),
+      'life': this.life?.toMap(),
+      'weight': this.weight?.toMap(),
+      'pDamage': this.pDamage,
+      'mDamage': this.mDamage,
+      'pArmor': this.pArmor,
+      'mArmor': this.mArmor,
+      'tempArmor': this.tempArmor,
+      'mainHandSlot': this.mainHandSlot?.toMap(),
+      'offHandSlot': this.offHandSlot?.toMap(),
+      'headSlot': this.headSlot?.toMap(),
+      'bodySlot': this.bodySlot?.toMap(),
+      'handSlot': this.handSlot?.toMap(),
+      'feetSlot': this.feetSlot?.toMap(),
       'bag': bag,
+      'action': this.action?.toMap(),
     };
   }
 
-  factory Player.fromMap(Map data) {
+  factory Player.fromMap(Map<String, dynamic>? data) {
     List<Item> bag = [];
-    List<dynamic> bagMap = data['bag'];
+    List<dynamic> bagMap = data?['bag'];
     bagMap.forEach((item) {
       bag.add(new Item.fromMap(item));
     });
 
     return Player(
-      id: data['id'],
-      dx: data['dx'] * 1.0,
-      dy: data['dy'] * 1.0,
-      race: data['race'],
-      vision: data['visionRange'] * 1.0,
-      walkRange: data['walkRange'] * 1.0,
-      maxAttackRange: data['maxAttackRange'] * 1.0,
-      minAttackRange: data['minAttackRange'] * 1.0,
-      life: data['life'],
-      maxLife: data['maxLife'],
-      weight: data['weight'],
-      maxWeight: data['maxWeight'],
-      pDamage: data['pDamage'],
-      mDamage: data['mDamage'],
-      pArmor: data['pArmor'],
-      mArmor: data['mArmor'],
-      tempArmor: data['tempArmor'],
-      mainHandSlot: Item.fromMap(data['mainHandSlot']),
-      offHandSlot: Item.fromMap(data['offHandSlot']),
-      headSlot: Item.fromMap(data['headSlot']),
-      bodySlot: Item.fromMap(data['bodySlot']),
-      handSlot: Item.fromMap(data['handSlot']),
-      feetSlot: Item.fromMap(data['feetSlot']),
+      index: data?['index'],
+      id: data?['id'],
+      location: PlayerLocation.fromMap(data?['location']),
+      race: data?['race'],
+      visionRange: PlayerVisionRange.fromMap(data?['visionRange']),
+      walkRange: PlayerWalkRange.fromMap(data?['walkRange']),
+      attackRange: PlayerAttackRange.fromMap(data?['attackRange']),
+      life: PlayerLife.fromMap(data?['life']),
+      weight: PlayerWeight.fromMap(data?['weight']),
+      pDamage: data?['pDamage'],
+      mDamage: data?['mDamage'],
+      pArmor: data?['pArmor'],
+      mArmor: data?['mArmor'],
+      tempArmor: data?['tempArmor'],
+      mainHandSlot: Item.fromMap(data?['mainHandSlot']),
+      offHandSlot: Item.fromMap(data?['offHandSlot']),
+      headSlot: Item.fromMap(data?['headSlot']),
+      bodySlot: Item.fromMap(data?['bodySlot']),
+      handSlot: Item.fromMap(data?['handSlot']),
+      feetSlot: Item.fromMap(data?['feetSlot']),
       bag: bag,
+      action: PlayerAction.fromMap(data?['action']),
     );
   }
 
-  factory Player.newRandomPlayer(double dx, double dy, int playerIndex) {
+  factory Player.newRandomPlayer(Offset location, int playerIndex) {
     List<String> id = [
       'blue',
       'pink',
@@ -161,101 +152,39 @@ class Player {
       'dwarf',
       'elf',
     ];
-    int randomRace = Random().nextInt(races.length);
+    int randomNumber = Random().nextInt(races.length);
+    String randomRace = races[randomNumber];
 
     return Player(
+      index: playerIndex,
       id: id[playerIndex],
-      dx: dx,
-      dy: dy,
-      race: races[randomRace],
-      vision: 0,
-      walkRange: 0,
-      maxAttackRange: 0,
-      minAttackRange: 0,
-      life: 0,
-      maxLife: 0,
-      weight: 0,
-      maxWeight: 0,
+      location: PlayerLocation.newLocation(location),
+      race: randomRace,
+      visionRange: PlayerVisionRange.set(randomRace),
+      walkRange: PlayerWalkRange.set(randomRace),
+      attackRange: PlayerAttackRange.set(randomRace),
+      life: PlayerLife.set(randomRace),
+      weight: PlayerWeight.set(randomRace),
       pDamage: 0,
       mDamage: 0,
       pArmor: 0,
       mArmor: 0,
       tempArmor: 0,
-      mainHandSlot: Item.emptyItem(),
-      offHandSlot: Item.emptyItem(),
-      headSlot: Item.emptyItem(),
-      bodySlot: Item.emptyItem(),
-      handSlot: Item.emptyItem(),
-      feetSlot: Item.emptyItem(),
+      mainHandSlot: Item.empty(),
+      offHandSlot: Item.empty(),
+      headSlot: Item.empty(),
+      bodySlot: Item.empty(),
+      handSlot: Item.empty(),
+      feetSlot: Item.empty(),
       bag: [],
+      action: PlayerAction.empty(),
     );
   }
 
-  void setVisionRange() {
-    if (this.race == 'elf') {
-      this.visionRange = 130.0;
-      return;
-    }
-    this.visionRange = 100.0;
-  }
-
-  void setWalkRange() {
-    this.walkRange = 50.0;
-  }
-
-  void setAttackRange() {
-    this.maxAttackRange = 30.0;
-    this.minAttackRange = 0.0;
-  }
-
-  void setLife() {
-    if (this.race == 'dwarf') {
-      this.maxLife = 20;
-      this.life = 20;
-      return;
-    }
-    this.maxLife = 16;
-    this.life = 16;
-  }
-
-  void setWeight() {
-    if (this.race == 'orc') {
-      this.maxWeight = 18;
-      this.weight = 0;
-      return;
-    }
-    this.maxWeight = 14;
-    this.weight = 0;
-  }
-
-  void reduceCurrentLife(int value) async {
-    this.life -= value;
-    await db.collection('players').doc(this.id).update({'life': this.life});
-  }
-
-  void increaseCurrentLife(int value) {
-    this.life += value;
-  }
-
-  bool isDead() {
-    if (this.life < 1) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
-  bool cantCarry(int newWeight) {
-    if (this.weight + newWeight > this.maxWeight) {
-      return true;
-    } else {
-      return false;
-    }
-  }
-
   bool cantSee(Offset targetLocation) {
-    double distance = (targetLocation - getLocation()).distance;
-    if (distance > this.visionRange / 2) {
+    double distance = (targetLocation - this.location!.getLocation()).distance;
+    if (distance < this.visionRange!.min! / 2 ||
+        distance > this.visionRange!.max! / 2) {
       return true;
     } else {
       return false;
@@ -263,12 +192,7 @@ class Player {
   }
 
   bool cantReach(Offset targetLocation) {
-    double distance = (targetLocation -
-            Offset(
-              getLocation().dx,
-              getLocation().dy - 5,
-            ))
-        .distance;
+    double distance = (targetLocation - this.location!.getLocation()).distance;
     if (distance > 15) {
       return true;
     } else {
@@ -277,22 +201,13 @@ class Player {
   }
 
   bool cantAttack(Offset targetLocation) {
-    double distance = (targetLocation -
-            Offset(
-              getLocation().dx,
-              getLocation().dy,
-            ))
-        .distance;
-    if (distance > this.maxAttackRange / 2 ||
-        distance < this.minAttackRange / 2) {
+    double distance = (targetLocation - this.location!.getLocation()).distance;
+    if (distance > this.attackRange!.max! / 2 ||
+        distance < this.attackRange!.min! / 2) {
       return true;
     } else {
       return false;
     }
-  }
-
-  Offset getLocation() {
-    return Offset(this.dx, this.dy);
   }
 
   int attack() {
@@ -306,20 +221,16 @@ class Player {
   }
 
   void increaseTempArmor(int value) async {
-    this.tempArmor += value;
-    await db
-        .collection('players')
-        .doc(this.id)
-        .update({'tempArmor': this.tempArmor});
+    this.tempArmor = this.tempArmor! + value;
   }
 
-  void clearTempEffects() async {
-    this.tempArmor = 0;
-    await db
-        .collection('players')
-        .doc(this.id)
-        .update({'tempArmor': this.tempArmor});
-  }
+  // void clearTempEffects() async {
+  //   this.tempArmor = 0;
+  //   await db
+  //       .collection('players')
+  //       .doc(this.id)
+  //       .update({'tempArmor': this.tempArmor});
+  // }
 
   void takeDamage(int damageRoll, pDamage, mDamage) {
     int damageLeftOver = 0;
@@ -352,51 +263,47 @@ class Player {
       totalDamageReceived = 0;
     }
 
-    reduceCurrentLife(totalDamageReceived);
+    this.life!.reduceCurrentLife(totalDamageReceived);
   }
 
   int calculateTempArmor(int damage) {
-    int damageCalculation = damage - this.tempArmor;
+    int damageCalculation = damage - this.tempArmor!;
     decreaseTempArmor(damage);
     return damageCalculation;
   }
 
   void decreaseTempArmor(int value) async {
-    this.tempArmor -= value;
-    if (this.tempArmor < 0) {
+    this.tempArmor = this.tempArmor! - value;
+    if (this.tempArmor! < 0) {
       this.tempArmor = 0;
     }
-    await db
-        .collection('players')
-        .doc(this.id)
-        .update({'tempArmor': this.tempArmor});
   }
 
   void equipItem(Item item) async {
-    this.pDamage += item.pDamage;
-    this.mDamage += item.mDamage;
-    this.pArmor += item.pArmor;
-    this.mArmor += item.mArmor;
-    this.maxAttackRange += item.maxWeaponRange;
-    this.minAttackRange += item.minWeaponRange;
+    this.pDamage = this.pDamage! + item.pDamage!;
+    this.mDamage = this.mDamage! + item.mDamage!;
+    this.pArmor = this.pArmor! + item.pArmor!;
+    this.mArmor = this.mArmor! + item.mArmor!;
+    this.attackRange!.max = this.attackRange!.max! + item.maxWeaponRange!;
+    this.attackRange!.min = this.attackRange!.min! + item.minWeaponRange!;
 
     switch (item.itemSlot) {
       case 'oneHand':
-        if (this.mainHandSlot.name != '' && this.offHandSlot.name != '') {
-          unequip(this.mainHandSlot, 'mainHandSlot');
+        if (this.mainHandSlot!.name != '' && this.offHandSlot!.name != '') {
+          unequip(this.mainHandSlot!, 'mainHandSlot');
         }
-        if (this.mainHandSlot.name != '') {
+        if (this.mainHandSlot!.name != '') {
           this.offHandSlot = item;
         } else {
           this.mainHandSlot = item;
         }
         break;
       case 'twoHands':
-        if (this.mainHandSlot.name != '') {
-          unequip(this.mainHandSlot, 'mainHandSlot');
+        if (this.mainHandSlot!.name != '') {
+          unequip(this.mainHandSlot!, 'mainHandSlot');
         }
-        if (this.offHandSlot.name != '') {
-          unequip(this.offHandSlot, 'offHandSlot');
+        if (this.offHandSlot!.name != '') {
+          unequip(this.offHandSlot!, 'offHandSlot');
         }
 
         this.mainHandSlot = item;
@@ -404,123 +311,362 @@ class Player {
 
         break;
       case 'head':
-        if (this.headSlot.name != '') {
-          unequip(this.headSlot, 'headSlot');
+        if (this.headSlot!.name != '') {
+          unequip(this.headSlot!, 'headSlot');
         }
         this.headSlot = item;
 
         break;
       case 'body':
-        if (this.bodySlot.name != '') {
-          unequip(this.bodySlot, 'bodySlot');
+        if (this.bodySlot!.name != '') {
+          unequip(this.bodySlot!, 'bodySlot');
         }
         this.bodySlot = item;
 
         break;
       case 'hands':
-        if (this.handSlot.name != '') {
-          unequip(this.handSlot, 'handSlot');
+        if (this.handSlot!.name != '') {
+          unequip(this.handSlot!, 'handSlot');
         }
         this.handSlot = item;
 
         break;
       case 'feet':
-        if (this.feetSlot.name != '') {
-          unequip(this.feetSlot, 'feetSlot');
+        if (this.feetSlot!.name != '') {
+          unequip(this.feetSlot!, 'feetSlot');
         }
         this.feetSlot = item;
 
         break;
     }
 
-    this.bag.remove(item);
-
-    List<Map<String, dynamic>> updatedBag =
-        this.bag.map((item) => item.toMap()).toList();
-    updateIventory(updatedBag);
+    this.bag!.remove(item);
   }
 
   void unequip(Item item, String itemSlot) async {
-    this.pDamage -= item.pDamage;
-    this.mDamage -= item.mDamage;
-    this.pArmor -= item.pArmor;
-    this.mArmor -= item.mArmor;
-    this.maxAttackRange -= item.maxWeaponRange;
-    this.minAttackRange -= item.minWeaponRange;
+    this.pDamage = this.pDamage! - item.pDamage!;
+    this.mDamage = this.mDamage! - item.mDamage!;
+    this.pArmor = this.pArmor! - item.pArmor!;
+    this.mArmor = this.mArmor! - item.mArmor!;
+    this.attackRange!.max = this.attackRange!.max! - item.maxWeaponRange!;
+    this.attackRange!.min = this.attackRange!.min! - item.minWeaponRange!;
 
     switch (item.itemSlot) {
       case 'oneHand':
         if (itemSlot == 'mainHandSlot') {
-          this.mainHandSlot = Item.emptyItem();
+          this.mainHandSlot = Item.empty();
         } else {
-          this.offHandSlot = Item.emptyItem();
+          this.offHandSlot = Item.empty();
         }
         break;
       case 'twoHands':
-        this.mainHandSlot = Item.emptyItem();
-        this.offHandSlot = Item.emptyItem();
+        this.mainHandSlot = Item.empty();
+        this.offHandSlot = Item.empty();
         break;
 
       case 'head':
-        this.headSlot = Item.emptyItem();
+        this.headSlot = Item.empty();
 
         break;
       case 'body':
-        this.bodySlot = Item.emptyItem();
+        this.bodySlot = Item.empty();
 
         break;
       case 'hands':
-        this.handSlot = Item.emptyItem();
+        this.handSlot = Item.empty();
 
         break;
       case 'feet':
-        this.feetSlot = Item.emptyItem();
+        this.feetSlot = Item.empty();
 
         break;
     }
 
-    this.bag.add(item);
-    List<Map<String, dynamic>> updatedBag =
-        this.bag.map((item) => item.toMap()).toList();
-    updateIventory(updatedBag);
+    this.bag!.add(item);
   }
 
   void getItem(Item item) {
-    this.weight += item.weight;
-    this.bag.add(item);
-    var updatedBag = this.bag.map((item) => item.toMap()).toList();
-    updateBag(updatedBag);
+    this.weight!.current = this.weight!.current! + item.weight!;
+    this.bag!.add(item);
   }
 
   void destroyItem(Item item) {
-    this.weight -= item.weight;
-    this.bag.remove(item);
-    var updatedBag = this.bag.map((item) => item.toMap()).toList();
-    updateBag(updatedBag);
+    this.weight!.current = this.weight!.current! - item.weight!;
+    this.bag!.remove(item);
+  }
+}
+
+class PlayerAction {
+  bool? firstAction;
+  bool? secondAction;
+  PlayerAction(
+      {int? index, String? id, bool? firstAction, bool? secondAction}) {
+    this.firstAction = firstAction;
+    this.secondAction = secondAction;
   }
 
-  void updateBag(List<Map<String, dynamic>> updatedBag) async {
-    await db.collection('players').doc(this.id).update({
-      'bag': updatedBag,
-      'weight': this.weight,
-    });
+  factory PlayerAction.fromMap(Map<String, dynamic>? data) {
+    return PlayerAction(
+      firstAction: data?['firstAction'],
+      secondAction: data?['secondAction'],
+    );
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'firstAction': this.firstAction,
+      'secondAction': this.secondAction,
+    };
   }
 
-  void updateIventory(List<Map<String, dynamic>> updatedBag) async {
-    await db.collection('players').doc(this.id).update({
-      'bag': updatedBag,
-      'mainHandSlot': this.mainHandSlot.toMap(),
-      'offHandSlot': this.offHandSlot.toMap(),
-      'headSlot': this.headSlot.toMap(),
-      'bodySlot': this.bodySlot.toMap(),
-      'handSlot': this.handSlot.toMap(),
-      'feetSlot': this.feetSlot.toMap(),
-      'pDamage': this.pDamage,
-      'mDamage': this.mDamage,
-      'pArmor': this.pArmor,
-      'mArmor': this.mArmor,
-      'maxAttackRange': this.maxAttackRange,
-      'minAttackRange': this.minAttackRange,
-    });
+  factory PlayerAction.empty() {
+    return PlayerAction(
+      firstAction: false,
+      secondAction: false,
+    );
+  }
+
+  void newActions() {
+    this.firstAction = true;
+    this.secondAction = true;
+  }
+
+  void takeAction() {
+    if (this.firstAction!) {
+      this.firstAction = false;
+    } else {
+      this.secondAction = false;
+    }
+  }
+
+  bool outOfActions() {
+    if (this.secondAction!) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+}
+
+class PlayerLocation {
+  double? dx;
+  double? dy;
+  PlayerLocation({double? dx, double? dy}) {
+    this.dx = dx;
+    this.dy = dy;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'dx': this.dx,
+      'dy': this.dy,
+    };
+  }
+
+  factory PlayerLocation.fromMap(Map<String, dynamic>? data) {
+    return PlayerLocation(
+      dx: data?['dx'] * 1.0,
+      dy: data?['dy'] * 1.0,
+    );
+  }
+  factory PlayerLocation.newLocation(Offset location) {
+    return PlayerLocation(
+      dx: location.dx,
+      dy: location.dy,
+    );
+  }
+
+  Offset getLocation() {
+    return Offset(this.dx!.toDouble(), this.dy!.toDouble());
+  }
+}
+
+class PlayerTempLocation extends ChangeNotifier {
+  double? dx;
+  double? dy;
+  PlayerTempLocation({double? dx, double? dy}) {
+    this.dx = dx;
+    this.dy = dy;
+  }
+
+  void walk(double dx, double dy) {
+    this.dx = this.dx! + dx;
+    this.dy = this.dy! + dy;
+    notifyListeners();
+  }
+
+  void updatePlayerLocation(double? dx, double? dy) {
+    this.dx = dx;
+    this.dy = dy;
+  }
+}
+
+class PlayerLife {
+  int? max;
+  int? current;
+  PlayerLife({int? max, int? current}) {
+    this.max = max;
+    this.current = current;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'max': this.max,
+      'current': this.current,
+    };
+  }
+
+  factory PlayerLife.fromMap(Map<String, dynamic>? data) {
+    return PlayerLife(
+      max: data?['max'],
+      current: data?['current'],
+    );
+  }
+
+  factory PlayerLife.set(String race) {
+    int max;
+    int current;
+    if (race == 'dwarf') {
+      max = 20;
+    } else {
+      max = 16;
+    }
+    current = max;
+    return PlayerLife(max: max, current: current);
+  }
+
+  void reduceCurrentLife(int value) async {
+    this.current = this.current! - value;
+  }
+
+  void increaseCurrentLife(int value) {
+    this.current = this.current! + value;
+  }
+
+  bool isDead() {
+    if (this.current! < 1) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+class PlayerWeight {
+  int? max;
+  int? current;
+  PlayerWeight({int? max, int? current}) {
+    this.max = max;
+    this.current = current;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'max': this.max,
+      'current': this.current,
+    };
+  }
+
+  factory PlayerWeight.fromMap(Map<String, dynamic>? data) {
+    return PlayerWeight(
+      max: data?['max'],
+      current: data?['current'],
+    );
+  }
+
+  factory PlayerWeight.set(String race) {
+    int max;
+    if (race == 'orc') {
+      max = 18;
+    } else {
+      max = 14;
+    }
+    return PlayerWeight(max: max, current: 0);
+  }
+
+  bool cantCarry(int newWeight) {
+    if (this.current! + newWeight > this.max!) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+}
+
+class PlayerAttackRange {
+  double? min;
+  double? max;
+  PlayerAttackRange({double? min, double? max}) {
+    this.min = min;
+    this.max = max;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'min': this.min,
+      'max': this.max,
+    };
+  }
+
+  factory PlayerAttackRange.fromMap(Map<String, dynamic>? data) {
+    return PlayerAttackRange(
+      min: data?['min'] * 1.0,
+      max: data?['max'] * 1.0,
+    );
+  }
+  factory PlayerAttackRange.set(String race) {
+    return PlayerAttackRange(min: 0, max: 30);
+  }
+}
+
+class PlayerWalkRange {
+  double? min;
+  double? max;
+  PlayerWalkRange({double? min, double? max}) {
+    this.min = min;
+    this.max = max;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'min': this.min,
+      'max': this.max,
+    };
+  }
+
+  factory PlayerWalkRange.fromMap(Map<String, dynamic>? data) {
+    return PlayerWalkRange(
+      min: data?['min'] * 1.0,
+      max: data?['max'] * 1.0,
+    );
+  }
+  factory PlayerWalkRange.set(String race) {
+    return PlayerWalkRange(min: 0, max: 50);
+  }
+}
+
+class PlayerVisionRange {
+  double? min;
+  double? max;
+  PlayerVisionRange({double? min, double? max}) {
+    this.min = min;
+    this.max = max;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'min': this.min,
+      'max': this.max,
+    };
+  }
+
+  factory PlayerVisionRange.fromMap(Map<String, dynamic>? data) {
+    return PlayerVisionRange(
+      min: data?['min'] * 1.0,
+      max: data?['max'] * 1.0,
+    );
+  }
+  factory PlayerVisionRange.set(String race) {
+    double max;
+    if (race == 'elf') {
+      max = 130.0;
+    } else {
+      max = 100.0;
+    }
+
+    return PlayerVisionRange(min: 0, max: max);
   }
 }

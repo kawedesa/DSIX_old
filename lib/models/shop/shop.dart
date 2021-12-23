@@ -6,8 +6,8 @@ import 'item.dart';
 
 class Shop {
   Item randomItem() {
-    Item newItem;
-    int randomItem;
+    Item? newItem;
+    int? randomItem;
     switch (randomCategory()) {
       case 'lightWeapons':
         randomItem = Random().nextInt(this.lightWeapons.length);
@@ -34,7 +34,7 @@ class Shop {
         newItem = ancient[randomItem];
         break;
     }
-    return newItem;
+    return newItem!;
   }
 
   String randomCategory() {

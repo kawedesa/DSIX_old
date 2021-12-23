@@ -12,7 +12,7 @@ import 'iventory.dart';
 
 class IventoryButton extends StatefulWidget {
   IventoryButton({
-    Key key,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -20,8 +20,8 @@ class IventoryButton extends StatefulWidget {
 }
 
 class _IventoryButtonState extends State<IventoryButton> {
-  Artboard _artboard;
   UIColor _uiColor = UIColor();
+  Artboard? _artboard;
 
   @override
   void initState() {
@@ -39,11 +39,11 @@ class _IventoryButtonState extends State<IventoryButton> {
   }
 
   _playReflectionAnimation() {
-    _artboard.addController(SimpleAnimation('reflection'));
+    _artboard!.addController(SimpleAnimation('reflection'));
   }
 
   _playOnTapAnimation() {
-    _artboard.addController(OneShotAnimation(
+    _artboard!.addController(OneShotAnimation(
       'onTap',
     ));
   }
@@ -55,20 +55,16 @@ class _IventoryButtonState extends State<IventoryButton> {
     return AnimatedContainer(
       curve: Curves.fastLinearToSlowEaseIn,
       duration: Duration(milliseconds: 500),
-      width: (user.playerMode == 'menu')
-          ? MediaQuery.of(context).size.height * 0.02
-          : 0,
-      height: (user.playerMode == 'menu')
-          ? MediaQuery.of(context).size.height * 0.02
-          : 0,
+      width: (user.menuIsOpen) ? MediaQuery.of(context).size.height * 0.02 : 0,
+      height: (user.menuIsOpen) ? MediaQuery.of(context).size.height * 0.02 : 0,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: _uiColor
-            .setUIColor(user.selectedPlayer.id, 'secondary')
+            .setUIColor(user.selectedPlayer!.id, 'secondary')
             .withAlpha(215),
         border: Border.all(
           color: _uiColor
-              .setUIColor(user.selectedPlayer.id, 'secondary')
+              .setUIColor(user.selectedPlayer!.id, 'secondary')
               .withAlpha(250),
           width: .5,
         ),
@@ -79,9 +75,7 @@ class _IventoryButtonState extends State<IventoryButton> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return Iventory(
-                  player: user.selectedPlayer,
-                );
+                return Iventory();
               },
             );
             _playOnTapAnimation();
@@ -95,18 +89,19 @@ class _IventoryButtonState extends State<IventoryButton> {
                 padding: const EdgeInsets.all(3.0),
                 child: SvgPicture.asset(
                   AppIcons.bag,
-                  color: _uiColor.setUIColor(user.selectedPlayer.id, 'primary'),
+                  color:
+                      _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
                 ),
               ),
             ),
             (_artboard != null)
                 ? ClipOval(
                     child: Rive(
-                      artboard: _artboard,
+                      artboard: _artboard!,
                       fit: BoxFit.fill,
                     ),
                   )
-                : Container(),
+                : SizedBox(),
           ],
         ),
       ),

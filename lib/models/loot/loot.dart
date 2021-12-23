@@ -1,28 +1,27 @@
 import 'package:dsixv02app/models/shop/item.dart';
+import 'package:flutter/material.dart';
 
 class Loot {
-  int index;
-  double dx;
-  double dy;
-  List<Item> items;
-  bool isClosed;
-  Loot({int index, double dx, double dy, List<Item> items, bool isClosed}) {
+  int? index;
+  LootLocation? location;
+  List<Item>? items;
+  bool? isClosed;
+  Loot(
+      {int? index, LootLocation? location, List<Item>? items, bool? isClosed}) {
     this.index = index;
-    this.dx = dx;
-    this.dy = dy;
+    this.location = location;
     this.items = items;
     this.isClosed = isClosed;
   }
 
-  Map<String, dynamic> saveToDataBase(Loot loot) {
-    var items = loot.items.map((item) => item.toMap()).toList();
+  Map<String, dynamic> toMap() {
+    var items = this.items!.map((item) => item.toMap()).toList();
 
     return {
-      'index': loot.index,
-      'dx': loot.dx,
-      'dy': loot.dy,
+      'index': this.index,
+      'location': this.location!.toMap(),
       'items': items,
-      'isClosed': loot.isClosed,
+      'isClosed': this.isClosed,
     };
   }
 
@@ -35,20 +34,128 @@ class Loot {
 
     return Loot(
       index: data['index'],
-      dx: data['dx'] * 1.0,
-      dy: data['dy'] * 1.0,
+      location: LootLocation.fromMap(data['location']),
       items: items,
       isClosed: data['isClosed'],
     );
   }
 
-  factory Loot.newLoot(double dx, double dy, int index) {
+  factory Loot.newLoot(LootLocation location, int index) {
     return Loot(
       index: index,
-      dx: dx,
-      dy: dy,
+      location: location,
       items: [],
       isClosed: true,
     );
   }
 }
+
+class LootLocation {
+  double? dx;
+  double? dy;
+  LootLocation({double? dx, double? dy}) {
+    this.dx = dx;
+    this.dy = dy;
+  }
+  Map<String, dynamic> toMap() {
+    return {
+      'dx': this.dx,
+      'dy': this.dy,
+    };
+  }
+
+  factory LootLocation.fromMap(Map<String, dynamic>? data) {
+    return LootLocation(
+      dx: data?['dx'] * 1.0,
+      dy: data?['dy'] * 1.0,
+    );
+  }
+  factory LootLocation.newLocation(Offset location) {
+    return LootLocation(
+      dx: location.dx,
+      dy: location.dy,
+    );
+  }
+  Offset getLocation() {
+    return Offset(this.dx!.toDouble(), this.dy!.toDouble());
+  }
+}
+
+
+
+// class Loot {
+//   int? index;
+//   LootLocation? location;
+//   List<Item>? items;
+//   bool? isClosed;
+//   Loot(
+//       {int? index, LootLocation? location, List<Item>? items, bool? isClosed}) {
+//     this.index = index;
+//     this.location = location;
+//     this.items = items;
+//     this.isClosed = isClosed;
+//   }
+
+//   Map<String, dynamic> toMap() {
+//     var items = this.items!.map((item) => item.toMap()).toList();
+
+//     return {
+//       'index': this.index,
+//       'location': this.location!.toMap(),
+//       'items': items,
+//       'isClosed': this.isClosed,
+//     };
+//   }
+
+//   factory Loot.fromMap(Map<String, dynamic>? data) {
+//     List<Item> items = [];
+//     List<dynamic> itemsMap = data?['items'];
+//     itemsMap.forEach((item) {
+//       items.add(new Item.fromMap(item));
+//     });
+
+//     return Loot(
+//       index: data?['index'],
+//       location: LootLocation.fromMap(data?['location']),
+//       items: items,
+//       isClosed: data?['isClosed'],
+//     );
+//   }
+
+//   factory Loot.newLoot(Offset location, int index) {
+//     return Loot(
+//       index: index,
+//       location: LootLocation.newLocation(location),
+//       items: [],
+//       isClosed: true,
+//     );
+//   }
+// }
+
+// class LootLocation {
+//   double? dx;
+//   double? dy;
+//   LootLocation({double? dx, double? dy}) {
+//     this.dx = dx;
+//     this.dy = dy;
+//   }
+//   Map<String, dynamic> toMap() {
+//     return {
+//       'dx': this.dx,
+//       'dy': this.dy,
+//     };
+//   }
+
+//   factory LootLocation.fromMap(Map<String, dynamic>? data) {
+//     return LootLocation(
+//       dx: data?['dx'] * 1.0,
+//       dy: data?['dy'] * 1.0,
+//     );
+//   }
+//   factory LootLocation.newLocation(Offset location) {
+//     return LootLocation(
+//       dx: location.dx,
+//       dy: location.dy,
+//     );
+//   }
+// }

@@ -1,25 +1,26 @@
+// import 'package:dsixv02app/models/game.dart';
+// import 'package:dsixv02app/models/gameController.dart';
+
+// import 'package:dsixv02app/models/loot/lootController.dart';
+
+// import 'package:dsixv02app/models/player/playerController.dart';
+
+// import 'package:dsixv02app/models/turnOrder/turnController.dart';
+// import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
+
+// import 'package:flutter/material.dart';
+
 import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/models/gameController.dart';
-
 import 'package:dsixv02app/models/loot/lootController.dart';
-
-import 'package:dsixv02app/models/player/playerController.dart';
-
+import 'package:dsixv02app/models/playerController.dart';
 import 'package:dsixv02app/models/turnOrder/turnController.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
-
 import 'package:flutter/material.dart';
 
 class BattleRoyaleSettingsPageVM {
-  int numberOfPlayers;
-  int numberOfLoot;
-
-  void setNumberOfPlayers() {
-    if (this.numberOfPlayers != null) {
-      return;
-    }
-    numberOfPlayers = 2;
-  }
+  int numberOfPlayers = 2;
+  int numberOfLoot = 10;
 
   void increaseNumberOfPlayers() {
     this.numberOfPlayers++;
@@ -33,13 +34,6 @@ class BattleRoyaleSettingsPageVM {
     if (numberOfPlayers < 2) {
       numberOfPlayers = 2;
     }
-  }
-
-  void setNumberOfLoot() {
-    if (this.numberOfLoot != null) {
-      return;
-    }
-    numberOfLoot = 10;
   }
 
   void increaseNumberOfLoot() {
@@ -56,12 +50,43 @@ class BattleRoyaleSettingsPageVM {
     }
   }
 
-  void joinGame(context, Game game, GameController gameController) {
-    gameController.joinGame(game);
-    goToPlayerSelectionPage(context);
+  void newBattleRoyaleGame(
+    GameController gameController,
+    PlayerController playerController,
+    LootController lootController,
+  ) {
+    GameMap map = GameMap(
+      name: 'ruins',
+      size: 320,
+    );
+    gameController.newGame(map);
+
+    playerController.newRandomPlayers(
+      gameController.gameID,
+      map.size!,
+      numberOfPlayers,
+    );
+
+    lootController.newRandomLoot(
+      gameController.gameID,
+      map.size!,
+      numberOfLoot * numberOfPlayers,
+    );
   }
 
-  void goToPlayerSelectionPage(context) {
+  void deleteGame(
+    GameController gameController,
+    PlayerController playerController,
+    LootController lootController,
+    TurnController turnController,
+  ) {
+    gameController.deleteGame();
+    playerController.deleteAllPlayers(gameController.gameID);
+    lootController.deleteAllLoot(gameController.gameID);
+    turnController.deleteTurnOrder(gameController.gameID);
+  }
+
+  void joinGame(context) {
     Route newRoute = PageRouteBuilder(
       pageBuilder: (context, animation, secondaryAnimation) =>
           PlayerSelectionPage(),
@@ -79,34 +104,6 @@ class BattleRoyaleSettingsPageVM {
       },
     );
 
-    Navigator.of(context).push(newRoute);
-  }
-
-  void newBattleRoyaleGame(
-    context,
-    GameController gameController,
-    PlayerController playerController,
-    TurnController turnController,
-    LootController lootController,
-  ) {
-    gameController.newGame();
-    playerController.createListOfRandomPlayersInRandomLocations(
-        this.numberOfPlayers, gameController.game.mapSize);
-    turnController.newTurnOrder(playerController.listOfRandomPlayers);
-    lootController.createListOfRandomLootInRandomLocation(
-        this.numberOfPlayers * this.numberOfLoot, gameController.game.mapSize);
-    goToPlayerSelectionPage(context);
-  }
-
-  void deleteBattleRoyaleGame(
-    GameController gameController,
-    PlayerController playerController,
-    TurnController turnController,
-    LootController lootController,
-  ) {
-    gameController.deleteGame();
-    playerController.deleteAllPlayersFromDataBase();
-    turnController.deleteTurnOrder();
-    lootController.deleteAllLootFromDataBase();
+    Navigator.of(context).pushReplacement(newRoute);
   }
 }

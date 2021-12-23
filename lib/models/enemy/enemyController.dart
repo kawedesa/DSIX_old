@@ -10,7 +10,7 @@ class EnemyController {
       if (target.id == selectedPlayer.id) {
         return;
       }
-      if (selectedPlayer.cantSee(target.getLocation())) {
+      if (selectedPlayer.cantSee(target.location!.getLocation())) {
         return;
       }
       this.enemyPlayers.add(EnemyPlayerSprite(

@@ -10,11 +10,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
+import '../gameController.dart';
 import 'loot.dart';
 
 class LootDialog extends StatefulWidget {
-  final int lootIndex;
-  final Function() onTapAction;
+  final int? lootIndex;
+  final Function()? onTapAction;
   const LootDialog({
     @required this.lootIndex,
     this.onTapAction,
@@ -41,10 +42,11 @@ class _LootDialogState extends State<LootDialog> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
+    final gameController = Provider.of<GameController>(context);
     final lootController = Provider.of<LootController>(context);
     final listOfloot = Provider.of<List<Loot>>(context);
 
-    _lootDialogController.setItemList(widget.lootIndex, listOfloot);
+    _lootDialogController.setItemList(widget.lootIndex!, listOfloot);
     _lootDialogController.setOptions(_lootDialogController.itemList.length);
 
     return AlertDialog(
@@ -54,7 +56,7 @@ class _LootDialogState extends State<LootDialog> {
         decoration: BoxDecoration(
           color: AppColors.black00,
           border: Border.all(
-            color: _uiColor.setUIColor(user.selectedPlayer.id, 'primary'),
+            color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
             width: 2,
           ),
         ),
@@ -63,7 +65,7 @@ class _LootDialogState extends State<LootDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
-              color: _uiColor.setUIColor(user.selectedPlayer.id, 'primary'),
+              color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                 child: Center(
@@ -76,7 +78,7 @@ class _LootDialogState extends State<LootDialog> {
                         height: 1,
                         fontSize: 25,
                         color: _uiColor.setUIColor(
-                            user.selectedPlayer.id, 'secondary'),
+                            user.selectedPlayer!.id, 'secondary'),
                         fontWeight: FontWeight.bold,
                         letterSpacing: 3,
                       )),
@@ -119,7 +121,7 @@ class _LootDialogState extends State<LootDialog> {
                             color: AppColors.black00,
                             border: Border.all(
                               color: _uiColor.setUIColor(
-                                  user.selectedPlayer.id, 'primary'),
+                                  user.selectedPlayer!.id, 'primary'),
                               width: 1,
                             ),
                           ),
@@ -128,7 +130,7 @@ class _LootDialogState extends State<LootDialog> {
                             children: [
                               (_lootDialogController.artboard != null)
                                   ? Rive(
-                                      artboard: _lootDialogController.artboard,
+                                      artboard: _lootDialogController.artboard!,
                                       fit: BoxFit.fill,
                                     )
                                   : SizedBox(),
@@ -142,7 +144,7 @@ class _LootDialogState extends State<LootDialog> {
                                         letterSpacing: 2,
                                         fontFamily: 'Calibri',
                                         color: _uiColor.setUIColor(
-                                            user.selectedPlayer.id, 'primary'),
+                                            user.selectedPlayer!.id, 'primary'),
                                       )),
                                 ),
                               ),
@@ -155,10 +157,11 @@ class _LootDialogState extends State<LootDialog> {
                           _lootDialogController.playOnTapAnimation();
                           _lootDialogController.chooseItems(
                               context,
-                              user.selectedPlayer,
+                              gameController.gameID,
+                              user.selectedPlayer!,
                               _lootDialogController.itemList,
                               lootController,
-                              widget.lootIndex);
+                              widget.lootIndex!);
                           setState(() {});
                         },
                         child: Container(
@@ -171,7 +174,7 @@ class _LootDialogState extends State<LootDialog> {
                                     : AppColors.errorPrimary,
                             border: Border.all(
                               color: _uiColor.setUIColor(
-                                  user.selectedPlayer.id, 'primary'),
+                                  user.selectedPlayer!.id, 'primary'),
                               width: 1,
                             ),
                           ),
@@ -180,7 +183,7 @@ class _LootDialogState extends State<LootDialog> {
                             children: [
                               (_lootDialogController.artboard != null)
                                   ? Rive(
-                                      artboard: _lootDialogController.artboard,
+                                      artboard: _lootDialogController.artboard!,
                                       fit: BoxFit.fill,
                                     )
                                   : SizedBox(),
@@ -199,7 +202,7 @@ class _LootDialogState extends State<LootDialog> {
                                             (_lootDialogController.buttonText ==
                                                     'choose')
                                                 ? _uiColor.setUIColor(
-                                                    user.selectedPlayer.id,
+                                                    user.selectedPlayer!.id,
                                                     'primary')
                                                 : AppColors.errorSecondary,
                                       )),
@@ -219,7 +222,7 @@ class _LootDialogState extends State<LootDialog> {
 }
 
 class LootDialogController {
-  Artboard artboard;
+  Artboard? artboard;
 
   void loadRiverFile() async {
     final bytes = await rootBundle.load('assets/animation/buttonAnimation.riv');
@@ -230,11 +233,11 @@ class LootDialogController {
   }
 
   playReflectionAnimation() {
-    artboard.addController(SimpleAnimation('reflection'));
+    artboard!.addController(SimpleAnimation('reflection'));
   }
 
   playOnTapAnimation() {
-    artboard.addController(OneShotAnimation(
+    artboard!.addController(OneShotAnimation(
       'onTap',
     ));
   }
@@ -246,7 +249,7 @@ class LootDialogController {
       if (loot.index != lootIndex) {
         return;
       }
-      itemList = loot.items;
+      itemList = loot.items!;
     });
   }
 
@@ -268,18 +271,18 @@ class LootDialogController {
     buttonText = 'choose';
     if (this.options[index]) {
       numberOfSelectedItems--;
-      totalWeight -= item.weight;
+      totalWeight -= item.weight!;
       this.options[index] = false;
     } else {
       numberOfSelectedItems++;
-      totalWeight += item.weight;
+      totalWeight += item.weight!;
       this.options[index] = true;
     }
   }
 
-  void chooseItems(context, Player player, List<Item> items,
+  void chooseItems(context, String gameID, Player player, List<Item> items,
       LootController lootController, int lootIndex) {
-    if (player.cantCarry(totalWeight)) {
+    if (player.weight!.cantCarry(totalWeight)) {
       buttonText = 'too heavy';
       return;
     }
@@ -297,7 +300,7 @@ class LootDialogController {
       this.itemList.remove(item);
     });
 
-    lootController.updateLootItems(lootIndex, this.itemList);
+    lootController.updateLootItems(gameID, lootIndex, this.itemList);
 
     Navigator.pop(context);
   }
@@ -305,10 +308,10 @@ class LootDialogController {
 
 // ignore: must_be_immutable
 class LootDialogOption extends StatelessWidget {
-  Item item;
-  bool optionSelected;
-  Function() onTapAction;
-  LootDialogOption({Key key, this.item, this.optionSelected, this.onTapAction})
+  Item? item;
+  bool? optionSelected;
+  Function()? onTapAction;
+  LootDialogOption({Key? key, this.item, this.optionSelected, this.onTapAction})
       : super(key: key);
 
   @override
@@ -317,17 +320,17 @@ class LootDialogOption extends StatelessWidget {
     final user = Provider.of<User>(context);
     return GestureDetector(
       onTap: () {
-        onTapAction();
+        onTapAction!();
       },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.09,
         width: double.infinity,
         decoration: BoxDecoration(
-          color: (optionSelected)
-              ? _uiColor.setUIColor(user.selectedPlayer.id, 'secondary')
+          color: (optionSelected!)
+              ? _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary')
               : AppColors.black00,
           border: Border.all(
-            color: _uiColor.setUIColor(user.selectedPlayer.id, 'primary'),
+            color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
             width: 1,
           ),
         ),
@@ -339,26 +342,27 @@ class LootDialogOption extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text('${item.weight}'.toUpperCase(),
+                  Text('${item!.weight}'.toUpperCase(),
                       style: TextStyle(
                         fontSize: 17,
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2,
                         fontFamily: 'Calibri',
-                        color: (optionSelected)
+                        color: (optionSelected!)
                             ? _uiColor.setUIColor(
-                                user.selectedPlayer.id, 'primary')
+                                user.selectedPlayer!.id, 'primary')
                             : _uiColor.setUIColor(
-                                user.selectedPlayer.id, 'primary'),
+                                user.selectedPlayer!.id, 'primary'),
                       )),
                   SvgPicture.asset(
                     AppIcons.weight,
                     height: MediaQuery.of(context).size.height * 0.03,
                     width: MediaQuery.of(context).size.height * 0.03,
-                    color: (optionSelected)
-                        ? _uiColor.setUIColor(user.selectedPlayer.id, 'primary')
+                    color: (optionSelected!)
+                        ? _uiColor.setUIColor(
+                            user.selectedPlayer!.id, 'primary')
                         : _uiColor.setUIColor(
-                            user.selectedPlayer.id, 'primary'),
+                            user.selectedPlayer!.id, 'primary'),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.05,
@@ -369,17 +373,17 @@ class LootDialogOption extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
               child: Center(
-                child: Text('${item.name}'.toUpperCase(),
+                child: Text('${item!.name}'.toUpperCase(),
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       fontFamily: 'Calibri',
-                      color: (optionSelected)
+                      color: (optionSelected!)
                           ? _uiColor.setUIColor(
-                              user.selectedPlayer.id, 'primary')
+                              user.selectedPlayer!.id, 'primary')
                           : _uiColor.setUIColor(
-                              user.selectedPlayer.id, 'primary'),
+                              user.selectedPlayer!.id, 'primary'),
                     )),
               ),
             ),
