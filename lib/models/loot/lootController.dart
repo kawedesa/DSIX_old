@@ -18,10 +18,10 @@ import 'loot.dart';
 import 'lootSprite.dart';
 
 class LootController {
-  final firebase = FirebaseFirestore.instance;
+  final database = FirebaseFirestore.instance;
 
   Stream<List<Loot>> pullLootFromDataBase(String gameID) {
-    return firebase
+    return database
         .collection('game')
         .doc(gameID)
         .collection('loot')
@@ -36,32 +36,27 @@ class LootController {
     double mapSize,
     int numberOfLoot,
   ) {
+    var batch = database.batch();
+
     for (int i = 0; i < numberOfLoot; i++) {
       LootLocation randomLocation = LootLocation(
         dx: lootRandomLocation(mapSize),
         dy: lootRandomLocation(mapSize),
       );
 
-      Loot newLoot = Loot.newLoot(randomLocation, i);
+      var document =
+          database.collection('game').doc(gameID).collection('loot').doc('$i');
 
-      addLootToDataBase(gameID, newLoot);
+      batch.set(document, Loot.newLoot(randomLocation, i).toMap());
     }
+    batch.commit();
   }
 
   double lootRandomLocation(double mapSize) {
     //For dev (spawn players closer together)
     // return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
     //Original
-    return (Random().nextDouble() * mapSize * 0.8) + (mapSize * 0.1);
-  }
-
-  void addLootToDataBase(String gameID, Loot loot) {
-    firebase
-        .collection('game')
-        .doc(gameID)
-        .collection('loot')
-        .doc('${loot.index}')
-        .set(loot.toMap());
+    return (Random().nextDouble() * mapSize * 0.9) + (mapSize * 0.05);
   }
 
   Shop _shop = Shop();
@@ -77,7 +72,7 @@ class LootController {
 
     var uploadItems = itemsInside.map((item) => item.toMap()).toList();
 
-    await firebase
+    await database
         .collection('game')
         .doc(gameID)
         .collection('loot')
@@ -93,7 +88,7 @@ class LootController {
 
     var uploadItems = itemsInside.map((item) => item.toMap()).toList();
 
-    await firebase
+    await database
         .collection('game')
         .doc(gameID)
         .collection('loot')
@@ -102,8 +97,8 @@ class LootController {
   }
 
   void deleteAllLoot(String gameID) async {
-    var batch = firebase.batch();
-    await firebase
+    var batch = database.batch();
+    await database
         .collection('game')
         .doc(gameID)
         .collection('loot')

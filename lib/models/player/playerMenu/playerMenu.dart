@@ -1,7 +1,6 @@
+import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn.dart';
-import 'package:dsixv02app/models/turnOrder/turnController.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
+import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'actionButton.dart';
@@ -14,8 +13,8 @@ class PlayerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    // final turnController = Provider.of<TurnController>(context);
-    // final turnOrder = Provider.of<List<Turn>>(context);
+    final turnController = Provider.of<TurnController>(context);
+    final gameController = Provider.of<GameController>(context);
 
     return Positioned(
       left: user.selectedPlayer!.location!.dx! -
@@ -51,17 +50,20 @@ class PlayerMenu extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: ActionButton(
                     action: 'defend',
-                    onTap: () {},
-                    //     onTap: () {
-                    //       user.selectedPlayer.defend();
-                    //       try {
-                    //         turnController.takeTurn(turnOrder);
-                    //       } on PlayerTurnException {
-                    //         user.walkMode();
-                    //       } on NotPlayerTurnException {
-                    //         user.endPlayerTurn();
-                    //       }
-                    //     },
+                    onTap: () {
+                      user.defend(
+                        gameController.gameID,
+                      );
+                      user.openCloseMenu();
+
+                      user.takeAction(
+                        gameController.gameID,
+                      );
+                      if (user.selectedPlayer!.action!.outOfActions()) {
+                        turnController.passTurnWhere(
+                            gameController.gameID, user.selectedPlayer!.id!);
+                      }
+                    },
                   ),
                 ),
                 Align(
@@ -69,9 +71,6 @@ class PlayerMenu extends StatelessWidget {
                   child: ActionButton(
                     action: 'look',
                     onTap: () {},
-                    // onTap: () {
-                    //   refresh!();
-                    // },
                   ),
                 ),
                 Align(

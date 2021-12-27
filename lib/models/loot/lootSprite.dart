@@ -1,10 +1,8 @@
-import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/loot/loot.dart';
 import 'package:dsixv02app/models/loot/lootSpriteImage.dart';
-import 'package:dsixv02app/models/turn.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turnOrder/turnController.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
+import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'lootController.dart';
@@ -25,7 +23,6 @@ class LootSprite extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final turnController = Provider.of<TurnController>(context);
-    final turnOrder = Provider.of<List<Turn>>(context);
     final lootController = Provider.of<LootController>(context);
     final gameController = Provider.of<GameController>(context);
     final user = Provider.of<User>(context);

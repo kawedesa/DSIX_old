@@ -1,11 +1,6 @@
-// import 'package:dsixv02app/models/player/player.dart';
-// import 'package:dsixv02app/pages/map/endGameButton.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:rive/rive.dart';
-// import 'package:flutter/services.dart';
-// import 'package:rive/rive.dart';
+import 'widgets/endGameButton.dart';
 
 class MapPageVM {
   TransformationController? canvasController;
@@ -50,28 +45,10 @@ class MapPageVM {
     updateCanvasController(context, mapSize, player.location);
   }
 
-  //   List<Widget> temporaryUI = [];
+  List<Widget> temporaryUI = [];
 
-//   void createEndGameButton(bool isDead) {
-//     this.temporaryUI = [];
-//     this.temporaryUI.add(EndGameButton(isDead: isDead));
-//   }
-
-// // ignore: must_be_immutable
-// class EffectSprite extends StatelessWidget {
-//   Offset location;
-//   EffectSprite({Key key, this.location}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Positioned(
-//       left: location.dx,
-//       top: location.dy,
-//       child: Container(
-//         width: 20,
-//         height: 20,
-//         color: Colors.amber,
-//       ),
-//     );
-//   }
+  void createEndGameButton(bool isDead) {
+    this.temporaryUI = [];
+    this.temporaryUI.add(EndGameButton(isDead: isDead));
+  }
 }

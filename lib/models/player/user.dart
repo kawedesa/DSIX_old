@@ -3,14 +3,13 @@
 // import 'player.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
-
-import '../turn.dart';
+import '../turn/turn.dart';
 import 'player.dart';
 
 class User {
   String? selectedPlayerID;
-
   Player? selectedPlayer;
   String? playerMode = 'walk';
   bool playerTurn = false;
@@ -26,6 +25,10 @@ class User {
     this.selectedPlayer = player;
   }
 
+  void updateSelectedPlayer(Player player) {
+    this.selectedPlayer = player;
+  }
+
   void endWalk(
     String gameID,
     PlayerLocation newLocation,
@@ -37,7 +40,7 @@ class User {
         .doc(gameID)
         .collection('players')
         .doc('${this.selectedPlayer!.index}')
-        .update({'location': this.selectedPlayer!.location!.toMap()});
+        .update({'location': newLocation.toMap()});
   }
 
   void takeAction(String gameID) async {
@@ -66,10 +69,57 @@ class User {
     throw ContinuePlayerTurnException();
   }
 
-  void startPlayerTurn() {
-    this.selectedPlayer!.action!.newActions();
+  void startPlayerTurn(String gameID, Fog fog) {
     this.playerTurn = true;
     setPlayerMode();
+    this.selectedPlayer!.action!.newActions();
+    updateActions(gameID);
+    checkFog(gameID, fog);
+    clearTempEffects(gameID);
+  }
+
+  void updateActions(String gameID) async {
+    await firebase
+        .doc(gameID)
+        .collection('players')
+        .doc('${this.selectedPlayer!.index}')
+        .update({'action': this.selectedPlayer!.action!.toMap()});
+  }
+
+  void checkFog(String gameID, Fog fog) {
+    double distance =
+        (this.selectedPlayer!.location!.getLocation() - fog.getLocation())
+            .distance;
+    if (distance >= fog.size! / 2) {
+      takeFogDamage(gameID);
+    }
+  }
+
+  void takeFogDamage(
+    String gameID,
+  ) async {
+    PlayerLife newLife = PlayerLife(
+        max: this.selectedPlayer!.life!.max,
+        current: this.selectedPlayer!.life!.current! - 2);
+
+    await firebase
+        .doc(gameID)
+        .collection('players')
+        .doc('${this.selectedPlayer!.index}')
+        .update({'life': newLife.toMap()});
+  }
+
+  void clearTempEffects(String gameID) {
+    this.selectedPlayer!.clearTempEffects();
+    updateTempEffects(gameID);
+  }
+
+  void updateTempEffects(String gameID) async {
+    await firebase
+        .doc(gameID)
+        .collection('players')
+        .doc('${this.selectedPlayer!.index}')
+        .update({'tempArmor': this.selectedPlayer!.tempArmor});
   }
 
   void continuePlayerTurn() {
@@ -121,6 +171,11 @@ class User {
     this.menuIsOpen = false;
   }
 
+  void defend(String gameID) {
+    this.selectedPlayer!.defend();
+    updateTempEffects(gameID);
+  }
+
   void updateBag(
     String gameID,
   ) async {
@@ -133,7 +188,7 @@ class User {
         .doc('${this.selectedPlayer!.index}')
         .update({
       'bag': updatedBag,
-      'weight': this.selectedPlayer!.weight,
+      'weight': this.selectedPlayer!.weight!.toMap(),
     });
   }
 

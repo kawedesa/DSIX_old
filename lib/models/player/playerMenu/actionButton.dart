@@ -81,9 +81,6 @@ class _ActionButtonState extends State<ActionButton> {
                 : 0,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
-
-              //TODO review COLORS
-
               color: _uiColor
                   .setUIColor(user.selectedPlayer!.id, 'secondary')
                   .withAlpha(215),

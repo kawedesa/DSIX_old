@@ -1,6 +1,7 @@
 class Turn {
   String? id;
   int? index;
+
   Turn({String? id, int? index}) {
     this.id = id;
     this.index = index;

@@ -1,10 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/models/turn.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turnOrder/turnController.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
+import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
-import '../gameController.dart';
+import '../game/gameController.dart';
 import '../player/playerSpriteImage.dart';
 
 class EnemyPlayerSprite extends StatefulWidget {
@@ -43,12 +41,10 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final gameController = Provider.of<GameController>(context);
-
     final turnController = Provider.of<TurnController>(context);
-    // final turnOrder = Provider.of<List<Turn>>(context);
     final players = Provider.of<List<Player>>(context);
 
-    // _enemyController.checkEnemyPlayer(players, widget.enemyPlayer);
+    _enemyController.checkEnemyPlayer(players, widget.enemyPlayer!);
 
     return Positioned(
       left: widget.enemyPlayer!.location!.dx! -
@@ -80,52 +76,28 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
             //HITBOX
             Align(
               alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 9),
-                child: (widget.enemyPlayer!.life!.isDead())
-                    ? SizedBox()
-                    : Container(
-                        width: 5,
-                        height: 10,
-                        child: GestureDetector(onTap: () {
-                          _enemyController.receiveAnAttack(gameController,
-                              turnController, user, widget.enemyPlayer!);
-                        }),
-                      ),
+              child: EnemySpriteHitBox(
+                isDead: widget.enemyPlayer!.life!.isDead(),
+                onTap: () async {
+                  _enemyController.receiveAnAttack(gameController,
+                      turnController, user, widget.enemyPlayer!);
+                },
               ),
             ),
             //IMAGE
             Align(
               alignment: Alignment.center,
-              child: Padding(
-                padding: const EdgeInsets.only(bottom: 14),
-                child: TransparentPointer(
-                  child: PlayerSpriteImage(
-                      image: widget.enemyPlayer!.race,
-                      isDead: widget.enemyPlayer!.life!.isDead()),
-                ),
-              ),
+              child: PlayerSpriteImage(
+                  image: widget.enemyPlayer!.race,
+                  isDead: widget.enemyPlayer!.life!.isDead()),
             ),
 
-            // //  TEMP EFFECTS
-            // Align(
-            //   alignment: Alignment.center,
-            //   child: TransparentPointer(
-            //     transparent: true,
-            //     child: Padding(
-            //       padding: const EdgeInsets.only(bottom: 26),
-            //       child: AnimatedContainer(
-            //         duration: Duration(milliseconds: 250),
-            //         width: (widget.enemyPlayer.tempArmor > 0) ? 3 : 0,
-            //         height: (widget.enemyPlayer.tempArmor > 0) ? 3 : 0,
-            //         child: SvgPicture.asset(
-            //           AppIcons.tempArmor,
-            //           color: Color.fromRGBO(250, 50, 10, 1),
-            //         ),
-            //       ),
-            //     ),
-            //   ),
-            // ),
+            //  TEMP EFFECTS
+            Align(
+                alignment: Alignment.center,
+                child: EnemySpriteTempEffects(
+                  tempArmor: widget.enemyPlayer!.tempArmor,
+                )),
 
             //DAMAGE ANIMATION
             Align(
@@ -187,7 +159,7 @@ class EnemyPlayerSpriteController {
 
     takeDamage(user.selectedPlayer!, enemyPlayer);
 
-    reduceEnemyPlayerLife(gameController.gameID, enemyPlayer);
+    reduceEnemyPlayerLifeAndTempArmor(gameController.gameID, enemyPlayer);
 
     user.takeAction(
       gameController.gameID,
@@ -212,39 +184,33 @@ class EnemyPlayerSpriteController {
     playDamageAnimation(totalAttackDamage);
   }
 
-  void reduceEnemyPlayerLife(String gameID, Player player) async {
+  void reduceEnemyPlayerLifeAndTempArmor(String gameID, Player player) async {
     await firebase
         .doc(gameID)
         .collection('players')
         .doc('${player.index}')
-        .update({'life': player.life!.toMap()});
+        .update({
+      'life': player.life!.toMap(),
+      'tempArmor': player.tempArmor,
+    });
   }
 
-  // void checkEnemyPlayer(List<Player> players, Player enemyPlayer) {
-  //   players.forEach((player) {
-  //     if (player.id != enemyPlayer.id) {
-  //       return;
-  //     }
-  //     checkTempArmor(player.tempArmor, enemyPlayer.tempArmor);
-  //     checkLife(player.life, enemyPlayer.life);
-  //     enemyPlayer = player;
-  //   });
-  // }
+  void checkEnemyPlayer(List<Player> players, Player enemyPlayer) {
+    players.forEach((player) {
+      if (player.id != enemyPlayer.id) {
+        return;
+      }
+      checkLife(player.life!.current!, enemyPlayer.life!.current);
+      enemyPlayer = player;
+    });
+  }
 
-  // void checkTempArmor(int newArmor, oldArmor) {
-  //   if (oldArmor != newArmor) {
-  //     int damage = oldArmor - newArmor;
-  //     playDamageAnimation(damage);
-  //   }
-  // }
-
-  // void checkLife(int newLife, oldLife) {
-  //   if (oldLife != newLife) {
-  //     int damage = oldLife - newLife;
-  //     playDamageAnimation(damage);
-  //   }
-  // }
-
+  void checkLife(int newLife, oldLife) {
+    if (oldLife != newLife) {
+      int damage = oldLife - newLife;
+      playDamageAnimation(damage);
+    }
+  }
 }
 
 // ignore: must_be_immutable
@@ -283,7 +249,6 @@ class EnemySpriteVisionRange extends StatelessWidget {
         child: DottedBorder(
           dashPattern: [2, 2],
           borderType: BorderType.Circle,
-          //TODO comeback here to revisit the colors. To remove with alpha.
           color: _uiColor.setUIColor(enemyID, 'rangeOutline').withAlpha(150),
           strokeWidth: 0.3,
           child: SizedBox(
@@ -321,6 +286,59 @@ class EnemySpriteShadow extends StatelessWidget {
           border: Border.all(
             color: _uiColor.setUIColor(enemyID, 'rangeOutline'),
             width: 0.3,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class EnemySpriteHitBox extends StatelessWidget {
+  bool? isDead;
+  final Function()? onTap;
+  EnemySpriteHitBox({
+    Key? key,
+    @required this.isDead,
+    @required this.onTap,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 9),
+      child: (isDead!)
+          ? SizedBox()
+          : Container(
+              width: 5,
+              height: 10,
+              child: GestureDetector(onTap: () {
+                onTap!();
+              }),
+            ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class EnemySpriteTempEffects extends StatelessWidget {
+  int? tempArmor;
+  EnemySpriteTempEffects({Key? key, @required this.tempArmor})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TransparentPointer(
+      transparent: true,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 26),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 250),
+          width: (tempArmor! > 0) ? 3 : 0,
+          height: (tempArmor! > 0) ? 3 : 0,
+          child: SvgPicture.asset(
+            AppIcons.tempArmor,
+            color: Color.fromRGBO(250, 50, 10, 1),
           ),
         ),
       ),

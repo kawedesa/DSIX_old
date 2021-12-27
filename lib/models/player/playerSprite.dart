@@ -1,30 +1,15 @@
-// import 'package:dsixv02app/models/turn.dart';
-// import 'package:dsixv02app/models/player/user.dart';
-// import 'package:dsixv02app/models/turnOrder/turnController.dart';
-// import 'package:dsixv02app/shared/app_Colors.dart';
-// import 'package:dsixv02app/shared/app_Exceptions.dart';
-// import 'package:dsixv02app/shared/app_Icons.dart';
-// import 'package:dsixv02app/shared/widgets/uiColor.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:flutter_svg/flutter_svg.dart';
-// import 'package:provider/provider.dart';
-// import 'package:rive/rive.dart';
-// import 'package:transparent_pointer/transparent_pointer.dart';
-// import 'playerSpriteImage.dart';
-// import 'player.dart';
-// import 'playerTempLocation.dart';
-
-import 'package:dsixv02app/models/game.dart';
-import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turnOrder/turnController.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
+import 'package:dsixv02app/models/turn/turnController.dart';
+import 'package:dsixv02app/shared/app_Colors.dart';
+import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
+import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
-
 import 'player.dart';
 import 'playerSpriteImage.dart';
 
@@ -47,21 +32,21 @@ class PlayerSprite extends StatefulWidget {
 class _PlayerSpriteState extends State<PlayerSprite> {
   PlayerSpriteController playerSpriteController = PlayerSpriteController();
 
-  // @override
-  // void initState() {
-  //   playerSpriteController.loadRiverFile();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    playerSpriteController.loadRiverFile();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    // final players = Provider.of<List<Player>>(context);
+    final players = Provider.of<List<Player>>(context);
     final turnController = Provider.of<TurnController>(context);
     final gameController = Provider.of<GameController>(context);
     final user = Provider.of<User>(context);
 
-    // playerSpriteController.updatePlayer(
-    //     players[user.selectedPlayerIndex], user);
+    playerSpriteController.updatePlayer(
+        players[user.selectedPlayer!.index!], user);
 
     return Positioned(
       left: playerSpriteController
@@ -157,71 +142,37 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               //IMAGE
               Align(
                 alignment: Alignment.center,
+                child: PlayerSpriteImage(
+                    image: widget.player!.race,
+                    isDead: widget.player!.life!.isDead()),
+              ),
+
+              //TEMP EFFECTS
+              Align(
+                  alignment: Alignment.center,
+                  child: PlayerSpriteTempEffects(
+                    tempArmor: widget.player!.tempArmor,
+                  )),
+              //DAMAGE ANIMATION
+              Align(
+                alignment: Alignment.center,
                 child: TransparentPointer(
                   transparent: true,
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 14),
-                    child: PlayerSpriteImage(
-                        image: widget.player!.race,
-                        isDead: widget.player!.life!.isDead()),
+                    padding: const EdgeInsets.only(bottom: 25),
+                    child: (playerSpriteController.artboard != null)
+                        ? SizedBox(
+                            width: 10,
+                            height: 20,
+                            child: Rive(
+                              artboard: playerSpriteController.artboard!,
+                              fit: BoxFit.fill,
+                            ),
+                          )
+                        : SizedBox(),
                   ),
                 ),
               ),
-              // //TEMP EFFECTS
-              // Align(
-              //   alignment: Alignment.center,
-              //   child: TransparentPointer(
-              //     transparent: true,
-              //     child: Padding(
-              //       padding: const EdgeInsets.only(bottom: 28),
-              //       child: AnimatedContainer(
-              //         duration: Duration(milliseconds: 250),
-              //         width: (user.selectedPlayer.tempArmor > 0) ? 5 : 0,
-              //         height: (user.selectedPlayer.tempArmor > 0) ? 5 : 0,
-              //         child: Stack(children: [
-              //           SvgPicture.asset(
-              //             AppIcons.tempArmor,
-              //             color: AppColors.goodEffectImage,
-              //           ),
-              //           Align(
-              //             alignment: Alignment.center,
-              //             child: FittedBox(
-              //                 child: Padding(
-              //               padding: const EdgeInsets.fromLTRB(0, 1, 0, 3),
-              //               child: Text(
-              //                 '${user.selectedPlayer.tempArmor}',
-              //                 style: TextStyle(
-              //                   fontFamily: 'Santana',
-              //                   color: AppColors.goodEffectText,
-              //                 ),
-              //               ),
-              //             )),
-              //           ),
-              //         ]),
-              //       ),
-              //     ),
-              //   ),
-              // ),
-              // //DAMAGE ANIMATION
-              // Align(
-              //   alignment: Alignment.center,
-              //   child: TransparentPointer(
-              //     transparent: true,
-              //     child: Padding(
-              //       padding: const EdgeInsets.only(bottom: 25),
-              //       child: (playerSpriteController.artboard != null)
-              //           ? SizedBox(
-              //               width: 10,
-              //               height: 20,
-              //               child: Rive(
-              //                 artboard: playerSpriteController.artboard,
-              //                 fit: BoxFit.fill,
-              //               ),
-              //             )
-              //           : SizedBox(),
-              //     ),
-              //   ),
-              // ),
             ],
           ),
         ),
@@ -231,52 +182,56 @@ class _PlayerSpriteState extends State<PlayerSprite> {
 }
 
 class PlayerSpriteController {
+  Artboard? artboard;
+
+  void loadRiverFile() async {
+    final bytes = await rootBundle.load('assets/animation/damage.riv');
+    final file = RiveFile.import(bytes);
+
+    artboard = file.mainArtboard;
+    offAnimation();
+  }
+
+  offAnimation() {
+    artboard!.addController(SimpleAnimation('off'));
+  }
+
+  playDamageAnimation(int damage) {
+    artboard!.addController(OneShotAnimation(
+      '$damage',
+    ));
+  }
+
+  void updatePlayer(Player player, User user) {
+    if (checkTempArmor(player.tempArmor!, user.selectedPlayer!.tempArmor!) ||
+        checkLife(player.life!.current!, user.selectedPlayer!.life!.current!)) {
+      user.updateSelectedPlayer(player);
+    }
+  }
+
+  bool checkTempArmor(int newArmor, oldArmor) {
+    if (oldArmor != newArmor) {
+      int damage = oldArmor - newArmor;
+      playDamageAnimation(damage);
+      return true;
+    }
+    return false;
+  }
+
+  bool checkLife(int newLife, oldLife) {
+    if (oldLife != newLife) {
+      int damage = oldLife - newLife;
+      playDamageAnimation(damage);
+      return true;
+    }
+    return false;
+  }
+
   Offset calculateSpritePosition(
       PlayerTempLocation? location, double? visionRange) {
     return Offset(
         location!.dx! - visionRange! / 2, location.dy! - visionRange / 2);
   }
-
-//   Artboard artboard;
-
-//   void loadRiverFile() async {
-//     final bytes = await rootBundle.load('assets/animation/damage.riv');
-//     final file = RiveFile.import(bytes);
-
-//     artboard = file.mainArtboard;
-//     offAnimation();
-//   }
-
-//   offAnimation() {
-//     artboard.addController(SimpleAnimation('off'));
-//   }
-
-//   void updatePlayer(Player player, User user) {
-//     checkTempArmor(player.tempArmor, user.selectedPlayer.tempArmor);
-//     checkLife(player.life, user.selectedPlayer.life);
-
-//     user.updateSelectedPlayer(player);
-//   }
-
-//   void checkTempArmor(int newArmor, oldArmor) {
-//     if (oldArmor != newArmor) {
-//       int damage = oldArmor - newArmor;
-//       playDamageAnimation(damage);
-//     }
-//   }
-
-//   void checkLife(int newLife, oldLife) {
-//     if (oldLife != newLife) {
-//       int damage = oldLife - newLife;
-//       playDamageAnimation(damage);
-//     }
-//   }
-
-//   playDamageAnimation(int damage) {
-//     artboard.addController(OneShotAnimation(
-//       '$damage',
-//     ));
-//   }
 
   double? walkedDistance(PlayerTempLocation temporaryLocation,
       PlayerLocation playerLocation, double walkRange) {
@@ -374,8 +329,7 @@ class AttackArea extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final center = Offset(maxRange! / 2, maxRange! / 2);
 
-    final fillColor = Paint()
-      ..color = Color.fromRGBO(200, 25, 25, 1).withAlpha(35);
+    final fillColor = Paint()..color = AppColors.attackRangeArea;
 
     canvas.drawPath(
       Path.combine(
@@ -392,8 +346,8 @@ class AttackArea extends CustomPainter {
     );
 
     final strokeColor = Paint()
-      ..color = Color.fromRGBO(200, 25, 25, 1).withAlpha(125)
-      ..strokeWidth = 0.3
+      ..color = AppColors.attackRangeOutline
+      ..strokeWidth = 0.5
       ..style = PaintingStyle.stroke;
 
     canvas.drawPath(
@@ -507,6 +461,49 @@ class PlayerSpriteVisionRange extends StatelessWidget {
         border: Border.all(
           color: _uiColor.setUIColor(user.selectedPlayer!.id, 'rangeOutline'),
           width: 0.3,
+        ),
+      ),
+    );
+  }
+}
+
+// ignore: must_be_immutable
+class PlayerSpriteTempEffects extends StatelessWidget {
+  int? tempArmor;
+  PlayerSpriteTempEffects({Key? key, @required this.tempArmor})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return TransparentPointer(
+      transparent: true,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 28),
+        child: AnimatedContainer(
+          duration: Duration(milliseconds: 250),
+          width: (tempArmor! > 0) ? 5 : 0,
+          height: (tempArmor! > 0) ? 5 : 0,
+          child: Stack(children: [
+            SvgPicture.asset(
+              AppIcons.tempArmor,
+              color: AppColors.goodEffectImage,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: FittedBox(
+                  child: Padding(
+                padding: const EdgeInsets.fromLTRB(0, 1, 0, 3),
+                child: Text(
+                  '$tempArmor',
+                  style: TextStyle(
+                    letterSpacing: 1,
+                    fontFamily: 'Santana',
+                    color: AppColors.goodEffectText,
+                  ),
+                ),
+              )),
+            ),
+          ]),
         ),
       ),
     );

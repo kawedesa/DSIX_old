@@ -53,8 +53,10 @@ flutter:
   uses-material-design: true
 
   assets:
+  
     - assets/icon/
     - assets/icon/item/
+
     - assets/image/map/ruins/
     - assets/image/sprite/orc/
     - assets/image/sprite/dwarf/

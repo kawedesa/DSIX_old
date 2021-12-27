@@ -1,15 +1,14 @@
 import 'package:dsixv02app/models/enemy/enemyController.dart';
-import 'package:dsixv02app/models/game.dart';
-import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/loot/loot.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/playerMenu/playerMenu.dart';
-import 'package:dsixv02app/models/player/playerTempLocation.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn.dart';
-import 'package:dsixv02app/models/turnOrder/turnController.dart';
-import 'package:dsixv02app/pages/map/mapTile.dart';
+import 'package:dsixv02app/models/turn/turn.dart';
+import 'package:dsixv02app/models/turn/turnController.dart';
+import 'package:dsixv02app/pages/map/widgets/mapTile.dart';
 
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
@@ -25,7 +24,8 @@ import 'package:transparent_pointer/transparent_pointer.dart';
 import 'mapPageAnimation.dart';
 import 'mapPageVM.dart';
 import '../../models/player/playerSprite.dart';
-import 'turnButton.dart';
+import 'widgets/fogArea.dart';
+import 'widgets/turnButton.dart';
 
 // ignore: must_be_immutable
 class MapPage extends StatefulWidget {
@@ -65,25 +65,28 @@ class _MapPageState extends State<MapPage> {
     final turnOrder = Provider.of<List<Turn>>(context);
     final loot = Provider.of<List<Loot>>(context);
 
-    // try {
-    //   gameController.checkForEndGame(players);
-    // } on EndGameException {
-    //   _mapPageVM
-    //       .createEndGameButton(players[user.selectedPlayerIndex].isDead());
-    // }
+    try {
+      gameController.checkForEndGame(players);
+    } on EndGameException {
+      _mapPageVM.createEndGameButton(
+          players[user.selectedPlayer!.index!].life!.isDead());
+    }
 
     try {
       turnController.passTurnForDeadPlayers(game.id!, turnOrder, players);
     } on NewTurnException {
-      gameController.newRound(game.round!);
       turnController.newTurnOrder(game.id!, players);
-      // gameController.setFogSize();
-      print('play new turn animation');
+      if (players.isNotEmpty) {
+        gameController.newRound(game);
+        user.endPlayerTurn();
+        print('play new turn animation');
+      }
     }
+
     try {
       user.checkForPlayerTurn(turnOrder);
     } on StartPlayerTurnException {
-      user.startPlayerTurn();
+      user.startPlayerTurn(game.id!, game.fog!);
       _mapPageAnimation.playYourTurnAnimation();
     } on ContinuePlayerTurnException {
       user.continuePlayerTurn();
@@ -192,35 +195,15 @@ class _MapPageState extends State<MapPage> {
                             MapTile(
                               name: game.map!.name,
                             ),
-                            // Align(
-                            //   alignment: Alignment.center,
-                            //   child: TransparentPointer(
-                            //     transparent: true,
-                            //     child: AnimatedContainer(
-                            //       duration: Duration(milliseconds: 500),
-                            //       width: gameController.fogSize,
-                            //       height: gameController.fogSize,
-                            //       decoration: BoxDecoration(
-                            //         shape: BoxShape.circle,
-                            //         border: Border.all(
-                            //           color: AppColors.badEffectImage,
-                            //           width: 0.5,
-                            //         ),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // ),
                             Stack(
                               children: lootController.visibleLoot,
                             ),
                             Stack(
                               children: enemyController.enemyPlayers,
                             ),
-
                             PlayerMenu(
                               refresh: () => refresh(),
                             ),
-
                             Consumer<PlayerTempLocation>(
                                 builder: (context, playerTempLocation, ___) {
                               return PlayerSprite(
@@ -229,16 +212,32 @@ class _MapPageState extends State<MapPage> {
                                 player: user.selectedPlayer,
                               );
                             }),
+                            Positioned(
+                              left: game.fog!.dx! - game.fog!.size! / 2,
+                              top: game.fog!.dy! - game.fog!.size! / 2,
+                              child: TransparentPointer(
+                                transparent: true,
+                                child: CustomPaint(
+                                  painter: FogArea(
+                                      minRange: game.fog!.size!,
+                                      maxRange: game.map!.size! * 2),
+                                  child: SizedBox(
+                                    width: game.fog!.size!,
+                                    height: game.fog!.size!,
+                                  ),
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
                     ),
-                    // Align(
-                    //   alignment: Alignment.center,
-                    //   child: Stack(
-                    //     children: _mapPageVM.temporaryUI,
-                    //   ),
-                    // ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: Stack(
+                        children: _mapPageVM.temporaryUI,
+                      ),
+                    ),
 
                     //Animation
                     Align(

@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 
 import 'game.dart';
+import '../player/player.dart';
 
 class GameController {
   final database = FirebaseFirestore.instance;
@@ -26,22 +28,26 @@ class GameController {
     database.collection('game').doc(this.gameID).set(game.toMap());
   }
 
-  void newRound(int currentRound) async {
-    int nextRound = currentRound + 1;
-    await database.collection('game').doc(gameID).update({'round': nextRound});
+  void newRound(Game game) async {
+    int nextRound = game.round! + 1;
+    game.fog!.shrink();
+    await database
+        .collection('game')
+        .doc(gameID)
+        .update({'round': nextRound, 'fog': game.fog!.toMap()});
   }
 
-  // void checkForEndGame(List<Player> players) {
-  //   int deadPlayers = 0;
-  //   players.forEach((player) {
-  //     if (player.life < 1) {
-  //       deadPlayers++;
-  //     }
-  //   });
-  //   if (deadPlayers == players.length - 1) {
-  //     throw EndGameException();
-  //   }
-  // }
+  void checkForEndGame(List<Player> players) {
+    int deadPlayers = 0;
+    players.forEach((player) {
+      if (player.life!.isDead()) {
+        deadPlayers++;
+      }
+    });
+    if (deadPlayers == players.length - 1) {
+      throw EndGameException();
+    }
+  }
 
   // double fogSize;
 

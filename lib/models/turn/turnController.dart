@@ -8,7 +8,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 
-import '../turn.dart';
+import 'turn.dart';
 
 class TurnController {
   final database = FirebaseFirestore.instance;
@@ -26,6 +26,7 @@ class TurnController {
 
   void newTurnOrder(String gameID, List<Player> players) {
     List<String> playerIDs = [];
+    var batch = database.batch();
 
     players.forEach((player) {
       if (player.life!.isDead()) {
@@ -37,18 +38,25 @@ class TurnController {
     playerIDs.shuffle();
 
     for (int i = 0; i < playerIDs.length; i++) {
-      addTurnToDataBase(gameID, Turn.newTurn(playerIDs[i], i));
+      var document = database
+          .collection('game')
+          .doc(gameID)
+          .collection('turnOrder')
+          .doc('$i');
+
+      batch.set(document, Turn.newTurn(playerIDs[i], i).toMap());
     }
+    batch.commit();
   }
 
-  void addTurnToDataBase(String gameID, Turn turn) async {
-    await database
-        .collection('game')
-        .doc(gameID)
-        .collection('turnOrder')
-        .doc('${turn.index}')
-        .set(turn.toMap());
-  }
+  // void addTurnToDataBase(String gameID, Turn turn) async {
+  //   await database
+  //       .collection('game')
+  //       .doc(gameID)
+  //       .collection('turnOrder')
+  //       .doc('${turn.index}')
+  //       .set(turn.toMap());
+  // }
 
   void passTurnForDeadPlayers(
       String gameID, List<Turn> turnOrder, List<Player> players) {
@@ -95,25 +103,4 @@ class TurnController {
 
     batch.commit();
   }
-
-//   void checkForPlayerTurn(List<Turn> turnOrder, String id) {
-//     if (turnOrder.isEmpty) {
-//       throw NotPlayerTurnException();
-//     }
-
-//     if (id == turnOrder.first.id) {
-//       throw PlayerTurnException();
-//     } else {
-//       throw NotPlayerTurnException();
-//     }
-//   }
-
-  // void passTurn(String gameID, int turnIndex) async {
-  //   await database
-  //       .collection('game')
-  //       .doc(gameID)
-  //       .collection('turnOrder')
-  //       .doc('$turnIndex')
-  //       .delete();
-  // }
 }

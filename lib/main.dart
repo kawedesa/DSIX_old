@@ -1,21 +1,17 @@
-import 'package:dsixv02app/models/gameController.dart';
+import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'models/enemy/enemyController.dart';
-import 'models/game.dart';
+import 'models/game/game.dart';
 import 'models/loot/loot.dart';
 import 'models/loot/lootController.dart';
 import 'models/player/player.dart';
-
-import 'models/playerController.dart';
-
+import 'models/player/playerController.dart';
 import 'models/player/user.dart';
-
-import 'models/turn.dart';
-import 'models/turnOrder/turnController.dart';
-import 'pages/settings/battleRoyaleSettingsPage.dart';
+import 'models/turn/turn.dart';
+import 'models/turn/turnController.dart';
+import 'pages/battleRoyaleSettings/battleRoyaleSettingsPage.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -46,7 +42,6 @@ class DsixApp extends StatelessWidget {
         // Streams
         StreamProvider<Game>(
           initialData: Game.newEmptyGame(),
-          // catchError: (_, __) => Game.newEmptyGame(),
           create: (context) => gameController.pullGameFromDataBase(),
         ),
 

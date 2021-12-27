@@ -1,7 +1,6 @@
-import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Images.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+import 'package:transparent_pointer/transparent_pointer.dart';
 
 // ignore: must_be_immutable
 class PlayerSpriteImage extends StatelessWidget {
@@ -33,12 +32,18 @@ class PlayerSpriteImage extends StatelessWidget {
       }
     }
 
-    return Container(
-      width: size,
-      height: size,
-      child: Stack(
-        alignment: Alignment.topLeft,
-        children: this.layers!,
+    return TransparentPointer(
+      transparent: true,
+      child: Padding(
+        padding: const EdgeInsets.only(bottom: 14),
+        child: Container(
+          width: size,
+          height: size,
+          child: Stack(
+            alignment: Alignment.topLeft,
+            children: this.layers!,
+          ),
+        ),
       ),
     );
   }

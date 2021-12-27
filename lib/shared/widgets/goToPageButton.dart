@@ -38,7 +38,3 @@ class GoToPagePageButton extends StatelessWidget {
     );
   }
 }
-
-
-// Navigator.of(context)
-//     .pushNamedAndRemoveUntil('/login', (Route<dynamic> route) => false);

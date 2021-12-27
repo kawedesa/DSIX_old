@@ -1,7 +1,5 @@
-import 'dart:math';
-
 import 'package:dsixv02app/shared/app_Icons.dart';
-
+import 'dart:math';
 import 'item.dart';
 
 class Shop {
@@ -88,7 +86,7 @@ class Shop {
       weight: 3,
       value: 100,
       maxWeaponRange: 10,
-      minWeaponRange: 5,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.claw,
@@ -114,7 +112,7 @@ class Shop {
       weight: 2,
       value: 200,
       maxWeaponRange: 10,
-      minWeaponRange: 5,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.shortSword,
@@ -127,7 +125,7 @@ class Shop {
       weight: 1,
       value: 300,
       maxWeaponRange: 10,
-      minWeaponRange: 5,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.ritualDagger,
@@ -152,8 +150,8 @@ class Shop {
       mArmor: 0,
       weight: 1,
       value: 300,
-      maxWeaponRange: 20,
-      minWeaponRange: 15,
+      maxWeaponRange: 15,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.rapier,
@@ -166,7 +164,7 @@ class Shop {
       weight: 2,
       value: 400,
       maxWeaponRange: 10,
-      minWeaponRange: 5,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.sword,
@@ -178,8 +176,8 @@ class Shop {
       mArmor: 0,
       weight: 4,
       value: 400,
-      maxWeaponRange: 15,
-      minWeaponRange: 10,
+      maxWeaponRange: 10,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.magicSword,
@@ -191,8 +189,8 @@ class Shop {
       mArmor: 0,
       weight: 3,
       value: 400,
-      maxWeaponRange: 20,
-      minWeaponRange: 10,
+      maxWeaponRange: 15,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.morningStar,
@@ -205,7 +203,7 @@ class Shop {
       weight: 6,
       value: 400,
       maxWeaponRange: 10,
-      minWeaponRange: 5,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.saber,
@@ -218,7 +216,7 @@ class Shop {
       weight: 3,
       value: 500,
       maxWeaponRange: 10,
-      minWeaponRange: 5,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.longSword,
@@ -230,8 +228,8 @@ class Shop {
       mArmor: 0,
       weight: 5,
       value: 500,
-      maxWeaponRange: 20,
-      minWeaponRange: 15,
+      maxWeaponRange: 15,
+      minWeaponRange: 0,
     ),
     Item(
       icon: AppIcons.magicAxe,
@@ -243,8 +241,8 @@ class Shop {
       mArmor: 0,
       weight: 4,
       value: 600,
-      maxWeaponRange: 15,
-      minWeaponRange: 5,
+      maxWeaponRange: 10,
+      minWeaponRange: 0,
     ),
   ];
 
@@ -260,7 +258,7 @@ class Shop {
       weight: 2,
       value: 300,
       maxWeaponRange: 30,
-      minWeaponRange: 20,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.quarterstaff,
@@ -273,7 +271,7 @@ class Shop {
       weight: 4,
       value: 300,
       maxWeaponRange: 20,
-      minWeaponRange: 10,
+      minWeaponRange: 30,
     ),
     Item(
       icon: AppIcons.doubleSword,
@@ -286,7 +284,7 @@ class Shop {
       weight: 5,
       value: 400,
       maxWeaponRange: 25,
-      minWeaponRange: 15,
+      minWeaponRange: 35,
     ),
     Item(
       icon: AppIcons.trident,
@@ -299,7 +297,7 @@ class Shop {
       weight: 3,
       value: 400,
       maxWeaponRange: 30,
-      minWeaponRange: 20,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.battleAxe,
@@ -312,7 +310,7 @@ class Shop {
       weight: 8,
       value: 500,
       maxWeaponRange: 20,
-      minWeaponRange: 10,
+      minWeaponRange: 30,
     ),
     Item(
       icon: AppIcons.halberd,
@@ -325,7 +323,7 @@ class Shop {
       weight: 6,
       value: 500,
       maxWeaponRange: 30,
-      minWeaponRange: 20,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.warHammer,
@@ -338,7 +336,7 @@ class Shop {
       weight: 9,
       value: 600,
       maxWeaponRange: 20,
-      minWeaponRange: 10,
+      minWeaponRange: 30,
     ),
     Item(
       icon: AppIcons.greatSword,
@@ -351,7 +349,7 @@ class Shop {
       weight: 7,
       value: 600,
       maxWeaponRange: 25,
-      minWeaponRange: 15,
+      minWeaponRange: 35,
     ),
   ];
 
@@ -366,8 +364,8 @@ class Shop {
       mArmor: 0,
       weight: 0,
       value: 100,
-      maxWeaponRange: 50,
-      minWeaponRange: 50,
+      maxWeaponRange: 60,
+      minWeaponRange: 60,
     ),
     Item(
       icon: AppIcons.boomerang,
@@ -380,7 +378,7 @@ class Shop {
       weight: 1,
       value: 100,
       maxWeaponRange: 40,
-      minWeaponRange: 30,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.javelins,
@@ -393,7 +391,7 @@ class Shop {
       weight: 1,
       value: 200,
       maxWeaponRange: 40,
-      minWeaponRange: 30,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.grenades,
@@ -406,7 +404,7 @@ class Shop {
       weight: 1,
       value: 200,
       maxWeaponRange: 40,
-      minWeaponRange: 30,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.shortBow,
@@ -418,8 +416,8 @@ class Shop {
       mArmor: 0,
       weight: 3,
       value: 300,
-      maxWeaponRange: 55,
-      minWeaponRange: 55,
+      maxWeaponRange: 80,
+      minWeaponRange: 70,
     ),
     Item(
       icon: AppIcons.kunai,
@@ -432,7 +430,7 @@ class Shop {
       weight: 1,
       value: 300,
       maxWeaponRange: 40,
-      minWeaponRange: 30,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.handCrossbow,
@@ -444,8 +442,8 @@ class Shop {
       mArmor: 0,
       weight: 2,
       value: 400,
-      maxWeaponRange: 50,
-      minWeaponRange: 50,
+      maxWeaponRange: 40,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.longBow,
@@ -457,8 +455,8 @@ class Shop {
       mArmor: 0,
       weight: 4,
       value: 400,
-      maxWeaponRange: 60,
-      minWeaponRange: 60,
+      maxWeaponRange: 100,
+      minWeaponRange: 80,
     ),
     Item(
       icon: AppIcons.greatBow,
@@ -470,8 +468,8 @@ class Shop {
       mArmor: 0,
       weight: 5,
       value: 500,
-      maxWeaponRange: 65,
-      minWeaponRange: 65,
+      maxWeaponRange: 120,
+      minWeaponRange: 90,
     ),
     Item(
       icon: AppIcons.lightCrossbow,
@@ -483,8 +481,8 @@ class Shop {
       mArmor: 0,
       weight: 3,
       value: 500,
-      maxWeaponRange: 60,
-      minWeaponRange: 60,
+      maxWeaponRange: 80,
+      minWeaponRange: 70,
     ),
     Item(
       icon: AppIcons.handCannon,
@@ -496,8 +494,8 @@ class Shop {
       mArmor: 0,
       weight: 0,
       value: 600,
-      maxWeaponRange: 50,
-      minWeaponRange: 50,
+      maxWeaponRange: 40,
+      minWeaponRange: 40,
     ),
     Item(
       icon: AppIcons.heavyCrossbow,
@@ -509,8 +507,8 @@ class Shop {
       mArmor: 0,
       weight: 8,
       value: 600,
-      maxWeaponRange: 65,
-      minWeaponRange: 65,
+      maxWeaponRange: 100,
+      minWeaponRange: 80,
     ),
     Item(
       icon: AppIcons.musket,
@@ -538,7 +536,7 @@ class Shop {
       mArmor: 0,
       weight: 1,
       value: 200,
-      maxWeaponRange: 40,
+      maxWeaponRange: 10,
       minWeaponRange: 0,
     ),
     Item(
@@ -551,7 +549,7 @@ class Shop {
       mArmor: 0,
       weight: 0,
       value: 300,
-      maxWeaponRange: 45,
+      maxWeaponRange: 20,
       minWeaponRange: 0,
     ),
     Item(
@@ -564,7 +562,7 @@ class Shop {
       mArmor: 0,
       weight: 1,
       value: 500,
-      maxWeaponRange: 50,
+      maxWeaponRange: 30,
       minWeaponRange: 0,
     ),
     Item(
@@ -577,7 +575,7 @@ class Shop {
       mArmor: 0,
       weight: 5,
       value: 700,
-      maxWeaponRange: 60,
+      maxWeaponRange: 50,
       minWeaponRange: 0,
     ),
   ];
@@ -752,7 +750,7 @@ class Shop {
       mArmor: 0,
       weight: 2,
       value: 1600,
-      maxWeaponRange: 20,
+      maxWeaponRange: 15,
       minWeaponRange: 0,
     ),
     Item(
@@ -765,8 +763,8 @@ class Shop {
       mArmor: 0,
       weight: 4,
       value: 1700,
-      maxWeaponRange: 40,
-      minWeaponRange: 10,
+      maxWeaponRange: 20,
+      minWeaponRange: 25,
     ),
     Item(
       icon: AppIcons.ancientBow,
@@ -778,8 +776,8 @@ class Shop {
       mArmor: 0,
       weight: 1,
       value: 1600,
-      maxWeaponRange: 130,
-      minWeaponRange: 0,
+      maxWeaponRange: 120,
+      minWeaponRange: 90,
     ),
     Item(
       icon: AppIcons.ancientSpellBook,
@@ -791,7 +789,7 @@ class Shop {
       mArmor: 0,
       weight: 2,
       value: 1900,
-      maxWeaponRange: 70,
+      maxWeaponRange: 40,
       minWeaponRange: 0,
     ),
     Item(

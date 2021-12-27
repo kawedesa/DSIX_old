@@ -1,5 +1,4 @@
 import 'package:dsixv02app/models/loot/lootController.dart';
-import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
@@ -10,7 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import '../gameController.dart';
+import '../game/gameController.dart';
 import 'loot.dart';
 
 class LootDialog extends StatefulWidget {
@@ -158,7 +157,7 @@ class _LootDialogState extends State<LootDialog> {
                           _lootDialogController.chooseItems(
                               context,
                               gameController.gameID,
-                              user.selectedPlayer!,
+                              user,
                               _lootDialogController.itemList,
                               lootController,
                               widget.lootIndex!);
@@ -280,9 +279,9 @@ class LootDialogController {
     }
   }
 
-  void chooseItems(context, String gameID, Player player, List<Item> items,
+  void chooseItems(context, String gameID, User user, List<Item> items,
       LootController lootController, int lootIndex) {
-    if (player.weight!.cantCarry(totalWeight)) {
+    if (user.selectedPlayer!.weight!.cantCarry(totalWeight)) {
       buttonText = 'too heavy';
       return;
     }
@@ -291,7 +290,8 @@ class LootDialogController {
 
     for (int i = 0; i < items.length; i++) {
       if (this.options[i]) {
-        player.getItem(items[i]);
+        user.selectedPlayer!.getItem(items[i]);
+        user.updateBag(gameID);
         itemsRemovedFromChest.add(items[i]);
       }
     }
@@ -348,21 +348,15 @@ class LootDialogOption extends StatelessWidget {
                         fontWeight: FontWeight.bold,
                         letterSpacing: 2,
                         fontFamily: 'Calibri',
-                        color: (optionSelected!)
-                            ? _uiColor.setUIColor(
-                                user.selectedPlayer!.id, 'primary')
-                            : _uiColor.setUIColor(
-                                user.selectedPlayer!.id, 'primary'),
+                        color: _uiColor.setUIColor(
+                            user.selectedPlayer!.id, 'primary'),
                       )),
                   SvgPicture.asset(
                     AppIcons.weight,
                     height: MediaQuery.of(context).size.height * 0.03,
                     width: MediaQuery.of(context).size.height * 0.03,
-                    color: (optionSelected!)
-                        ? _uiColor.setUIColor(
-                            user.selectedPlayer!.id, 'primary')
-                        : _uiColor.setUIColor(
-                            user.selectedPlayer!.id, 'primary'),
+                    color:
+                        _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.05,
@@ -379,11 +373,8 @@ class LootDialogOption extends StatelessWidget {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       fontFamily: 'Calibri',
-                      color: (optionSelected!)
-                          ? _uiColor.setUIColor(
-                              user.selectedPlayer!.id, 'primary')
-                          : _uiColor.setUIColor(
-                              user.selectedPlayer!.id, 'primary'),
+                      color: _uiColor.setUIColor(
+                          user.selectedPlayer!.id, 'primary'),
                     )),
               ),
             ),

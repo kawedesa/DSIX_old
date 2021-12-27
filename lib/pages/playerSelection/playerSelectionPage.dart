@@ -1,9 +1,7 @@
-import 'package:dsixv02app/models/game.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
-import 'package:dsixv02app/pages/settings/battleRoyaleSettingsPage.dart';
+import 'package:dsixv02app/pages/battleRoyaleSettings/battleRoyaleSettingsPage.dart';
 import 'package:dsixv02app/shared/widgets/button.dart';
 import 'package:dsixv02app/shared/widgets/goToPageButton.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
@@ -18,7 +16,6 @@ class PlayerSelectionPage extends StatelessWidget {
   Widget build(BuildContext context) {
     PlayerSelectionPageVM _selectPlayerPageVM = PlayerSelectionPageVM();
     UIColor _uiColor = UIColor();
-    final turnOrder = Provider.of<List<Turn>>(context);
     final user = Provider.of<User>(context);
     final players = Provider.of<List<Player>>(context);
 

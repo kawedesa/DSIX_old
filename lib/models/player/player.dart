@@ -1,8 +1,5 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dsixv02app/models/player/playerSprite.dart';
 import 'package:dsixv02app/models/shop/item.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 
 class Player {
@@ -193,7 +190,7 @@ class Player {
 
   bool cantReach(Offset targetLocation) {
     double distance = (targetLocation - this.location!.getLocation()).distance;
-    if (distance > 15) {
+    if (distance > 20) {
       return true;
     } else {
       return false;
@@ -220,19 +217,22 @@ class Player {
     increaseTempArmor(protect);
   }
 
-  void increaseTempArmor(int value) async {
+  void increaseTempArmor(int value) {
     this.tempArmor = this.tempArmor! + value;
   }
 
-  // void clearTempEffects() async {
-  //   this.tempArmor = 0;
-  //   await db
-  //       .collection('players')
-  //       .doc(this.id)
-  //       .update({'tempArmor': this.tempArmor});
-  // }
+  void clearTempEffects() {
+    this.tempArmor = 0;
+  }
 
   void takeDamage(int damageRoll, pDamage, mDamage) {
+    if (this.tempArmor! > 0) {
+      int damage = pDamage + mDamage + damageRoll;
+
+      this.life!.reduceCurrentLife(calculateTempArmor(damage));
+      return;
+    }
+
     int damageLeftOver = 0;
     int protectionLeftOver = 0;
 
@@ -255,9 +255,7 @@ class Player {
       partialDamage = 0;
     }
 
-    partialDamage += damageLeftOver;
-
-    int totalDamageReceived = calculateTempArmor(partialDamage);
+    int totalDamageReceived = partialDamage + damageLeftOver;
 
     if (totalDamageReceived < 0) {
       totalDamageReceived = 0;
@@ -267,9 +265,16 @@ class Player {
   }
 
   int calculateTempArmor(int damage) {
-    int damageCalculation = damage - this.tempArmor!;
+    int totalDamageReceived =
+        damage - this.tempArmor! - this.pArmor! - this.mArmor!;
+
     decreaseTempArmor(damage);
-    return damageCalculation;
+
+    if (totalDamageReceived < 0) {
+      totalDamageReceived = 0;
+    }
+
+    return totalDamageReceived;
   }
 
   void decreaseTempArmor(int value) async {
@@ -635,7 +640,7 @@ class PlayerWalkRange {
     );
   }
   factory PlayerWalkRange.set(String race) {
-    return PlayerWalkRange(min: 0, max: 50);
+    return PlayerWalkRange(min: 0, max: 60);
   }
 }
 
@@ -662,9 +667,9 @@ class PlayerVisionRange {
   factory PlayerVisionRange.set(String race) {
     double max;
     if (race == 'elf') {
-      max = 130.0;
+      max = 150.0;
     } else {
-      max = 100.0;
+      max = 120.0;
     }
 
     return PlayerVisionRange(min: 0, max: max);

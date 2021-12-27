@@ -1,28 +1,27 @@
-import 'package:dsixv02app/shared/app_Colors.dart';
+import 'package:dsixv02app/models/player/user.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 
-class Button extends StatefulWidget {
-  final String? buttonText;
-  final Color? buttonColor;
-  final Color? buttonTextColor;
-  final Color? buttonFillColor;
-  final Function()? onTapAction;
+import '../app_Colors.dart';
+import 'uiColor.dart';
 
-  const Button({
-    @required this.buttonText,
-    this.buttonColor,
-    this.buttonTextColor,
-    this.buttonFillColor,
-    this.onTapAction,
-  });
+// ignore: must_be_immutable
+class DialogButton extends StatefulWidget {
+  String? buttonText;
+
+  Function()? onTapAction;
+  DialogButton(
+      {Key? key, @required this.buttonText, @required this.onTapAction})
+      : super(key: key);
 
   @override
-  State<Button> createState() => _ButtonState();
+  State<DialogButton> createState() => _DialogButtonState();
 }
 
-class _ButtonState extends State<Button> {
+class _DialogButtonState extends State<DialogButton> {
+  UIColor _uiColor = UIColor();
   Artboard? _artboard;
 
   @override
@@ -49,22 +48,22 @@ class _ButtonState extends State<Button> {
   }
 
   @override
-  Widget build(context) {
+  Widget build(BuildContext context) {
+    final user = Provider.of<User>(context);
+
     return GestureDetector(
       onTap: () {
+        widget.onTapAction!();
         _playOnTapAnimation();
-        this.widget.onTapAction!();
       },
       child: Container(
         height: MediaQuery.of(context).size.height * 0.09,
-        width: MediaQuery.of(context).size.width * 0.65,
+        width: double.infinity,
         decoration: BoxDecoration(
-          color: (this.widget.buttonFillColor != null)
-              ? this.widget.buttonFillColor
-              : AppColors.black00,
+          color: AppColors.black00,
           border: Border.all(
-            color: this.widget.buttonColor!,
-            width: 2.5,
+            color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+            width: 1,
           ),
         ),
         child: Stack(
@@ -73,13 +72,14 @@ class _ButtonState extends State<Button> {
             Padding(
               padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
               child: Center(
-                child: Text('${this.widget.buttonText}'.toUpperCase(),
+                child: Text(widget.buttonText!.toUpperCase(),
                     style: TextStyle(
                       fontSize: 15,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       fontFamily: 'Calibri',
-                      color: this.widget.buttonTextColor!,
+                      color: _uiColor.setUIColor(
+                          user.selectedPlayer!.id, 'primary'),
                     )),
               ),
             ),
@@ -88,7 +88,7 @@ class _ButtonState extends State<Button> {
                     artboard: _artboard!,
                     fit: BoxFit.fill,
                   )
-                : Container(),
+                : SizedBox(),
           ],
         ),
       ),

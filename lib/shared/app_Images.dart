@@ -226,4 +226,75 @@ class AppImages {
       height: double.infinity,
     ),
   ];
+
+//Maps
+
+  static final ruins = [
+    SvgPicture.asset(
+      'assets/image/map/ruins/grass00.svg',
+      color: AppColors.ruinsGrass00,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/grass01.svg',
+      color: AppColors.ruinsGrass01,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/structure00.svg',
+      color: AppColors.ruinsStructure00,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/structure01.svg',
+      color: AppColors.ruinsroadsStructure01,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/structure02.svg',
+      color: AppColors.ruinsroadsStructure02,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/structure03.svg',
+      color: AppColors.ruinsroadsStructure03,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/structure04.svg',
+      color: AppColors.ruinsroadsStructure04,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/structure05.svg',
+      color: AppColors.ruinsroadsStructure05,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/tree00.svg',
+      color: AppColors.ruinsroadsTree00,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/tree01.svg',
+      color: AppColors.ruinsroadsTree01,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
+      'assets/image/map/ruins/tree02.svg',
+      color: AppColors.ruinsroadsTree02,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+  ];
 }

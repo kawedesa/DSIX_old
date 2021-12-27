@@ -1,56 +1,79 @@
-// import 'dart:math';
+import 'dart:math';
 
-// import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
-// import 'player.dart';
+import 'player.dart';
 
-// class PlayerController {
-//   final db = FirebaseFirestore.instance;
-//   Stream<List<Player>> pullPlayersFromDataBase() {
-//     return db.collection('players').snapshots().map((querySnapshot) =>
-//         querySnapshot.docs
-//             .map((player) => Player.fromMap(player.data()))
-//             .toList());
-//   }
+class PlayerController {
+  List<Player>? players;
+  PlayerController({List<Player>? players}) {
+    this.players = players;
+  }
 
-//   List<Player> listOfRandomPlayers = [];
-//   void createListOfRandomPlayersInRandomLocations(
-//       int numberOfPlayers, double mapSize) {
-//     listOfRandomPlayers = [];
-//     for (int i = 0; i < numberOfPlayers; i++) {
-//       listOfRandomPlayers.add(Player.newRandomPlayer(
-//           playerRandomLocation(mapSize), playerRandomLocation(mapSize), i));
-//     }
+  final database = FirebaseFirestore.instance;
 
-//     listOfRandomPlayers.forEach((player) {
-//       player.setLife();
-//       player.setWeight();
-//       player.setAttackRange();
-//       player.setVisionRange();
-//       player.setWalkRange();
-//       addPlayerToDataBase(player);
-//     });
-//   }
+  Stream<List<Player>> pullPlayersFromDataBase(String gameID) {
+    return database
+        .collection('game')
+        .doc(gameID)
+        .collection('players')
+        .snapshots()
+        .map((querySnapshot) => querySnapshot.docs
+            .map((player) => Player.fromMap(player.data()))
+            .toList());
+  }
 
-//   double playerRandomLocation(double mapSize) {
-//     // //For dev (spawn players closer together)
-//     // return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
-//     //Original
-//     return (Random().nextDouble() * mapSize * 0.8) + (mapSize * 0.1);
-//   }
+  void newRandomPlayers(
+    String gameID,
+    double mapSize,
+    int numberOfPlayers,
+  ) async {
+    var batch = database.batch();
 
-//   void addPlayerToDataBase(Player player) {
-//     db.collection('players').doc(player.id).set(player.toMap());
-//   }
+    //Add Players
+    for (int i = 0; i < numberOfPlayers; i++) {
+      // For Test
+      // double dx = (Random().nextDouble() * mapSize * 0.4) + (mapSize * 0.3);
+      // double dy = (Random().nextDouble() * mapSize * 0.4) + (mapSize * 0.3);
 
-//   void deleteAllPlayersFromDataBase() async {
-//     var batch = db.batch();
-//     await db.collection('players').get().then((snapshot) {
-//       snapshot.docs.forEach((document) {
-//         batch.delete(document.reference);
-//       });
-//     });
+      // Original
+      double dx = playerRandomLocation(mapSize);
+      double dy = playerRandomLocation(mapSize);
 
-//     batch.commit();
-//   }
-// }
+      Offset randomLocation = Offset(dx, dy);
+
+      var document = database
+          .collection('game')
+          .doc(gameID)
+          .collection('players')
+          .doc('$i');
+
+      batch.set(document, Player.newRandomPlayer(randomLocation, i).toMap());
+    }
+    batch.commit();
+  }
+
+  double playerRandomLocation(double mapSize) {
+    //For dev (spawn players closer together)
+    // return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
+    //Original
+    return (Random().nextDouble() * mapSize * 0.9) + (mapSize * 0.05);
+  }
+
+  void deleteAllPlayers(String gameID) async {
+    var batch = database.batch();
+    await database
+        .collection('game')
+        .doc(gameID)
+        .collection('players')
+        .get()
+        .then((snapshot) {
+      snapshot.docs.forEach((document) {
+        batch.delete(document.reference);
+      });
+    });
+
+    batch.commit();
+  }
+}

@@ -17,10 +17,10 @@ class UIColor {
               return AppColors.bluePlayerTertiary;
 
             case 'shadow':
-              return AppColors.bluePlayerSecondary.withAlpha(75);
+              return AppColors.bluePlayerShadow;
 
             case 'rangeOutline':
-              return AppColors.bluePlayerPrimary.withAlpha(150);
+              return AppColors.bluePlayerRange;
           }
         }
         break;
@@ -37,10 +37,10 @@ class UIColor {
               return AppColors.pinkPlayerTertiary;
 
             case 'shadow':
-              return AppColors.pinkPlayerSecondary.withAlpha(75);
+              return AppColors.pinkPlayerShadow;
 
             case 'rangeOutline':
-              return AppColors.pinkPlayerPrimary.withAlpha(150);
+              return AppColors.pinkPlayerRange;
           }
         }
         break;
@@ -57,10 +57,10 @@ class UIColor {
               return AppColors.greenPlayerTertiary;
 
             case 'shadow':
-              return AppColors.greenPlayerSecondary.withAlpha(75);
+              return AppColors.greenPlayerShadow;
 
             case 'rangeOutline':
-              return AppColors.greenPlayerPrimary.withAlpha(150);
+              return AppColors.greenPlayerRange;
           }
         }
         break;
@@ -77,10 +77,10 @@ class UIColor {
               return AppColors.yellowPlayerTertiary;
 
             case 'shadow':
-              return AppColors.yellowPlayerSecondary.withAlpha(75);
+              return AppColors.yellowPlayerShadow;
 
             case 'rangeOutline':
-              return AppColors.yellowPlayerPrimary.withAlpha(150);
+              return AppColors.yellowPlayerRange;
           }
         }
         break;
@@ -97,10 +97,10 @@ class UIColor {
               return AppColors.purplePlayerTertiary;
 
             case 'shadow':
-              return AppColors.purplePlayerSecondary.withAlpha(75);
+              return AppColors.purplePlayerShadow;
 
             case 'rangeOutline':
-              return AppColors.purplePlayerPrimary.withAlpha(150);
+              return AppColors.purplePlayerRange;
           }
         }
         break;
