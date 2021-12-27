@@ -58,6 +58,7 @@ class BattleRoyaleSettingsPageVM {
     GameMap map = GameMap(
       name: 'ruins',
       size: 320,
+      tallGrass: TallGrassArea.newTallGrass(),
     );
     gameController.newGame(map);
 

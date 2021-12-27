@@ -70,7 +70,22 @@ class PlayerMenu extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: ActionButton(
                     action: 'look',
-                    onTap: () {},
+                    onTap: () {
+                      user.look(
+                        gameController.gameID,
+                      );
+
+                      user.openCloseMenu();
+
+                      user.takeAction(
+                        gameController.gameID,
+                      );
+                      if (user.selectedPlayer!.action!.outOfActions()) {
+                        turnController.passTurnWhere(
+                            gameController.gameID, user.selectedPlayer!.id!);
+                      }
+                      // refresh!();
+                    },
                   ),
                 ),
                 Align(

@@ -9,7 +9,6 @@ import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turn.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/pages/map/widgets/mapTile.dart';
-
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
@@ -52,6 +51,29 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
+    // List<List<Offset>> tallGrassArea = [
+    //   [
+    //     Offset(320, 213),
+    //     Offset(275, 213),
+    //     Offset(275, 278),
+    //     Offset(235, 278),
+    //     Offset(235, 320),
+    //     Offset(320, 320),
+    //   ],
+    //   [
+    //     Offset(264, 80),
+    //     Offset(264, 70),
+    //     Offset(210, 70),
+    //     Offset(210, 80),
+    //   ],
+    //   [
+    //     Offset(230, 200),
+    //     Offset(230, 184),
+    //     Offset(208, 184),
+    //     Offset(208, 200),
+    //   ]
+    // ];
+
     //Controlers
     final gameController = Provider.of<GameController>(context);
     final turnController = Provider.of<TurnController>(context);
@@ -192,9 +214,7 @@ class _MapPageState extends State<MapPage> {
                         height: game.map!.size,
                         child: Stack(
                           children: [
-                            MapTile(
-                              name: game.map!.name,
-                            ),
+                            MapTile(),
                             Stack(
                               children: lootController.visibleLoot,
                             ),
@@ -212,6 +232,9 @@ class _MapPageState extends State<MapPage> {
                                 player: user.selectedPlayer,
                               );
                             }),
+                            // TallGrass(
+                            //     size: game.map!.size,
+                            //     tallgrass: game.map!.tallGrassArea),
                             Positioned(
                               left: game.fog!.dx! - game.fog!.size! / 2,
                               top: game.fog!.dy! - game.fog!.size! / 2,

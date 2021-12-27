@@ -1,3 +1,4 @@
+import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
@@ -43,6 +44,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
     final players = Provider.of<List<Player>>(context);
     final turnController = Provider.of<TurnController>(context);
     final gameController = Provider.of<GameController>(context);
+    final game = Provider.of<Game>(context);
     final user = Provider.of<User>(context);
 
     playerSpriteController.updatePlayer(
@@ -120,14 +122,14 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                             },
                             onPanEnd: (details) {
                               user.endWalk(
-                                gameController.gameID,
-                                PlayerLocation(
-                                    dx: widget.tempLocation!.dx,
-                                    dy: widget.tempLocation!.dy),
-                              );
+                                  game.id!,
+                                  PlayerLocation(
+                                      dx: widget.tempLocation!.dx,
+                                      dy: widget.tempLocation!.dy),
+                                  game.map!.tallGrass!);
 
                               user.takeAction(
-                                gameController.gameID,
+                                game.id!,
                               );
                               if (user.selectedPlayer!.action!.outOfActions()) {
                                 turnController.passTurnWhere(

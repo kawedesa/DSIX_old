@@ -6,6 +6,8 @@ class Player {
   int? index;
   String? id;
   PlayerLocation? location;
+  bool? isVisible;
+  bool? canSeeInvisible;
   String? race;
   PlayerVisionRange? visionRange;
   PlayerWalkRange? walkRange;
@@ -29,6 +31,8 @@ class Player {
     int? index,
     String? id,
     PlayerLocation? location,
+    bool? isVisible,
+    bool? canSeeInvisible,
     String? race,
     PlayerVisionRange? visionRange,
     PlayerWalkRange? walkRange,
@@ -52,6 +56,8 @@ class Player {
     this.index = index;
     this.id = id;
     this.location = location;
+    this.isVisible = isVisible;
+    this.canSeeInvisible = canSeeInvisible;
     this.race = race;
     this.visionRange = visionRange;
     this.walkRange = walkRange;
@@ -80,6 +86,8 @@ class Player {
       'index': this.index,
       'id': this.id,
       'location': this.location?.toMap(),
+      'isVisible': this.isVisible,
+      'canSeeInvisible': this.canSeeInvisible,
       'race': this.race,
       'visionRange': this.visionRange?.toMap(),
       'walkRange': this.walkRange?.toMap(),
@@ -113,6 +121,8 @@ class Player {
       index: data?['index'],
       id: data?['id'],
       location: PlayerLocation.fromMap(data?['location']),
+      isVisible: data?['isVisible'],
+      canSeeInvisible: data?['canSeeInvisible'],
       race: data?['race'],
       visionRange: PlayerVisionRange.fromMap(data?['visionRange']),
       walkRange: PlayerWalkRange.fromMap(data?['walkRange']),
@@ -157,6 +167,8 @@ class Player {
       id: id[playerIndex],
       location: PlayerLocation.newLocation(location),
       race: randomRace,
+      isVisible: true,
+      canSeeInvisible: false,
       visionRange: PlayerVisionRange.set(randomRace),
       walkRange: PlayerWalkRange.set(randomRace),
       attackRange: PlayerAttackRange.set(randomRace),
@@ -178,8 +190,13 @@ class Player {
     );
   }
 
-  bool cantSee(Offset targetLocation) {
+  bool cantSee(Offset targetLocation, bool isVisible) {
+    if (isVisible == false && this.canSeeInvisible == false) {
+      return true;
+    }
+
     double distance = (targetLocation - this.location!.getLocation()).distance;
+
     if (distance < this.visionRange!.min! / 2 ||
         distance > this.visionRange!.max! / 2) {
       return true;
@@ -212,6 +229,10 @@ class Player {
     return damage;
   }
 
+  void look() {
+    this.canSeeInvisible = true;
+  }
+
   void defend() {
     int protect = Random().nextInt(6) + 1;
     increaseTempArmor(protect);
@@ -223,6 +244,7 @@ class Player {
 
   void clearTempEffects() {
     this.tempArmor = 0;
+    this.canSeeInvisible = false;
   }
 
   void takeDamage(int damageRoll, pDamage, mDamage) {

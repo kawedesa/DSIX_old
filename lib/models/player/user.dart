@@ -32,15 +32,38 @@ class User {
   void endWalk(
     String gameID,
     PlayerLocation newLocation,
+    TallGrassArea tallGrass,
   ) async {
     this.selectedPlayer!.location!.dx = newLocation.dx;
     this.selectedPlayer!.location!.dy = newLocation.dy;
+
+    if (inTallGrass(tallGrass)) {
+      this.selectedPlayer!.isVisible = false;
+    } else {
+      this.selectedPlayer!.isVisible = true;
+    }
 
     await firebase
         .doc(gameID)
         .collection('players')
         .doc('${this.selectedPlayer!.index}')
-        .update({'location': newLocation.toMap()});
+        .update({
+      'location': newLocation.toMap(),
+      'isVisible': this.selectedPlayer!.isVisible
+    });
+  }
+
+  bool inTallGrass(TallGrassArea tallgrass) {
+    bool inThere = false;
+
+    tallgrass.totalArea!.forEach((grass) {
+      if (inThere) {
+        return;
+      }
+      inThere = grass.inHere(this.selectedPlayer!.location!.getLocation());
+    });
+
+    return inThere;
   }
 
   void takeAction(String gameID) async {
@@ -114,14 +137,6 @@ class User {
     updateTempEffects(gameID);
   }
 
-  void updateTempEffects(String gameID) async {
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({'tempArmor': this.selectedPlayer!.tempArmor});
-  }
-
   void continuePlayerTurn() {
     this.playerTurn = true;
     setPlayerMode();
@@ -171,9 +186,25 @@ class User {
     this.menuIsOpen = false;
   }
 
+  void look(String gameID) {
+    this.selectedPlayer!.look();
+    updateTempEffects(gameID);
+  }
+
   void defend(String gameID) {
     this.selectedPlayer!.defend();
     updateTempEffects(gameID);
+  }
+
+  void updateTempEffects(String gameID) async {
+    await firebase
+        .doc(gameID)
+        .collection('players')
+        .doc('${this.selectedPlayer!.index}')
+        .update({
+      'tempArmor': this.selectedPlayer!.tempArmor,
+      'canSeeInvisible': this.selectedPlayer!.canSeeInvisible
+    });
   }
 
   void updateBag(

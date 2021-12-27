@@ -18,7 +18,10 @@ class GameController {
   }
 
   void newGame(GameMap map) {
-    Game game = Game.newGame(this.gameID, map);
+    Game game = Game.newGame(
+      this.gameID,
+      map,
+    );
 
     database.collection('game').doc(this.gameID).set(game.toMap());
   }
@@ -48,10 +51,4 @@ class GameController {
       throw EndGameException();
     }
   }
-
-  // double fogSize;
-
-  // void setFogSize() {
-  //   this.fogSize = game.mapSize - this.game.round * 5;
-  // }
 }

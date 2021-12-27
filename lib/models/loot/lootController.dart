@@ -120,7 +120,7 @@ class LootController {
   ) {
     this.visibleLoot = [];
     loot.forEach((target) {
-      if (selectedPlayer.cantSee(target.location!.getLocation())) {
+      if (selectedPlayer.cantSee(target.location!.getLocation(), true)) {
         return;
       }
 
