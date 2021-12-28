@@ -51,29 +51,6 @@ class _MapPageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    // List<List<Offset>> tallGrassArea = [
-    //   [
-    //     Offset(320, 213),
-    //     Offset(275, 213),
-    //     Offset(275, 278),
-    //     Offset(235, 278),
-    //     Offset(235, 320),
-    //     Offset(320, 320),
-    //   ],
-    //   [
-    //     Offset(264, 80),
-    //     Offset(264, 70),
-    //     Offset(210, 70),
-    //     Offset(210, 80),
-    //   ],
-    //   [
-    //     Offset(230, 200),
-    //     Offset(230, 184),
-    //     Offset(208, 184),
-    //     Offset(208, 200),
-    //   ]
-    // ];
-
     //Controlers
     final gameController = Provider.of<GameController>(context);
     final turnController = Provider.of<TurnController>(context);
@@ -97,12 +74,8 @@ class _MapPageState extends State<MapPage> {
     try {
       turnController.passTurnForDeadPlayers(game.id!, turnOrder, players);
     } on NewTurnException {
-      turnController.newTurnOrder(game.id!, players);
-      if (players.isNotEmpty) {
-        gameController.newRound(game);
-        user.endPlayerTurn();
-        print('play new turn animation');
-      }
+      _mapPageVM.newRound(game, gameController, turnController, players);
+      _mapPageAnimation.playNewRoundAnimation();
     }
 
     try {
@@ -221,20 +194,13 @@ class _MapPageState extends State<MapPage> {
                             Stack(
                               children: enemyController.enemyPlayers,
                             ),
-                            PlayerMenu(
-                              refresh: () => refresh(),
-                            ),
                             Consumer<PlayerTempLocation>(
                                 builder: (context, playerTempLocation, ___) {
                               return PlayerSprite(
                                 refresh: () => refresh(),
                                 tempLocation: playerTempLocation,
-                                player: user.selectedPlayer,
                               );
                             }),
-                            // TallGrass(
-                            //     size: game.map!.size,
-                            //     tallgrass: game.map!.tallGrassArea),
                             Positioned(
                               left: game.fog!.dx! - game.fog!.size! / 2,
                               top: game.fog!.dy! - game.fog!.size! / 2,
@@ -243,13 +209,16 @@ class _MapPageState extends State<MapPage> {
                                 child: CustomPaint(
                                   painter: FogArea(
                                       minRange: game.fog!.size!,
-                                      maxRange: game.map!.size! * 2),
+                                      maxRange: game.map!.size! * 3),
                                   child: SizedBox(
                                     width: game.fog!.size!,
                                     height: game.fog!.size!,
                                   ),
                                 ),
                               ),
+                            ),
+                            PlayerMenu(
+                              refresh: () => refresh(),
                             ),
                           ],
                         ),

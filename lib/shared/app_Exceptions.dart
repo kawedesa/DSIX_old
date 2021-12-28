@@ -33,6 +33,11 @@ class EndPlayerTurnException implements Exception {
   EndPlayerTurnException();
 }
 
+class UpdatePlayerException implements Exception {
+  String message = 'update player';
+  UpdatePlayerException();
+}
+
 class EndGameException implements Exception {
   String message = 'end game';
   EndGameException();

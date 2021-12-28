@@ -243,6 +243,12 @@ class AppImages {
       height: double.infinity,
     ),
     SvgPicture.asset(
+      'assets/image/map/ruins/tallGrass00.svg',
+      color: AppColors.ruinsTallGrass00,
+      width: double.infinity,
+      height: double.infinity,
+    ),
+    SvgPicture.asset(
       'assets/image/map/ruins/structure00.svg',
       color: AppColors.ruinsStructure00,
       width: double.infinity,

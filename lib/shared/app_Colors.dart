@@ -77,8 +77,9 @@ class AppColors {
   static final crossroadsTree02 = Color.fromRGBO(158, 122, 66, 1);
 
   //Ruins
-  static final ruinsGrass00 = Color.fromRGBO(97, 103, 72, 1);
+  static final ruinsGrass00 = Color.fromRGBO(96, 102, 64, 1);
   static final ruinsGrass01 = Color.fromRGBO(164, 156, 70, 1);
+  static final ruinsTallGrass00 = Color.fromRGBO(57, 68, 42, 1);
   static final ruinsStructure00 = Color.fromRGBO(61, 64, 60, 1);
   static final ruinsroadsStructure01 = Color.fromRGBO(73, 81, 80, 1);
   static final ruinsroadsStructure02 = Color.fromRGBO(141, 142, 121, 1);

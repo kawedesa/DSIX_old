@@ -15,7 +15,17 @@ class MapPageAnimation {
     artboard!.addController(SimpleAnimation('off'));
   }
 
+  playNewRoundAnimation() {
+    if (artboard == null) {
+      return;
+    }
+    artboard!.addController(SimpleAnimation('newRound'));
+  }
+
   playYourTurnAnimation() {
+    if (artboard == null) {
+      return;
+    }
     artboard!.addController(SimpleAnimation('yourTurn'));
   }
 }

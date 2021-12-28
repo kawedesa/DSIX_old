@@ -1,11 +1,13 @@
+import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:flutter/material.dart';
 import 'widgets/endGameButton.dart';
 
 class MapPageVM {
   TransformationController? canvasController;
-
-  double minZoom = 4.5;
+  double minZoom = 3.5;
   double maxZoom = 15;
 
   void createCanvasController(
@@ -43,6 +45,13 @@ class MapPageVM {
 
   void goToPlayer(context, double mapSize, Player player) {
     updateCanvasController(context, mapSize, player.location);
+  }
+
+  void newRound(Game game, GameController gameController,
+      TurnController turnController, List<Player> players) async {
+    turnController.newTurnOrder(game.id!, players);
+    gameController.newRound(game);
+    await Future.delayed(Duration(seconds: 1));
   }
 
   List<Widget> temporaryUI = [];

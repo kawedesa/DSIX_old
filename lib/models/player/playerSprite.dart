@@ -3,6 +3,7 @@ import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
@@ -18,11 +19,9 @@ import 'playerSpriteImage.dart';
 class PlayerSprite extends StatefulWidget {
   final Function()? refresh;
   PlayerTempLocation? tempLocation;
-  Player? player;
   PlayerSprite({
     Key? key,
     @required this.refresh,
-    @required this.player,
     @required this.tempLocation,
   }) : super(key: key);
 
@@ -47,38 +46,42 @@ class _PlayerSpriteState extends State<PlayerSprite> {
     final game = Provider.of<Game>(context);
     final user = Provider.of<User>(context);
 
-    playerSpriteController.updatePlayer(
-        players[user.selectedPlayer!.index!], user);
+    try {
+      playerSpriteController.updatePlayer(
+          players[user.selectedPlayer!.index!], user.selectedPlayer!);
+    } on UpdatePlayerException {
+      user.updateSelectedPlayer(players[user.selectedPlayer!.index!]);
+    }
 
     return Positioned(
       left: playerSpriteController
           .calculateSpritePosition(
-              widget.tempLocation, widget.player!.visionRange!.max)
+              widget.tempLocation, user.selectedPlayer!.visionRange!.max)
           .dx,
       top: playerSpriteController
           .calculateSpritePosition(
-              widget.tempLocation, widget.player!.visionRange!.max)
+              widget.tempLocation, user.selectedPlayer!.visionRange!.max)
           .dy,
       child: TransparentPointer(
         transparent: true,
         child: SizedBox(
-          width: widget.player!.visionRange!.max,
-          height: widget.player!.visionRange!.max,
+          width: user.selectedPlayer!.visionRange!.max,
+          height: user.selectedPlayer!.visionRange!.max,
           child: Stack(
             children: [
               //VISION RANGE
               Align(
                   alignment: Alignment.center,
                   child: PlayerSpriteVisionRange(
-                      visionRange: widget.player!.visionRange)),
+                      visionRange: user.selectedPlayer!.visionRange)),
               //WALK RANGE
               Align(
                 alignment: Alignment.center,
                 child: WalkRange(
                   walkRange: playerSpriteController.walkedDistance(
                       widget.tempLocation!,
-                      widget.player!.location!,
-                      widget.player!.walkRange!.max!),
+                      user.selectedPlayer!.location!,
+                      user.selectedPlayer!.walkRange!.max!),
                 ),
               ),
 
@@ -86,8 +89,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                 alignment: Alignment.center,
                 child: AttackRange(
-                  maxAttackRange: widget.player!.attackRange!.max!,
-                  minAttackRange: widget.player!.attackRange!.min!,
+                  maxAttackRange: user.selectedPlayer!.attackRange!.max!,
+                  minAttackRange: user.selectedPlayer!.attackRange!.min!,
                 ),
               ),
               //HITBOX CONTROLLER
@@ -113,8 +116,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                             onPanUpdate: (details) {
                               if (playerSpriteController.walkedDistance(
                                       widget.tempLocation!,
-                                      widget.player!.location!,
-                                      widget.player!.walkRange!.max!)! >
+                                      user.selectedPlayer!.location!,
+                                      user.selectedPlayer!.walkRange!.max!)! >
                                   0) {
                                 widget.tempLocation!
                                     .walk(details.delta.dx, details.delta.dy);
@@ -145,15 +148,15 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                 alignment: Alignment.center,
                 child: PlayerSpriteImage(
-                    image: widget.player!.race,
-                    isDead: widget.player!.life!.isDead()),
+                    image: user.selectedPlayer!.race,
+                    isDead: user.selectedPlayer!.life!.isDead()),
               ),
 
               //TEMP EFFECTS
               Align(
                   alignment: Alignment.center,
                   child: PlayerSpriteTempEffects(
-                    tempArmor: widget.player!.tempArmor,
+                    tempArmor: user.selectedPlayer!.tempArmor,
                   )),
               //DAMAGE ANIMATION
               Align(
@@ -204,17 +207,19 @@ class PlayerSpriteController {
     ));
   }
 
-  void updatePlayer(Player player, User user) {
-    if (checkTempArmor(player.tempArmor!, user.selectedPlayer!.tempArmor!) ||
-        checkLife(player.life!.current!, user.selectedPlayer!.life!.current!)) {
-      user.updateSelectedPlayer(player);
+  void updatePlayer(
+    Player newPlayer,
+    Player selectedPlayeruser,
+  ) {
+    if (checkTempArmor(newPlayer.tempArmor!, selectedPlayeruser.tempArmor!) ||
+        checkLife(
+            newPlayer.life!.current!, selectedPlayeruser.life!.current!)) {
+      throw UpdatePlayerException();
     }
   }
 
   bool checkTempArmor(int newArmor, oldArmor) {
     if (oldArmor != newArmor) {
-      int damage = oldArmor - newArmor;
-      playDamageAnimation(damage);
       return true;
     }
     return false;

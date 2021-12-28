@@ -24,7 +24,7 @@ class TurnController {
             .toList());
   }
 
-  void newTurnOrder(String gameID, List<Player> players) {
+  void newTurnOrder(String gameID, List<Player> players) async {
     List<String> playerIDs = [];
     var batch = database.batch();
 
