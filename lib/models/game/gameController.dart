@@ -3,6 +3,7 @@ import 'package:dsixv02app/shared/app_Exceptions.dart';
 
 import 'game.dart';
 import '../player/player.dart';
+import 'gameMap/gameMap.dart';
 
 class GameController {
   final database = FirebaseFirestore.instance;

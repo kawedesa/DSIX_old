@@ -1,21 +1,10 @@
-// import 'package:dsixv02app/models/game.dart';
-// import 'package:dsixv02app/models/gameController.dart';
-
-// import 'package:dsixv02app/models/loot/lootController.dart';
-
-// import 'package:dsixv02app/models/player/playerController.dart';
-
-// import 'package:dsixv02app/models/turnOrder/turnController.dart';
-// import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
-
-// import 'package:flutter/material.dart';
-
-import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/game/gameController.dart';
+import 'package:dsixv02app/models/game/gameMap/gameMap.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/playerController.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
+import 'package:dsixv02app/shared/app_Maps.dart';
 import 'package:flutter/material.dart';
 
 class BattleRoyaleSettingsPageVM {
@@ -55,11 +44,7 @@ class BattleRoyaleSettingsPageVM {
     PlayerController playerController,
     LootController lootController,
   ) {
-    GameMap map = GameMap(
-      name: 'ruins',
-      size: 320,
-      tallGrass: TallGrassArea.newTallGrass(),
-    );
+    GameMap map = AppMaps.ruins;
     gameController.newGame(map);
 
     playerController.newRandomPlayers(

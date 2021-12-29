@@ -31,6 +31,10 @@ class Shop {
         randomItem = Random().nextInt(this.ancient.length);
         newItem = ancient[randomItem];
         break;
+      case 'consumable':
+        randomItem = Random().nextInt(this.consumable.length);
+        newItem = consumable[randomItem];
+        break;
     }
     return newItem!;
   }
@@ -43,6 +47,7 @@ class Shop {
       'magicWeapons',
       'armor',
       'ancient',
+      'consumable',
     ];
     int randomCategory = Random().nextInt(category.length);
     return category[randomCategory];
@@ -854,6 +859,51 @@ class Shop {
       mArmor: 2,
       weight: 3,
       value: 1600,
+      maxWeaponRange: 0,
+      minWeaponRange: 0,
+    ),
+  ];
+
+  List<Item> consumable = [
+    Item(
+      icon: AppIcons.ward,
+      name: 'ward',
+      description: 'Reveals an area around you.',
+      itemSlot: 'consumable',
+      weight: 1,
+      value: 100,
+      pDamage: 0,
+      pArmor: 0,
+      mDamage: 0,
+      mArmor: 0,
+      maxWeaponRange: 0,
+      minWeaponRange: 0,
+    ),
+    Item(
+      icon: AppIcons.food,
+      name: 'food',
+      description: 'Heals 1-3 HP.',
+      itemSlot: 'consumable',
+      weight: 1,
+      value: 100,
+      pDamage: 0,
+      pArmor: 0,
+      mDamage: 0,
+      mArmor: 0,
+      maxWeaponRange: 0,
+      minWeaponRange: 0,
+    ),
+    Item(
+      icon: AppIcons.healingPotion,
+      name: 'healing potion',
+      description: 'Heals 3-6 HP.',
+      itemSlot: 'consumable',
+      weight: 1,
+      value: 300,
+      pDamage: 0,
+      pArmor: 0,
+      mDamage: 0,
+      mArmor: 0,
       maxWeaponRange: 0,
       minWeaponRange: 0,
     ),

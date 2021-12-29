@@ -1,9 +1,8 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:dsixv02app/shared/app_Exceptions.dart';
-// import 'player.dart';
-
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/game/fog/fog.dart';
+import 'package:dsixv02app/models/game/gameMap/tallGrassArea.dart';
+import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import '../turn/turn.dart';
 import 'player.dart';
@@ -18,7 +17,6 @@ class User {
 
   void selectPlayer(
     String? id,
-    int? index,
     Player? player,
   ) {
     this.selectedPlayerID = id;
@@ -134,7 +132,8 @@ class User {
 
   void clearTempEffects(String gameID) {
     this.selectedPlayer!.clearTempEffects();
-    updateTempEffects(gameID);
+    updateTempArmor(gameID);
+    updateVision(gameID);
   }
 
   void continuePlayerTurn() {
@@ -187,23 +186,67 @@ class User {
   }
 
   void look(String gameID) {
-    this.selectedPlayer!.look();
-    updateTempEffects(gameID);
+    this.selectedPlayer!.vision!.look();
+    updateVision(gameID);
   }
 
   void defend(String gameID) {
     this.selectedPlayer!.defend();
-    updateTempEffects(gameID);
+    updateTempArmor(gameID);
   }
 
-  void updateTempEffects(String gameID) async {
+  void useItem(String gameID, Item item) {
+    switch (item.name) {
+      case 'ward':
+        this.selectedPlayer!.vision!.tempVision = 50;
+        this.selectedPlayer!.vision!.canSeeInvisible = true;
+        updateVision(gameID);
+        break;
+      case 'food':
+        int healingAmount = Random().nextInt(3) + 1;
+        this.selectedPlayer!.life!.increaseCurrentLife(healingAmount);
+        updateLife(gameID);
+        break;
+
+      case 'healing potion':
+        int healingAmount = Random().nextInt(3) + 4;
+        this.selectedPlayer!.life!.increaseCurrentLife(healingAmount);
+        updateLife(gameID);
+        break;
+      case 'ward':
+        break;
+    }
+    this.selectedPlayer!.destroyItem(item);
+    updateBag(gameID);
+  }
+
+  void updateLife(String gameID) async {
+    await firebase
+        .doc(gameID)
+        .collection('players')
+        .doc('${this.selectedPlayer!.index}')
+        .update({
+      'life': this.selectedPlayer!.life!.toMap(),
+    });
+  }
+
+  void updateVision(String gameID) async {
+    await firebase
+        .doc(gameID)
+        .collection('players')
+        .doc('${this.selectedPlayer!.index}')
+        .update({
+      'vision': this.selectedPlayer!.vision!.toMap(),
+    });
+  }
+
+  void updateTempArmor(String gameID) async {
     await firebase
         .doc(gameID)
         .collection('players')
         .doc('${this.selectedPlayer!.index}')
         .update({
       'tempArmor': this.selectedPlayer!.tempArmor,
-      'canSeeInvisible': this.selectedPlayer!.canSeeInvisible
     });
   }
 
@@ -254,7 +297,6 @@ class User {
       if (players[i].id == playerID) {
         selectPlayer(
           playerID,
-          i,
           players[i],
         );
       }

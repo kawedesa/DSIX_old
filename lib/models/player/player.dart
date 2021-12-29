@@ -7,9 +7,8 @@ class Player {
   String? id;
   PlayerLocation? location;
   bool? isVisible;
-  bool? canSeeInvisible;
   String? race;
-  PlayerVisionRange? visionRange;
+  PlayerVision? vision;
   PlayerWalkRange? walkRange;
   PlayerAttackRange? attackRange;
   PlayerLife? life;
@@ -32,9 +31,8 @@ class Player {
     String? id,
     PlayerLocation? location,
     bool? isVisible,
-    bool? canSeeInvisible,
     String? race,
-    PlayerVisionRange? visionRange,
+    PlayerVision? vision,
     PlayerWalkRange? walkRange,
     PlayerAttackRange? attackRange,
     PlayerLife? life,
@@ -57,9 +55,8 @@ class Player {
     this.id = id;
     this.location = location;
     this.isVisible = isVisible;
-    this.canSeeInvisible = canSeeInvisible;
     this.race = race;
-    this.visionRange = visionRange;
+    this.vision = vision;
     this.walkRange = walkRange;
     this.attackRange = attackRange;
     this.life = life;
@@ -87,9 +84,8 @@ class Player {
       'id': this.id,
       'location': this.location?.toMap(),
       'isVisible': this.isVisible,
-      'canSeeInvisible': this.canSeeInvisible,
       'race': this.race,
-      'visionRange': this.visionRange?.toMap(),
+      'vision': this.vision?.toMap(),
       'walkRange': this.walkRange?.toMap(),
       'attackRange': this.attackRange?.toMap(),
       'life': this.life?.toMap(),
@@ -122,9 +118,8 @@ class Player {
       id: data?['id'],
       location: PlayerLocation.fromMap(data?['location']),
       isVisible: data?['isVisible'],
-      canSeeInvisible: data?['canSeeInvisible'],
       race: data?['race'],
-      visionRange: PlayerVisionRange.fromMap(data?['visionRange']),
+      vision: PlayerVision.fromMap(data?['vision']),
       walkRange: PlayerWalkRange.fromMap(data?['walkRange']),
       attackRange: PlayerAttackRange.fromMap(data?['attackRange']),
       life: PlayerLife.fromMap(data?['life']),
@@ -168,8 +163,7 @@ class Player {
       location: PlayerLocation.newLocation(location),
       race: randomRace,
       isVisible: true,
-      canSeeInvisible: false,
-      visionRange: PlayerVisionRange.set(randomRace),
+      vision: PlayerVision.set(randomRace),
       walkRange: PlayerWalkRange.set(randomRace),
       attackRange: PlayerAttackRange.set(randomRace),
       life: PlayerLife.set(randomRace),
@@ -191,14 +185,18 @@ class Player {
   }
 
   bool cantSee(Offset targetLocation, bool isVisible) {
-    if (isVisible == false && this.canSeeInvisible == false) {
+    if (isVisible == false && this.vision!.canSeeInvisible == false) {
+      print('isVisible:');
+      print(isVisible);
+      print('canSeeInvisible:');
+      print(this.vision!.canSeeInvisible);
       return true;
     }
 
-    double distance = (targetLocation - this.location!.getLocation()).distance;
+    double distanceFromTarget =
+        (targetLocation - this.location!.getLocation()).distance;
 
-    if (distance < this.visionRange!.min! / 2 ||
-        distance > this.visionRange!.max! / 2) {
+    if (distanceFromTarget > this.vision!.getRange() / 2) {
       return true;
     } else {
       return false;
@@ -229,10 +227,6 @@ class Player {
     return damage;
   }
 
-  void look() {
-    this.canSeeInvisible = true;
-  }
-
   void defend() {
     int protect = Random().nextInt(6) + 1;
     increaseTempArmor(protect);
@@ -244,7 +238,7 @@ class Player {
 
   void clearTempEffects() {
     this.tempArmor = 0;
-    this.canSeeInvisible = false;
+    this.vision!.resetVision();
   }
 
   void takeDamage(int damageRoll, pDamage, mDamage) {
@@ -565,6 +559,9 @@ class PlayerLife {
 
   void increaseCurrentLife(int value) {
     this.current = this.current! + value;
+    if (this.current! > this.max!) {
+      this.current = this.max;
+    }
   }
 
   bool isDead() {
@@ -666,34 +663,59 @@ class PlayerWalkRange {
   }
 }
 
-class PlayerVisionRange {
-  double? min;
-  double? max;
-  PlayerVisionRange({double? min, double? max}) {
-    this.min = min;
-    this.max = max;
+class PlayerVision {
+  double? tempVision;
+  double? vision;
+  bool? canSeeInvisible;
+  PlayerVision({
+    double? tempVision,
+    double? vision,
+    bool? canSeeInvisible,
+  }) {
+    this.tempVision = tempVision;
+    this.vision = vision;
+    this.canSeeInvisible = canSeeInvisible;
   }
   Map<String, dynamic> toMap() {
     return {
-      'min': this.min,
-      'max': this.max,
+      'tempVision': this.tempVision,
+      'vision': this.vision,
+      'canSeeInvisible': this.canSeeInvisible,
     };
   }
 
-  factory PlayerVisionRange.fromMap(Map<String, dynamic>? data) {
-    return PlayerVisionRange(
-      min: data?['min'] * 1.0,
-      max: data?['max'] * 1.0,
+  factory PlayerVision.fromMap(Map<String, dynamic>? data) {
+    return PlayerVision(
+      tempVision: data?['tempVision'] * 1.0,
+      vision: data?['vision'] * 1.0,
+      canSeeInvisible: data?['canSeeInvisible'],
     );
   }
-  factory PlayerVisionRange.set(String race) {
-    double max;
+  factory PlayerVision.set(String race) {
+    double vision;
     if (race == 'elf') {
-      max = 150.0;
+      vision = 150.0;
     } else {
-      max = 120.0;
+      vision = 120.0;
     }
 
-    return PlayerVisionRange(min: 0, max: max);
+    return PlayerVision(
+      tempVision: 0,
+      vision: vision,
+      canSeeInvisible: false,
+    );
+  }
+
+  void look() {
+    this.canSeeInvisible = true;
+  }
+
+  double getRange() {
+    return (this.vision! + this.tempVision!);
+  }
+
+  void resetVision() {
+    this.canSeeInvisible = false;
+    this.tempVision = 0;
   }
 }

@@ -1,19 +1,8 @@
-// import 'dart:math';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:dsixv02app/models/player/player.dart';
-// import 'package:dsixv02app/models/shop/item.dart';
-// import 'package:dsixv02app/models/shop/shop.dart';
-// import 'package:flutter/material.dart';
-// import 'loot.dart';
-// import 'lootSprite.dart';
-
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/models/shop/shop.dart';
-
 import 'loot.dart';
 import 'lootSprite.dart';
 

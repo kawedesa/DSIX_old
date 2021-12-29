@@ -1,4 +1,4 @@
-// ignore: must_be_immutable
+import 'package:dsixv02app/models/player/iventory/iventory.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
@@ -6,9 +6,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-
 import '../user.dart';
-import 'iventory.dart';
 
 class IventoryButton extends StatefulWidget {
   IventoryButton({

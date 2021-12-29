@@ -1,6 +1,7 @@
 class Item {
   String? icon;
   String? name;
+  String? description;
   String? itemSlot;
   int? pDamage;
   int? mDamage;
@@ -13,6 +14,7 @@ class Item {
   Item({
     String? icon,
     String? name,
+    String? description,
     String? itemSlot,
     int? pDamage,
     int? mDamage,
@@ -25,6 +27,7 @@ class Item {
   }) {
     this.icon = icon;
     this.name = name;
+    this.description = description;
     this.itemSlot = itemSlot;
     this.pDamage = pDamage;
     this.mDamage = mDamage;
@@ -40,6 +43,7 @@ class Item {
     return Item(
       icon: data?['icon'],
       name: data?['name'],
+      description: data?['description'],
       itemSlot: data?['itemSlot'],
       pDamage: data?['pDamage'],
       mDamage: data?['mDamage'],
@@ -56,6 +60,7 @@ class Item {
     return {
       'icon': this.icon,
       'name': this.name,
+      'description': this.description,
       'itemSlot': this.itemSlot,
       'pDamage': this.pDamage,
       'mDamage': this.mDamage,
@@ -72,6 +77,7 @@ class Item {
     return Item(
       icon: '',
       name: '',
+      description: '',
       itemSlot: '',
       pDamage: 0,
       mDamage: 0,

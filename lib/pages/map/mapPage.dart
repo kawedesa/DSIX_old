@@ -1,14 +1,15 @@
 import 'package:dsixv02app/models/enemy/enemyController.dart';
+import 'package:dsixv02app/models/game/fog/fogSprite.dart';
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/loot/loot.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/models/player/playerMenu/playerMenu.dart';
+import 'package:dsixv02app/models/player/menu/playerMenu.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turn.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
-import 'package:dsixv02app/pages/map/widgets/mapTile.dart';
+import 'package:dsixv02app/models/game/gameMap/mapTile.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
@@ -22,8 +23,7 @@ import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
 import 'mapPageAnimation.dart';
 import 'mapPageVM.dart';
-import '../../models/player/playerSprite.dart';
-import 'widgets/fogArea.dart';
+import '../../models/player/sprite/playerSprite.dart';
 import 'widgets/turnButton.dart';
 
 // ignore: must_be_immutable
@@ -89,14 +89,12 @@ class _MapPageState extends State<MapPage> {
       user.endPlayerTurn();
     }
 
-    enemyController.updateEnemyPlayersInSight(
-        players, players[user.selectedPlayer!.index!]);
+    enemyController.updateEnemyPlayersInSight(players, user.selectedPlayer!);
 
-    lootController.updateLootInSight(
-        loot, players[user.selectedPlayer!.index!]);
+    lootController.updateLootInSight(loot, user.selectedPlayer!);
 
-    _mapPageVM.createCanvasController(context, game.map!.size!,
-        players[user.selectedPlayer!.index!].location);
+    _mapPageVM.createCanvasController(
+        context, game.map!.size!, user.selectedPlayer!.location);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -201,22 +199,7 @@ class _MapPageState extends State<MapPage> {
                                 tempLocation: playerTempLocation,
                               );
                             }),
-                            Positioned(
-                              left: game.fog!.dx! - game.fog!.size! / 2,
-                              top: game.fog!.dy! - game.fog!.size! / 2,
-                              child: TransparentPointer(
-                                transparent: true,
-                                child: CustomPaint(
-                                  painter: FogArea(
-                                      minRange: game.fog!.size!,
-                                      maxRange: game.map!.size! * 3),
-                                  child: SizedBox(
-                                    width: game.fog!.size!,
-                                    height: game.fog!.size!,
-                                  ),
-                                ),
-                              ),
-                            ),
+                            FogSprite(),
                             PlayerMenu(
                               refresh: () => refresh(),
                             ),

@@ -1,13 +1,15 @@
 import 'package:dsixv02app/models/game/gameController.dart';
-import 'package:dsixv02app/models/shop/item.dart';
+import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
-import 'package:dsixv02app/shared/widgets/dialogButton.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../user.dart';
+import 'damageAndArmorStats.dart';
+import 'itemDetail.dart';
+import 'iventorySlot.dart';
 
 class Iventory extends StatefulWidget {
   const Iventory({
@@ -27,6 +29,7 @@ class _IventoryState extends State<Iventory> {
   @override
   Widget build(BuildContext context) {
     final gameController = Provider.of<GameController>(context);
+    final turnController = Provider.of<TurnController>(context);
     final user = Provider.of<User>(context);
 
     return AlertDialog(
@@ -110,8 +113,8 @@ class _IventoryState extends State<Iventory> {
                                           playerTurn: user.playerTurn,
                                           item: user
                                               .selectedPlayer!.mainHandSlot!,
-                                          isEquipped: true,
-                                          equipOrUnequip: () async {
+                                          buttonText: 'unequip',
+                                          useEquipOrUnequip: () async {
                                             user.selectedPlayer!.unequip(
                                                 user.selectedPlayer!
                                                     .mainHandSlot!,
@@ -150,8 +153,8 @@ class _IventoryState extends State<Iventory> {
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.handSlot!,
-                                          isEquipped: true,
-                                          equipOrUnequip: () async {
+                                          buttonText: 'unequip',
+                                          useEquipOrUnequip: () async {
                                             user.selectedPlayer!.unequip(
                                                 user.selectedPlayer!.handSlot!,
                                                 'handSlot');
@@ -197,8 +200,8 @@ class _IventoryState extends State<Iventory> {
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.headSlot!,
-                                          isEquipped: true,
-                                          equipOrUnequip: () async {
+                                          buttonText: 'unequip',
+                                          useEquipOrUnequip: () async {
                                             user.selectedPlayer!.unequip(
                                                 user.selectedPlayer!.headSlot!,
                                                 'headSlot');
@@ -236,8 +239,8 @@ class _IventoryState extends State<Iventory> {
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.bodySlot!,
-                                          isEquipped: true,
-                                          equipOrUnequip: () async {
+                                          buttonText: 'unequip',
+                                          useEquipOrUnequip: () async {
                                             user.selectedPlayer!.unequip(
                                                 user.selectedPlayer!.bodySlot!,
                                                 'bodySlot');
@@ -284,8 +287,8 @@ class _IventoryState extends State<Iventory> {
                                           playerTurn: user.playerTurn,
                                           item:
                                               user.selectedPlayer!.offHandSlot!,
-                                          isEquipped: true,
-                                          equipOrUnequip: () async {
+                                          buttonText: 'unequip',
+                                          useEquipOrUnequip: () async {
                                             user.selectedPlayer!.unequip(
                                                 user.selectedPlayer!
                                                     .offHandSlot!,
@@ -321,8 +324,8 @@ class _IventoryState extends State<Iventory> {
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.feetSlot!,
-                                          isEquipped: true,
-                                          equipOrUnequip: () async {
+                                          buttonText: 'unequip',
+                                          useEquipOrUnequip: () async {
                                             user.selectedPlayer!.unequip(
                                                 user.selectedPlayer!.feetSlot!,
                                                 'feetSlot');
@@ -395,19 +398,49 @@ class _IventoryState extends State<Iventory> {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return ItemDetail(
-                                    playerID: user.selectedPlayerID,
-                                    playerTurn: user.playerTurn,
-                                    item: user.selectedPlayer!.bag![index],
-                                    isEquipped: false,
-                                    equipOrUnequip: () async {
-                                      user.selectedPlayer!.equipItem(
-                                          user.selectedPlayer!.bag![index]);
-                                      user.updateIventory(
-                                          gameController.gameID);
-                                      refresh();
-                                    },
-                                  );
+                                  return (user.selectedPlayer!.bag![index]
+                                              .itemSlot ==
+                                          'consumable')
+                                      ? ItemDetail(
+                                          playerID: user.selectedPlayerID,
+                                          playerTurn: user.playerTurn,
+                                          item:
+                                              user.selectedPlayer!.bag![index],
+                                          buttonText: 'use',
+                                          useEquipOrUnequip: () async {
+                                            user.useItem(
+                                                gameController.gameID,
+                                                user.selectedPlayer!
+                                                    .bag![index]);
+                                            user.takeAction(
+                                              gameController.gameID,
+                                            );
+                                            if (user.selectedPlayer!.action!
+                                                .outOfActions()) {
+                                              turnController.passTurnWhere(
+                                                  gameController.gameID,
+                                                  user.selectedPlayer!.id!);
+                                            }
+                                            Navigator.pop(context);
+
+                                            refresh();
+                                          },
+                                        )
+                                      : ItemDetail(
+                                          playerID: user.selectedPlayerID,
+                                          playerTurn: user.playerTurn,
+                                          item:
+                                              user.selectedPlayer!.bag![index],
+                                          buttonText: 'equip',
+                                          useEquipOrUnequip: () async {
+                                            user.selectedPlayer!.equipItem(user
+                                                .selectedPlayer!.bag![index]);
+                                            user.updateIventory(
+                                                gameController.gameID);
+
+                                            refresh();
+                                          },
+                                        );
                                 },
                               );
                             },
@@ -435,298 +468,6 @@ class _IventoryState extends State<Iventory> {
           ],
         ),
       ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class ItemDetail extends StatelessWidget {
-  String? playerID;
-  bool? playerTurn;
-  Item? item;
-  bool? isEquipped;
-  Function()? equipOrUnequip;
-  ItemDetail({
-    Key? key,
-    @required this.playerID,
-    @required this.playerTurn,
-    @required this.item,
-    @required this.isEquipped,
-    @required this.equipOrUnequip,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    UIColor _uiColor = UIColor();
-
-    return AlertDialog(
-      contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-      content: Container(
-        width: MediaQuery.of(context).size.width * 0.8,
-        decoration: BoxDecoration(
-          color: AppColors.black00,
-          border: Border.all(
-            color: _uiColor.setUIColor(playerID, 'primary'),
-            width: 2,
-          ),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              color: _uiColor.setUIColor(playerID, 'primary'),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-                child: Center(
-                  child: Text('${item!.name}'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: 'Santana',
-                        height: 1,
-                        fontSize: 25,
-                        color: _uiColor.setUIColor(playerID, 'secondary'),
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 3,
-                      )),
-                ),
-              ),
-            ),
-            Column(
-              children: [
-                Divider(
-                  height: 0,
-                  thickness: 2,
-                  color: _uiColor.setUIColor(playerID, 'primary'),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.3,
-                  width: MediaQuery.of(context).size.height * 0.3,
-                  child: SvgPicture.asset(
-                    item!.icon!,
-                    color: AppColors.white00,
-                  ),
-                ),
-                SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 2,
-                  color: _uiColor.setUIColor(playerID, 'primary'),
-                ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.07,
-                  child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: DamageAndArmorStats(
-                        playerID: playerID,
-                        pDamage: item!.pDamage,
-                        mDamage: item!.mDamage,
-                        pArmor: item!.pArmor,
-                        mArmor: item!.mArmor,
-                      )),
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 2,
-                  color: _uiColor.setUIColor(playerID, 'primary'),
-                ),
-                (playerTurn!)
-                    ? DialogButton(
-                        buttonText: (isEquipped!) ? 'unequip' : 'equip',
-                        onTapAction: () async {
-                          equipOrUnequip!();
-                          Navigator.pop(context);
-                        },
-                      )
-                    : SizedBox(),
-                DialogButton(
-                  buttonText: 'close',
-                  onTapAction: () async {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class IventorySlot extends StatelessWidget {
-  String? playerID;
-  Item? item;
-  String? slotImage;
-  Function()? onTap;
-  Function()? onDoubleTap;
-
-  IventorySlot(
-      {Key? key,
-      @required this.playerID,
-      @required this.item,
-      @required this.slotImage,
-      @required this.onTap,
-      @required this.onDoubleTap})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    UIColor _uiColor = UIColor();
-    return GestureDetector(
-      onTap: () => onTap!(),
-      onDoubleTap: () => onDoubleTap!(),
-      child: Container(
-        decoration: BoxDecoration(
-          border: Border.all(
-            color: _uiColor.setUIColor(playerID, 'primary'),
-            width: 1,
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10.0),
-          child: SvgPicture.asset(
-            (item!.name != '') ? item!.icon! : slotImage!,
-            width: double.infinity,
-            color: (item!.name != '')
-                ? AppColors.white00
-                : _uiColor.setUIColor(playerID, 'primary'),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class DamageAndArmorStats extends StatelessWidget {
-  String? playerID;
-  int? pDamage;
-  int? mDamage;
-  int? pArmor;
-  int? mArmor;
-  DamageAndArmorStats(
-      {Key? key,
-      @required this.playerID,
-      @required this.pDamage,
-      @required this.mDamage,
-      @required this.pArmor,
-      @required this.mArmor})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    UIColor _uiColor = UIColor();
-
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              AppIcons.pDamage,
-              color: _uiColor.setUIColor(playerID, 'primary'),
-              width: MediaQuery.of(context).size.height * 0.035,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              child: Text(
-                '$pDamage',
-                style: TextStyle(
-                  fontFamily: 'Santana',
-                  height: 1,
-                  fontSize: 25,
-                  color: AppColors.white00,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 3,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              AppIcons.mDamage,
-              color: _uiColor.setUIColor(playerID, 'primary'),
-              width: MediaQuery.of(context).size.height * 0.035,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              child: Text(
-                '$mDamage',
-                style: TextStyle(
-                  fontFamily: 'Santana',
-                  height: 1,
-                  fontSize: 25,
-                  color: AppColors.white00,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 3,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              AppIcons.pArmor,
-              color: _uiColor.setUIColor(playerID, 'primary'),
-              width: MediaQuery.of(context).size.height * 0.035,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              child: Text(
-                '$pArmor',
-                style: TextStyle(
-                  fontFamily: 'Santana',
-                  height: 1,
-                  fontSize: 25,
-                  color: AppColors.white00,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 3,
-                ),
-              ),
-            ),
-          ],
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            SvgPicture.asset(
-              AppIcons.mArmor,
-              color: _uiColor.setUIColor(playerID, 'primary'),
-              width: MediaQuery.of(context).size.height * 0.035,
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
-              child: Text(
-                '$mArmor',
-                style: TextStyle(
-                  fontFamily: 'Santana',
-                  height: 1,
-                  fontSize: 25,
-                  color: AppColors.white00,
-                  fontWeight: FontWeight.bold,
-                  letterSpacing: 3,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
     );
   }
 }

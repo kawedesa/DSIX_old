@@ -1,18 +1,18 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dotted_border/dotted_border.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
-import 'package:dsixv02app/shared/app_Icons.dart';
-import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
-import '../game/gameController.dart';
-import '../player/playerSpriteImage.dart';
+import '../../game/gameController.dart';
+import '../../player/sprite/playerSpriteImage.dart';
+import 'enemyPlayerSpriteHitBox.dart';
+import 'enemyPlayerSpriteShadow.dart';
+import 'enemyPlayerSpriteTempEffects.dart';
+import 'enemyPlayerSpriteVisionRange.dart';
 
 class EnemyPlayerSprite extends StatefulWidget {
   final Player? enemyPlayer;
@@ -48,27 +48,27 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
 
     return Positioned(
       left: widget.enemyPlayer!.location!.dx! -
-          widget.enemyPlayer!.visionRange!.max! / 2,
+          widget.enemyPlayer!.vision!.getRange() / 2,
       top: widget.enemyPlayer!.location!.dy! -
-          widget.enemyPlayer!.visionRange!.max! / 2,
+          widget.enemyPlayer!.vision!.getRange() / 2,
       child: SizedBox(
-        width: widget.enemyPlayer!.visionRange!.max,
-        height: widget.enemyPlayer!.visionRange!.max,
+        width: widget.enemyPlayer!.vision!.getRange(),
+        height: widget.enemyPlayer!.vision!.getRange(),
         child: Stack(
           children: [
             //VISION RANGE
             Align(
               alignment: Alignment.center,
-              child: EnemySpriteVisionRange(
+              child: EnemyPlayerSpriteVisionRange(
                 enemyID: widget.enemyPlayer!.id,
-                visionRange: widget.enemyPlayer!.visionRange!.max,
+                visionRange: widget.enemyPlayer!.vision!.getRange(),
                 isDead: widget.enemyPlayer!.life!.isDead(),
               ),
             ),
             //SHADOW
             Align(
               alignment: Alignment.center,
-              child: EnemySpriteShadow(
+              child: EnemyPlayerSpriteShadow(
                 enemyID: widget.enemyPlayer!.id,
                 isDead: widget.enemyPlayer!.life!.isDead(),
               ),
@@ -76,7 +76,7 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
             //HITBOX
             Align(
               alignment: Alignment.center,
-              child: EnemySpriteHitBox(
+              child: EnemyPlayerSpriteHitBox(
                 isDead: widget.enemyPlayer!.life!.isDead(),
                 onTap: () async {
                   _enemyController.receiveAnAttack(gameController,
@@ -210,138 +210,5 @@ class EnemyPlayerSpriteController {
       int damage = oldLife - newLife;
       playDamageAnimation(damage);
     }
-  }
-}
-
-// ignore: must_be_immutable
-class EnemySpriteVisionRange extends StatelessWidget {
-  String? enemyID;
-  double? visionRange;
-  bool? isDead;
-  EnemySpriteVisionRange(
-      {Key? key,
-      @required this.enemyID,
-      @required this.visionRange,
-      @required this.isDead})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    UIColor _uiColor = UIColor();
-
-    double? setVisionRange() {
-      switch (isDead) {
-        case false:
-          return visionRange;
-
-        case true:
-          return 0;
-      }
-    }
-
-    return TransparentPointer(
-      transparent: true,
-      child: AnimatedContainer(
-        curve: Curves.fastLinearToSlowEaseIn,
-        duration: Duration(milliseconds: 700),
-        width: setVisionRange(),
-        height: setVisionRange(),
-        child: DottedBorder(
-          dashPattern: [2, 2],
-          borderType: BorderType.Circle,
-          color: _uiColor.setUIColor(enemyID, 'rangeOutline').withAlpha(150),
-          strokeWidth: 0.3,
-          child: SizedBox(
-            width: visionRange,
-            height: visionRange,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class EnemySpriteShadow extends StatelessWidget {
-  String? enemyID;
-  bool? isDead;
-  EnemySpriteShadow({
-    Key? key,
-    @required this.enemyID,
-    @required this.isDead,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    UIColor _uiColor = UIColor();
-
-    return TransparentPointer(
-      transparent: true,
-      child: Container(
-        width: (isDead!) ? 0 : 6,
-        height: (isDead!) ? 0 : 6,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: _uiColor.setUIColor(enemyID, 'shadow'),
-          border: Border.all(
-            color: _uiColor.setUIColor(enemyID, 'rangeOutline'),
-            width: 0.3,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class EnemySpriteHitBox extends StatelessWidget {
-  bool? isDead;
-  final Function()? onTap;
-  EnemySpriteHitBox({
-    Key? key,
-    @required this.isDead,
-    @required this.onTap,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 9),
-      child: (isDead!)
-          ? SizedBox()
-          : Container(
-              width: 5,
-              height: 10,
-              child: GestureDetector(onTap: () {
-                onTap!();
-              }),
-            ),
-    );
-  }
-}
-
-// ignore: must_be_immutable
-class EnemySpriteTempEffects extends StatelessWidget {
-  int? tempArmor;
-  EnemySpriteTempEffects({Key? key, @required this.tempArmor})
-      : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return TransparentPointer(
-      transparent: true,
-      child: Padding(
-        padding: const EdgeInsets.only(bottom: 26),
-        child: AnimatedContainer(
-          duration: Duration(milliseconds: 250),
-          width: (tempArmor! > 0) ? 3 : 0,
-          height: (tempArmor! > 0) ? 3 : 0,
-          child: SvgPicture.asset(
-            AppIcons.tempArmor,
-            color: Color.fromRGBO(250, 50, 10, 1),
-          ),
-        ),
-      ),
-    );
   }
 }

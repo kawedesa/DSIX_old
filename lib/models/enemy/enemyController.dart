@@ -1,5 +1,5 @@
 import 'package:dsixv02app/models/player/player.dart';
-import 'enemyPlayerSprite.dart';
+import 'enemyPlayerSprite/enemyPlayerSprite.dart';
 
 class EnemyController {
   List<EnemyPlayerSprite> enemyPlayers = [];

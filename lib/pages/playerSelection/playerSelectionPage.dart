@@ -61,7 +61,6 @@ class PlayerSelectionPage extends StatelessWidget {
                         onTapAction: () async {
                           user.selectPlayer(
                             players[index].id,
-                            index,
                             players[index],
                           );
                           _selectPlayerPageVM.goToMapPage(context);

@@ -103,4 +103,9 @@ class AppIcons {
   static final ancientSword = 'assets/icon/item/ancientSword.svg';
   static final ancientWarAxe = 'assets/icon/item/ancientWarAxe.svg';
   static final ancientBow = 'assets/icon/item/ancientBow.svg';
+
+  //Consumable
+  static final ward = 'assets/icon/item/ward.svg';
+  static final food = 'assets/icon/item/food.svg';
+  static final healingPotion = 'assets/icon/item/healingPotion.svg';
 }

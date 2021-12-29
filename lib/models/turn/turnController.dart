@@ -1,13 +1,6 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:dsixv02app/models/player/player.dart';
-// import 'package:dsixv02app/shared/app_Exceptions.dart';
-
-// import '../turn.dart';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
-
 import 'turn.dart';
 
 class TurnController {
@@ -48,15 +41,6 @@ class TurnController {
     }
     batch.commit();
   }
-
-  // void addTurnToDataBase(String gameID, Turn turn) async {
-  //   await database
-  //       .collection('game')
-  //       .doc(gameID)
-  //       .collection('turnOrder')
-  //       .doc('${turn.index}')
-  //       .set(turn.toMap());
-  // }
 
   void passTurnForDeadPlayers(
       String gameID, List<Turn> turnOrder, List<Player> players) {
