@@ -1,6 +1,7 @@
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/player/playerLocation.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:flutter/material.dart';
 import 'widgets/endGameButton.dart';

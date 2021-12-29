@@ -10,8 +10,10 @@ class EnemyController {
       if (target.id == selectedPlayer.id) {
         return;
       }
-      if (selectedPlayer.cantSee(
-          target.location!.getLocation(), target.isVisible!)) {
+      if (selectedPlayer.vision!.cantSee(
+          target.location!.getLocation(),
+          target.location!.isVisible!,
+          selectedPlayer.location!.getLocation())) {
         return;
       }
 

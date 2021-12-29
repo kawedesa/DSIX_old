@@ -281,7 +281,7 @@ class LootDialogController {
 
   void chooseItems(context, String gameID, User user, List<Item> items,
       LootController lootController, int lootIndex) {
-    if (user.selectedPlayer!.weight!.cantCarry(totalWeight)) {
+    if (user.selectedPlayer!.iventory!.weight!.cantCarry(totalWeight)) {
       buttonText = 'too heavy';
       return;
     }
@@ -290,8 +290,9 @@ class LootDialogController {
 
     for (int i = 0; i < items.length; i++) {
       if (this.options[i]) {
-        user.selectedPlayer!.getItem(items[i]);
-        user.updateBag(gameID);
+        user.selectedPlayer!.iventory!
+            .getItem(gameID, user.selectedPlayer!.index.toString(), items[i]);
+
         itemsRemovedFromChest.add(items[i]);
       }
     }

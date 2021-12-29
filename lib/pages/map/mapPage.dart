@@ -6,6 +6,7 @@ import 'package:dsixv02app/models/loot/loot.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/menu/playerMenu.dart';
+import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turn.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
@@ -136,7 +137,7 @@ class _MapPageState extends State<MapPage> {
                 ),
               ),
               Text(
-                '${players[user.selectedPlayer!.index!].weight!.current}/${players[user.selectedPlayer!.index!].weight!.max}',
+                '${players[user.selectedPlayer!.index!].iventory!.weight!.current}/${players[user.selectedPlayer!.index!].iventory!.weight!.max}',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontFamily: 'Santana',

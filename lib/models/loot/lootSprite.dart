@@ -39,8 +39,9 @@ class LootSprite extends StatelessWidget {
               return;
             }
 
-            user.takeAction(
+            user.selectedPlayer!.action!.takeAction(
               gameController.gameID,
+              user.selectedPlayer!.index!.toString(),
             );
 
             if (user.selectedPlayer!.action!.outOfActions()) {

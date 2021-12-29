@@ -1,7 +1,7 @@
 import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/game/gameMap/gameMap.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
-import 'package:dsixv02app/models/player/playerController.dart';
+import 'package:dsixv02app/models/player/playersController.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/shared/app_Maps.dart';
@@ -41,7 +41,7 @@ class BattleRoyaleSettingsPageVM {
 
   void newBattleRoyaleGame(
     GameController gameController,
-    PlayerController playerController,
+    PlayersController playerController,
     LootController lootController,
   ) {
     GameMap map = AppMaps.ruins;
@@ -62,7 +62,7 @@ class BattleRoyaleSettingsPageVM {
 
   void deleteGame(
     GameController gameController,
-    PlayerController playerController,
+    PlayersController playerController,
     LootController lootController,
     TurnController turnController,
   ) {

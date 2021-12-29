@@ -51,14 +51,16 @@ class PlayerMenu extends StatelessWidget {
                   child: ActionButton(
                     action: 'defend',
                     onTap: () {
-                      user.defend(
+                      user.selectedPlayer!.defend(
                         gameController.gameID,
                       );
                       user.openCloseMenu();
 
-                      user.takeAction(
+                      user.selectedPlayer!.action!.takeAction(
                         gameController.gameID,
+                        user.selectedPlayer!.index!.toString(),
                       );
+
                       if (user.selectedPlayer!.action!.outOfActions()) {
                         turnController.passTurnWhere(
                             gameController.gameID, user.selectedPlayer!.id!);
@@ -71,15 +73,16 @@ class PlayerMenu extends StatelessWidget {
                   child: ActionButton(
                     action: 'look',
                     onTap: () {
-                      user.look(
-                        gameController.gameID,
-                      );
+                      user.selectedPlayer!.vision!.look(gameController.gameID,
+                          user.selectedPlayer!.index.toString());
 
                       user.openCloseMenu();
 
-                      user.takeAction(
+                      user.selectedPlayer!.action!.takeAction(
                         gameController.gameID,
+                        user.selectedPlayer!.index!.toString(),
                       );
+
                       if (user.selectedPlayer!.action!.outOfActions()) {
                         turnController.passTurnWhere(
                             gameController.gameID, user.selectedPlayer!.id!);

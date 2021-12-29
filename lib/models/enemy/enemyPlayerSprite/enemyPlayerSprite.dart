@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
@@ -96,7 +95,7 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
             Align(
                 alignment: Alignment.center,
                 child: EnemySpriteTempEffects(
-                  tempArmor: widget.enemyPlayer!.tempArmor,
+                  tempArmor: widget.enemyPlayer!.armor!.tempArmor,
                 )),
 
             //DAMAGE ANIMATION
@@ -127,7 +126,6 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
 }
 
 class EnemyPlayerSpriteController {
-  final firebase = FirebaseFirestore.instance.collection('game');
   Artboard? artboard;
 
   void loadRiverFile() async {
@@ -153,16 +151,17 @@ class EnemyPlayerSpriteController {
       return;
     }
 
-    if (user.selectedPlayer!.cantAttack(enemyPlayer.location!.getLocation())) {
+    if (user.selectedPlayer!.attackRange!.cantAttack(
+        enemyPlayer.location!.getLocation(),
+        user.selectedPlayer!.location!.getLocation())) {
       return;
     }
 
-    takeDamage(user.selectedPlayer!, enemyPlayer);
+    takeDamage(gameController.gameID, user.selectedPlayer!, enemyPlayer);
 
-    reduceEnemyPlayerLifeAndTempArmor(gameController.gameID, enemyPlayer);
-
-    user.takeAction(
+    user.selectedPlayer!.action!.takeAction(
       gameController.gameID,
+      user.selectedPlayer!.index!.toString(),
     );
 
     if (user.selectedPlayer!.action!.outOfActions()) {
@@ -173,26 +172,16 @@ class EnemyPlayerSpriteController {
     }
   }
 
-  void takeDamage(Player selectedPlayer, Player enemy) {
+  void takeDamage(String gameID, Player selectedPlayer, Player enemy) {
     int attackDamage = selectedPlayer.attack();
-    int itemDamage = selectedPlayer.pDamage! + selectedPlayer.mDamage!;
+    int itemDamage =
+        selectedPlayer.damage!.pDamage! + selectedPlayer.damage!.mDamage!;
     int totalAttackDamage = attackDamage + itemDamage;
 
-    enemy.takeDamage(
-        attackDamage, selectedPlayer.pDamage, selectedPlayer.mDamage);
+    enemy.takeDamage(gameID, attackDamage, selectedPlayer.damage!.pDamage,
+        selectedPlayer.damage!.mDamage);
 
     playDamageAnimation(totalAttackDamage);
-  }
-
-  void reduceEnemyPlayerLifeAndTempArmor(String gameID, Player player) async {
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${player.index}')
-        .update({
-      'life': player.life!.toMap(),
-      'tempArmor': player.tempArmor,
-    });
   }
 
   void checkEnemyPlayer(List<Player> players, Player enemyPlayer) {

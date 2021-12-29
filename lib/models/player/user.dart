@@ -1,7 +1,5 @@
 import 'dart:math';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/game/fog/fog.dart';
-import 'package:dsixv02app/models/game/gameMap/tallGrassArea.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import '../turn/turn.dart';
@@ -13,7 +11,17 @@ class User {
   String? playerMode = 'walk';
   bool playerTurn = false;
   bool menuIsOpen = false;
-  final firebase = FirebaseFirestore.instance.collection('game');
+
+  void changeSelectPlayer(List<Player> players, String playerID) {
+    for (int i = 0; i < players.length; i++) {
+      if (players[i].id == playerID) {
+        selectPlayer(
+          playerID,
+          players[i],
+        );
+      }
+    }
+  }
 
   void selectPlayer(
     String? id,
@@ -25,53 +33,6 @@ class User {
 
   void updateSelectedPlayer(Player player) {
     this.selectedPlayer = player;
-  }
-
-  void endWalk(
-    String gameID,
-    PlayerLocation newLocation,
-    TallGrassArea tallGrass,
-  ) async {
-    this.selectedPlayer!.location!.dx = newLocation.dx;
-    this.selectedPlayer!.location!.dy = newLocation.dy;
-
-    if (inTallGrass(tallGrass)) {
-      this.selectedPlayer!.isVisible = false;
-    } else {
-      this.selectedPlayer!.isVisible = true;
-    }
-
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({
-      'location': newLocation.toMap(),
-      'isVisible': this.selectedPlayer!.isVisible
-    });
-  }
-
-  bool inTallGrass(TallGrassArea tallgrass) {
-    bool inThere = false;
-
-    tallgrass.totalArea!.forEach((grass) {
-      if (inThere) {
-        return;
-      }
-      inThere = grass.inHere(this.selectedPlayer!.location!.getLocation());
-    });
-
-    return inThere;
-  }
-
-  void takeAction(String gameID) async {
-    this.selectedPlayer!.action!.takeAction();
-
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({'action': this.selectedPlayer!.action!.toMap()});
   }
 
   void checkForPlayerTurn(List<Turn> turnOrder) {
@@ -93,18 +54,13 @@ class User {
   void startPlayerTurn(String gameID, Fog fog) {
     this.playerTurn = true;
     setPlayerMode();
-    this.selectedPlayer!.action!.newActions();
-    updateActions(gameID);
-    checkFog(gameID, fog);
-    clearTempEffects(gameID);
-  }
+    this
+        .selectedPlayer!
+        .action!
+        .newActions(gameID, this.selectedPlayer!.index!.toString());
 
-  void updateActions(String gameID) async {
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({'action': this.selectedPlayer!.action!.toMap()});
+    checkFog(gameID, fog);
+    this.selectedPlayer!.clearTempEffects(gameID);
   }
 
   void checkFog(String gameID, Fog fog) {
@@ -118,22 +74,11 @@ class User {
 
   void takeFogDamage(
     String gameID,
-  ) async {
-    PlayerLife newLife = PlayerLife(
-        max: this.selectedPlayer!.life!.max,
-        current: this.selectedPlayer!.life!.current! - 2);
-
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({'life': newLife.toMap()});
-  }
-
-  void clearTempEffects(String gameID) {
-    this.selectedPlayer!.clearTempEffects();
-    updateTempArmor(gameID);
-    updateVision(gameID);
+  ) {
+    this
+        .selectedPlayer!
+        .life!
+        .decrease(gameID, this.selectedPlayer!.index!.toString(), 2);
   }
 
   void continuePlayerTurn() {
@@ -185,121 +130,121 @@ class User {
     this.menuIsOpen = false;
   }
 
-  void look(String gameID) {
-    this.selectedPlayer!.vision!.look();
-    updateVision(gameID);
+  void equipItem(String gameID, Item item) {
+    if (playerTurn == false) {
+      return;
+    }
+    switch (item.itemSlot) {
+      case 'oneHand':
+        if (this.selectedPlayer!.iventory!.mainHandSlot!.name != '' &&
+            this.selectedPlayer!.iventory!.offHandSlot!.name != '') {
+          this
+              .selectedPlayer!
+              .unequip(gameID, this.selectedPlayer!.iventory!.mainHandSlot!);
+        }
+        if (this.selectedPlayer!.iventory!.mainHandSlot!.name != '') {
+          this.selectedPlayer!.iventory!.offHandSlot = item;
+        } else {
+          this.selectedPlayer!.iventory!.mainHandSlot = item;
+        }
+        break;
+      case 'twoHands':
+        if (this.selectedPlayer!.iventory!.mainHandSlot!.name != '') {
+          this
+              .selectedPlayer!
+              .unequip(gameID, this.selectedPlayer!.iventory!.mainHandSlot!);
+        }
+        if (this.selectedPlayer!.iventory!.offHandSlot!.name != '') {
+          this
+              .selectedPlayer!
+              .unequip(gameID, this.selectedPlayer!.iventory!.offHandSlot!);
+        }
+
+        this.selectedPlayer!.iventory!.mainHandSlot = item;
+        this.selectedPlayer!.iventory!.offHandSlot = item;
+
+        break;
+      case 'head':
+        if (this.selectedPlayer!.iventory!.headSlot!.name != '') {
+          this
+              .selectedPlayer!
+              .unequip(gameID, this.selectedPlayer!.iventory!.headSlot!);
+        }
+        this.selectedPlayer!.iventory!.headSlot = item;
+
+        break;
+      case 'body':
+        if (this.selectedPlayer!.iventory!.bodySlot!.name != '') {
+          this
+              .selectedPlayer!
+              .unequip(gameID, this.selectedPlayer!.iventory!.bodySlot!);
+        }
+        this.selectedPlayer!.iventory!.bodySlot = item;
+
+        break;
+      case 'hands':
+        if (this.selectedPlayer!.iventory!.handSlot!.name != '') {
+          this
+              .selectedPlayer!
+              .unequip(gameID, this.selectedPlayer!.iventory!.handSlot!);
+        }
+        this.selectedPlayer!.iventory!.handSlot = item;
+
+        break;
+      case 'feet':
+        if (this.selectedPlayer!.iventory!.feetSlot!.name != '') {
+          this
+              .selectedPlayer!
+              .unequip(gameID, this.selectedPlayer!.iventory!.feetSlot!);
+        }
+        this.selectedPlayer!.iventory!.feetSlot = item;
+
+        break;
+    }
+
+    this.selectedPlayer!.equipItem(gameID, item);
   }
 
-  void defend(String gameID) {
-    this.selectedPlayer!.defend();
-    updateTempArmor(gameID);
+  void unequipItem(String gameID, Item item) {
+    if (playerTurn == false) {
+      return;
+    }
+    this.selectedPlayer!.unequip(gameID, item);
   }
 
   void useItem(String gameID, Item item) {
+    if (playerTurn == false) {
+      return;
+    }
     switch (item.name) {
       case 'ward':
-        this.selectedPlayer!.vision!.tempVision = 50;
+        this.selectedPlayer!.vision!.tempVision =
+            this.selectedPlayer!.vision!.tempVision! + 50;
         this.selectedPlayer!.vision!.canSeeInvisible = true;
-        updateVision(gameID);
+        this
+            .selectedPlayer!
+            .vision!
+            .update(gameID, this.selectedPlayer!.index.toString());
         break;
       case 'food':
         int healingAmount = Random().nextInt(3) + 1;
-        this.selectedPlayer!.life!.increaseCurrentLife(healingAmount);
-        updateLife(gameID);
+        this.selectedPlayer!.life!.increase(
+            gameID, this.selectedPlayer!.index.toString(), healingAmount);
+
         break;
 
       case 'healing potion':
         int healingAmount = Random().nextInt(3) + 4;
-        this.selectedPlayer!.life!.increaseCurrentLife(healingAmount);
-        updateLife(gameID);
+        this.selectedPlayer!.life!.increase(
+            gameID, this.selectedPlayer!.index.toString(), healingAmount);
+
         break;
       case 'ward':
         break;
     }
-    this.selectedPlayer!.destroyItem(item);
-    updateBag(gameID);
-  }
-
-  void updateLife(String gameID) async {
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({
-      'life': this.selectedPlayer!.life!.toMap(),
-    });
-  }
-
-  void updateVision(String gameID) async {
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({
-      'vision': this.selectedPlayer!.vision!.toMap(),
-    });
-  }
-
-  void updateTempArmor(String gameID) async {
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({
-      'tempArmor': this.selectedPlayer!.tempArmor,
-    });
-  }
-
-  void updateBag(
-    String gameID,
-  ) async {
-    var updatedBag =
-        this.selectedPlayer!.bag!.map((item) => item.toMap()).toList();
-
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({
-      'bag': updatedBag,
-      'weight': this.selectedPlayer!.weight!.toMap(),
-    });
-  }
-
-  void updateIventory(
-    String gameID,
-  ) async {
-    List<Map<String, dynamic>> updatedBag =
-        this.selectedPlayer!.bag!.map((item) => item.toMap()).toList();
-
-    await firebase
-        .doc(gameID)
-        .collection('players')
-        .doc('${this.selectedPlayer!.index}')
-        .update({
-      'bag': updatedBag,
-      'mainHandSlot': this.selectedPlayer!.mainHandSlot!.toMap(),
-      'offHandSlot': this.selectedPlayer!.offHandSlot!.toMap(),
-      'headSlot': this.selectedPlayer!.headSlot!.toMap(),
-      'bodySlot': this.selectedPlayer!.bodySlot!.toMap(),
-      'handSlot': this.selectedPlayer!.handSlot!.toMap(),
-      'feetSlot': this.selectedPlayer!.feetSlot!.toMap(),
-      'pDamage': this.selectedPlayer!.pDamage,
-      'mDamage': this.selectedPlayer!.mDamage,
-      'pArmor': this.selectedPlayer!.pArmor,
-      'mArmor': this.selectedPlayer!.mArmor,
-      'attackRange': this.selectedPlayer!.attackRange!.toMap(),
-    });
-  }
-
-  void changeSelectPlayer(List<Player> players, String playerID) {
-    for (int i = 0; i < players.length; i++) {
-      if (players[i].id == playerID) {
-        selectPlayer(
-          playerID,
-          players[i],
-        );
-      }
-    }
+    this
+        .selectedPlayer!
+        .iventory!
+        .destroyItem(gameID, this.selectedPlayer!.index.toString(), item);
   }
 }

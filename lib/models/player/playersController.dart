@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 import 'player.dart';
 
-class PlayerController {
+class PlayersController {
   List<Player>? players;
-  PlayerController({List<Player>? players}) {
+  PlayersController({List<Player>? players}) {
     this.players = players;
   }
 

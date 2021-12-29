@@ -7,7 +7,7 @@ import 'models/game/game.dart';
 import 'models/loot/loot.dart';
 import 'models/loot/lootController.dart';
 import 'models/player/player.dart';
-import 'models/player/playerController.dart';
+import 'models/player/playersController.dart';
 import 'models/player/user.dart';
 import 'models/turn/turn.dart';
 import 'models/turn/turnController.dart';
@@ -23,7 +23,7 @@ class DsixApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     GameController gameController = GameController();
-    PlayerController playerController = PlayerController();
+    PlayersController playerController = PlayersController();
     TurnController turnController = TurnController();
     LootController lootController = LootController();
     EnemyController enemyController = EnemyController();

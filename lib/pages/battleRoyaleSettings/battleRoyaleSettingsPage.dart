@@ -1,6 +1,6 @@
 import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
-import 'package:dsixv02app/models/player/playerController.dart';
+import 'package:dsixv02app/models/player/playersController.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/models/game/game.dart';
@@ -26,7 +26,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
   Widget build(BuildContext context) {
     final game = Provider.of<Game>(context);
     final gameController = Provider.of<GameController>(context);
-    final playerController = Provider.of<PlayerController>(context);
+    final playerController = Provider.of<PlayersController>(context);
     final turnController = Provider.of<TurnController>(context);
     final lootController = Provider.of<LootController>(context);
 

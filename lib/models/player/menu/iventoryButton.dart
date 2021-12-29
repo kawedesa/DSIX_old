@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/player/iventory/iventory.dart';
+import 'package:dsixv02app/models/player/iventoryPage/iventory.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';

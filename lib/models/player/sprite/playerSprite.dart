@@ -14,6 +14,8 @@ import 'playerSpriteImage.dart';
 import 'playerSpriteTempEffects.dart';
 import 'playerSpriteVisionRange.dart';
 import 'playerSpriteWalkRange.dart';
+import 'playerTempLocation.dart';
+import '../playerLocation.dart';
 
 //  ignore: must_be_immutable
 class PlayerSprite extends StatefulWidget {
@@ -120,16 +122,19 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                               }
                             },
                             onPanEnd: (details) {
-                              user.endWalk(
+                              user.selectedPlayer!.location!.endWalk(
                                   game.id!,
+                                  user.selectedPlayer!.index!.toString(),
                                   PlayerLocation(
                                       dx: widget.tempLocation!.dx,
                                       dy: widget.tempLocation!.dy),
                                   game.map!.tallGrass!);
 
-                              user.takeAction(
+                              user.selectedPlayer!.action!.takeAction(
                                 game.id!,
+                                user.selectedPlayer!.index!.toString(),
                               );
+
                               if (user.selectedPlayer!.action!.outOfActions()) {
                                 turnController.passTurnWhere(
                                     gameController.gameID,
@@ -152,7 +157,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                   alignment: Alignment.center,
                   child: PlayerSpriteTempEffects(
-                    tempArmor: user.selectedPlayer!.tempArmor,
+                    tempArmor: user.selectedPlayer!.armor!.tempArmor,
                   )),
               //DAMAGE ANIMATION
               Align(
@@ -207,7 +212,8 @@ class PlayerSpriteController {
     Player newPlayer,
     Player selectedPlayeruser,
   ) {
-    if (checkTempArmor(newPlayer.tempArmor!, selectedPlayeruser.tempArmor!) ||
+    if (checkTempArmor(newPlayer.armor!.tempArmor!,
+            selectedPlayeruser.armor!.tempArmor!) ||
         checkLife(
             newPlayer.life!.current!, selectedPlayeruser.life!.current!)) {
       throw UpdatePlayerException();
