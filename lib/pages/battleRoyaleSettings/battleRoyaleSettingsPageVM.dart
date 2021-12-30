@@ -49,7 +49,7 @@ class BattleRoyaleSettingsPageVM {
 
     playerController.newRandomPlayers(
       gameController.gameID,
-      map.size!,
+      map,
       numberOfPlayers,
     );
 

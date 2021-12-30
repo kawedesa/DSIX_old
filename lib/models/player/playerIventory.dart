@@ -126,6 +126,15 @@ class PlayerIventory {
     update(gameID, playerIndex);
   }
 
+  bool rangedAttack() {
+    if (this.mainHandSlot!.type == 'ranged' ||
+        this.offHandSlot!.type == 'ranged') {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   void update(String gameID, String playerIndex) async {
     final database = FirebaseFirestore.instance.collection('game');
 

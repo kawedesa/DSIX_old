@@ -24,6 +24,9 @@ class AppColors {
   static final goodEffectText = Color.fromRGBO(40, 75, 5, 1);
   static final badEffectImage = Color.fromRGBO(150, 0, 0, 1);
 
+  static final cantPassArea = Color.fromRGBO(200, 25, 25, 0.45);
+  static final cantPassOutline = Color.fromRGBO(200, 25, 25, 0.9);
+
   static final attackRangeArea = Color.fromRGBO(200, 25, 25, 0.15);
   static final attackRangeOutline = Color.fromRGBO(200, 25, 25, 0.5);
 

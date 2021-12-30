@@ -1,6 +1,5 @@
 import 'fog/fog.dart';
 import 'gameMap/gameMap.dart';
-import 'gameMap/tallGrassArea.dart';
 
 class Game {
   String? id;
@@ -25,8 +24,8 @@ class Game {
   factory Game.fromMap(Map<String, dynamic>? data) {
     return Game(
       id: data?['id'],
-      round: data?['round'],
       isRunning: data?['isRunning'],
+      round: data?['round'],
       map: GameMap.fromMap(data?['map']),
       fog: Fog.fromMap(data?['fog']),
     );
@@ -35,26 +34,20 @@ class Game {
   Map<String, dynamic> toMap() {
     return {
       'id': this.id,
+      'isRunning': this.isRunning,
       'round': this.round,
       'map': this.map?.toMap(),
-      'isRunning': this.isRunning,
       'fog': this.fog?.toMap(),
     };
   }
 
   factory Game.newEmptyGame() {
-    GameMap map = GameMap(
-      name: '',
-      size: 0.0,
-      tallGrass: TallGrassArea.empty(),
-    );
-
     return Game(
       id: 'alpha',
-      round: 0,
-      map: map,
       isRunning: false,
-      fog: Fog.newFog(map.size),
+      round: 0,
+      map: GameMap.empty(),
+      fog: Fog.empty(),
     );
   }
 

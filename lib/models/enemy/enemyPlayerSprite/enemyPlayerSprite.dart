@@ -151,9 +151,11 @@ class EnemyPlayerSpriteController {
       return;
     }
 
-    if (user.selectedPlayer!.attackRange!.cantAttack(
-        enemyPlayer.location!.getLocation(),
-        user.selectedPlayer!.location!.getLocation())) {
+    if (user.selectedPlayer!.attackRange!.canAttack(
+            enemyPlayer.location!,
+            user.selectedPlayer!.location!,
+            user.selectedPlayer!.iventory!.rangedAttack()) ==
+        false) {
       return;
     }
 

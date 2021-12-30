@@ -1,5 +1,4 @@
 import 'dart:math';
-import 'package:dsixv02app/models/game/fog/fog.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import '../turn/turn.dart';
@@ -51,7 +50,9 @@ class User {
     throw ContinuePlayerTurnException();
   }
 
-  void startPlayerTurn(String gameID, Fog fog) {
+  void startPlayerTurn(
+    String gameID,
+  ) {
     this.playerTurn = true;
     setPlayerMode();
     this
@@ -59,26 +60,7 @@ class User {
         .action!
         .newActions(gameID, this.selectedPlayer!.index!.toString());
 
-    checkFog(gameID, fog);
     this.selectedPlayer!.clearTempEffects(gameID);
-  }
-
-  void checkFog(String gameID, Fog fog) {
-    double distance =
-        (this.selectedPlayer!.location!.getLocation() - fog.getLocation())
-            .distance;
-    if (distance >= fog.size! / 2) {
-      takeFogDamage(gameID);
-    }
-  }
-
-  void takeFogDamage(
-    String gameID,
-  ) {
-    this
-        .selectedPlayer!
-        .life!
-        .decrease(gameID, this.selectedPlayer!.index!.toString(), 2);
   }
 
   void continuePlayerTurn() {

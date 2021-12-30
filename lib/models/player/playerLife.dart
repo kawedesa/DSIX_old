@@ -25,9 +25,9 @@ class PlayerLife {
     int max;
     int current;
     if (race == 'dwarf') {
-      max = 20;
+      max = 25;
     } else {
-      max = 16;
+      max = 20;
     }
     current = max;
     return PlayerLife(max: max, current: current);

@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/game/gameMap/gameMap.dart';
+import 'package:dsixv02app/models/player/playerLocation.dart';
 import 'package:flutter/material.dart';
 
 import 'player.dart';
@@ -26,22 +28,14 @@ class PlayersController {
 
   void newRandomPlayers(
     String gameID,
-    double mapSize,
+    GameMap map,
     int numberOfPlayers,
   ) async {
     var batch = database.batch();
 
     //Add Players
     for (int i = 0; i < numberOfPlayers; i++) {
-      // For Test
-      // double dx = (Random().nextDouble() * mapSize * 0.4) + (mapSize * 0.3);
-      // double dy = (Random().nextDouble() * mapSize * 0.4) + (mapSize * 0.3);
-
-      // Original
-      double dx = playerRandomLocation(mapSize);
-      double dy = playerRandomLocation(mapSize);
-
-      Offset randomLocation = Offset(dx, dy);
+      PlayerLocation location = randomLocation(map);
 
       var document = database
           .collection('game')
@@ -49,16 +43,43 @@ class PlayersController {
           .collection('players')
           .doc('$i');
 
-      batch.set(document, Player.newRandomPlayer(randomLocation, i).toMap());
+      batch.set(
+          document,
+          Player.newRandomPlayer(
+            i,
+            location,
+          ).toMap());
     }
     batch.commit();
   }
 
-  double playerRandomLocation(double mapSize) {
-    //For dev (spawn players closer together)
-    // return (Random().nextDouble() * mapSize * 0.1) + (mapSize * 0.35);
-    //Original
-    return (Random().nextDouble() * mapSize * 0.9) + (mapSize * 0.05);
+  PlayerLocation randomLocation(GameMap map) {
+    int i = 0;
+
+    double dx = 0;
+    double dy = 0;
+    Offset newOffset = Offset(0, 0);
+    bool isVisible = true;
+    int height = 0;
+
+    while (i < 1) {
+      dx = (Random().nextDouble() * map.size! * 0.9) + (map.size! * 0.05);
+      dy = (Random().nextDouble() * map.size! * 0.9) + (map.size! * 0.05);
+
+      newOffset = Offset(dx, dy);
+
+      if (map.tallGrass!.inThisArea(newOffset)) {
+        isVisible = false;
+      }
+
+      height = map.heightMap!.inThisLayer(newOffset);
+
+      if (height != 10) {
+        i++;
+      }
+    }
+
+    return PlayerLocation(dx: dx, dy: dy, isVisible: isVisible, height: height);
   }
 
   void deleteAllPlayers(String gameID) async {

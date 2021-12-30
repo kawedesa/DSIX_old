@@ -3,6 +3,7 @@ class Item {
   String? name;
   String? description;
   String? itemSlot;
+  String? type;
   int? pDamage;
   int? mDamage;
   int? pArmor;
@@ -16,6 +17,7 @@ class Item {
     String? name,
     String? description,
     String? itemSlot,
+    String? type,
     int? pDamage,
     int? mDamage,
     int? pArmor,
@@ -29,6 +31,7 @@ class Item {
     this.name = name;
     this.description = description;
     this.itemSlot = itemSlot;
+    this.type = type;
     this.pDamage = pDamage;
     this.mDamage = mDamage;
     this.pArmor = pArmor;
@@ -45,6 +48,7 @@ class Item {
       name: data?['name'],
       description: data?['description'],
       itemSlot: data?['itemSlot'],
+      type: data?['type'],
       pDamage: data?['pDamage'],
       mDamage: data?['mDamage'],
       pArmor: data?['pArmor'],
@@ -62,6 +66,7 @@ class Item {
       'name': this.name,
       'description': this.description,
       'itemSlot': this.itemSlot,
+      'type': this.type,
       'pDamage': this.pDamage,
       'mDamage': this.mDamage,
       'pArmor': this.pArmor,
@@ -79,6 +84,7 @@ class Item {
       name: '',
       description: '',
       itemSlot: '',
+      type: '',
       pDamage: 0,
       mDamage: 0,
       pArmor: 0,

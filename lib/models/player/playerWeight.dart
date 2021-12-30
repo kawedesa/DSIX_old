@@ -22,9 +22,9 @@ class PlayerWeight {
   factory PlayerWeight.set(String race) {
     int max;
     if (race == 'orc') {
-      max = 18;
+      max = 20;
     } else {
-      max = 14;
+      max = 15;
     }
     return PlayerWeight(max: max, current: 0);
   }

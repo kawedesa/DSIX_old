@@ -10,7 +10,7 @@ import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/models/turn/turn.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
-import 'package:dsixv02app/models/game/gameMap/mapTile.dart';
+import 'package:dsixv02app/pages/map/widgets/mapTile.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
@@ -82,7 +82,8 @@ class _MapPageState extends State<MapPage> {
     try {
       user.checkForPlayerTurn(turnOrder);
     } on StartPlayerTurnException {
-      user.startPlayerTurn(game.id!, game.fog!);
+      user.startPlayerTurn(game.id!);
+      game.fog!.checkFog(game.id!, players[user.selectedPlayer!.index!]);
       _mapPageAnimation.playYourTurnAnimation();
     } on ContinuePlayerTurnException {
       user.continuePlayerTurn();
@@ -165,8 +166,7 @@ class _MapPageState extends State<MapPage> {
         child: ChangeNotifierProxyProvider<List<Player>, PlayerTempLocation?>(
           create: (context) => PlayerTempLocation(),
           update: (context, _, playerTempLocation) => playerTempLocation!
-            ..updatePlayerLocation(user.selectedPlayer!.location!.dx,
-                user.selectedPlayer!.location!.dy),
+            ..updatePlayerLocation(user.selectedPlayer!.location!),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

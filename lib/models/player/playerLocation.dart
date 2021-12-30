@@ -1,20 +1,26 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dsixv02app/models/game/gameMap/tallGrassArea.dart';
+import 'package:dsixv02app/models/game/gameMap/heightMap.dart';
+import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
+import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 
 class PlayerLocation {
   double? dx;
   double? dy;
+  int? height;
   bool? isVisible;
-  PlayerLocation({double? dx, double? dy, bool? isVisible}) {
+  PlayerLocation({double? dx, double? dy, int? height, bool? isVisible}) {
     this.dx = dx;
     this.dy = dy;
+    this.height = height;
     this.isVisible = isVisible;
   }
   Map<String, dynamic> toMap() {
     return {
       'dx': this.dx,
       'dy': this.dy,
+      'height': this.height,
       'isVisible': this.isVisible,
     };
   }
@@ -23,16 +29,16 @@ class PlayerLocation {
     return PlayerLocation(
       dx: data?['dx'] * 1.0,
       dy: data?['dy'] * 1.0,
+      height: data?['height'],
       isVisible: data?['isVisible'],
     );
   }
-  factory PlayerLocation.newLocation(
-    Offset location,
-  ) {
+  factory PlayerLocation.newLocation(PlayerLocation location) {
     return PlayerLocation(
       dx: location.dx,
       dy: location.dy,
-      isVisible: true,
+      height: location.height,
+      isVisible: location.isVisible,
     );
   }
 
@@ -43,32 +49,28 @@ class PlayerLocation {
   void endWalk(
     String gameID,
     String playerIndex,
-    PlayerLocation newLocation,
-    TallGrassArea tallGrass,
-  ) async {
+    PlayerTempLocation newLocation,
+    TotalArea tallGrass,
+    HeightMap height,
+  ) {
+    int newHeight = height.inThisLayer(newLocation.getLocation());
+
+    if (newHeight != newLocation.height) {
+      throw CantPassException();
+    }
+
     this.dx = newLocation.dx;
     this.dy = newLocation.dy;
 
-    if (inTallGrass(tallGrass)) {
+    if (tallGrass.inThisArea(newLocation.getLocation())) {
       this.isVisible = false;
     } else {
       this.isVisible = true;
     }
 
+    this.height = newHeight;
+
     update(gameID, playerIndex);
-  }
-
-  bool inTallGrass(TallGrassArea tallgrass) {
-    bool inThere = false;
-
-    tallgrass.totalArea!.forEach((grass) {
-      if (inThere) {
-        return;
-      }
-      inThere = grass.inHere(this.getLocation());
-    });
-
-    return inThere;
   }
 
   void update(String gameID, String playerIndex) async {

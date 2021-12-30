@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/player/playerLocation.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:flutter/material.dart';
 
@@ -36,12 +37,42 @@ class PlayerAttackRange {
     this.min = this.min! - item.minWeaponRange!;
   }
 
-  bool cantAttack(Offset targetLocation, Offset playerLocation) {
-    double distance = (targetLocation - playerLocation).distance;
-    if (distance > this.max! / 2 || distance < this.min! / 2) {
+  bool canAttack(PlayerLocation targetLocation, PlayerLocation playerLocation,
+      bool rangedAttack) {
+    bool withinHeight = checkHeight(
+        targetLocation.height!, playerLocation.height!, rangedAttack);
+    bool withinDistance = checkDistance(
+        targetLocation.getLocation(), playerLocation.getLocation());
+
+    if (withinHeight && withinDistance) {
       return true;
     } else {
       return false;
+    }
+  }
+
+  bool checkHeight(int targetHeight, int playerHeight, bool rangedAttack) {
+    if (rangedAttack) {
+      return true;
+    }
+
+    int maxRange = targetHeight + 1;
+    int minRange = targetHeight - 1;
+
+    if (playerHeight < minRange || playerHeight > maxRange) {
+      return false;
+    } else {
+      return true;
+    }
+  }
+
+  bool checkDistance(Offset targetLocation, Offset playerLocation) {
+    double distance = (targetLocation - playerLocation).distance;
+
+    if (distance > this.max! / 2 || distance < this.min! / 2) {
+      return false;
+    } else {
+      return true;
     }
   }
 

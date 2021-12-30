@@ -15,7 +15,6 @@ import 'playerSpriteTempEffects.dart';
 import 'playerSpriteVisionRange.dart';
 import 'playerSpriteWalkRange.dart';
 import 'playerTempLocation.dart';
-import '../playerLocation.dart';
 
 //  ignore: must_be_immutable
 class PlayerSprite extends StatefulWidget {
@@ -79,10 +78,10 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                 alignment: Alignment.center,
                 child: WalkRange(
-                  walkRange: playerSpriteController.walkedDistance(
-                      widget.tempLocation!,
-                      user.selectedPlayer!.location!,
-                      user.selectedPlayer!.walkRange!.max!),
+                  tempLocation: widget.tempLocation,
+                  oldLocation: user.selectedPlayer!.location,
+                  maxWalkRange: user.selectedPlayer!.walkRange!.max,
+                  heightMap: game.map!.heightMap,
                 ),
               ),
 
@@ -112,23 +111,31 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                               widget.refresh!();
                             },
                             onPanUpdate: (details) {
-                              if (playerSpriteController.walkedDistance(
-                                      widget.tempLocation!,
+                              if (widget.tempLocation!.distanceLeftOver(
                                       user.selectedPlayer!.location!,
-                                      user.selectedPlayer!.walkRange!.max!)! >
+                                      user.selectedPlayer!.walkRange!.max!)! <=
                                   0) {
-                                widget.tempLocation!
-                                    .walk(details.delta.dx, details.delta.dy);
+                                return;
                               }
+
+                              widget.tempLocation!.walk(details.delta.dx,
+                                  details.delta.dy, game.map!.heightMap!);
                             },
                             onPanEnd: (details) {
-                              user.selectedPlayer!.location!.endWalk(
+                              try {
+                                user.selectedPlayer!.location!.endWalk(
                                   game.id!,
                                   user.selectedPlayer!.index!.toString(),
-                                  PlayerLocation(
-                                      dx: widget.tempLocation!.dx,
-                                      dy: widget.tempLocation!.dy),
-                                  game.map!.tallGrass!);
+                                  widget.tempLocation!,
+                                  game.map!.tallGrass!,
+                                  game.map!.heightMap!,
+                                );
+                              } on CantPassException {
+                                widget.tempLocation!.updatePlayerLocation(
+                                    user.selectedPlayer!.location!);
+                                widget.refresh!();
+                                return;
+                              }
 
                               user.selectedPlayer!.action!.takeAction(
                                 game.id!,
@@ -242,19 +249,20 @@ class PlayerSpriteController {
         location!.dx! - visionRange! / 2, location.dy! - visionRange / 2);
   }
 
-  double? walkedDistance(PlayerTempLocation temporaryLocation,
-      PlayerLocation playerLocation, double walkRange) {
-    double distanceLeftOver =
-        (Offset(temporaryLocation.dx!, temporaryLocation.dy!) -
-                    Offset(playerLocation.dx!, playerLocation.dy!))
-                .distance *
-            2;
+  // double? walkedDistance(PlayerTempLocation temporaryLocation,
+  //     PlayerLocation playerLocation, double walkRange) {
+  //   double distanceLeftOver =
+  //       (Offset(temporaryLocation.dx!, temporaryLocation.dy!) -
+  //                   Offset(playerLocation.dx!, playerLocation.dy!))
+  //               .distance *
+  //           2;
 
-    if (walkRange - distanceLeftOver < 0) {
-      distanceLeftOver = 0;
-    } else {
-      distanceLeftOver = walkRange - distanceLeftOver;
-    }
-    return distanceLeftOver;
-  }
+  //   if (walkRange - distanceLeftOver < 0) {
+  //     distanceLeftOver = 0;
+  //   } else {
+  //     distanceLeftOver = walkRange - distanceLeftOver;
+  //   }
+  //   return distanceLeftOver;
+  // }
+
 }

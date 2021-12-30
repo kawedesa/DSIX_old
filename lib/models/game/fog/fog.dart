@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'package:dsixv02app/models/player/player.dart';
 import 'package:flutter/material.dart';
 
 class Fog {
@@ -18,6 +19,14 @@ class Fog {
       'dy': this.dy,
       'size': this.size,
     };
+  }
+
+  factory Fog.empty() {
+    return Fog(
+      dx: 0,
+      dy: 0,
+      size: 0,
+    );
   }
 
   factory Fog.fromMap(Map<String, dynamic>? data) {
@@ -47,5 +56,19 @@ class Fog {
     if (this.size! < 50) {
       this.size = 50;
     }
+  }
+
+  void checkFog(String gameID, Player player) {
+    double distance = (player.location!.getLocation() - getLocation()).distance;
+    if (distance >= this.size! / 2) {
+      takeFogDamage(gameID, player);
+    }
+  }
+
+  void takeFogDamage(
+    String gameID,
+    Player player,
+  ) {
+    player.life!.decrease(gameID, player.index!.toString(), 2);
   }
 }

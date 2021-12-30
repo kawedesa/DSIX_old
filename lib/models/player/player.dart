@@ -86,7 +86,7 @@ class Player {
     );
   }
 
-  factory Player.newRandomPlayer(Offset location, int playerIndex) {
+  factory Player.newRandomPlayer(int playerIndex, PlayerLocation location) {
     List<String> id = [
       'blue',
       'pink',

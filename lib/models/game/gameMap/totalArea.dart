@@ -1,34 +1,47 @@
 import 'package:flutter/material.dart';
 
-class TallGrassArea {
-  List<Area>? totalArea;
-  TallGrassArea({
-    List<Area>? totalArea,
+class TotalArea {
+  List<Area>? area;
+  TotalArea({
+    List<Area>? area,
   }) {
-    this.totalArea = totalArea;
+    this.area = area;
   }
-  factory TallGrassArea.empty() {
-    return TallGrassArea(
-      totalArea: [],
+  factory TotalArea.empty() {
+    return TotalArea(
+      area: [],
     );
   }
 
-  factory TallGrassArea.fromMap(Map data) {
-    List<Area> totalArea = [];
-    List<dynamic> areaMap = data['totalArea'];
-    areaMap.forEach((area) {
-      totalArea.add(new Area.fromMap(area));
+  factory TotalArea.fromMap(Map data) {
+    List<Area> areaFromMap = [];
+    List<dynamic> areaMap = data['area'];
+    areaMap.forEach((newArea) {
+      areaFromMap.add(new Area.fromMap(newArea));
     });
-    return TallGrassArea(
-      totalArea: totalArea,
+    return TotalArea(
+      area: areaFromMap,
     );
   }
 
   Map<String, dynamic> toMap() {
-    var totalArea = this.totalArea?.map((area) => area.toMap()).toList();
+    var areaToMap = this.area?.map((newArea) => newArea.toMap()).toList();
     return {
-      'totalArea': totalArea,
+      'area': areaToMap,
     };
+  }
+
+  bool inThisArea(Offset location) {
+    bool inHere = false;
+
+    this.area!.forEach((eachArea) {
+      if (inHere) {
+        return;
+      }
+      inHere = eachArea.inHere(location);
+    });
+
+    return inHere;
   }
 }
 
@@ -65,9 +78,9 @@ class Area {
   }
 
   bool inHere(Offset location) {
-    Path grass = Path();
-    grass.addPolygon(toPoly(), true);
-    return grass.contains(location);
+    Path area = Path();
+    area.addPolygon(toPoly(), true);
+    return area.contains(location);
   }
 }
 
@@ -84,7 +97,7 @@ class Vertex {
 
   factory Vertex.fromMap(Map data) {
     return Vertex(
-      dx: data['dx'],
+      dx: data['dx'] * 1.0,
       dy: data['dy'] * 1.0,
     );
   }
