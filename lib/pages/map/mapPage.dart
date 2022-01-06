@@ -104,11 +104,37 @@ class _MapPageState extends State<MapPage> {
         actions: [
           Row(
             children: <Widget>[
+              Row(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 0, 2, 0),
+                    child: SvgPicture.asset(
+                      AppIcons.action,
+                      height: MediaQuery.of(context).size.height * 0.03,
+                      color: (user.selectedPlayer!.action!.firstAction!)
+                          ? AppColors.white00
+                          : _uiColor.setUIColor(
+                              user.selectedPlayerID, 'secondary'),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(2, 0, 10, 0),
+                    child: SvgPicture.asset(
+                      AppIcons.action,
+                      height: MediaQuery.of(context).size.height * 0.03,
+                      color: (user.selectedPlayer!.action!.secondAction!)
+                          ? AppColors.white00
+                          : _uiColor.setUIColor(
+                              user.selectedPlayerID, 'secondary'),
+                    ),
+                  ),
+                ],
+              ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                 child: SvgPicture.asset(
                   AppIcons.life,
-                  height: MediaQuery.of(context).size.height * 0.045,
+                  height: MediaQuery.of(context).size.height * 0.047,
                   color:
                       _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
                 ),
@@ -150,7 +176,7 @@ class _MapPageState extends State<MapPage> {
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
+                width: MediaQuery.of(context).size.width * 0.035,
               )
             ],
           ),

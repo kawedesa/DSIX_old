@@ -1,19 +1,19 @@
+import 'package:dsixv02app/models/shop/damageArmorWeight.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/widgets/dialogButton.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'damageAndArmorStats.dart';
 
 // ignore: must_be_immutable
-class ItemDetail extends StatelessWidget {
+class ItemDetailPage extends StatelessWidget {
   String? playerID;
   bool? playerTurn;
   Item? item;
   String? buttonText;
   Function()? useEquipOrUnequip;
-  ItemDetail({
+  ItemDetailPage({
     Key? key,
     @required this.playerID,
     @required this.playerTurn,
@@ -89,12 +89,13 @@ class ItemDetail extends StatelessWidget {
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: (item!.itemSlot != 'consumable')
-                          ? DamageAndArmorStats(
+                          ? DamageArmorWeight(
                               playerID: playerID,
                               pDamage: item!.pDamage,
                               mDamage: item!.mDamage,
                               pArmor: item!.pArmor,
                               mArmor: item!.mArmor,
+                              weight: item!.weight,
                             )
                           : Center(
                               child: Text(

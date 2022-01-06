@@ -46,8 +46,14 @@ class TotalArea {
 }
 
 class Area {
+  int? index;
   List<Vertex>? area;
-  Area({List<Vertex>? area}) {
+
+  Area({
+    int? index,
+    List<Vertex>? area,
+  }) {
+    this.index = index;
     this.area = area;
   }
   factory Area.fromMap(Map data) {
@@ -57,6 +63,7 @@ class Area {
       area.add(new Vertex.fromMap(vertex));
     });
     return Area(
+      index: data['index'],
       area: area,
     );
   }
@@ -64,6 +71,7 @@ class Area {
   Map<String, dynamic> toMap() {
     var area = this.area?.map((vertex) => vertex.toMap()).toList();
     return {
+      'index': this.index,
       'area': area,
     };
   }

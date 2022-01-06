@@ -227,7 +227,10 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                         buttonTextColor: AppColors.grey04,
                         onTapAction: () async {
                           _battleRoyaleSettingsPage.newBattleRoyaleGame(
-                              gameController, playerController, lootController);
+                              gameController,
+                              playerController,
+                              turnController,
+                              lootController);
                         },
                       ),
                     ],

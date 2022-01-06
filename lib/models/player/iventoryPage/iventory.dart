@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import '../user.dart';
 import 'damageAndArmorStats.dart';
-import 'itemDetail.dart';
+import 'itemDetailPage.dart';
 import 'iventorySlot.dart';
 
 class Iventory extends StatefulWidget {
@@ -109,7 +109,7 @@ class _IventoryState extends State<Iventory> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return ItemDetail(
+                                        return ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!
@@ -148,7 +148,7 @@ class _IventoryState extends State<Iventory> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return ItemDetail(
+                                        return ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!
@@ -194,7 +194,7 @@ class _IventoryState extends State<Iventory> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return ItemDetail(
+                                        return ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!
@@ -233,7 +233,7 @@ class _IventoryState extends State<Iventory> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return ItemDetail(
+                                        return ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!
@@ -279,7 +279,7 @@ class _IventoryState extends State<Iventory> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return ItemDetail(
+                                        return ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!
@@ -318,7 +318,7 @@ class _IventoryState extends State<Iventory> {
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return ItemDetail(
+                                        return ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!
@@ -397,7 +397,7 @@ class _IventoryState extends State<Iventory> {
                                   return (user.selectedPlayer!.iventory!
                                               .bag![index].itemSlot ==
                                           'consumable')
-                                      ? ItemDetail(
+                                      ? ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!
@@ -427,7 +427,7 @@ class _IventoryState extends State<Iventory> {
                                             refresh();
                                           },
                                         )
-                                      : ItemDetail(
+                                      : ItemDetailPage(
                                           playerID: user.selectedPlayerID,
                                           playerTurn: user.playerTurn,
                                           item: user.selectedPlayer!.iventory!

@@ -11,6 +11,7 @@ import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import '../game/gameController.dart';
 import 'loot.dart';
+import 'lootDetail.dart';
 
 class LootDialog extends StatefulWidget {
   final int? lootIndex;
@@ -319,68 +320,101 @@ class LootDialogOption extends StatelessWidget {
   Widget build(BuildContext context) {
     UIColor _uiColor = UIColor();
     final user = Provider.of<User>(context);
-    return GestureDetector(
-      onTap: () {
-        onTapAction!();
-      },
-      child: Container(
-        height: MediaQuery.of(context).size.height * 0.09,
-        width: double.infinity,
-        decoration: BoxDecoration(
-          color: (optionSelected!)
-              ? _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary')
-              : AppColors.black00,
-          border: Border.all(
-            color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
-            width: 1,
-          ),
-        ),
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.centerRight,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.end,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.09,
+      width: double.infinity,
+      child: Stack(
+        children: [
+          GestureDetector(
+            onTap: () {
+              onTapAction!();
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                color: (optionSelected!)
+                    ? _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary')
+                    : AppColors.black00,
+                border: Border.all(
+                  color:
+                      _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+                  width: 1,
+                ),
+              ),
+              child: Stack(
                 children: [
-                  Text('${item!.weight}'.toUpperCase(),
-                      style: TextStyle(
-                        fontSize: 17,
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 2,
-                        fontFamily: 'Calibri',
-                        color: _uiColor.setUIColor(
-                            user.selectedPlayer!.id, 'primary'),
-                      )),
-                  SvgPicture.asset(
-                    AppIcons.weight,
-                    height: MediaQuery.of(context).size.height * 0.03,
-                    width: MediaQuery.of(context).size.height * 0.03,
-                    color:
-                        _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text('${item!.weight}'.toUpperCase(),
+                            style: TextStyle(
+                              fontSize: 17,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 2,
+                              fontFamily: 'Calibri',
+                              color: _uiColor.setUIColor(
+                                  user.selectedPlayer!.id, 'primary'),
+                            )),
+                        SvgPicture.asset(
+                          AppIcons.weight,
+                          height: MediaQuery.of(context).size.height * 0.03,
+                          width: MediaQuery.of(context).size.height * 0.03,
+                          color: _uiColor.setUIColor(
+                              user.selectedPlayer!.id, 'primary'),
+                        ),
+                        SizedBox(
+                          width: MediaQuery.of(context).size.width * 0.05,
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(
-                    width: MediaQuery.of(context).size.width * 0.05,
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                    child: Center(
+                      child: Text('${item!.name}'.toUpperCase(),
+                          style: TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 2,
+                            fontFamily: 'Calibri',
+                            color: _uiColor.setUIColor(
+                                user.selectedPlayer!.id, 'primary'),
+                          )),
+                    ),
                   ),
                 ],
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
-              child: Center(
-                child: Text('${item!.name}'.toUpperCase(),
-                    style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      letterSpacing: 2,
-                      fontFamily: 'Calibri',
-                      color: _uiColor.setUIColor(
-                          user.selectedPlayer!.id, 'primary'),
-                    )),
+          ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+              child: GestureDetector(
+                onTap: () {
+                  showDialog(
+                    context: context,
+                    builder: (BuildContext context) {
+                      return LootDetail(
+                        playerID: user.selectedPlayerID,
+                        item: item,
+                      );
+                    },
+                  );
+                },
+                child: SvgPicture.asset(
+                  AppIcons.help,
+                  height: MediaQuery.of(context).size.height * 0.03,
+                  width: MediaQuery.of(context).size.height * 0.03,
+                  color:
+                      _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

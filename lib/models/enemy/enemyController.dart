@@ -6,20 +6,18 @@ class EnemyController {
 
   void updateEnemyPlayersInSight(List<Player> players, Player selectedPlayer) {
     this.enemyPlayers = [];
+
     players.forEach((target) {
       if (target.id == selectedPlayer.id) {
         return;
       }
-      if (selectedPlayer.vision!.cantSee(
-          target.location!.getLocation(),
-          target.location!.isVisible!,
-          selectedPlayer.location!.getLocation())) {
-        return;
-      }
 
-      this.enemyPlayers.add(EnemyPlayerSprite(
-            enemyPlayer: target,
-          ));
+      if (selectedPlayer.vision!
+          .canSeeEnemyPlayer(target.location!, selectedPlayer.location!)) {
+        this.enemyPlayers.add(EnemyPlayerSprite(
+              enemyPlayer: target,
+            ));
+      }
     });
   }
 }

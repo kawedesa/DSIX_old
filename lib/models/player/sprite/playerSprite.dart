@@ -248,21 +248,4 @@ class PlayerSpriteController {
     return Offset(
         location!.dx! - visionRange! / 2, location.dy! - visionRange / 2);
   }
-
-  // double? walkedDistance(PlayerTempLocation temporaryLocation,
-  //     PlayerLocation playerLocation, double walkRange) {
-  //   double distanceLeftOver =
-  //       (Offset(temporaryLocation.dx!, temporaryLocation.dy!) -
-  //                   Offset(playerLocation.dx!, playerLocation.dy!))
-  //               .distance *
-  //           2;
-
-  //   if (walkRange - distanceLeftOver < 0) {
-  //     distanceLeftOver = 0;
-  //   } else {
-  //     distanceLeftOver = walkRange - distanceLeftOver;
-  //   }
-  //   return distanceLeftOver;
-  // }
-
 }

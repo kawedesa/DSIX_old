@@ -9,6 +9,7 @@ class AppMaps {
     tallGrass: TotalArea(area: [
       //Start with the triangle shape in the middle and start adding the grass areas clockwise
       Area(
+        index: 0,
         area: [
           Vertex(dx: 96, dy: 120),
           Vertex(dx: 125, dy: 100),
@@ -17,6 +18,7 @@ class AppMaps {
         ],
       ),
       Area(
+        index: 1,
         area: [
           Vertex(dx: 264, dy: 84),
           Vertex(dx: 264, dy: 72),
@@ -25,7 +27,7 @@ class AppMaps {
           Vertex(dx: 212, dy: 84),
         ],
       ),
-      Area(area: [
+      Area(index: 2, area: [
         Vertex(dx: 228, dy: 196),
         Vertex(dx: 232, dy: 192),
         Vertex(dx: 232, dy: 184),
@@ -33,6 +35,7 @@ class AppMaps {
         Vertex(dx: 208, dy: 196),
       ]),
       Area(
+        index: 3,
         area: [
           Vertex(dx: 320, dy: 186),
           Vertex(dx: 296, dy: 196),
@@ -48,6 +51,7 @@ class AppMaps {
         ],
       ),
       Area(
+        index: 4,
         area: [
           Vertex(dx: 104, dy: 248),
           Vertex(dx: 108, dy: 240),
@@ -57,6 +61,7 @@ class AppMaps {
         ],
       ),
       Area(
+        index: 5,
         area: [
           Vertex(dx: 68, dy: 292),
           Vertex(dx: 108, dy: 292),
@@ -65,6 +70,7 @@ class AppMaps {
         ],
       ),
       Area(
+        index: 6,
         area: [
           Vertex(dx: 44, dy: 240),
           Vertex(dx: 40, dy: 232),
@@ -75,6 +81,7 @@ class AppMaps {
         ],
       ),
       Area(
+        index: 7,
         area: [
           Vertex(dx: 32, dy: 136),
           Vertex(dx: 56, dy: 136),
@@ -94,6 +101,7 @@ class AppMaps {
         index: 0,
         layer: TotalArea(area: [
           Area(
+            index: 0,
             area: [
               Vertex(dx: 0, dy: 0),
               Vertex(dx: 320, dy: 0),
@@ -109,6 +117,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 1,
             area: [
               Vertex(dx: 320, dy: 12),
               Vertex(dx: 316, dy: 12),
@@ -125,6 +134,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 2,
             area: [
               Vertex(dx: 0, dy: 136),
               Vertex(dx: 72, dy: 136),
@@ -144,6 +154,7 @@ class AppMaps {
         index: 1,
         layer: TotalArea(area: [
           Area(
+            index: 0,
             area: [
               Vertex(dx: 268, dy: 136),
               Vertex(dx: 268, dy: 156),
@@ -156,6 +167,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 1,
             area: [
               Vertex(dx: 196, dy: 72),
               Vertex(dx: 208, dy: 56),
@@ -164,6 +176,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 2,
             area: [
               Vertex(dx: 88, dy: 120),
               Vertex(dx: 72, dy: 136),
@@ -174,6 +187,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 3,
             area: [
               Vertex(dx: 208, dy: 248),
               Vertex(dx: 204, dy: 248),
@@ -191,6 +205,7 @@ class AppMaps {
         index: 2,
         layer: TotalArea(area: [
           Area(
+            index: 0,
             area: [
               Vertex(dx: 208, dy: 56),
               Vertex(dx: 208, dy: 12),
@@ -206,6 +221,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 1,
             area: [
               Vertex(dx: 152, dy: 220),
               Vertex(dx: 152, dy: 248),
@@ -227,6 +243,7 @@ class AppMaps {
         index: 3,
         layer: TotalArea(area: [
           Area(
+            index: 0,
             area: [
               Vertex(dx: 220, dy: 144),
               Vertex(dx: 220, dy: 112),
@@ -244,6 +261,7 @@ class AppMaps {
         index: 10,
         layer: TotalArea(area: [
           Area(
+            index: 0,
             area: [
               Vertex(dx: 220, dy: 144),
               Vertex(dx: 220, dy: 184),
@@ -255,6 +273,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 1,
             area: [
               Vertex(dx: 264, dy: 72),
               Vertex(dx: 196, dy: 72),
@@ -263,6 +282,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 2,
             area: [
               Vertex(dx: 148, dy: 240),
               Vertex(dx: 148, dy: 220),
@@ -271,6 +291,7 @@ class AppMaps {
             ],
           ),
           Area(
+            index: 3,
             area: [
               Vertex(dx: 88, dy: 184),
               Vertex(dx: 76, dy: 184),

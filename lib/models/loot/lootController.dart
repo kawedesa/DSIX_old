@@ -109,16 +109,14 @@ class LootController {
   ) {
     this.visibleLoot = [];
     loot.forEach((target) {
-      if (selectedPlayer.vision!.cantSee(target.location!.getLocation(), true,
+      if (selectedPlayer.vision!.canSeeLoot(target.location!.getLocation(),
           selectedPlayer.location!.getLocation())) {
-        return;
+        this.visibleLoot.add(LootSprite(
+              lootIndex: target.index,
+              location: target.location,
+              isClosed: target.isClosed,
+            ));
       }
-
-      this.visibleLoot.add(LootSprite(
-            lootIndex: target.index,
-            location: target.location,
-            isClosed: target.isClosed,
-          ));
     });
   }
 }

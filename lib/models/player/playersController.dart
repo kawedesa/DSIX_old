@@ -26,31 +26,24 @@ class PlayersController {
             .toList());
   }
 
-  void newRandomPlayers(
+  List<Player> newRandomPlayers(
     String gameID,
     GameMap map,
     int numberOfPlayers,
-  ) async {
-    var batch = database.batch();
+  ) {
+    List<Player> newPlayers = [];
 
     //Add Players
     for (int i = 0; i < numberOfPlayers; i++) {
       PlayerLocation location = randomLocation(map);
-
-      var document = database
-          .collection('game')
-          .doc(gameID)
-          .collection('players')
-          .doc('$i');
-
-      batch.set(
-          document,
-          Player.newRandomPlayer(
-            i,
-            location,
-          ).toMap());
+      Player player = Player.newRandomPlayer(
+        i,
+        location,
+      );
+      newPlayers.add(player);
     }
-    batch.commit();
+    uploadPlayers(gameID, newPlayers);
+    return newPlayers;
   }
 
   PlayerLocation randomLocation(GameMap map) {
@@ -80,6 +73,19 @@ class PlayersController {
     }
 
     return PlayerLocation(dx: dx, dy: dy, isVisible: isVisible, height: height);
+  }
+
+  void uploadPlayers(String gameID, List<Player> players) async {
+    var batch = database.batch();
+    players.forEach((player) {
+      var document = database
+          .collection('game')
+          .doc(gameID)
+          .collection('players')
+          .doc('${player.index}');
+      batch.set(document, player.toMap());
+    });
+    batch.commit();
   }
 
   void deleteAllPlayers(String gameID) async {

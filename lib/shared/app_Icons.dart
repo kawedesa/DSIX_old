@@ -1,34 +1,32 @@
 class AppIcons {
-  //Actions
-  static final attack = 'assets/icon/attack.svg';
-  static final defend = 'assets/icon/defend.svg';
-  static final look = 'assets/icon/look.svg';
-  static final bag = 'assets/icon/bag.svg';
-
+  //UI
+  static final turn = 'assets/icon/turn.svg';
+  static final action = 'assets/icon/action.svg';
   //Buttons
   static final leftArrow = 'assets/icon/leftArrow.svg';
   static final rightArrow = 'assets/icon/rightArrow.svg';
-
-  //Game
-  static final turn = 'assets/icon/turn.svg';
+  static final help = 'assets/icon/help.svg';
 
   //Player
   static final life = 'assets/icon/life.svg';
   static final weight = 'assets/icon/weight.svg';
-
   static final mArmor = 'assets/icon/mArmor.svg';
   static final mDamage = 'assets/icon/mDamage.svg';
   static final pArmor = 'assets/icon/pArmor.svg';
   static final pDamage = 'assets/icon/pDamage.svg';
-
   static final tempArmor = 'assets/icon/tempArmor.svg';
-
   static final mainHandSlot = 'assets/icon/mainHandSlot.svg';
   static final offHandSlot = 'assets/icon/offHandSlot.svg';
   static final headSlot = 'assets/icon/headSlot.svg';
   static final handSlot = 'assets/icon/handSlot.svg';
   static final feetSlot = 'assets/icon/feetSlot.svg';
   static final bodySlot = 'assets/icon/bodySlot.svg';
+
+  //Actions
+  static final attack = 'assets/icon/attack.svg';
+  static final defend = 'assets/icon/defend.svg';
+  static final look = 'assets/icon/look.svg';
+  static final bag = 'assets/icon/bag.svg';
 
   //Item
   //Light Weapons
