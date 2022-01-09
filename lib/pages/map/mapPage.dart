@@ -91,7 +91,8 @@ class _MapPageState extends State<MapPage> {
       user.endPlayerTurn();
     }
 
-    enemyController.updateEnemyPlayersInSight(players, user.selectedPlayer!);
+    enemyController.updateEnemyPlayersInSight(
+        players, user.selectedPlayer!, game.map!.tallGrass!);
 
     lootController.updateLootInSight(loot, user.selectedPlayer!);
 

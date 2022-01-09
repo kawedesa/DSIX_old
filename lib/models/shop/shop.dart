@@ -491,7 +491,7 @@ class Shop {
       mArmor: 0,
       weight: 4,
       value: 400,
-      maxWeaponRange: 100,
+      maxWeaponRange: 120,
       minWeaponRange: 80,
     ),
     Item(
@@ -505,7 +505,7 @@ class Shop {
       mArmor: 0,
       weight: 5,
       value: 500,
-      maxWeaponRange: 120,
+      maxWeaponRange: 160,
       minWeaponRange: 90,
     ),
     Item(
@@ -547,7 +547,7 @@ class Shop {
       mArmor: 0,
       weight: 8,
       value: 600,
-      maxWeaponRange: 100,
+      maxWeaponRange: 120,
       minWeaponRange: 80,
     ),
     Item(
@@ -836,7 +836,7 @@ class Shop {
       mArmor: 0,
       weight: 1,
       value: 1600,
-      maxWeaponRange: 120,
+      maxWeaponRange: 250,
       minWeaponRange: 90,
     ),
     Item(

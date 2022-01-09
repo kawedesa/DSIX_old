@@ -123,9 +123,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                             },
                             onPanEnd: (details) {
                               try {
-                                user.selectedPlayer!.location!.endWalk(
+                                user.selectedPlayer!.endWalk(
                                   game.id!,
-                                  user.selectedPlayer!.index!.toString(),
                                   widget.tempLocation!,
                                   game.map!.tallGrass!,
                                   game.map!.heightMap!,

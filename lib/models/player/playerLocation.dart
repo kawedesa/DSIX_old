@@ -1,8 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dsixv02app/models/game/gameMap/heightMap.dart';
 import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
 import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 
 class PlayerLocation {
@@ -46,19 +44,13 @@ class PlayerLocation {
     return Offset(this.dx!.toDouble(), this.dy!.toDouble());
   }
 
-  void endWalk(
+  void newLocation(
     String gameID,
     String playerIndex,
     PlayerTempLocation newLocation,
     TotalArea tallGrass,
-    HeightMap height,
+    int newHeight,
   ) {
-    int newHeight = height.inThisLayer(newLocation.getLocation());
-
-    if (newHeight != newLocation.height) {
-      throw CantPassException();
-    }
-
     this.dx = newLocation.dx;
     this.dy = newLocation.dy;
 

@@ -38,6 +38,7 @@ class LootDetail extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
+              height: MediaQuery.of(context).size.height * 0.05,
               color: _uiColor.setUIColor(playerID, 'primary'),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),

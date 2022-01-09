@@ -1,4 +1,5 @@
 import 'package:dsixv02app/models/loot/lootController.dart';
+import 'package:dsixv02app/models/player/iventoryPage/iventory.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
@@ -65,24 +66,23 @@ class _LootDialogState extends State<LootDialog> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
+              height: MediaQuery.of(context).size.height * 0.05,
               color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-                child: Center(
-                  child: Text(
-                      (_lootDialogController.itemList.isEmpty)
-                          ? 'empty'.toUpperCase()
-                          : 'chest'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: 'Santana',
-                        height: 1,
-                        fontSize: 25,
-                        color: _uiColor.setUIColor(
-                            user.selectedPlayer!.id, 'secondary'),
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 3,
-                      )),
-                ),
+              child: Align(
+                alignment: Alignment.center,
+                child: Text(
+                    (_lootDialogController.itemList.isEmpty)
+                        ? 'empty'.toUpperCase()
+                        : 'chest'.toUpperCase(),
+                    style: TextStyle(
+                      fontFamily: 'Santana',
+                      height: 1,
+                      fontSize: 25,
+                      color: _uiColor.setUIColor(
+                          user.selectedPlayer!.id, 'secondary'),
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 3,
+                    )),
               ),
             ),
             Column(
@@ -107,6 +107,53 @@ class _LootDialogState extends State<LootDialog> {
                         },
                       );
                     },
+                  ),
+                ),
+                GestureDetector(
+                  onTap: () {
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Iventory();
+                      },
+                    );
+                  },
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.09,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: AppColors.black00,
+                      border: Border.all(
+                        color: _uiColor.setUIColor(
+                            user.selectedPlayer!.id, 'primary'),
+                        width: 1,
+                      ),
+                    ),
+                    child: Stack(
+                      alignment: AlignmentDirectional.centerEnd,
+                      children: [
+                        (_lootDialogController.artboard != null)
+                            ? Rive(
+                                artboard: _lootDialogController.artboard!,
+                                fit: BoxFit.fill,
+                              )
+                            : SizedBox(),
+                        Padding(
+                          padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
+                          child: Center(
+                            child: Text('iventory'.toUpperCase(),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  letterSpacing: 2,
+                                  fontFamily: 'Calibri',
+                                  color: _uiColor.setUIColor(
+                                      user.selectedPlayer!.id, 'primary'),
+                                )),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 (_lootDialogController.numberOfSelectedItems < 1)

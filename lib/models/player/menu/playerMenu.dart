@@ -87,7 +87,6 @@ class PlayerMenu extends StatelessWidget {
                         turnController.passTurnWhere(
                             gameController.gameID, user.selectedPlayer!.id!);
                       }
-                      // refresh!();
                     },
                   ),
                 ),

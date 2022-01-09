@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
 import 'package:dsixv02app/models/player/playerLocation.dart';
 import 'package:flutter/material.dart';
 
@@ -56,7 +57,14 @@ class PlayerVision {
     update(gameID, playerIndex);
   }
 
-  bool canSeeEnemyPlayer(PlayerLocation target, PlayerLocation player) {
+  void setHeight(String gameID, String playerIndex, int height) {
+    this.heightBonus = height * 10;
+
+    update(gameID, playerIndex);
+  }
+
+  bool canSeeEnemyPlayer(
+      PlayerLocation target, PlayerLocation player, TotalArea tallGrass) {
     double distanceFromTarget =
         (target.getLocation() - player.getLocation()).distance;
 
@@ -66,6 +74,11 @@ class PlayerVision {
 
     if (target.isVisible == false &&
         this.canSeeInvisible == true &&
+        distanceFromTarget < getRange() / 2) {
+      return true;
+    }
+
+    if (tallGrass.inTheSameArea(target.getLocation(), player.getLocation()) &&
         distanceFromTarget < getRange() / 2) {
       return true;
     }

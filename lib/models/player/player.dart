@@ -1,5 +1,8 @@
 import 'dart:math';
+import 'package:dsixv02app/models/game/gameMap/heightMap.dart';
+import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
 import 'package:dsixv02app/models/shop/item.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'playerAction.dart';
 import 'playerArmor.dart';
@@ -10,6 +13,7 @@ import 'playerLife.dart';
 import 'playerLocation.dart';
 import 'playerVision.dart';
 import 'playerWalkRange.dart';
+import 'sprite/playerTempLocation.dart';
 
 class Player {
   int? index;
@@ -126,6 +130,24 @@ class Player {
     } else {
       return false;
     }
+  }
+
+  void endWalk(
+    String gameID,
+    PlayerTempLocation newLocation,
+    TotalArea tallGrass,
+    HeightMap height,
+  ) {
+    int newHeight = height.inThisLayer(newLocation.getLocation());
+
+    if (newHeight != newLocation.height) {
+      throw CantPassException();
+    }
+
+    this.location!.newLocation(
+        gameID, this.index.toString(), newLocation, tallGrass, newHeight);
+
+    this.vision!.setHeight(gameID, this.index.toString(), newHeight);
   }
 
   int attack() {

@@ -48,6 +48,7 @@ class _IventoryState extends State<Iventory> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             Container(
+              height: MediaQuery.of(context).size.height * 0.05,
               color: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
@@ -352,22 +353,20 @@ class _IventoryState extends State<Iventory> {
                     ),
                   ),
                   Container(
+                    height: MediaQuery.of(context).size.height * 0.05,
                     color:
                         _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-                      child: Center(
-                        child: Text('bag'.toUpperCase(),
-                            style: TextStyle(
-                              fontFamily: 'Santana',
-                              height: 1,
-                              fontSize: 25,
-                              color: _uiColor.setUIColor(
-                                  user.selectedPlayerID, 'secondary'),
-                              fontWeight: FontWeight.bold,
-                              letterSpacing: 3,
-                            )),
-                      ),
+                    child: Center(
+                      child: Text('bag'.toUpperCase(),
+                          style: TextStyle(
+                            fontFamily: 'Santana',
+                            height: 1,
+                            fontSize: 25,
+                            color: _uiColor.setUIColor(
+                                user.selectedPlayerID, 'secondary'),
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 3,
+                          )),
                     ),
                   ),
                   Padding(
@@ -381,9 +380,6 @@ class _IventoryState extends State<Iventory> {
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: GestureDetector(
                             onLongPress: () {
-                              if (user.playerTurn == false) {
-                                return;
-                              }
                               user.selectedPlayer!.iventory!.destroyItem(
                                   gameController.gameID,
                                   user.selectedPlayer!.index.toString(),
