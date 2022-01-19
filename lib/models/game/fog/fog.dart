@@ -69,6 +69,6 @@ class Fog {
     String gameID,
     Player player,
   ) {
-    player.life!.decrease(gameID, player.index!.toString(), 2);
+    player.life!.decrease(gameID, player.id!, 2);
   }
 }

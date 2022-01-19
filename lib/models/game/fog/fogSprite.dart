@@ -11,16 +11,16 @@ class FogSprite extends StatelessWidget {
   Widget build(BuildContext context) {
     final game = Provider.of<Game>(context);
     return Positioned(
-      left: game.fog!.dx! - game.fog!.size! / 2,
-      top: game.fog!.dy! - game.fog!.size! / 2,
+      left: game.round!.fog!.dx! - game.round!.fog!.size! / 2,
+      top: game.round!.fog!.dy! - game.round!.fog!.size! / 2,
       child: TransparentPointer(
         transparent: true,
         child: CustomPaint(
-          painter:
-              FogArea(minRange: game.fog!.size!, maxRange: game.map!.size! * 3),
+          painter: FogArea(
+              minRange: game.round!.fog!.size!, maxRange: game.map!.size! * 3),
           child: SizedBox(
-            width: game.fog!.size!,
-            height: game.fog!.size!,
+            width: game.round!.fog!.size!,
+            height: game.round!.fog!.size!,
           ),
         ),
       ),

@@ -22,7 +22,7 @@ class LootSprite extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final turnController = Provider.of<TurnController>(context);
+    // final turnController = Provider.of<TurnController>(context);
     final lootController = Provider.of<LootController>(context);
     final gameController = Provider.of<GameController>(context);
     final user = Provider.of<User>(context);
@@ -41,13 +41,13 @@ class LootSprite extends StatelessWidget {
 
             user.selectedPlayer!.action!.takeAction(
               gameController.gameID,
-              user.selectedPlayer!.index!.toString(),
+              user.selectedPlayer!.id!,
             );
 
-            if (user.selectedPlayer!.action!.outOfActions()) {
-              turnController.passTurnWhere(
-                  gameController.gameID, user.selectedPlayer!.id!);
-            }
+            // if (user.selectedPlayer!.action!.outOfActions()) {
+            //   turnController.passTurnWhere(
+            //       gameController.gameID, user.selectedPlayer!.id!);
+            // }
 
             if (isClosed!) {
               lootController.openLoot(gameController.gameID, lootIndex!);

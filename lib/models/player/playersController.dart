@@ -82,7 +82,7 @@ class PlayersController {
           .collection('game')
           .doc(gameID)
           .collection('players')
-          .doc('${player.index}');
+          .doc('${player.id}');
       batch.set(document, player.toMap());
     });
     batch.commit();

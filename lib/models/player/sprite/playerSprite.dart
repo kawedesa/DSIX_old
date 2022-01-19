@@ -42,17 +42,17 @@ class _PlayerSpriteState extends State<PlayerSprite> {
   @override
   Widget build(BuildContext context) {
     final players = Provider.of<List<Player>>(context);
-    final turnController = Provider.of<TurnController>(context);
+    // final turnController = Provider.of<TurnController>(context);
     final gameController = Provider.of<GameController>(context);
     final game = Provider.of<Game>(context);
     final user = Provider.of<User>(context);
 
-    try {
-      playerSpriteController.updatePlayer(
-          players[user.selectedPlayer!.index!], user.selectedPlayer!);
-    } on UpdatePlayerException {
-      user.updateSelectedPlayer(players[user.selectedPlayer!.index!]);
-    }
+    // try {
+    //   playerSpriteController.updatePlayer(
+    //       players[user.selectedPlayer!.index!], user.selectedPlayer!);
+    // } on UpdatePlayerException {
+    //   user.updateSelectedPlayer(players[user.selectedPlayer!.index!]);
+    // }
 
     return Positioned(
       left: playerSpriteController
@@ -138,14 +138,14 @@ class _PlayerSpriteState extends State<PlayerSprite> {
 
                               user.selectedPlayer!.action!.takeAction(
                                 game.id!,
-                                user.selectedPlayer!.index!.toString(),
+                                user.selectedPlayer!.id!,
                               );
 
-                              if (user.selectedPlayer!.action!.outOfActions()) {
-                                turnController.passTurnWhere(
-                                    gameController.gameID,
-                                    user.selectedPlayer!.id!);
-                              }
+                              // if (user.selectedPlayer!.action!.outOfActions()) {
+                              //   turnController.passTurnWhere(
+                              //       gameController.gameID,
+                              //       user.selectedPlayer!.id!);
+                              // }
                             },
                           ),
                   ),

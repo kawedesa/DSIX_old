@@ -13,7 +13,7 @@ class PlayerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    final turnController = Provider.of<TurnController>(context);
+    // final turnController = Provider.of<TurnController>(context);
     final gameController = Provider.of<GameController>(context);
 
     return Positioned(
@@ -58,13 +58,13 @@ class PlayerMenu extends StatelessWidget {
 
                       user.selectedPlayer!.action!.takeAction(
                         gameController.gameID,
-                        user.selectedPlayer!.index!.toString(),
+                        user.selectedPlayer!.id!,
                       );
 
-                      if (user.selectedPlayer!.action!.outOfActions()) {
-                        turnController.passTurnWhere(
-                            gameController.gameID, user.selectedPlayer!.id!);
-                      }
+                      // if (user.selectedPlayer!.action!.outOfActions()) {
+                      //   turnController.passTurnWhere(
+                      //       gameController.gameID, user.selectedPlayer!.id!);
+                      // }
                     },
                   ),
                 ),
@@ -73,20 +73,20 @@ class PlayerMenu extends StatelessWidget {
                   child: ActionButton(
                     action: 'look',
                     onTap: () {
-                      user.selectedPlayer!.vision!.look(gameController.gameID,
-                          user.selectedPlayer!.index.toString());
+                      user.selectedPlayer!.vision!.look(
+                          gameController.gameID, user.selectedPlayer!.id!);
 
                       user.openCloseMenu();
 
                       user.selectedPlayer!.action!.takeAction(
                         gameController.gameID,
-                        user.selectedPlayer!.index!.toString(),
+                        user.selectedPlayer!.id!,
                       );
 
-                      if (user.selectedPlayer!.action!.outOfActions()) {
-                        turnController.passTurnWhere(
-                            gameController.gameID, user.selectedPlayer!.id!);
-                      }
+                      // if (user.selectedPlayer!.action!.outOfActions()) {
+                      //   turnController.passTurnWhere(
+                      //       gameController.gameID, user.selectedPlayer!.id!);
+                      // }
                     },
                   ),
                 ),

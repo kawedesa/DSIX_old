@@ -54,7 +54,7 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     //Controlers
     final gameController = Provider.of<GameController>(context);
-    final turnController = Provider.of<TurnController>(context);
+    // final turnController = Provider.of<TurnController>(context);
     final enemyController = Provider.of<EnemyController>(context);
     final lootController = Provider.of<LootController>(context);
     final user = Provider.of<User>(context);
@@ -62,34 +62,34 @@ class _MapPageState extends State<MapPage> {
     //Streams
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
-    final turnOrder = Provider.of<List<Turn>>(context);
+    // final turnOrder = Provider.of<List<Turn>>(context);
     final loot = Provider.of<List<Loot>>(context);
 
-    try {
-      gameController.checkForEndGame(players);
-    } on EndGameException {
-      _mapPageVM.createEndGameButton(
-          players[user.selectedPlayer!.index!].life!.isDead());
-    }
+    // try {
+    //   gameController.checkForEndGame(players);
+    // } on EndGameException {
+    //   _mapPageVM.createEndGameButton(
+    //       players[user.selectedPlayer!.id!].life!.isDead());
+    // }
 
-    try {
-      turnController.passTurnForDeadPlayers(game.id!, turnOrder, players);
-    } on NewTurnException {
-      _mapPageVM.newRound(game, gameController, turnController, players);
-      _mapPageAnimation.playNewRoundAnimation();
-    }
+    // try {
+    //   turnController.passTurnForDeadPlayers(game.id!, turnOrder, players);
+    // } on NewTurnException {
+    //   _mapPageVM.newRound(game, gameController, turnController, players);
+    //   _mapPageAnimation.playNewRoundAnimation();
+    // }
 
-    try {
-      user.checkForPlayerTurn(turnOrder);
-    } on StartPlayerTurnException {
-      user.startPlayerTurn(game.id!);
-      game.fog!.checkFog(game.id!, players[user.selectedPlayer!.index!]);
-      _mapPageAnimation.playYourTurnAnimation();
-    } on ContinuePlayerTurnException {
-      user.continuePlayerTurn();
-    } on NotPlayerTurnException {
-      user.endPlayerTurn();
-    }
+    // try {
+    //   // user.checkForPlayerTurn(game!.round!.turnOrder!);
+    // } on StartPlayerTurnException {
+    //   user.startPlayerTurn(game.id!);
+    //   game.round!.fog!.checkFog(game.id!, players[user.selectedPlayer!.index!]);
+    //   _mapPageAnimation.playYourTurnAnimation();
+    // } on ContinuePlayerTurnException {
+    //   user.continuePlayerTurn();
+    // } on NotPlayerTurnException {
+    //   user.endPlayerTurn();
+    // }
 
     enemyController.updateEnemyPlayersInSight(
         players, user.selectedPlayer!, game.map!.tallGrass!);
@@ -140,18 +140,18 @@ class _MapPageState extends State<MapPage> {
                       _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
                 ),
               ),
-              Text(
-                '${players[user.selectedPlayer!.index!].life!.current}',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontFamily: 'Santana',
-                  height: 1,
-                  fontSize: 27,
-                  color:
-                      _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
-                  letterSpacing: 1.2,
-                ),
-              ),
+              // Text(
+              //   '${players[user.selectedPlayer!.index!].life!.current}',
+              //   textAlign: TextAlign.left,
+              //   style: TextStyle(
+              //     fontFamily: 'Santana',
+              //     height: 1,
+              //     fontSize: 27,
+              //     color:
+              //         _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
+              //     letterSpacing: 1.2,
+              //   ),
+              // ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
@@ -164,18 +164,18 @@ class _MapPageState extends State<MapPage> {
                       _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
                 ),
               ),
-              Text(
-                '${players[user.selectedPlayer!.index!].iventory!.weight!.current}/${players[user.selectedPlayer!.index!].iventory!.weight!.max}',
-                textAlign: TextAlign.left,
-                style: TextStyle(
-                  fontFamily: 'Santana',
-                  height: 1,
-                  fontSize: 27,
-                  color:
-                      _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
-                  letterSpacing: 1.2,
-                ),
-              ),
+              // Text(
+              //   '${players[user.selectedPlayer!.index!].iventory!.weight!.current}/${players[user.selectedPlayer!.index!].iventory!.weight!.max}',
+              //   textAlign: TextAlign.left,
+              //   style: TextStyle(
+              //     fontFamily: 'Santana',
+              //     height: 1,
+              //     fontSize: 27,
+              //     color:
+              //         _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
+              //     letterSpacing: 1.2,
+              //   ),
+              // ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.035,
               )
@@ -276,20 +276,20 @@ class _MapPageState extends State<MapPage> {
                     scrollDirection: Axis.horizontal,
                     shrinkWrap: true,
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    itemCount: turnOrder.length,
+                    itemCount: game.round!.turnOrder!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return Padding(
                         padding: const EdgeInsets.only(left: 5),
                         child: TurnButton(
                           onDoubleTap: () {
                             user.changeSelectPlayer(
-                                players, turnOrder[index].id!);
+                                players, game.round!.turnOrder![index]);
                             _mapPageVM.goToPlayer(
                                 context, game.map!.size!, user.selectedPlayer!);
                             refresh();
                           },
                           color: _uiColor.setUIColor(
-                              turnOrder[index].id, 'primary'),
+                              game.round!.turnOrder![index], 'primary'),
                         ),
                       );
                     },

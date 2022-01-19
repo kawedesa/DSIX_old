@@ -55,10 +55,7 @@ class User {
   ) {
     this.playerTurn = true;
     setPlayerMode();
-    this
-        .selectedPlayer!
-        .action!
-        .newActions(gameID, this.selectedPlayer!.index!.toString());
+    this.selectedPlayer!.action!.newActions(gameID, this.selectedPlayer!.id!);
 
     this.selectedPlayer!.clearTempEffects(gameID);
   }
@@ -203,22 +200,23 @@ class User {
         this.selectedPlayer!.vision!.tempVision =
             this.selectedPlayer!.vision!.tempVision! + 50;
         this.selectedPlayer!.vision!.canSeeInvisible = true;
-        this
-            .selectedPlayer!
-            .vision!
-            .update(gameID, this.selectedPlayer!.index.toString());
+        this.selectedPlayer!.vision!.update(gameID, this.selectedPlayer!.id!);
         break;
       case 'food':
         int healingAmount = Random().nextInt(3) + 1;
-        this.selectedPlayer!.life!.increase(
-            gameID, this.selectedPlayer!.index.toString(), healingAmount);
+        this
+            .selectedPlayer!
+            .life!
+            .increase(gameID, this.selectedPlayer!.id!, healingAmount);
 
         break;
 
       case 'healing potion':
         int healingAmount = Random().nextInt(3) + 4;
-        this.selectedPlayer!.life!.increase(
-            gameID, this.selectedPlayer!.index.toString(), healingAmount);
+        this
+            .selectedPlayer!
+            .life!
+            .increase(gameID, this.selectedPlayer!.id!, healingAmount);
 
         break;
       case 'ward':
@@ -227,6 +225,6 @@ class User {
     this
         .selectedPlayer!
         .iventory!
-        .destroyItem(gameID, this.selectedPlayer!.index.toString(), item);
+        .destroyItem(gameID, this.selectedPlayer!.id!, item);
   }
 }

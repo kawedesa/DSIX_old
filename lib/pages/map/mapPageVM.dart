@@ -51,7 +51,7 @@ class MapPageVM {
   void newRound(Game game, GameController gameController,
       TurnController turnController, List<Player> players) async {
     turnController.newTurnOrder(game.id!, players);
-    gameController.newRound(game);
+    // gameController.newRound(game);
     await Future.delayed(Duration(seconds: 1));
   }
 

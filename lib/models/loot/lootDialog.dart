@@ -339,7 +339,7 @@ class LootDialogController {
     for (int i = 0; i < items.length; i++) {
       if (this.options[i]) {
         user.selectedPlayer!.iventory!
-            .getItem(gameID, user.selectedPlayer!.index.toString(), items[i]);
+            .getItem(gameID, user.selectedPlayer!.id!, items[i]);
 
         itemsRemovedFromChest.add(items[i]);
       }

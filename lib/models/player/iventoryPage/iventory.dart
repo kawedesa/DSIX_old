@@ -29,7 +29,7 @@ class _IventoryState extends State<Iventory> {
   @override
   Widget build(BuildContext context) {
     final gameController = Provider.of<GameController>(context);
-    final turnController = Provider.of<TurnController>(context);
+    // final turnController = Provider.of<TurnController>(context);
     final user = Provider.of<User>(context);
 
     return AlertDialog(
@@ -382,7 +382,7 @@ class _IventoryState extends State<Iventory> {
                             onLongPress: () {
                               user.selectedPlayer!.iventory!.destroyItem(
                                   gameController.gameID,
-                                  user.selectedPlayer!.index.toString(),
+                                  user.selectedPlayer!.id!,
                                   user.selectedPlayer!.iventory!.bag![index]);
                               refresh();
                             },
@@ -408,16 +408,16 @@ class _IventoryState extends State<Iventory> {
                                             user.selectedPlayer!.action!
                                                 .takeAction(
                                               gameController.gameID,
-                                              user.selectedPlayer!.index!
+                                              user.selectedPlayer!.id!
                                                   .toString(),
                                             );
 
-                                            if (user.selectedPlayer!.action!
-                                                .outOfActions()) {
-                                              turnController.passTurnWhere(
-                                                  gameController.gameID,
-                                                  user.selectedPlayer!.id!);
-                                            }
+                                            // if (user.selectedPlayer!.action!
+                                            //     .outOfActions()) {
+                                            //   turnController.passTurnWhere(
+                                            //       gameController.gameID,
+                                            //       user.selectedPlayer!.id!);
+                                            // }
                                             Navigator.pop(context);
 
                                             refresh();
@@ -450,15 +450,15 @@ class _IventoryState extends State<Iventory> {
 
                                 user.selectedPlayer!.action!.takeAction(
                                   gameController.gameID,
-                                  user.selectedPlayer!.index!.toString(),
+                                  user.selectedPlayer!.id!,
                                 );
 
-                                if (user.selectedPlayer!.action!
-                                    .outOfActions()) {
-                                  turnController.passTurnWhere(
-                                      gameController.gameID,
-                                      user.selectedPlayer!.id!);
-                                }
+                                // if (user.selectedPlayer!.action!
+                                //     .outOfActions()) {
+                                //   turnController.passTurnWhere(
+                                //       gameController.gameID,
+                                //       user.selectedPlayer!.id!);
+                                // }
                                 Navigator.pop(context);
                               } else {
                                 user.equipItem(gameController.gameID,

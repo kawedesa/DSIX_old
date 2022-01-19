@@ -16,7 +16,7 @@ import 'playerWalkRange.dart';
 import 'sprite/playerTempLocation.dart';
 
 class Player {
-  int? index;
+  // int? index;
   String? id;
   PlayerLocation? location;
   String? race;
@@ -29,7 +29,7 @@ class Player {
   PlayerIventory? iventory;
   PlayerAction? action;
   Player({
-    int? index,
+    // int? index,
     String? id,
     PlayerLocation? location,
     String? race,
@@ -42,7 +42,7 @@ class Player {
     PlayerIventory? iventory,
     PlayerAction? action,
   }) {
-    this.index = index;
+    // this.index = index;
     this.id = id;
     this.location = location;
     this.race = race;
@@ -58,7 +58,7 @@ class Player {
 
   Map<String, dynamic> toMap() {
     return {
-      'index': this.index,
+      // 'index': this.index,
       'id': this.id,
       'location': this.location?.toMap(),
       'race': this.race,
@@ -75,7 +75,7 @@ class Player {
 
   factory Player.fromMap(Map<String, dynamic>? data) {
     return Player(
-      index: data?['index'],
+      // index: data?['index'],
       id: data?['id'],
       location: PlayerLocation.fromMap(data?['location']),
       race: data?['race'],
@@ -108,7 +108,7 @@ class Player {
     String randomRace = races[randomNumber];
 
     return Player(
-      index: playerIndex,
+      // index: playerIndex,
       id: id[playerIndex],
       location: PlayerLocation.newLocation(location),
       race: randomRace,
@@ -144,10 +144,11 @@ class Player {
       throw CantPassException();
     }
 
-    this.location!.newLocation(
-        gameID, this.index.toString(), newLocation, tallGrass, newHeight);
+    this
+        .location!
+        .newLocation(gameID, this.id!, newLocation, tallGrass, newHeight);
 
-    this.vision!.setHeight(gameID, this.index.toString(), newHeight);
+    this.vision!.setHeight(gameID, this.id!, newHeight);
   }
 
   int attack() {
@@ -158,40 +159,41 @@ class Player {
   void defend(String gameID) {
     int protect = Random().nextInt(6) + 1;
     this.armor!.increaseTempArmor(protect);
-    this.armor!.update(gameID, this.index.toString());
+    this.armor!.update(gameID, this.id!);
   }
 
   void clearTempEffects(String gameID) {
     this.armor!.resetTempArmor();
-    this.armor!.update(gameID, this.index.toString());
+    this.armor!.update(gameID, this.id!);
     this.vision!.reset();
-    this.vision!.update(gameID, this.index.toString());
+    this.vision!.update(gameID, this.id!);
   }
 
   void takeDamage(String gameID, int damageRoll, pDamage, mDamage) {
     if (this.armor!.tempArmor! > 0) {
       int damage = pDamage + mDamage + damageRoll;
-      this.life!.decrease(gameID, this.index.toString(),
-          this.armor!.calculateTempArmor(damage));
-      this.armor!.update(gameID, this.index.toString());
+      this
+          .life!
+          .decrease(gameID, this.id!, this.armor!.calculateTempArmor(damage));
+      this.armor!.update(gameID, this.id!);
       return;
     }
 
-    this.life!.decrease(gameID, this.index.toString(),
+    this.life!.decrease(gameID, this.id!,
         this.armor!.calculateDamageReceived(damageRoll, pDamage, mDamage));
   }
 
   void equipItem(String gameID, Item item) {
     this.iventory!.bag!.remove(item);
-    this.iventory!.update(gameID, this.index.toString());
+    this.iventory!.update(gameID, this.id!);
     this.attackRange!.increase(item);
-    this.attackRange!.update(gameID, this.index.toString());
+    this.attackRange!.update(gameID, this.id!);
     this.damage!.increasePDamage(item.pDamage!);
     this.damage!.increaseMDamage(item.mDamage!);
-    this.damage!.update(gameID, this.index.toString());
+    this.damage!.update(gameID, this.id!);
     this.armor!.increasePArmor(item.pArmor!);
     this.armor!.increaseMArmor(item.mArmor!);
-    this.armor!.update(gameID, this.index.toString());
+    this.armor!.update(gameID, this.id!);
   }
 
   void unequip(
@@ -202,14 +204,14 @@ class Player {
       return;
     }
     this.iventory!.unequip(item);
-    this.iventory!.update(gameID, this.index.toString());
+    this.iventory!.update(gameID, this.id!);
     this.attackRange!.decrease(item);
-    this.attackRange!.update(gameID, this.index.toString());
+    this.attackRange!.update(gameID, this.id!);
     this.damage!.decreasePDamage(item.pDamage!);
     this.damage!.decreaseMDamage(item.mDamage!);
-    this.damage!.update(gameID, this.index.toString());
+    this.damage!.update(gameID, this.id!);
     this.armor!.decreasePArmor(item.pArmor!);
     this.armor!.decreaseMArmor(item.mArmor!);
-    this.armor!.update(gameID, this.index.toString());
+    this.armor!.update(gameID, this.id!);
   }
 }

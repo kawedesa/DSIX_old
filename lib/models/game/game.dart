@@ -1,33 +1,31 @@
-import 'fog/fog.dart';
+import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/models/game/round/round.dart';
 import 'gameMap/gameMap.dart';
 
 class Game {
   String? id;
   bool? isRunning;
-  int? round;
+  Round? round;
   GameMap? map;
-  Fog? fog;
+
   Game({
     String? id,
     bool? isRunning,
-    int? round,
+    Round? round,
     GameMap? map,
-    Fog? fog,
   }) {
     this.id = id;
     this.isRunning = isRunning;
     this.round = round;
     this.map = map;
-    this.fog = fog;
   }
 
   factory Game.fromMap(Map<String, dynamic>? data) {
     return Game(
       id: data?['id'],
       isRunning: data?['isRunning'],
-      round: data?['round'],
+      round: Round.fromMap(data?['round']),
       map: GameMap.fromMap(data?['map']),
-      fog: Fog.fromMap(data?['fog']),
     );
   }
 
@@ -35,9 +33,8 @@ class Game {
     return {
       'id': this.id,
       'isRunning': this.isRunning,
-      'round': this.round,
+      'round': this.round?.toMap(),
       'map': this.map?.toMap(),
-      'fog': this.fog?.toMap(),
     };
   }
 
@@ -45,19 +42,17 @@ class Game {
     return Game(
       id: 'alpha',
       isRunning: false,
-      round: 0,
+      round: Round.empty(),
       map: GameMap.empty(),
-      fog: Fog.empty(),
     );
   }
 
-  factory Game.newGame(String gameID, GameMap map) {
+  factory Game.newGame(String gameID, GameMap map, List<Player> players) {
     return Game(
       id: gameID,
-      round: 0,
+      round: Round.newRound(map.size, players),
       map: map,
       isRunning: true,
-      fog: Fog.newFog(map.size),
     );
   }
 }

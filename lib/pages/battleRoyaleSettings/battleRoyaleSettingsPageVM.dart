@@ -3,6 +3,7 @@ import 'package:dsixv02app/models/game/gameMap/gameMap.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/playersController.dart';
+import 'package:dsixv02app/models/round/roundController.dart';
 import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/shared/app_Maps.dart';
@@ -43,39 +44,46 @@ class BattleRoyaleSettingsPageVM {
   void newBattleRoyaleGame(
     GameController gameController,
     PlayersController playerController,
-    TurnController turnController,
+    // RoundController roundController,
+    // TurnController turnController,
     LootController lootController,
   ) {
     GameMap map = AppMaps.ruins;
-    List<Player> newPlayers = [];
-
-    gameController.newGame(map);
-
-    newPlayers = playerController.newRandomPlayers(
+    List<Player> newPlayers = playerController.newRandomPlayers(
       gameController.gameID,
       map,
       numberOfPlayers,
     );
-
-    turnController.newTurnOrder(gameController.gameID, newPlayers);
 
     lootController.newRandomLoot(
       gameController.gameID,
       map.size!,
       numberOfLoot * numberOfPlayers,
     );
+
+    gameController.newGame(map, newPlayers);
+
+    // newPlayers = playerController.newRandomPlayers(
+    //   gameController.gameID,
+    //   map,
+    //   numberOfPlayers,
+    // );
+
+    // roundController.newRound(gameController.gameID, newPlayers);
+
+    // turnController.newTurnOrder(gameController.gameID, newPlayers);
   }
 
   void deleteGame(
     GameController gameController,
     PlayersController playerController,
     LootController lootController,
-    TurnController turnController,
+    // TurnController turnController,
   ) {
     gameController.deleteGame();
     playerController.deleteAllPlayers(gameController.gameID);
     lootController.deleteAllLoot(gameController.gameID);
-    turnController.deleteTurnOrder(gameController.gameID);
+    // turnController.deleteTurnOrder(gameController.gameID);
   }
 
   void joinGame(context) {

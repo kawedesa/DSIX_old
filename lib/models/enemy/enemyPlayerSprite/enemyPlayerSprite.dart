@@ -40,7 +40,7 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
     final gameController = Provider.of<GameController>(context);
-    final turnController = Provider.of<TurnController>(context);
+    // final turnController = Provider.of<TurnController>(context);
     final players = Provider.of<List<Player>>(context);
 
     _enemyController.checkEnemyPlayer(players, widget.enemyPlayer!);
@@ -78,8 +78,8 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
               child: EnemyPlayerSpriteHitBox(
                 isDead: widget.enemyPlayer!.life!.isDead(),
                 onTap: () async {
-                  _enemyController.receiveAnAttack(gameController,
-                      turnController, user, widget.enemyPlayer!);
+                  // _enemyController.receiveAnAttack(gameController,
+                  //     turnController, user, widget.enemyPlayer!);
                 },
               ),
             ),
@@ -163,7 +163,7 @@ class EnemyPlayerSpriteController {
 
     user.selectedPlayer!.action!.takeAction(
       gameController.gameID,
-      user.selectedPlayer!.index!.toString(),
+      user.selectedPlayer!.id!,
     );
 
     if (user.selectedPlayer!.action!.outOfActions()) {

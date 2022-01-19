@@ -18,11 +18,8 @@ class GameController {
         .map((game) => Game.fromMap(game.data()));
   }
 
-  void newGame(GameMap map) {
-    Game game = Game.newGame(
-      this.gameID,
-      map,
-    );
+  void newGame(GameMap map, List<Player> players) {
+    Game game = Game.newGame(this.gameID, map, players);
 
     database.collection('game').doc(this.gameID).set(game.toMap());
   }
@@ -32,14 +29,14 @@ class GameController {
     database.collection('game').doc(this.gameID).set(game.toMap());
   }
 
-  void newRound(Game game) async {
-    int nextRound = game.round! + 1;
-    game.fog!.shrink();
-    await database
-        .collection('game')
-        .doc(gameID)
-        .update({'round': nextRound, 'fog': game.fog!.toMap()});
-  }
+  // void newRound(Game game) async {
+  //   int nextRound = game.round! + 1;
+  //   game.fog!.shrink();
+  //   await database
+  //       .collection('game')
+  //       .doc(gameID)
+  //       .update({'round': nextRound, 'fog': game.fog!.toMap()});
+  // }
 
   void checkForEndGame(List<Player> players) {
     int deadPlayers = 0;
