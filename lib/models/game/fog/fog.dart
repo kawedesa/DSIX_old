@@ -51,18 +51,29 @@ class Fog {
     return Offset(this.dx!, this.dy!);
   }
 
-  void shrink() {
-    this.size = this.size! - 32;
+  void shrink(int numberOfPlayers) {
+    this.size = this.size! - ((6 - numberOfPlayers) * 5);
     if (this.size! < 50) {
       this.size = 50;
     }
   }
 
-  void checkFog(String gameID, Player player) {
-    double distance = (player.location!.getLocation() - getLocation()).distance;
-    if (distance >= this.size! / 2) {
-      takeFogDamage(gameID, player);
-    }
+  void checkFog(
+    String gameID,
+    String playerID,
+    List<Player> players,
+  ) {
+    players.forEach((player) {
+      if (player.id != playerID) {
+        return;
+      }
+
+      double distance =
+          (player.location!.getLocation() - getLocation()).distance;
+      if (distance >= this.size! / 2) {
+        takeFogDamage(gameID, player);
+      }
+    });
   }
 
   void takeFogDamage(

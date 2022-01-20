@@ -9,9 +9,6 @@ import 'models/loot/lootController.dart';
 import 'models/player/player.dart';
 import 'models/player/playersController.dart';
 import 'models/player/user.dart';
-import 'models/round/roundController.dart';
-import 'models/turn/turn.dart';
-import 'models/turn/turnController.dart';
 import 'pages/battleRoyaleSettings/battleRoyaleSettingsPage.dart';
 
 Future<void> main() async {
@@ -25,8 +22,6 @@ class DsixApp extends StatelessWidget {
   Widget build(BuildContext context) {
     GameController gameController = GameController();
     PlayersController playerController = PlayersController();
-    // RoundController roundController = RoundController();
-    // TurnController turnController = TurnController();
     LootController lootController = LootController();
     EnemyController enemyController = EnemyController();
     User user = User();
@@ -36,8 +31,6 @@ class DsixApp extends StatelessWidget {
         // //Controllers
         Provider(create: (context) => gameController),
         Provider(create: (context) => playerController),
-        // Provider(create: (context) => roundController),
-        // Provider(create: (context) => turnController),
         Provider(create: (context) => lootController),
         Provider(create: (context) => enemyController),
         Provider(create: (context) => user),
@@ -54,11 +47,6 @@ class DsixApp extends StatelessWidget {
               playerController.pullPlayersFromDataBase(gameController.gameID),
         ),
 
-        // StreamProvider<List<Turn>>(
-        //   initialData: [],
-        //   create: (context) =>
-        //       turnController.pullTurnOrderFromDataBase(gameController.gameID),
-        // ),
         StreamProvider<List<Loot>>(
           initialData: [],
           create: (context) =>

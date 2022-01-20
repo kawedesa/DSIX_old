@@ -1,7 +1,5 @@
 import 'package:dsixv02app/models/game/game.dart';
-import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -42,17 +40,10 @@ class _PlayerSpriteState extends State<PlayerSprite> {
   @override
   Widget build(BuildContext context) {
     final players = Provider.of<List<Player>>(context);
-    // final turnController = Provider.of<TurnController>(context);
-    final gameController = Provider.of<GameController>(context);
     final game = Provider.of<Game>(context);
     final user = Provider.of<User>(context);
 
-    // try {
-    //   playerSpriteController.updatePlayer(
-    //       players[user.selectedPlayer!.index!], user.selectedPlayer!);
-    // } on UpdatePlayerException {
-    //   user.updateSelectedPlayer(players[user.selectedPlayer!.index!]);
-    // }
+    playerSpriteController.updatePlayer(players, user);
 
     return Positioned(
       left: playerSpriteController
@@ -141,11 +132,10 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                                 user.selectedPlayer!.id!,
                               );
 
-                              // if (user.selectedPlayer!.action!.outOfActions()) {
-                              //   turnController.passTurnWhere(
-                              //       gameController.gameID,
-                              //       user.selectedPlayer!.id!);
-                              // }
+                              if (user.selectedPlayer!.action!.outOfActions()) {
+                                game.round!.passTurn(
+                                    game.id!, user.selectedPlayer!.id!);
+                              }
                             },
                           ),
                   ),
@@ -163,7 +153,7 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                   alignment: Alignment.center,
                   child: PlayerSpriteTempEffects(
-                    tempArmor: user.selectedPlayer!.armor!.tempArmor,
+                    tempArmor: user.selectedPlayer!.equipment!.armor!.tempArmor,
                   )),
               //DAMAGE ANIMATION
               Align(
@@ -215,15 +205,21 @@ class PlayerSpriteController {
   }
 
   void updatePlayer(
-    Player newPlayer,
-    Player selectedPlayeruser,
+    List<Player> players,
+    User user,
   ) {
-    if (checkTempArmor(newPlayer.armor!.tempArmor!,
-            selectedPlayeruser.armor!.tempArmor!) ||
-        checkLife(
-            newPlayer.life!.current!, selectedPlayeruser.life!.current!)) {
-      throw UpdatePlayerException();
-    }
+    players.forEach((player) {
+      if (player.id != user.selectedPlayer!.id) {
+        return;
+      }
+
+      if (checkTempArmor(player.equipment!.armor!.tempArmor!,
+              user.selectedPlayer!.equipment!.armor!.tempArmor!) ||
+          checkLife(
+              player.life!.current!, user.selectedPlayer!.life!.current!)) {
+        user.selectedPlayer = player;
+      }
+    });
   }
 
   bool checkTempArmor(int newArmor, oldArmor) {

@@ -1,15 +1,12 @@
 import 'package:dsixv02app/models/enemy/enemyController.dart';
 import 'package:dsixv02app/models/game/fog/fogSprite.dart';
 import 'package:dsixv02app/models/game/game.dart';
-import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/loot/loot.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/menu/playerMenu.dart';
 import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn/turn.dart';
-import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/pages/map/widgets/mapTile.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
@@ -53,8 +50,6 @@ class _MapPageState extends State<MapPage> {
   @override
   Widget build(BuildContext context) {
     //Controlers
-    final gameController = Provider.of<GameController>(context);
-    // final turnController = Provider.of<TurnController>(context);
     final enemyController = Provider.of<EnemyController>(context);
     final lootController = Provider.of<LootController>(context);
     final user = Provider.of<User>(context);
@@ -62,34 +57,25 @@ class _MapPageState extends State<MapPage> {
     //Streams
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
-    // final turnOrder = Provider.of<List<Turn>>(context);
     final loot = Provider.of<List<Loot>>(context);
 
-    // try {
-    //   gameController.checkForEndGame(players);
-    // } on EndGameException {
-    //   _mapPageVM.createEndGameButton(
-    //       players[user.selectedPlayer!.id!].life!.isDead());
-    // }
+    try {
+      game.round!.checkForEndGame();
+    } on EndGameException {
+      _mapPageVM.createEndGameButton(user.selectedPlayer!.life!.isDead());
+    }
 
-    // try {
-    //   turnController.passTurnForDeadPlayers(game.id!, turnOrder, players);
-    // } on NewTurnException {
-    //   _mapPageVM.newRound(game, gameController, turnController, players);
-    //   _mapPageAnimation.playNewRoundAnimation();
-    // }
-
-    // try {
-    //   // user.checkForPlayerTurn(game!.round!.turnOrder!);
-    // } on StartPlayerTurnException {
-    //   user.startPlayerTurn(game.id!);
-    //   game.round!.fog!.checkFog(game.id!, players[user.selectedPlayer!.index!]);
-    //   _mapPageAnimation.playYourTurnAnimation();
-    // } on ContinuePlayerTurnException {
-    //   user.continuePlayerTurn();
-    // } on NotPlayerTurnException {
-    //   user.endPlayerTurn();
-    // }
+    try {
+      user.checkForPlayerTurn(game.round!.turnOrder!.first);
+    } on StartPlayerTurnException {
+      user.startPlayerTurn(game.id!);
+      game.round!.fog!.checkFog(
+        game.id!,
+        user.selectedPlayer!.id!,
+        players,
+      );
+      _mapPageAnimation.playYourTurnAnimation();
+    }
 
     enemyController.updateEnemyPlayersInSight(
         players, user.selectedPlayer!, game.map!.tallGrass!);
@@ -115,7 +101,7 @@ class _MapPageState extends State<MapPage> {
                       color: (user.selectedPlayer!.action!.firstAction!)
                           ? AppColors.white00
                           : _uiColor.setUIColor(
-                              user.selectedPlayerID, 'secondary'),
+                              user.selectedPlayer!.id, 'secondary'),
                     ),
                   ),
                   Padding(
@@ -126,7 +112,7 @@ class _MapPageState extends State<MapPage> {
                       color: (user.selectedPlayer!.action!.secondAction!)
                           ? AppColors.white00
                           : _uiColor.setUIColor(
-                              user.selectedPlayerID, 'secondary'),
+                              user.selectedPlayer!.id, 'secondary'),
                     ),
                   ),
                 ],
@@ -137,21 +123,21 @@ class _MapPageState extends State<MapPage> {
                   AppIcons.life,
                   height: MediaQuery.of(context).size.height * 0.047,
                   color:
-                      _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
+                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
                 ),
               ),
-              // Text(
-              //   '${players[user.selectedPlayer!.index!].life!.current}',
-              //   textAlign: TextAlign.left,
-              //   style: TextStyle(
-              //     fontFamily: 'Santana',
-              //     height: 1,
-              //     fontSize: 27,
-              //     color:
-              //         _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
-              //     letterSpacing: 1.2,
-              //   ),
-              // ),
+              Text(
+                '${user.selectedPlayer!.life!.current}',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontFamily: 'Santana',
+                  height: 1,
+                  fontSize: 27,
+                  color:
+                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
+                  letterSpacing: 1.2,
+                ),
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.03,
               ),
@@ -161,21 +147,21 @@ class _MapPageState extends State<MapPage> {
                   AppIcons.weight,
                   height: MediaQuery.of(context).size.height * 0.045,
                   color:
-                      _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
+                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
                 ),
               ),
-              // Text(
-              //   '${players[user.selectedPlayer!.index!].iventory!.weight!.current}/${players[user.selectedPlayer!.index!].iventory!.weight!.max}',
-              //   textAlign: TextAlign.left,
-              //   style: TextStyle(
-              //     fontFamily: 'Santana',
-              //     height: 1,
-              //     fontSize: 27,
-              //     color:
-              //         _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
-              //     letterSpacing: 1.2,
-              //   ),
-              // ),
+              Text(
+                '${user.selectedPlayer!.equipment!.weight!.current}/${user.selectedPlayer!.equipment!.weight!.max}',
+                textAlign: TextAlign.left,
+                style: TextStyle(
+                  fontFamily: 'Santana',
+                  height: 1,
+                  fontSize: 27,
+                  color:
+                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
+                  letterSpacing: 1.2,
+                ),
+              ),
               SizedBox(
                 width: MediaQuery.of(context).size.width * 0.035,
               )
@@ -185,9 +171,11 @@ class _MapPageState extends State<MapPage> {
         toolbarHeight: MediaQuery.of(context).size.height * 0.06,
         leading: GoToPagePageButton(
           goToPage: PlayerSelectionPage(),
-          buttonColor: _uiColor.setUIColor(user.selectedPlayerID, 'secondary'),
+          buttonColor:
+              _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
         ),
-        backgroundColor: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
+        backgroundColor:
+            _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
       ),
       body: SafeArea(
         child: ChangeNotifierProxyProvider<List<Player>, PlayerTempLocation?>(
@@ -266,7 +254,7 @@ class _MapPageState extends State<MapPage> {
               Divider(
                 thickness: 2,
                 height: 2,
-                color: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
+                color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.04,
@@ -299,7 +287,7 @@ class _MapPageState extends State<MapPage> {
               Divider(
                 thickness: 2,
                 height: 2,
-                color: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
+                color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
               ),
             ],
           ),

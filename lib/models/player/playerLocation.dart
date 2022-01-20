@@ -1,4 +1,7 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:dsixv02app/models/game/gameMap/gameMap.dart';
 import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
 import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
 import 'package:flutter/material.dart';
@@ -31,13 +34,33 @@ class PlayerLocation {
       isVisible: data?['isVisible'],
     );
   }
-  factory PlayerLocation.newLocation(PlayerLocation location) {
-    return PlayerLocation(
-      dx: location.dx,
-      dy: location.dy,
-      height: location.height,
-      isVisible: location.isVisible,
-    );
+
+  factory PlayerLocation.randomLocation(GameMap map) {
+    int i = 0;
+    double dx = 0;
+    double dy = 0;
+    Offset newOffset = Offset(0, 0);
+    bool isVisible = true;
+    int height = 0;
+
+    while (i < 1) {
+      dx = (Random().nextDouble() * map.size! * 0.9) + (map.size! * 0.05);
+      dy = (Random().nextDouble() * map.size! * 0.9) + (map.size! * 0.05);
+
+      newOffset = Offset(dx, dy);
+
+      if (map.tallGrass!.inThisArea(newOffset)) {
+        isVisible = false;
+      }
+
+      height = map.heightMap!.inThisLayer(newOffset);
+
+      if (height != 10) {
+        i++;
+      }
+    }
+
+    return PlayerLocation(dx: dx, dy: dy, isVisible: isVisible, height: height);
   }
 
   Offset getLocation() {

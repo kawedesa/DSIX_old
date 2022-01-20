@@ -24,11 +24,11 @@ class AttackRange extends StatelessWidget {
           return 0;
 
         case 'attack':
-          if (user.selectedPlayer!.attackRange!.max! >
+          if (user.selectedPlayer!.equipment!.attackRange!.max! >
               user.selectedPlayer!.vision!.getRange()) {
             return user.selectedPlayer!.vision!.getRange();
           } else {
-            return user.selectedPlayer!.attackRange!.max!;
+            return user.selectedPlayer!.equipment!.attackRange!.max!;
           }
       }
 
@@ -47,7 +47,7 @@ class AttackRange extends StatelessWidget {
           return 0;
 
         case 'attack':
-          return user.selectedPlayer!.attackRange!.min!;
+          return user.selectedPlayer!.equipment!.attackRange!.min!;
       }
 
       return 0.0;

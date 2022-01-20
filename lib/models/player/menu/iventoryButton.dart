@@ -1,4 +1,4 @@
-import 'package:dsixv02app/models/player/iventoryPage/iventory.dart';
+import 'package:dsixv02app/models/player/equipment/widget/equipmentPage.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
@@ -73,7 +73,7 @@ class _IventoryButtonState extends State<IventoryButton> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return Iventory();
+                return EquipmentPage();
               },
             );
             _playOnTapAnimation();

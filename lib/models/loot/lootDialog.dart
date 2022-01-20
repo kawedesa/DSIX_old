@@ -1,5 +1,6 @@
-import 'package:dsixv02app/models/loot/lootController.dart';
-import 'package:dsixv02app/models/player/iventoryPage/iventory.dart';
+import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/player/equipment/widget/equipmentPage.dart';
+import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
@@ -10,15 +11,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import '../game/gameController.dart';
 import 'loot.dart';
 import 'lootDetail.dart';
 
 class LootDialog extends StatefulWidget {
-  final int? lootIndex;
+  final Loot? loot;
   final Function()? onTapAction;
   const LootDialog({
-    @required this.lootIndex,
+    @required this.loot,
     this.onTapAction,
   });
 
@@ -43,12 +43,9 @@ class _LootDialogState extends State<LootDialog> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    final gameController = Provider.of<GameController>(context);
-    final lootController = Provider.of<LootController>(context);
-    final listOfloot = Provider.of<List<Loot>>(context);
+    final game = Provider.of<Game>(context);
 
-    _lootDialogController.setItemList(widget.lootIndex!, listOfloot);
-    _lootDialogController.setOptions(_lootDialogController.itemList.length);
+    _lootDialogController.setOptions(widget.loot!.items!.length);
 
     return AlertDialog(
       contentPadding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -71,7 +68,7 @@ class _LootDialogState extends State<LootDialog> {
               child: Align(
                 alignment: Alignment.center,
                 child: Text(
-                    (_lootDialogController.itemList.isEmpty)
+                    (widget.loot!.items!.isEmpty)
                         ? 'empty'.toUpperCase()
                         : 'chest'.toUpperCase(),
                     style: TextStyle(
@@ -90,19 +87,19 @@ class _LootDialogState extends State<LootDialog> {
                 SizedBox(
                   height: MediaQuery.of(context).size.height *
                       0.09 *
-                      _lootDialogController.itemList.length,
+                      widget.loot!.items!.length,
                   child: ListView.builder(
                     scrollDirection: Axis.vertical,
                     shrinkWrap: true,
                     padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    itemCount: _lootDialogController.itemList.length,
+                    itemCount: widget.loot!.items!.length,
                     itemBuilder: (BuildContext context, int index) {
                       return LootDialogOption(
-                        item: _lootDialogController.itemList[index],
+                        item: widget.loot!.items![index],
                         optionSelected: _lootDialogController.options[index],
                         onTapAction: () {
                           _lootDialogController.selectOptions(
-                              index, _lootDialogController.itemList[index]);
+                              index, widget.loot!.items![index]);
                           refresh();
                         },
                       );
@@ -114,7 +111,7 @@ class _LootDialogState extends State<LootDialog> {
                     showDialog(
                       context: context,
                       builder: (BuildContext context) {
-                        return Iventory();
+                        return EquipmentPage();
                       },
                     );
                   },
@@ -202,13 +199,8 @@ class _LootDialogState extends State<LootDialog> {
                     : GestureDetector(
                         onTap: () {
                           _lootDialogController.playOnTapAnimation();
-                          _lootDialogController.chooseItems(
-                              context,
-                              gameController.gameID,
-                              user,
-                              _lootDialogController.itemList,
-                              lootController,
-                              widget.lootIndex!);
+                          _lootDialogController.chooseItems(context, game.id!,
+                              user.selectedPlayer!, widget.loot!);
                           setState(() {});
                         },
                         child: Container(
@@ -289,17 +281,6 @@ class LootDialogController {
     ));
   }
 
-  List<Item> itemList = [];
-  void setItemList(int lootIndex, List<Loot> loots) {
-    this.itemList = [];
-    loots.forEach((loot) {
-      if (loot.index != lootIndex) {
-        return;
-      }
-      itemList = loot.items!;
-    });
-  }
-
   List<bool> options = [];
   void setOptions(int numberOfOptions) {
     if (options.isNotEmpty) {
@@ -327,29 +308,27 @@ class LootDialogController {
     }
   }
 
-  void chooseItems(context, String gameID, User user, List<Item> items,
-      LootController lootController, int lootIndex) {
-    if (user.selectedPlayer!.iventory!.weight!.cantCarry(totalWeight)) {
+  void chooseItems(
+    context,
+    String gameID,
+    Player player,
+    Loot loot,
+  ) {
+    if (player.equipment!.weight!.cantCarry(totalWeight)) {
       buttonText = 'too heavy';
       return;
     }
 
     List<Item> itemsRemovedFromChest = [];
 
-    for (int i = 0; i < items.length; i++) {
+    for (int i = 0; i < loot.items!.length; i++) {
       if (this.options[i]) {
-        user.selectedPlayer!.iventory!
-            .getItem(gameID, user.selectedPlayer!.id!, items[i]);
-
-        itemsRemovedFromChest.add(items[i]);
+        player.equipment!.getItem(gameID, player.id!, loot.items![i]);
+        itemsRemovedFromChest.add(loot.items![i]);
       }
     }
 
-    itemsRemovedFromChest.forEach((item) {
-      this.itemList.remove(item);
-    });
-
-    lootController.updateLootItems(gameID, lootIndex, this.itemList);
+    loot.removeItems(gameID, itemsRemovedFromChest);
 
     Navigator.pop(context);
   }
@@ -445,7 +424,7 @@ class LootDialogOption extends StatelessWidget {
                     context: context,
                     builder: (BuildContext context) {
                       return LootDetail(
-                        playerID: user.selectedPlayerID,
+                        playerID: user.selectedPlayer!.id,
                         item: item,
                       );
                     },

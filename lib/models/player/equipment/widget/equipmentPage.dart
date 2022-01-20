@@ -1,26 +1,25 @@
-import 'package:dsixv02app/models/game/gameController.dart';
-import 'package:dsixv02app/models/turn/turnController.dart';
+import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../user.dart';
+import '../../user.dart';
 import 'damageAndArmorStats.dart';
 import 'itemDetailPage.dart';
 import 'iventorySlot.dart';
 
-class Iventory extends StatefulWidget {
-  const Iventory({
+class EquipmentPage extends StatefulWidget {
+  const EquipmentPage({
     Key? key,
   }) : super(key: key);
 
   @override
-  State<Iventory> createState() => _IventoryState();
+  State<EquipmentPage> createState() => _EquipmentPageState();
 }
 
-class _IventoryState extends State<Iventory> {
+class _EquipmentPageState extends State<EquipmentPage> {
   UIColor _uiColor = UIColor();
   refresh() {
     setState(() {});
@@ -28,8 +27,7 @@ class _IventoryState extends State<Iventory> {
 
   @override
   Widget build(BuildContext context) {
-    final gameController = Provider.of<GameController>(context);
-    // final turnController = Provider.of<TurnController>(context);
+    final game = Provider.of<Game>(context);
     final user = Provider.of<User>(context);
 
     return AlertDialog(
@@ -39,7 +37,7 @@ class _IventoryState extends State<Iventory> {
         decoration: BoxDecoration(
           color: AppColors.black00,
           border: Border.all(
-            color: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
+            color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
             width: 2,
           ),
         ),
@@ -49,17 +47,17 @@ class _IventoryState extends State<Iventory> {
           children: [
             Container(
               height: MediaQuery.of(context).size.height * 0.05,
-              color: _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
+              color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
                 child: Center(
-                  child: Text('iventory'.toUpperCase(),
+                  child: Text('equipment'.toUpperCase(),
                       style: TextStyle(
                         fontFamily: 'Santana',
                         height: 1,
                         fontSize: 25,
                         color: _uiColor.setUIColor(
-                            user.selectedPlayerID, 'secondary'),
+                            user.selectedPlayer!.id, 'secondary'),
                         fontWeight: FontWeight.bold,
                         letterSpacing: 3,
                       )),
@@ -75,18 +73,20 @@ class _IventoryState extends State<Iventory> {
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.7,
                         child: DamageAndArmorStats(
-                          playerID: user.selectedPlayerID,
-                          pDamage: user.selectedPlayer!.damage!.pDamage,
-                          mDamage: user.selectedPlayer!.damage!.mDamage,
-                          pArmor: user.selectedPlayer!.armor!.pArmor,
-                          mArmor: user.selectedPlayer!.armor!.mArmor,
+                          playerID: user.selectedPlayer!.id,
+                          pDamage:
+                              user.selectedPlayer!.equipment!.damage!.pDamage,
+                          mDamage:
+                              user.selectedPlayer!.equipment!.damage!.mDamage,
+                          pArmor: user.selectedPlayer!.equipment!.armor!.pArmor,
+                          mArmor: user.selectedPlayer!.equipment!.armor!.mArmor,
                         )),
                   ),
                   Divider(
                     height: 0,
                     thickness: 2,
                     color:
-                        _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
+                        _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
                   ),
                   SizedBox(
                     width: MediaQuery.of(context).size.width * 0.8,
@@ -102,24 +102,34 @@ class _IventoryState extends State<Iventory> {
                               Expanded(
                                 flex: 2,
                                 child: IventorySlot(
-                                  playerID: user.selectedPlayerID,
+                                  playerID: user.selectedPlayer!.id,
                                   item: user
-                                      .selectedPlayer!.iventory!.mainHandSlot!,
+                                      .selectedPlayer!.equipment!.mainHandSlot!,
                                   slotImage: AppIcons.mainHandSlot,
                                   onTap: () {
+                                    if (user.selectedPlayer!.equipment!
+                                            .mainHandSlot!.name! ==
+                                        '') {
+                                      return;
+                                    }
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .mainHandSlot!,
                                           buttonText: 'unequip',
                                           useEquipOrUnequip: () async {
-                                            user.unequipItem(
-                                              gameController.gameID,
-                                              user.selectedPlayer!.iventory!
+                                            user.selectedPlayer!.equipment!
+                                                .unequip(
+                                              game.id!,
+                                              user.selectedPlayer!.id!,
+                                              user.selectedPlayer!.equipment!
                                                   .mainHandSlot!,
                                             );
                                             refresh();
@@ -129,9 +139,10 @@ class _IventoryState extends State<Iventory> {
                                     );
                                   },
                                   onDoubleTap: () async {
-                                    user.unequipItem(
-                                      gameController.gameID,
-                                      user.selectedPlayer!.iventory!
+                                    user.selectedPlayer!.equipment!.unequip(
+                                      game.id!,
+                                      user.selectedPlayer!.id!,
+                                      user.selectedPlayer!.equipment!
                                           .mainHandSlot!,
                                     );
                                     refresh();
@@ -141,24 +152,34 @@ class _IventoryState extends State<Iventory> {
                               Expanded(
                                 flex: 1,
                                 child: IventorySlot(
-                                  playerID: user.selectedPlayerID,
+                                  playerID: user.selectedPlayer!.id,
                                   item:
-                                      user.selectedPlayer!.iventory!.handSlot!,
+                                      user.selectedPlayer!.equipment!.handSlot!,
                                   slotImage: AppIcons.handSlot,
                                   onTap: () {
+                                    if (user.selectedPlayer!.equipment!
+                                            .handSlot!.name! ==
+                                        '') {
+                                      return;
+                                    }
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .handSlot!,
                                           buttonText: 'unequip',
                                           useEquipOrUnequip: () async {
-                                            user.unequipItem(
-                                              gameController.gameID,
-                                              user.selectedPlayer!.iventory!
+                                            user.selectedPlayer!.equipment!
+                                                .unequip(
+                                              game.id!,
+                                              user.selectedPlayer!.id!,
+                                              user.selectedPlayer!.equipment!
                                                   .handSlot!,
                                             );
                                             refresh();
@@ -168,9 +189,10 @@ class _IventoryState extends State<Iventory> {
                                     );
                                   },
                                   onDoubleTap: () async {
-                                    user.unequipItem(
-                                      gameController.gameID,
-                                      user.selectedPlayer!.iventory!.handSlot!,
+                                    user.selectedPlayer!.equipment!.unequip(
+                                      game.id!,
+                                      user.selectedPlayer!.id!,
+                                      user.selectedPlayer!.equipment!.handSlot!,
                                     );
                                     refresh();
                                   },
@@ -187,24 +209,34 @@ class _IventoryState extends State<Iventory> {
                               Expanded(
                                 flex: 1,
                                 child: IventorySlot(
-                                  playerID: user.selectedPlayerID,
+                                  playerID: user.selectedPlayer!.id,
                                   item:
-                                      user.selectedPlayer!.iventory!.headSlot!,
+                                      user.selectedPlayer!.equipment!.headSlot!,
                                   slotImage: AppIcons.headSlot,
                                   onTap: () {
+                                    if (user.selectedPlayer!.equipment!
+                                            .headSlot!.name! ==
+                                        '') {
+                                      return;
+                                    }
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .headSlot!,
                                           buttonText: 'unequip',
                                           useEquipOrUnequip: () async {
-                                            user.unequipItem(
-                                              gameController.gameID,
-                                              user.selectedPlayer!.iventory!
+                                            user.selectedPlayer!.equipment!
+                                                .unequip(
+                                              game.id!,
+                                              user.selectedPlayer!.id!,
+                                              user.selectedPlayer!.equipment!
                                                   .headSlot!,
                                             );
                                             refresh();
@@ -214,9 +246,10 @@ class _IventoryState extends State<Iventory> {
                                     );
                                   },
                                   onDoubleTap: () async {
-                                    user.unequipItem(
-                                      gameController.gameID,
-                                      user.selectedPlayer!.iventory!.headSlot!,
+                                    user.selectedPlayer!.equipment!.unequip(
+                                      game.id!,
+                                      user.selectedPlayer!.id!,
+                                      user.selectedPlayer!.equipment!.headSlot!,
                                     );
 
                                     refresh();
@@ -226,24 +259,34 @@ class _IventoryState extends State<Iventory> {
                               Expanded(
                                 flex: 2,
                                 child: IventorySlot(
-                                  playerID: user.selectedPlayerID,
+                                  playerID: user.selectedPlayer!.id,
                                   item:
-                                      user.selectedPlayer!.iventory!.bodySlot!,
+                                      user.selectedPlayer!.equipment!.bodySlot!,
                                   slotImage: AppIcons.bodySlot,
                                   onTap: () {
+                                    if (user.selectedPlayer!.equipment!
+                                            .bodySlot!.name! ==
+                                        '') {
+                                      return;
+                                    }
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .bodySlot!,
                                           buttonText: 'unequip',
                                           useEquipOrUnequip: () async {
-                                            user.unequipItem(
-                                              gameController.gameID,
-                                              user.selectedPlayer!.iventory!
+                                            user.selectedPlayer!.equipment!
+                                                .unequip(
+                                              game.id!,
+                                              user.selectedPlayer!.id!,
+                                              user.selectedPlayer!.equipment!
                                                   .bodySlot!,
                                             );
                                             refresh();
@@ -253,9 +296,10 @@ class _IventoryState extends State<Iventory> {
                                     );
                                   },
                                   onDoubleTap: () async {
-                                    user.unequipItem(
-                                      gameController.gameID,
-                                      user.selectedPlayer!.iventory!.bodySlot!,
+                                    user.selectedPlayer!.equipment!.unequip(
+                                      game.id!,
+                                      user.selectedPlayer!.id!,
+                                      user.selectedPlayer!.equipment!.bodySlot!,
                                     );
                                     refresh();
                                   },
@@ -272,24 +316,34 @@ class _IventoryState extends State<Iventory> {
                               Expanded(
                                 flex: 2,
                                 child: IventorySlot(
-                                  playerID: user.selectedPlayerID,
+                                  playerID: user.selectedPlayer!.id,
                                   item: user
-                                      .selectedPlayer!.iventory!.offHandSlot!,
+                                      .selectedPlayer!.equipment!.offHandSlot!,
                                   slotImage: AppIcons.offHandSlot,
                                   onTap: () {
+                                    if (user.selectedPlayer!.equipment!
+                                            .offHandSlot!.name! ==
+                                        '') {
+                                      return;
+                                    }
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .offHandSlot!,
                                           buttonText: 'unequip',
                                           useEquipOrUnequip: () async {
-                                            user.unequipItem(
-                                              gameController.gameID,
-                                              user.selectedPlayer!.iventory!
+                                            user.selectedPlayer!.equipment!
+                                                .unequip(
+                                              game.id!,
+                                              user.selectedPlayer!.id!,
+                                              user.selectedPlayer!.equipment!
                                                   .offHandSlot!,
                                             );
                                             refresh();
@@ -299,9 +353,10 @@ class _IventoryState extends State<Iventory> {
                                     );
                                   },
                                   onDoubleTap: () async {
-                                    user.unequipItem(
-                                      gameController.gameID,
-                                      user.selectedPlayer!.iventory!
+                                    user.selectedPlayer!.equipment!.unequip(
+                                      game.id!,
+                                      user.selectedPlayer!.id!,
+                                      user.selectedPlayer!.equipment!
                                           .offHandSlot!,
                                     );
                                     refresh();
@@ -311,24 +366,34 @@ class _IventoryState extends State<Iventory> {
                               Expanded(
                                 flex: 1,
                                 child: IventorySlot(
-                                  playerID: user.selectedPlayerID,
+                                  playerID: user.selectedPlayer!.id,
                                   item:
-                                      user.selectedPlayer!.iventory!.feetSlot!,
+                                      user.selectedPlayer!.equipment!.feetSlot!,
                                   slotImage: AppIcons.feetSlot,
                                   onTap: () {
+                                    if (user.selectedPlayer!.equipment!
+                                            .feetSlot!.name! ==
+                                        '') {
+                                      return;
+                                    }
+
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
                                         return ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .feetSlot!,
                                           buttonText: 'unequip',
                                           useEquipOrUnequip: () async {
-                                            user.unequipItem(
-                                              gameController.gameID,
-                                              user.selectedPlayer!.iventory!
+                                            user.selectedPlayer!.equipment!
+                                                .unequip(
+                                              game.id!,
+                                              user.selectedPlayer!.id!,
+                                              user.selectedPlayer!.equipment!
                                                   .feetSlot!,
                                             );
                                             refresh();
@@ -338,9 +403,10 @@ class _IventoryState extends State<Iventory> {
                                     );
                                   },
                                   onDoubleTap: () async {
-                                    user.unequipItem(
-                                      gameController.gameID,
-                                      user.selectedPlayer!.iventory!.feetSlot!,
+                                    user.selectedPlayer!.equipment!.unequip(
+                                      game.id!,
+                                      user.selectedPlayer!.id!,
+                                      user.selectedPlayer!.equipment!.feetSlot!,
                                     );
                                     refresh();
                                   },
@@ -355,7 +421,7 @@ class _IventoryState extends State<Iventory> {
                   Container(
                     height: MediaQuery.of(context).size.height * 0.05,
                     color:
-                        _uiColor.setUIColor(user.selectedPlayerID, 'primary'),
+                        _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
                     child: Center(
                       child: Text('bag'.toUpperCase(),
                           style: TextStyle(
@@ -363,7 +429,7 @@ class _IventoryState extends State<Iventory> {
                             height: 1,
                             fontSize: 25,
                             color: _uiColor.setUIColor(
-                                user.selectedPlayerID, 'secondary'),
+                                user.selectedPlayer!.id, 'secondary'),
                             fontWeight: FontWeight.bold,
                             letterSpacing: 3,
                           )),
@@ -375,65 +441,71 @@ class _IventoryState extends State<Iventory> {
                       shrinkWrap: true,
                       crossAxisCount: 6,
                       children: List.generate(
-                          user.selectedPlayer!.iventory!.bag!.length, (index) {
+                          user.selectedPlayer!.equipment!.bag!.length, (index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 3),
                           child: GestureDetector(
                             onLongPress: () {
-                              user.selectedPlayer!.iventory!.destroyItem(
-                                  gameController.gameID,
+                              user.selectedPlayer!.equipment!.destroyItem(
+                                  game.id!,
                                   user.selectedPlayer!.id!,
-                                  user.selectedPlayer!.iventory!.bag![index]);
+                                  user.selectedPlayer!.equipment!.bag![index]);
                               refresh();
                             },
                             onTap: () {
                               showDialog(
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return (user.selectedPlayer!.iventory!
+                                  return (user.selectedPlayer!.equipment!
                                               .bag![index].itemSlot ==
                                           'consumable')
                                       ? ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .bag![index],
                                           buttonText: 'use',
                                           useEquipOrUnequip: () async {
-                                            user.useItem(
-                                                gameController.gameID,
-                                                user.selectedPlayer!.iventory!
+                                            user.selectedPlayer!.useItem(
+                                                game.id!,
+                                                user.selectedPlayer!.equipment!
                                                     .bag![index]);
 
                                             user.selectedPlayer!.action!
                                                 .takeAction(
-                                              gameController.gameID,
-                                              user.selectedPlayer!.id!
-                                                  .toString(),
+                                              game.id!,
+                                              user.selectedPlayer!.id!,
                                             );
 
-                                            // if (user.selectedPlayer!.action!
-                                            //     .outOfActions()) {
-                                            //   turnController.passTurnWhere(
-                                            //       gameController.gameID,
-                                            //       user.selectedPlayer!.id!);
-                                            // }
+                                            if (user.selectedPlayer!.action!
+                                                .outOfActions()) {
+                                              game.round!.passTurn(game.id!,
+                                                  user.selectedPlayer!.id!);
+                                            }
                                             Navigator.pop(context);
 
                                             refresh();
                                           },
                                         )
                                       : ItemDetailPage(
-                                          playerID: user.selectedPlayerID,
-                                          playerTurn: user.playerTurn,
-                                          item: user.selectedPlayer!.iventory!
+                                          playerID: user.selectedPlayer!.id,
+                                          outOfActions: user
+                                              .selectedPlayer!.action!
+                                              .outOfActions(),
+                                          item: user.selectedPlayer!.equipment!
                                               .bag![index],
                                           buttonText: 'equip',
                                           useEquipOrUnequip: () async {
-                                            user.equipItem(
-                                                gameController.gameID,
-                                                user.selectedPlayer!.iventory!
-                                                    .bag![index]);
+                                            user.selectedPlayer!.equipment!
+                                                .equip(
+                                                    game.id!,
+                                                    user.selectedPlayer!.id!,
+                                                    user
+                                                        .selectedPlayer!
+                                                        .equipment!
+                                                        .bag![index]);
 
                                             refresh();
                                           },
@@ -442,33 +514,38 @@ class _IventoryState extends State<Iventory> {
                               );
                             },
                             onDoubleTap: () {
-                              if ((user.selectedPlayer!.iventory!.bag![index]
+                              if ((user.selectedPlayer!.equipment!.bag![index]
                                       .itemSlot ==
                                   'consumable')) {
-                                user.useItem(gameController.gameID,
-                                    user.selectedPlayer!.iventory!.bag![index]);
+                                user.selectedPlayer!.useItem(
+                                    game.id!,
+                                    user.selectedPlayer!.equipment!
+                                        .bag![index]);
 
                                 user.selectedPlayer!.action!.takeAction(
-                                  gameController.gameID,
+                                  game.id!,
                                   user.selectedPlayer!.id!,
                                 );
 
-                                // if (user.selectedPlayer!.action!
-                                //     .outOfActions()) {
-                                //   turnController.passTurnWhere(
-                                //       gameController.gameID,
-                                //       user.selectedPlayer!.id!);
-                                // }
+                                if (user.selectedPlayer!.action!
+                                    .outOfActions()) {
+                                  game.round!.passTurn(
+                                      game.id!, user.selectedPlayer!.id!);
+                                }
+
                                 Navigator.pop(context);
                               } else {
-                                user.equipItem(gameController.gameID,
-                                    user.selectedPlayer!.iventory!.bag![index]);
+                                user.selectedPlayer!.equipment!.equip(
+                                    game.id!,
+                                    user.selectedPlayer!.id!,
+                                    user.selectedPlayer!.equipment!
+                                        .bag![index]);
                               }
 
                               refresh();
                             },
                             child: SvgPicture.asset(
-                              user.selectedPlayer!.iventory!.bag![index].icon!,
+                              user.selectedPlayer!.equipment!.bag![index].icon!,
                               color: Colors.white,
                             ),
                           ),

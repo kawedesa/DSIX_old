@@ -1,6 +1,7 @@
-import 'package:dsixv02app/models/game/gameController.dart';
+import 'package:dsixv02app/models/game/game.dart';
+
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn/turnController.dart';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'actionButton.dart';
@@ -13,8 +14,8 @@ class PlayerMenu extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    // final turnController = Provider.of<TurnController>(context);
-    final gameController = Provider.of<GameController>(context);
+
+    final game = Provider.of<Game>(context);
 
     return Positioned(
       left: user.selectedPlayer!.location!.dx! -
@@ -52,19 +53,19 @@ class PlayerMenu extends StatelessWidget {
                     action: 'defend',
                     onTap: () {
                       user.selectedPlayer!.defend(
-                        gameController.gameID,
+                        game.id!,
                       );
                       user.openCloseMenu();
 
                       user.selectedPlayer!.action!.takeAction(
-                        gameController.gameID,
+                        game.id!,
                         user.selectedPlayer!.id!,
                       );
 
-                      // if (user.selectedPlayer!.action!.outOfActions()) {
-                      //   turnController.passTurnWhere(
-                      //       gameController.gameID, user.selectedPlayer!.id!);
-                      // }
+                      if (user.selectedPlayer!.action!.outOfActions()) {
+                        game.round!
+                            .passTurn(game.id!, user.selectedPlayer!.id!);
+                      }
                     },
                   ),
                 ),
@@ -73,20 +74,20 @@ class PlayerMenu extends StatelessWidget {
                   child: ActionButton(
                     action: 'look',
                     onTap: () {
-                      user.selectedPlayer!.vision!.look(
-                          gameController.gameID, user.selectedPlayer!.id!);
+                      user.selectedPlayer!.vision!
+                          .look(game.id!, user.selectedPlayer!.id!);
 
                       user.openCloseMenu();
 
                       user.selectedPlayer!.action!.takeAction(
-                        gameController.gameID,
+                        game.id!,
                         user.selectedPlayer!.id!,
                       );
 
-                      // if (user.selectedPlayer!.action!.outOfActions()) {
-                      //   turnController.passTurnWhere(
-                      //       gameController.gameID, user.selectedPlayer!.id!);
-                      // }
+                      if (user.selectedPlayer!.action!.outOfActions()) {
+                        game.round!
+                            .passTurn(game.id!, user.selectedPlayer!.id!);
+                      }
                     },
                   ),
                 ),

@@ -9,14 +9,14 @@ import 'package:flutter_svg/svg.dart';
 // ignore: must_be_immutable
 class ItemDetailPage extends StatelessWidget {
   String? playerID;
-  bool? playerTurn;
+  bool? outOfActions;
   Item? item;
   String? buttonText;
   Function()? useEquipOrUnequip;
   ItemDetailPage({
     Key? key,
     @required this.playerID,
-    @required this.playerTurn,
+    @required this.outOfActions,
     @required this.item,
     @required this.buttonText,
     @required this.useEquipOrUnequip,
@@ -115,15 +115,15 @@ class ItemDetailPage extends StatelessWidget {
                   thickness: 2,
                   color: _uiColor.setUIColor(playerID, 'primary'),
                 ),
-                (playerTurn!)
-                    ? DialogButton(
+                (outOfActions!)
+                    ? SizedBox()
+                    : DialogButton(
                         buttonText: buttonText!,
                         onTapAction: () async {
                           useEquipOrUnequip!();
                           Navigator.pop(context);
                         },
-                      )
-                    : SizedBox(),
+                      ),
                 DialogButton(
                   buttonText: 'close',
                   onTapAction: () async {

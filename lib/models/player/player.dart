@@ -5,10 +5,10 @@ import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'playerAction.dart';
-import 'playerArmor.dart';
-import 'playerAttackRange.dart';
-import 'playerDamage.dart';
-import 'playerIventory.dart';
+
+import 'equipment/playerAttackRange.dart';
+
+import 'equipment/playerEquipment.dart';
 import 'playerLife.dart';
 import 'playerLocation.dart';
 import 'playerVision.dart';
@@ -16,20 +16,16 @@ import 'playerWalkRange.dart';
 import 'sprite/playerTempLocation.dart';
 
 class Player {
-  // int? index;
   String? id;
   PlayerLocation? location;
   String? race;
   PlayerVision? vision;
   PlayerWalkRange? walkRange;
   PlayerLife? life;
-  PlayerAttackRange? attackRange;
-  PlayerDamage? damage;
-  PlayerArmor? armor;
-  PlayerIventory? iventory;
+  PlayerEquipment? equipment;
   PlayerAction? action;
+
   Player({
-    // int? index,
     String? id,
     PlayerLocation? location,
     String? race,
@@ -37,55 +33,41 @@ class Player {
     PlayerWalkRange? walkRange,
     PlayerLife? life,
     PlayerAttackRange? attackRange,
-    PlayerDamage? damage,
-    PlayerArmor? armor,
-    PlayerIventory? iventory,
+    PlayerEquipment? equipment,
     PlayerAction? action,
   }) {
-    // this.index = index;
     this.id = id;
     this.location = location;
     this.race = race;
     this.vision = vision;
     this.walkRange = walkRange;
     this.life = life;
-    this.attackRange = attackRange;
-    this.damage = damage;
-    this.armor = armor;
-    this.iventory = iventory;
+    this.equipment = equipment;
     this.action = action;
   }
 
   Map<String, dynamic> toMap() {
     return {
-      // 'index': this.index,
       'id': this.id,
       'location': this.location?.toMap(),
       'race': this.race,
       'vision': this.vision?.toMap(),
       'walkRange': this.walkRange?.toMap(),
       'life': this.life?.toMap(),
-      'attackRange': this.attackRange?.toMap(),
-      'damage': this.damage?.toMap(),
-      'armor': this.armor?.toMap(),
-      'iventory': this.iventory?.toMap(),
+      'equipment': this.equipment?.toMap(),
       'action': this.action?.toMap(),
     };
   }
 
   factory Player.fromMap(Map<String, dynamic>? data) {
     return Player(
-      // index: data?['index'],
       id: data?['id'],
       location: PlayerLocation.fromMap(data?['location']),
       race: data?['race'],
       vision: PlayerVision.fromMap(data?['vision']),
       walkRange: PlayerWalkRange.fromMap(data?['walkRange']),
       life: PlayerLife.fromMap(data?['life']),
-      attackRange: PlayerAttackRange.fromMap(data?['attackRange']),
-      damage: PlayerDamage.fromMap(data?['damage']),
-      armor: PlayerArmor.fromMap(data?['armor']),
-      iventory: PlayerIventory.fromMap(data?['iventory']),
+      equipment: PlayerEquipment.fromMap(data?['equipment']),
       action: PlayerAction.fromMap(data?['action']),
     );
   }
@@ -108,17 +90,13 @@ class Player {
     String randomRace = races[randomNumber];
 
     return Player(
-      // index: playerIndex,
       id: id[playerIndex],
-      location: PlayerLocation.newLocation(location),
+      location: location,
       race: randomRace,
       vision: PlayerVision.set(randomRace),
       walkRange: PlayerWalkRange.set(randomRace),
       life: PlayerLife.set(randomRace),
-      attackRange: PlayerAttackRange.empty(),
-      damage: PlayerDamage.empty(),
-      armor: PlayerArmor.empty(),
-      iventory: PlayerIventory.empty(randomRace),
+      equipment: PlayerEquipment.empty(randomRace),
       action: PlayerAction.empty(),
     );
   }
@@ -158,60 +136,53 @@ class Player {
 
   void defend(String gameID) {
     int protect = Random().nextInt(6) + 1;
-    this.armor!.increaseTempArmor(protect);
-    this.armor!.update(gameID, this.id!);
+    this.equipment!.armor!.increaseTempArmor(protect);
+    this.equipment!.update(gameID, this.id!);
   }
 
   void clearTempEffects(String gameID) {
-    this.armor!.resetTempArmor();
-    this.armor!.update(gameID, this.id!);
+    this.equipment!.armor!.resetTempArmor();
+    this.equipment!.update(gameID, this.id!);
     this.vision!.reset();
     this.vision!.update(gameID, this.id!);
   }
 
   void takeDamage(String gameID, int damageRoll, pDamage, mDamage) {
-    if (this.armor!.tempArmor! > 0) {
+    if (this.equipment!.armor!.tempArmor! > 0) {
       int damage = pDamage + mDamage + damageRoll;
-      this
-          .life!
-          .decrease(gameID, this.id!, this.armor!.calculateTempArmor(damage));
-      this.armor!.update(gameID, this.id!);
+      this.life!.decrease(
+          gameID, this.id!, this.equipment!.armor!.calculateTempArmor(damage));
+      this.equipment!.update(gameID, this.id!);
       return;
     }
 
-    this.life!.decrease(gameID, this.id!,
-        this.armor!.calculateDamageReceived(damageRoll, pDamage, mDamage));
+    this.life!.decrease(
+        gameID,
+        this.id!,
+        this
+            .equipment!
+            .armor!
+            .calculateDamageReceived(damageRoll, pDamage, mDamage));
   }
 
-  void equipItem(String gameID, Item item) {
-    this.iventory!.bag!.remove(item);
-    this.iventory!.update(gameID, this.id!);
-    this.attackRange!.increase(item);
-    this.attackRange!.update(gameID, this.id!);
-    this.damage!.increasePDamage(item.pDamage!);
-    this.damage!.increaseMDamage(item.mDamage!);
-    this.damage!.update(gameID, this.id!);
-    this.armor!.increasePArmor(item.pArmor!);
-    this.armor!.increaseMArmor(item.mArmor!);
-    this.armor!.update(gameID, this.id!);
-  }
+  void useItem(String gameID, Item item) {
+    switch (item.name) {
+      case 'ward':
+        this.vision!.tempVision = this.vision!.tempVision! + 50;
+        this.vision!.canSeeInvisible = true;
+        this.vision!.update(gameID, this.id!);
+        break;
 
-  void unequip(
-    String gameID,
-    Item item,
-  ) {
-    if (item.name == '') {
-      return;
+      case 'food':
+        int healingAmount = Random().nextInt(3) + 1;
+        this.life!.increase(gameID, this.id!, healingAmount);
+        break;
+
+      case 'healing potion':
+        int healingAmount = Random().nextInt(3) + 4;
+        this.life!.increase(gameID, this.id!, healingAmount);
+        break;
     }
-    this.iventory!.unequip(item);
-    this.iventory!.update(gameID, this.id!);
-    this.attackRange!.decrease(item);
-    this.attackRange!.update(gameID, this.id!);
-    this.damage!.decreasePDamage(item.pDamage!);
-    this.damage!.decreaseMDamage(item.mDamage!);
-    this.damage!.update(gameID, this.id!);
-    this.armor!.decreasePArmor(item.pArmor!);
-    this.armor!.decreaseMArmor(item.mArmor!);
-    this.armor!.update(gameID, this.id!);
+    this.equipment!.destroyItem(gameID, this.id!, item);
   }
 }

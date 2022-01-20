@@ -1,5 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 class PlayerArmor {
   int? pArmor;
   int? mArmor;
@@ -86,13 +84,6 @@ class PlayerArmor {
 
   void resetTempArmor() {
     this.tempArmor = 0;
-  }
-
-  void update(String gameID, String playerIndex) async {
-    final database = FirebaseFirestore.instance.collection('game');
-    await database.doc(gameID).collection('players').doc(playerIndex).update({
-      'armor': toMap(),
-    });
   }
 
   int calculateDamageReceived(int damageRoll, int pDamage, int mDamage) {

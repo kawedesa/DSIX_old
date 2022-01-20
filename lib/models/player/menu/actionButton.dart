@@ -69,8 +69,40 @@ class _ActionButtonState extends State<ActionButton> {
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
 
-    return (user.playerTurn)
+    return (user.selectedPlayer!.action!.outOfActions())
         ? AnimatedContainer(
+            curve: Curves.fastLinearToSlowEaseIn,
+            duration: Duration(milliseconds: 500),
+            width: (user.menuIsOpen)
+                ? MediaQuery.of(context).size.height * 0.02
+                : 0,
+            height: (user.menuIsOpen)
+                ? MediaQuery.of(context).size.height * 0.02
+                : 0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: AppColors.grey02!.withAlpha(215),
+              border: Border.all(
+                color: AppColors.grey02!.withAlpha(250),
+                width: .5,
+              ),
+            ),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.all(3.0),
+                    child: SvgPicture.asset(
+                      setIcon(widget.action!),
+                      color: AppColors.grey04,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+        : AnimatedContainer(
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(milliseconds: 500),
             width: (user.menuIsOpen)
@@ -121,38 +153,6 @@ class _ActionButtonState extends State<ActionButton> {
                       : SizedBox(),
                 ],
               ),
-            ),
-          )
-        : AnimatedContainer(
-            curve: Curves.fastLinearToSlowEaseIn,
-            duration: Duration(milliseconds: 500),
-            width: (user.menuIsOpen)
-                ? MediaQuery.of(context).size.height * 0.02
-                : 0,
-            height: (user.menuIsOpen)
-                ? MediaQuery.of(context).size.height * 0.02
-                : 0,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: AppColors.grey02!.withAlpha(215),
-              border: Border.all(
-                color: AppColors.grey02!.withAlpha(250),
-                width: .5,
-              ),
-            ),
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.center,
-                  child: Padding(
-                    padding: const EdgeInsets.all(3.0),
-                    child: SvgPicture.asset(
-                      setIcon(widget.action!),
-                      color: AppColors.grey04,
-                    ),
-                  ),
-                ),
-              ],
             ),
           );
   }

@@ -1,12 +1,11 @@
+import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
 import 'package:transparent_pointer/transparent_pointer.dart';
-import '../../game/gameController.dart';
 import '../../player/sprite/playerSpriteImage.dart';
 import 'enemyPlayerSpriteHitBox.dart';
 import 'enemyPlayerSpriteShadow.dart';
@@ -39,8 +38,7 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
   @override
   Widget build(BuildContext context) {
     final user = Provider.of<User>(context);
-    final gameController = Provider.of<GameController>(context);
-    // final turnController = Provider.of<TurnController>(context);
+    final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
 
     _enemyController.checkEnemyPlayer(players, widget.enemyPlayer!);
@@ -78,8 +76,13 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
               child: EnemyPlayerSpriteHitBox(
                 isDead: widget.enemyPlayer!.life!.isDead(),
                 onTap: () async {
-                  // _enemyController.receiveAnAttack(gameController,
-                  //     turnController, user, widget.enemyPlayer!);
+                  if (user.playerMode != 'attack') {
+                    return;
+                  }
+                  _enemyController.receiveAnAttack(
+                      game, user.selectedPlayer!, widget.enemyPlayer!);
+
+                  user.setPlayerMode();
                 },
               ),
             ),
@@ -95,7 +98,7 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
             Align(
                 alignment: Alignment.center,
                 child: EnemySpriteTempEffects(
-                  tempArmor: widget.enemyPlayer!.armor!.tempArmor,
+                  tempArmor: widget.enemyPlayer!.equipment!.armor!.tempArmor,
                 )),
 
             //DAMAGE ANIMATION
@@ -145,43 +148,37 @@ class EnemyPlayerSpriteController {
     ));
   }
 
-  void receiveAnAttack(GameController gameController,
-      TurnController turnController, User user, Player enemyPlayer) {
-    if (user.playerMode != 'attack') {
-      return;
-    }
-
-    if (user.selectedPlayer!.attackRange!.canAttack(
-            enemyPlayer.location!,
-            user.selectedPlayer!.location!,
-            user.selectedPlayer!.iventory!.rangedAttack()) ==
+  void receiveAnAttack(Game game, Player player, Player enemyPlayer) {
+    if (player.equipment!.attackRange!.canAttack(enemyPlayer.location!,
+            player.location!, player.equipment!.rangedAttack()) ==
         false) {
       return;
     }
 
-    takeDamage(gameController.gameID, user.selectedPlayer!, enemyPlayer);
-
-    user.selectedPlayer!.action!.takeAction(
-      gameController.gameID,
-      user.selectedPlayer!.id!,
+    player.action!.takeAction(
+      game.id!,
+      player.id!,
     );
 
-    if (user.selectedPlayer!.action!.outOfActions()) {
-      turnController.passTurnWhere(
-          gameController.gameID, user.selectedPlayerID!);
-    } else {
-      user.openCloseMenu();
+    if (player.action!.outOfActions()) {
+      game.round!.passTurn(game.id!, player.id!);
     }
+
+    takeDamage(game, player, enemyPlayer);
   }
 
-  void takeDamage(String gameID, Player selectedPlayer, Player enemy) {
-    int attackDamage = selectedPlayer.attack();
+  void takeDamage(Game game, Player player, Player enemy) {
+    int attackDamage = player.attack();
     int itemDamage =
-        selectedPlayer.damage!.pDamage! + selectedPlayer.damage!.mDamage!;
+        player.equipment!.damage!.pDamage! + player.equipment!.damage!.mDamage!;
     int totalAttackDamage = attackDamage + itemDamage;
 
-    enemy.takeDamage(gameID, attackDamage, selectedPlayer.damage!.pDamage,
-        selectedPlayer.damage!.mDamage);
+    enemy.takeDamage(game.id!, attackDamage, player.equipment!.damage!.pDamage,
+        player.equipment!.damage!.mDamage);
+
+    if (enemy.life!.isDead()) {
+      game.round!.removeDeadPlayer(game.id!, enemy.id!);
+    }
 
     playDamageAnimation(totalAttackDamage);
   }

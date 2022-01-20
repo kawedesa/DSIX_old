@@ -54,10 +54,10 @@ class PlayerLife {
     }
   }
 
-  void update(String gameID, String playerIndex) async {
+  void update(String gameID, String playerID) async {
     final database = FirebaseFirestore.instance.collection('game');
 
-    await database.doc(gameID).collection('players').doc(playerIndex).update({
+    await database.doc(gameID).collection('players').doc(playerID).update({
       'life': toMap(),
     });
   }

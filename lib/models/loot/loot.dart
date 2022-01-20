@@ -1,4 +1,8 @@
+import 'dart:math';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/shop/item.dart';
+import 'package:dsixv02app/models/shop/shop.dart';
 import 'package:flutter/material.dart';
 
 class Loot {
@@ -48,6 +52,35 @@ class Loot {
       isClosed: true,
     );
   }
+
+  Shop _shop = Shop();
+
+  void openLoot(String gameID) {
+    this.isClosed = false;
+    int numberOfLoot = Random().nextInt(3) + 1;
+
+    for (int i = 0; i < numberOfLoot; i++) {
+      this.items!.add(_shop.randomItem());
+    }
+    update(gameID);
+  }
+
+  void removeItems(String gameID, List<Item> itemsRemovedFromChest) {
+    itemsRemovedFromChest.forEach((item) {
+      this.items!.remove(item);
+    });
+    update(gameID);
+  }
+
+  void update(String gameID) async {
+    final database = FirebaseFirestore.instance;
+    await database
+        .collection('game')
+        .doc(gameID)
+        .collection('loot')
+        .doc('${this.index}')
+        .update(toMap());
+  }
 }
 
 class LootLocation {
@@ -76,6 +109,7 @@ class LootLocation {
       dy: location.dy,
     );
   }
+
   Offset getLocation() {
     return Offset(this.dx!.toDouble(), this.dy!.toDouble());
   }

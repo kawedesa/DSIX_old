@@ -1,8 +1,6 @@
 import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/playersController.dart';
-import 'package:dsixv02app/models/round/roundController.dart';
-import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
@@ -28,8 +26,6 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
     final game = Provider.of<Game>(context);
     final gameController = Provider.of<GameController>(context);
     final playerController = Provider.of<PlayersController>(context);
-    // final roundController = Provider.of<RoundController>(context);
-    // final turnController = Provider.of<TurnController>(context);
     final lootController = Provider.of<LootController>(context);
 
     return Scaffold(

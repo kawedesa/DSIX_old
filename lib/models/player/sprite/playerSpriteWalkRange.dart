@@ -57,12 +57,12 @@ class WalkRange extends StatelessWidget {
         color: (tempLocation!.height == 10)
             ? AppColors.cantPassArea
             : _uiColor
-                .setUIColor(user.selectedPlayerID, 'shadow')
+                .setUIColor(user.selectedPlayer!.id, 'shadow')
                 .withAlpha(75 - setWalkRange(user.playerMode!)!.floor()),
         border: Border.all(
           color: (tempLocation!.height == 10)
               ? AppColors.cantPassOutline
-              : _uiColor.setUIColor(user.selectedPlayerID, 'rangeOutline'),
+              : _uiColor.setUIColor(user.selectedPlayer!.id, 'rangeOutline'),
           width: 0.3,
         ),
       ),

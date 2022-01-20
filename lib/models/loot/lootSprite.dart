@@ -1,62 +1,53 @@
-import 'package:dsixv02app/models/game/gameController.dart';
+import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/loot/loot.dart';
 import 'package:dsixv02app/models/loot/lootSpriteImage.dart';
 import 'package:dsixv02app/models/player/user.dart';
-import 'package:dsixv02app/models/turn/turnController.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'lootController.dart';
 import 'lootDialog.dart';
 
 // ignore: must_be_immutable
 class LootSprite extends StatelessWidget {
-  int? lootIndex;
-  LootLocation? location;
-  bool? isClosed;
-  LootSprite(
-      {Key? key,
-      @required this.lootIndex,
-      @required this.location,
-      @required this.isClosed})
-      : super(key: key);
+  Loot? loot;
+  LootSprite({
+    Key? key,
+    @required this.loot,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // final turnController = Provider.of<TurnController>(context);
-    final lootController = Provider.of<LootController>(context);
-    final gameController = Provider.of<GameController>(context);
+    final game = Provider.of<Game>(context);
     final user = Provider.of<User>(context);
 
     return Positioned(
-        left: location!.dx! - 4,
-        top: location!.dy! - 4,
+        left: loot!.location!.dx! - 4,
+        top: loot!.location!.dy! - 4,
         child: GestureDetector(
           onTap: () async {
             if (user.playerMode != 'walk') {
               return;
             }
-            if (user.selectedPlayer!.cantReach(location!.getLocation())) {
+            if (user.selectedPlayer!.cantReach(loot!.location!.getLocation())) {
               return;
             }
 
             user.selectedPlayer!.action!.takeAction(
-              gameController.gameID,
+              game.id!,
               user.selectedPlayer!.id!,
             );
 
-            // if (user.selectedPlayer!.action!.outOfActions()) {
-            //   turnController.passTurnWhere(
-            //       gameController.gameID, user.selectedPlayer!.id!);
-            // }
+            if (user.selectedPlayer!.action!.outOfActions()) {
+              game.round!.passTurn(game.id!, user.selectedPlayer!.id!);
+            }
 
-            if (isClosed!) {
-              lootController.openLoot(gameController.gameID, lootIndex!);
+            if (loot!.isClosed!) {
+              loot!.openLoot(game.id!);
               showDialog(
                 barrierDismissible: false,
                 context: context,
                 builder: (BuildContext context) {
                   return LootDialog(
-                    lootIndex: lootIndex,
+                    loot: loot,
                   );
                 },
               );
@@ -66,13 +57,13 @@ class LootSprite extends StatelessWidget {
                 context: context,
                 builder: (BuildContext context) {
                   return LootDialog(
-                    lootIndex: lootIndex,
+                    loot: loot,
                   );
                 },
               );
             }
           },
-          child: LootSpriteImage(isClosed: isClosed),
+          child: LootSpriteImage(isClosed: loot!.isClosed),
         ));
   }
 }
