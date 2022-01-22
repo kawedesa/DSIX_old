@@ -21,6 +21,7 @@ class AppIcons {
   static final handSlot = 'assets/icon/handSlot.svg';
   static final feetSlot = 'assets/icon/feetSlot.svg';
   static final bodySlot = 'assets/icon/bodySlot.svg';
+  static final bagSlot = 'assets/icon/bagSlot.svg';
 
   //Actions
   static final attack = 'assets/icon/attack.svg';
