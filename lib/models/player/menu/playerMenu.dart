@@ -52,6 +52,7 @@ class PlayerMenu extends StatelessWidget {
                     action: 'defend',
                     onTap: () {
                       player!.defend();
+                      player!.menuMode();
 
                       try {
                         player!.action!.takeAction(

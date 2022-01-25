@@ -128,6 +128,11 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     return false;
                                   }
 
+                                  if (widget.chest == null &&
+                                      widget.player!.action!.outOfActions()) {
+                                    return false;
+                                  }
+
                                   if (data.name == 'chest') {
                                     if (widget.player!.equipment!.weight!
                                         .cantCarry(data.item!.weight!)) {
@@ -135,10 +140,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     } else {
                                       return true;
                                     }
-                                  }
-
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
                                   }
 
                                   return true;
@@ -175,6 +176,12 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                   if (data!.item!.itemSlot != 'hands') {
                                     return false;
                                   }
+
+                                  if (widget.chest == null &&
+                                      widget.player!.action!.outOfActions()) {
+                                    return false;
+                                  }
+
                                   if (data.name == 'chest') {
                                     if (widget.player!.equipment!.weight!
                                         .cantCarry(data.item!.weight!)) {
@@ -182,10 +189,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     } else {
                                       return true;
                                     }
-                                  }
-
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
                                   }
 
                                   return true;
@@ -227,6 +230,12 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                   if (data!.item!.itemSlot != 'head') {
                                     return false;
                                   }
+
+                                  if (widget.chest == null &&
+                                      widget.player!.action!.outOfActions()) {
+                                    return false;
+                                  }
+
                                   if (data.name == 'chest') {
                                     if (widget.player!.equipment!.weight!
                                         .cantCarry(data.item!.weight!)) {
@@ -234,10 +243,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     } else {
                                       return true;
                                     }
-                                  }
-
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
                                   }
 
                                   return true;
@@ -273,6 +278,11 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     return false;
                                   }
 
+                                  if (widget.chest == null &&
+                                      widget.player!.action!.outOfActions()) {
+                                    return false;
+                                  }
+
                                   if (data.name == 'chest') {
                                     if (widget.player!.equipment!.weight!
                                         .cantCarry(data.item!.weight!)) {
@@ -280,10 +290,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     } else {
                                       return true;
                                     }
-                                  }
-
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
                                   }
 
                                   return true;
@@ -330,6 +336,12 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                   if (data.name == 'mainHandSlot') {
                                     return false;
                                   }
+
+                                  if (widget.chest == null &&
+                                      widget.player!.action!.outOfActions()) {
+                                    return false;
+                                  }
+
                                   if (data.name == 'chest') {
                                     if (widget.player!.equipment!.weight!
                                         .cantCarry(data.item!.weight!)) {
@@ -337,10 +349,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     } else {
                                       return true;
                                     }
-                                  }
-
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
                                   }
 
                                   return true;
@@ -378,6 +386,11 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     return false;
                                   }
 
+                                  if (widget.chest == null &&
+                                      widget.player!.action!.outOfActions()) {
+                                    return false;
+                                  }
+
                                   if (data.name == 'chest') {
                                     if (widget.player!.equipment!.weight!
                                         .cantCarry(data.item!.weight!)) {
@@ -385,10 +398,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     } else {
                                       return true;
                                     }
-                                  }
-
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
                                   }
 
                                   return true;
@@ -459,8 +468,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                               child: Draggable<EquipmentSlot>(
                                 data: widget.player!.equipment!.bag![index],
                                 feedback: Container(
-                                  height: widgetWidth / 4,
-                                  width: widgetWidth / 4,
+                                  height: widgetWidth / 3.5,
+                                  width: widgetWidth / 3.5,
                                   decoration: BoxDecoration(
                                     border: Border.all(
                                         width: 2,
@@ -470,7 +479,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     color: Colors.black,
                                   ),
                                   child: Padding(
-                                    padding: const EdgeInsets.all(10),
+                                    padding: const EdgeInsets.all(15.0),
                                     child: SvgPicture.asset(
                                       widget.player!.equipment!.bag![index]
                                           .item!.icon!,
@@ -497,6 +506,12 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     if (widget.player!.action!.outOfActions()) {
                                       return;
                                     }
+                                    if (widget.player!.equipment!.bag![index]
+                                            .item!.itemSlot !=
+                                        'consumable') {
+                                      return;
+                                    }
+
                                     widget.player!.useItem(
                                         widget.player!.equipment!.bag![index]);
 
@@ -529,6 +544,11 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       }
 
                       if (widget.player!.equipment!.bag!.length == 12) {
+                        return false;
+                      }
+
+                      if (widget.chest == null &&
+                          widget.player!.action!.outOfActions()) {
                         return false;
                       }
 
@@ -610,8 +630,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                           data: EquipmentSlot.fromItem('chest',
                                               widget.chest!.loot![index]),
                                           feedback: Container(
-                                            height: widgetWidth / 4,
-                                            width: widgetWidth / 4,
+                                            height: widgetWidth / 3.5,
+                                            width: widgetWidth / 3.5,
                                             decoration: BoxDecoration(
                                               border: Border.all(
                                                   width: 2,
@@ -622,7 +642,8 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                               color: Colors.black,
                                             ),
                                             child: Padding(
-                                              padding: const EdgeInsets.all(10),
+                                              padding:
+                                                  const EdgeInsets.all(15.0),
                                               child: SvgPicture.asset(
                                                 widget
                                                     .chest!.loot![index].icon!,
@@ -749,8 +770,8 @@ class EquipmentPageSlot extends StatelessWidget {
                     feedback: Padding(
                       padding: const EdgeInsets.fromLTRB(25, 25, 0, 0),
                       child: Container(
-                        height: widgetWidth! / 4,
-                        width: widgetWidth! / 4,
+                        height: widgetWidth! / 3.5,
+                        width: widgetWidth! / 3.5,
                         decoration: BoxDecoration(
                           border: Border.all(
                               width: 2,
@@ -759,10 +780,9 @@ class EquipmentPageSlot extends StatelessWidget {
                           color: Colors.black,
                         ),
                         child: Padding(
-                          padding: const EdgeInsets.all(8.0),
+                          padding: const EdgeInsets.all(15.0),
                           child: SvgPicture.asset(
                             slot!.item!.icon!,
-                            width: double.infinity,
                             color: AppColors.white00,
                           ),
                         ),
