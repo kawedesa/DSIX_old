@@ -1,4 +1,5 @@
 import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/player/equipment/widget/equipmentPage.dart';
 
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
@@ -6,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import 'chest.dart';
-import 'chestPage.dart';
 import 'chestSpriteImage.dart';
 
 // ignore: must_be_immutable
@@ -49,7 +49,7 @@ class ChestSprite extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return ChestPage(
+                  return EquipmentPage(
                     player: player,
                     chest: chest,
                   );
@@ -59,7 +59,7 @@ class ChestSprite extends StatelessWidget {
               showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return ChestPage(
+                  return EquipmentPage(
                     player: player,
                     chest: chest,
                   );

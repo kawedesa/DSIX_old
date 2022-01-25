@@ -1,3 +1,4 @@
+import 'package:dsixv02app/models/chest/chest.dart';
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
@@ -12,10 +13,12 @@ import 'equipmentStats.dart';
 
 class EquipmentPage extends StatefulWidget {
   final Player? player;
+  final Chest? chest;
 
   const EquipmentPage({
     Key? key,
     @required this.player,
+    this.chest,
   }) : super(key: key);
 
   @override
@@ -104,94 +107,18 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             //MAIN HAND
                             Expanded(
                               flex: 2,
-                              child: DragTarget<EquipmentSlot>(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: _uiColor.setUIColor(
-                                              widget.player!.id, 'primary'),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: (widget.player!.equipment!
-                                                  .mainHandSlot!.item!.name! ==
-                                              '')
-                                          ? SvgPicture.asset(
-                                              AppIcons.mainHandSlot,
-                                              width: double.infinity,
-                                              color: _uiColor.setUIColor(
-                                                  widget.player!.id, 'primary'),
-                                            )
-                                          : Draggable<EquipmentSlot>(
-                                              data: widget.player!.equipment!
-                                                  .mainHandSlot!,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: SvgPicture.asset(
-                                                  widget
-                                                      .player!
-                                                      .equipment!
-                                                      .mainHandSlot!
-                                                      .item!
-                                                      .icon!,
-                                                  width: double.infinity,
-                                                  color: AppColors.white00,
-                                                ),
-                                              ),
-                                              onDragCompleted: () {
-                                                setState(() {
-                                                  widget.player!.emptySlot(
-                                                      widget.player!.equipment!
-                                                          .mainHandSlot!);
-                                                });
-                                              },
-                                              feedback: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        50, 75, 0, 0),
-                                                child: Container(
-                                                  height: widgetWidth / 4,
-                                                  width: widgetWidth / 4,
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 2,
-                                                        color:
-                                                            _uiColor.setUIColor(
-                                                                widget
-                                                                    .player!.id,
-                                                                'primary')),
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.black,
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: SvgPicture.asset(
-                                                      widget
-                                                          .player!
-                                                          .equipment!
-                                                          .mainHandSlot!
-                                                          .item!
-                                                          .icon!,
-                                                      width: double.infinity,
-                                                      color: AppColors.white00,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ));
+                              child: EquipmentPageSlot(
+                                playerID: widget.player!.id,
+                                widgetWidth: widgetWidth,
+                                slotIcon: AppIcons.mainHandSlot,
+                                slot: widget.player!.equipment!.mainHandSlot,
+                                onDragCompleted: () async {
+                                  setState(() {
+                                    widget.player!.emptySlot(widget
+                                        .player!.equipment!.mainHandSlot!);
+                                  });
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'oneHand' &&
                                       data.item!.itemSlot != 'twoHands') {
                                     return false;
@@ -201,9 +128,25 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     return false;
                                   }
 
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    } else {
+                                      return true;
+                                    }
+                                  }
+
+                                  if (widget.player!.action!.outOfActions()) {
+                                    return false;
+                                  }
+
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                     widget.player!.equipment!.mainHandSlot!,
                                     data,
@@ -215,90 +158,42 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             ),
 
                             //HANDS
-
                             Expanded(
                               flex: 1,
-                              child: DragTarget<EquipmentSlot>(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: _uiColor.setUIColor(
-                                            widget.player!.id, 'primary'),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: (widget.player!.equipment!.handSlot!
-                                                .item!.name! ==
-                                            '')
-                                        ? SvgPicture.asset(
-                                            AppIcons.handSlot,
-                                            width: double.infinity,
-                                            color: _uiColor.setUIColor(
-                                                widget.player!.id, 'primary'),
-                                          )
-                                        : Draggable<EquipmentSlot>(
-                                            data: widget
-                                                .player!.equipment!.handSlot!,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: SvgPicture.asset(
-                                                widget.player!.equipment!
-                                                    .handSlot!.item!.icon!,
-                                                width: double.infinity,
-                                                color: AppColors.white00,
-                                              ),
-                                            ),
-                                            onDragCompleted: () {
-                                              setState(() {
-                                                widget.player!.emptySlot(widget
-                                                    .player!
-                                                    .equipment!
-                                                    .handSlot!);
-                                              });
-                                            },
-                                            feedback: Container(
-                                              height: widgetWidth / 4,
-                                              width: widgetWidth / 4,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    width: 2,
-                                                    color: _uiColor.setUIColor(
-                                                        widget.player!.id,
-                                                        'primary')),
-                                                shape: BoxShape.circle,
-                                                color: Colors.black,
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: SvgPicture.asset(
-                                                  widget.player!.equipment!
-                                                      .handSlot!.item!.icon!,
-                                                  width: double.infinity,
-                                                  color: AppColors.white00,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                  );
+                              child: EquipmentPageSlot(
+                                playerID: widget.player!.id,
+                                widgetWidth: widgetWidth,
+                                slotIcon: AppIcons.handSlot,
+                                slot: widget.player!.equipment!.handSlot,
+                                onDragCompleted: () {
+                                  setState(() {
+                                    widget.player!.emptySlot(
+                                        widget.player!.equipment!.handSlot!);
+                                  });
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
+                                  if (data!.item!.itemSlot != 'hands') {
                                     return false;
                                   }
-                                  if (data!.item!.itemSlot != 'hands') {
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    } else {
+                                      return true;
+                                    }
+                                  }
+
+                                  if (widget.player!.action!.outOfActions()) {
                                     return false;
                                   }
 
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.handSlot!,
                                       data);
@@ -317,86 +212,40 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             //HEAD
                             Expanded(
                               flex: 1,
-                              child: DragTarget<EquipmentSlot>(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: _uiColor.setUIColor(
-                                              widget.player!.id, 'primary'),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: (widget.player!.equipment!
-                                                  .headSlot!.item!.name! ==
-                                              '')
-                                          ? SvgPicture.asset(
-                                              AppIcons.headSlot,
-                                              width: double.infinity,
-                                              color: _uiColor.setUIColor(
-                                                  widget.player!.id, 'primary'),
-                                            )
-                                          : Draggable<EquipmentSlot>(
-                                              data: widget
-                                                  .player!.equipment!.headSlot!,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: SvgPicture.asset(
-                                                  widget.player!.equipment!
-                                                      .headSlot!.item!.icon!,
-                                                  width: double.infinity,
-                                                  color: AppColors.white00,
-                                                ),
-                                              ),
-                                              onDragCompleted: () {
-                                                setState(() {
-                                                  widget.player!.emptySlot(
-                                                      widget.player!.equipment!
-                                                          .headSlot!);
-                                                });
-                                              },
-                                              feedback: Container(
-                                                height: widgetWidth / 4,
-                                                width: widgetWidth / 4,
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                      width: 2,
-                                                      color:
-                                                          _uiColor.setUIColor(
-                                                              widget.player!.id,
-                                                              'primary')),
-                                                  shape: BoxShape.circle,
-                                                  color: Colors.black,
-                                                ),
-                                                child: Padding(
-                                                  padding:
-                                                      const EdgeInsets.all(8.0),
-                                                  child: SvgPicture.asset(
-                                                    widget.player!.equipment!
-                                                        .headSlot!.item!.icon!,
-                                                    width: double.infinity,
-                                                    color: AppColors.white00,
-                                                  ),
-                                                ),
-                                              ),
-                                            ));
+                              child: EquipmentPageSlot(
+                                playerID: widget.player!.id,
+                                widgetWidth: widgetWidth,
+                                slotIcon: AppIcons.headSlot,
+                                slot: widget.player!.equipment!.headSlot,
+                                onDragCompleted: () {
+                                  setState(() {
+                                    widget.player!.emptySlot(
+                                        widget.player!.equipment!.headSlot!);
+                                  });
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
+                                  if (data!.item!.itemSlot != 'head') {
                                     return false;
                                   }
-                                  if (data!.item!.itemSlot != 'head') {
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    } else {
+                                      return true;
+                                    }
+                                  }
+
+                                  if (widget.player!.action!.outOfActions()) {
                                     return false;
                                   }
 
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.headSlot!,
                                       data);
@@ -406,90 +255,43 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             ),
 
                             //BODY
-
                             Expanded(
                               flex: 2,
-                              child: DragTarget<EquipmentSlot>(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: _uiColor.setUIColor(
-                                            widget.player!.id, 'primary'),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: (widget.player!.equipment!.bodySlot!
-                                                .item!.name! ==
-                                            '')
-                                        ? SvgPicture.asset(
-                                            AppIcons.bodySlot,
-                                            width: double.infinity,
-                                            color: _uiColor.setUIColor(
-                                                widget.player!.id, 'primary'),
-                                          )
-                                        : Draggable<EquipmentSlot>(
-                                            data: widget
-                                                .player!.equipment!.bodySlot!,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: SvgPicture.asset(
-                                                widget.player!.equipment!
-                                                    .bodySlot!.item!.icon!,
-                                                width: double.infinity,
-                                                color: AppColors.white00,
-                                              ),
-                                            ),
-                                            onDragCompleted: () {
-                                              setState(() {
-                                                widget.player!.emptySlot(widget
-                                                    .player!
-                                                    .equipment!
-                                                    .bodySlot!);
-                                              });
-                                            },
-                                            feedback: Container(
-                                              height: widgetWidth / 4,
-                                              width: widgetWidth / 4,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    width: 2,
-                                                    color: _uiColor.setUIColor(
-                                                        widget.player!.id,
-                                                        'primary')),
-                                                shape: BoxShape.circle,
-                                                color: Colors.black,
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: SvgPicture.asset(
-                                                  widget.player!.equipment!
-                                                      .bodySlot!.item!.icon!,
-                                                  width: double.infinity,
-                                                  color: AppColors.white00,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                  );
+                              child: EquipmentPageSlot(
+                                playerID: widget.player!.id,
+                                widgetWidth: widgetWidth,
+                                slotIcon: AppIcons.bodySlot,
+                                slot: widget.player!.equipment!.bodySlot,
+                                onDragCompleted: () {
+                                  setState(() {
+                                    widget.player!.emptySlot(
+                                        widget.player!.equipment!.bodySlot!);
+                                  });
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
+                                  if (data!.item!.itemSlot != 'body') {
                                     return false;
                                   }
-                                  if (data!.item!.itemSlot != 'body') {
+
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    } else {
+                                      return true;
+                                    }
+                                  }
+
+                                  if (widget.player!.action!.outOfActions()) {
                                     return false;
                                   }
 
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.bodySlot!,
                                       data);
@@ -508,101 +310,45 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             //OFF HAND
                             Expanded(
                               flex: 2,
-                              child: DragTarget<EquipmentSlot>(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return Container(
-                                      decoration: BoxDecoration(
-                                        border: Border.all(
-                                          color: _uiColor.setUIColor(
-                                              widget.player!.id, 'primary'),
-                                          width: 1,
-                                        ),
-                                      ),
-                                      child: (widget.player!.equipment!
-                                                  .offHandSlot!.item!.name! ==
-                                              '')
-                                          ? SvgPicture.asset(
-                                              AppIcons.offHandSlot,
-                                              width: double.infinity,
-                                              color: _uiColor.setUIColor(
-                                                  widget.player!.id, 'primary'),
-                                            )
-                                          : Draggable<EquipmentSlot>(
-                                              data: widget.player!.equipment!
-                                                  .offHandSlot!,
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(10.0),
-                                                child: SvgPicture.asset(
-                                                  widget.player!.equipment!
-                                                      .offHandSlot!.item!.icon!,
-                                                  width: double.infinity,
-                                                  color: AppColors.white00,
-                                                ),
-                                              ),
-                                              onDragCompleted: () {
-                                                setState(() {
-                                                  widget.player!.emptySlot(
-                                                      widget.player!.equipment!
-                                                          .offHandSlot!);
-                                                });
-                                              },
-                                              feedback: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        50, 75, 0, 0),
-                                                child: Container(
-                                                  height: widgetWidth / 4,
-                                                  width: widgetWidth / 4,
-                                                  decoration: BoxDecoration(
-                                                    border: Border.all(
-                                                        width: 2,
-                                                        color:
-                                                            _uiColor.setUIColor(
-                                                                widget
-                                                                    .player!.id,
-                                                                'primary')),
-                                                    shape: BoxShape.circle,
-                                                    color: Colors.black,
-                                                  ),
-                                                  child: Padding(
-                                                    padding:
-                                                        const EdgeInsets.all(
-                                                            8.0),
-                                                    child: SvgPicture.asset(
-                                                      widget
-                                                          .player!
-                                                          .equipment!
-                                                          .offHandSlot!
-                                                          .item!
-                                                          .icon!,
-                                                      width: double.infinity,
-                                                      color: AppColors.white00,
-                                                    ),
-                                                  ),
-                                                ),
-                                              ),
-                                            ));
+                              child: EquipmentPageSlot(
+                                playerID: widget.player!.id,
+                                widgetWidth: widgetWidth,
+                                slotIcon: AppIcons.offHandSlot,
+                                slot: widget.player!.equipment!.offHandSlot,
+                                onDragCompleted: () async {
+                                  setState(() {
+                                    widget.player!.emptySlot(
+                                        widget.player!.equipment!.offHandSlot!);
+                                  });
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'oneHand' &&
                                       data.item!.itemSlot != 'twoHands') {
                                     return false;
                                   }
+
                                   if (data.name == 'mainHandSlot') {
+                                    return false;
+                                  }
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    } else {
+                                      return true;
+                                    }
+                                  }
+
+                                  if (widget.player!.action!.outOfActions()) {
                                     return false;
                                   }
 
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                     widget.player!.equipment!.offHandSlot!,
                                     data,
@@ -614,90 +360,43 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             ),
 
                             //FEET
-
                             Expanded(
                               flex: 1,
-                              child: DragTarget<EquipmentSlot>(
-                                builder: (
-                                  BuildContext context,
-                                  List<dynamic> accepted,
-                                  List<dynamic> rejected,
-                                ) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      border: Border.all(
-                                        color: _uiColor.setUIColor(
-                                            widget.player!.id, 'primary'),
-                                        width: 1,
-                                      ),
-                                    ),
-                                    child: (widget.player!.equipment!.feetSlot!
-                                                .item!.name! ==
-                                            '')
-                                        ? SvgPicture.asset(
-                                            AppIcons.feetSlot,
-                                            width: double.infinity,
-                                            color: _uiColor.setUIColor(
-                                                widget.player!.id, 'primary'),
-                                          )
-                                        : Draggable<EquipmentSlot>(
-                                            data: widget
-                                                .player!.equipment!.feetSlot!,
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(10.0),
-                                              child: SvgPicture.asset(
-                                                widget.player!.equipment!
-                                                    .feetSlot!.item!.icon!,
-                                                width: double.infinity,
-                                                color: AppColors.white00,
-                                              ),
-                                            ),
-                                            onDragCompleted: () {
-                                              setState(() {
-                                                widget.player!.emptySlot(widget
-                                                    .player!
-                                                    .equipment!
-                                                    .feetSlot!);
-                                              });
-                                            },
-                                            feedback: Container(
-                                              height: widgetWidth / 4,
-                                              width: widgetWidth / 4,
-                                              decoration: BoxDecoration(
-                                                border: Border.all(
-                                                    width: 2,
-                                                    color: _uiColor.setUIColor(
-                                                        widget.player!.id,
-                                                        'primary')),
-                                                shape: BoxShape.circle,
-                                                color: Colors.black,
-                                              ),
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.all(8.0),
-                                                child: SvgPicture.asset(
-                                                  widget.player!.equipment!
-                                                      .feetSlot!.item!.icon!,
-                                                  width: double.infinity,
-                                                  color: AppColors.white00,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                  );
+                              child: EquipmentPageSlot(
+                                playerID: widget.player!.id,
+                                widgetWidth: widgetWidth,
+                                slotIcon: AppIcons.feetSlot,
+                                slot: widget.player!.equipment!.feetSlot,
+                                onDragCompleted: () {
+                                  setState(() {
+                                    widget.player!.emptySlot(
+                                        widget.player!.equipment!.feetSlot!);
+                                  });
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
+                                  if (data!.item!.itemSlot != 'feet') {
                                     return false;
                                   }
-                                  if (data!.item!.itemSlot != 'feet') {
+
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    } else {
+                                      return true;
+                                    }
+                                  }
+
+                                  if (widget.player!.action!.outOfActions()) {
                                     return false;
                                   }
 
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.feetSlot!,
                                       data);
@@ -795,6 +494,9 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                 ),
                                 child: GestureDetector(
                                   onDoubleTap: () {
+                                    if (widget.player!.action!.outOfActions()) {
+                                      return;
+                                    }
                                     widget.player!.useItem(
                                         widget.player!.equipment!.bag![index]);
 
@@ -822,9 +524,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       ]);
                     },
                     onWillAccept: (data) {
-                      if (widget.player!.action!.outOfActions()) {
-                        return false;
-                      }
                       if (data!.name == 'bag') {
                         return false;
                       }
@@ -833,9 +532,20 @@ class _EquipmentPageState extends State<EquipmentPage> {
                         return false;
                       }
 
+                      if (data.name == 'chest') {
+                        if (widget.player!.equipment!.weight!
+                            .cantCarry(data.item!.weight!)) {
+                          return false;
+                        }
+                      }
+
                       return true;
                     },
                     onAccept: (data) {
+                      if (data.name == 'chest') {
+                        widget.player!.getItem(data.item!);
+                      }
+
                       widget.player!.addItemToBag(data.item!);
                     },
                   ),
@@ -845,11 +555,223 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   thickness: 2,
                   color: _uiColor.setUIColor(widget.player!.id, 'primary'),
                 ),
+                (widget.chest == null)
+                    ? SizedBox()
+                    : Column(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            color: _uiColor.setUIColor(
+                                widget.player!.id, 'primary'),
+                            child: Center(
+                              child: Text('chest'.toUpperCase(),
+                                  style: TextStyle(
+                                    fontFamily: 'Santana',
+                                    height: 1,
+                                    fontSize: 25,
+                                    color: _uiColor.setUIColor(
+                                        widget.player!.id, 'secondary'),
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 3,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            height: widgetWidth / 6,
+                            child: DragTarget<EquipmentSlot>(
+                              builder: (
+                                BuildContext context,
+                                List<dynamic> accepted,
+                                List<dynamic> rejected,
+                              ) {
+                                return Stack(children: [
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 6,
+                                    children: List.generate(6, (index) {
+                                      return SvgPicture.asset(
+                                        AppIcons.bagSlot,
+                                        height: widgetWidth / 6,
+                                        width: widgetWidth / 6,
+                                        color: _uiColor.setUIColor(
+                                            widget.player!.id, 'primary'),
+                                      );
+                                    }),
+                                  ),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 6,
+                                    children: List.generate(
+                                        widget.chest!.loot!.length, (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        child: Draggable<EquipmentSlot>(
+                                          data: EquipmentSlot.fromItem('chest',
+                                              widget.chest!.loot![index]),
+                                          feedback: Container(
+                                            height: widgetWidth / 4,
+                                            width: widgetWidth / 4,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 2,
+                                                  color: _uiColor.setUIColor(
+                                                      widget.player!.id,
+                                                      'primary')),
+                                              shape: BoxShape.circle,
+                                              color: Colors.black,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: SvgPicture.asset(
+                                                widget
+                                                    .chest!.loot![index].icon!,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          onDragCompleted: () {
+                                            setState(() {
+                                              widget.chest!.removeItem(
+                                                  widget.chest!.loot![index]);
+                                            });
+                                          },
+                                          childWhenDragging: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: SvgPicture.asset(
+                                              widget.chest!.loot![index].icon!,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          child: SvgPicture.asset(
+                                            widget.chest!.loot![index].icon!,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ]);
+                              },
+                              onWillAccept: (data) {
+                                if (data!.name == 'chest') {
+                                  return false;
+                                }
+                                if (widget.chest!.loot!.length == 6) {
+                                  return false;
+                                }
+                                return true;
+                              },
+                              onAccept: (data) {
+                                widget.player!.removeItem(data);
+                                widget.chest!.getItem(data.item!);
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                          Divider(
+                            height: 0,
+                            thickness: 2,
+                            color: _uiColor.setUIColor(
+                                widget.player!.id, 'primary'),
+                          ),
+                        ],
+                      ),
               ],
             ),
           ],
         ),
       ),
+    );
+  }
+}
+
+class EquipmentPageSlot extends StatelessWidget {
+  final String? playerID;
+  final double? widgetWidth;
+  final String? slotIcon;
+  final EquipmentSlot? slot;
+  final Function()? onDragCompleted;
+  final bool Function(EquipmentSlot?)? onWillAccept;
+  final Function(EquipmentSlot)? onAccept;
+  const EquipmentPageSlot({
+    Key? key,
+    @required this.playerID,
+    @required this.widgetWidth,
+    @required this.slotIcon,
+    @required this.slot,
+    @required this.onDragCompleted,
+    @required this.onWillAccept,
+    @required this.onAccept,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    UIColor _uiColor = UIColor();
+    return DragTarget<EquipmentSlot>(
+      builder: (
+        BuildContext context,
+        List<dynamic> accepted,
+        List<dynamic> rejected,
+      ) {
+        return Container(
+            decoration: BoxDecoration(
+              border: Border.all(
+                color: _uiColor.setUIColor(playerID, 'primary'),
+                width: 1,
+              ),
+            ),
+            child: (slot!.item!.name! == '')
+                ? SvgPicture.asset(
+                    slotIcon!,
+                    width: double.infinity,
+                    color: _uiColor.setUIColor(playerID, 'primary'),
+                  )
+                : Draggable<EquipmentSlot>(
+                    data: slot!,
+                    child: Padding(
+                      padding: const EdgeInsets.all(5.0),
+                      child: SvgPicture.asset(
+                        slot!.item!.icon!,
+                        width: double.infinity,
+                        color: AppColors.white00,
+                      ),
+                    ),
+                    onDragCompleted: onDragCompleted,
+                    childWhenDragging: Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: SvgPicture.asset(
+                        slot!.item!.icon!,
+                        width: double.infinity,
+                        color: Colors.grey,
+                      ),
+                    ),
+                    feedback: Padding(
+                      padding: const EdgeInsets.fromLTRB(25, 25, 0, 0),
+                      child: Container(
+                        height: widgetWidth! / 4,
+                        width: widgetWidth! / 4,
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 2,
+                              color: _uiColor.setUIColor(playerID, 'primary')),
+                          shape: BoxShape.circle,
+                          color: Colors.black,
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: SvgPicture.asset(
+                            slot!.item!.icon!,
+                            width: double.infinity,
+                            color: AppColors.white00,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ));
+      },
+      onWillAccept: onWillAccept,
+      onAccept: onAccept,
     );
   }
 }

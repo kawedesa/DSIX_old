@@ -2,6 +2,8 @@ class AppIcons {
   //UI
   static final turn = 'assets/icon/turn.svg';
   static final action = 'assets/icon/action.svg';
+  static final nullIcon = 'assets/icon/nullIcon.svg';
+
   //Buttons
   static final leftArrow = 'assets/icon/leftArrow.svg';
   static final rightArrow = 'assets/icon/rightArrow.svg';

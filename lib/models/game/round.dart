@@ -86,12 +86,13 @@ class Round {
 
   void passTurn(String gameID, Player player) {
     this.turnOrder!.remove(player.id);
+    this.turnOrder!.add(player.id!);
     this.fog!.checkFog(gameID, player);
 
     if (player.life!.isNotDead()) {
-      this.turnOrder!.add(player.id!);
       player.waitMode();
     } else {
+      removeDeadPlayer(gameID, player.id!);
       player.deadMode();
     }
 
