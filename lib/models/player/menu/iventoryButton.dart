@@ -1,16 +1,17 @@
 import 'package:dsixv02app/models/player/equipment/widget/equipmentPage.dart';
+import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import '../user.dart';
 
 class IventoryButton extends StatefulWidget {
+  final Player? player;
   IventoryButton({
     Key? key,
+    @required this.player,
   }) : super(key: key);
 
   @override
@@ -48,21 +49,22 @@ class _IventoryButtonState extends State<IventoryButton> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-
     return AnimatedContainer(
       curve: Curves.fastLinearToSlowEaseIn,
       duration: Duration(milliseconds: 500),
-      width: (user.menuIsOpen) ? MediaQuery.of(context).size.height * 0.02 : 0,
-      height: (user.menuIsOpen) ? MediaQuery.of(context).size.height * 0.02 : 0,
+      width: (widget.player!.mode == 'menu')
+          ? MediaQuery.of(context).size.height * 0.02
+          : 0,
+      height: (widget.player!.mode == 'menu')
+          ? MediaQuery.of(context).size.height * 0.02
+          : 0,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: _uiColor
-            .setUIColor(user.selectedPlayer!.id, 'secondary')
-            .withAlpha(215),
+        color:
+            _uiColor.setUIColor(widget.player!.id, 'secondary').withAlpha(215),
         border: Border.all(
           color: _uiColor
-              .setUIColor(user.selectedPlayer!.id, 'secondary')
+              .setUIColor(widget.player!.id, 'secondary')
               .withAlpha(250),
           width: .5,
         ),
@@ -73,7 +75,9 @@ class _IventoryButtonState extends State<IventoryButton> {
             showDialog(
               context: context,
               builder: (BuildContext context) {
-                return EquipmentPage();
+                return EquipmentPage(
+                  player: widget.player,
+                );
               },
             );
             _playOnTapAnimation();
@@ -87,8 +91,7 @@ class _IventoryButtonState extends State<IventoryButton> {
                 padding: const EdgeInsets.all(3.0),
                 child: SvgPicture.asset(
                   AppIcons.bag,
-                  color:
-                      _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+                  color: _uiColor.setUIColor(widget.player!.id, 'primary'),
                 ),
               ),
             ),

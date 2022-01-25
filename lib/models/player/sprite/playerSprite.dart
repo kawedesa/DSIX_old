@@ -1,5 +1,4 @@
 import 'package:dsixv02app/models/game/game.dart';
-import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,15 +11,17 @@ import 'playerSpriteImage.dart';
 import 'playerSpriteTempEffects.dart';
 import 'playerSpriteVisionRange.dart';
 import 'playerSpriteWalkRange.dart';
-import 'playerTempLocation.dart';
+import '../playerTempLocation.dart';
 
 //  ignore: must_be_immutable
 class PlayerSprite extends StatefulWidget {
   final Function()? refresh;
+  Player? player;
   PlayerTempLocation? tempLocation;
   PlayerSprite({
     Key? key,
     @required this.refresh,
+    @required this.player,
     @required this.tempLocation,
   }) : super(key: key);
 
@@ -39,47 +40,48 @@ class _PlayerSpriteState extends State<PlayerSprite> {
 
   @override
   Widget build(BuildContext context) {
-    final players = Provider.of<List<Player>>(context);
     final game = Provider.of<Game>(context);
-    final user = Provider.of<User>(context);
-
-    playerSpriteController.updatePlayer(players, user);
 
     return Positioned(
       left: playerSpriteController
           .calculateSpritePosition(
-              widget.tempLocation, user.selectedPlayer!.vision!.getRange())
+              widget.tempLocation, widget.player!.vision!.getRange())
           .dx,
       top: playerSpriteController
           .calculateSpritePosition(
-              widget.tempLocation, user.selectedPlayer!.vision!.getRange())
+              widget.tempLocation, widget.player!.vision!.getRange())
           .dy,
       child: TransparentPointer(
         transparent: true,
         child: SizedBox(
-          width: user.selectedPlayer!.vision!.getRange(),
-          height: user.selectedPlayer!.vision!.getRange(),
+          width: widget.player!.vision!.getRange(),
+          height: widget.player!.vision!.getRange(),
           child: Stack(
             children: [
               //VISION RANGE
               Align(
                   alignment: Alignment.center,
-                  child: PlayerSpriteVisionRange()),
+                  child: PlayerSpriteVisionRange(
+                    player: widget.player,
+                  )),
               //WALK RANGE
               Align(
                 alignment: Alignment.center,
                 child: WalkRange(
                   tempLocation: widget.tempLocation,
-                  oldLocation: user.selectedPlayer!.location,
-                  maxWalkRange: user.selectedPlayer!.walkRange!.max,
+                  oldLocation: widget.player!.location,
+                  maxWalkRange: widget.player!.walkRange!.max,
                   heightMap: game.map!.heightMap,
+                  player: widget.player,
                 ),
               ),
 
               //ATTACK RANGE
               Align(
                 alignment: Alignment.center,
-                child: AttackRange(),
+                child: AttackRange(
+                  player: widget.player,
+                ),
               ),
               //HITBOX CONTROLLER
               Align(
@@ -89,52 +91,49 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                   child: Container(
                     width: 5,
                     height: 10,
-                    child: (user.playerMode != 'walk')
+                    child: (widget.player!.mode == 'menu')
                         ? GestureDetector(
                             onTap: () {
-                              user.openCloseMenu();
+                              widget.player!.menuMode();
                               widget.refresh!();
                             },
                           )
                         : GestureDetector(
                             onTap: () {
-                              user.openCloseMenu();
+                              widget.player!.menuMode();
                               widget.refresh!();
                             },
                             onPanUpdate: (details) {
-                              if (widget.tempLocation!.distanceLeftOver(
-                                      user.selectedPlayer!.location!,
-                                      user.selectedPlayer!.walkRange!.max!)! <=
-                                  0) {
+                              if (widget.player!.action!.outOfActions()) {
                                 return;
                               }
-
-                              widget.tempLocation!.walk(details.delta.dx,
-                                  details.delta.dy, game.map!.heightMap!);
+                              widget.tempLocation!.walk(
+                                  details.delta.dx,
+                                  details.delta.dy,
+                                  game.map!.heightMap!,
+                                  widget.player!.walkRange!.max!);
                             },
                             onPanEnd: (details) {
                               try {
-                                user.selectedPlayer!.endWalk(
-                                  game.id!,
+                                widget.player!.endWalk(
                                   widget.tempLocation!,
                                   game.map!.tallGrass!,
                                   game.map!.heightMap!,
                                 );
                               } on CantPassException {
                                 widget.tempLocation!.updatePlayerLocation(
-                                    user.selectedPlayer!.location!);
+                                    widget.player!.location!);
                                 widget.refresh!();
                                 return;
                               }
 
-                              user.selectedPlayer!.action!.takeAction(
-                                game.id!,
-                                user.selectedPlayer!.id!,
-                              );
-
-                              if (user.selectedPlayer!.action!.outOfActions()) {
-                                game.round!.passTurn(
-                                    game.id!, user.selectedPlayer!.id!);
+                              try {
+                                widget.player!.action!.takeAction(
+                                  game.id!,
+                                  widget.player!.id!,
+                                );
+                              } on EndPlayerTurnException {
+                                game.round!.passTurn(game.id!, widget.player!);
                               }
                             },
                           ),
@@ -145,15 +144,15 @@ class _PlayerSpriteState extends State<PlayerSprite> {
               Align(
                 alignment: Alignment.center,
                 child: PlayerSpriteImage(
-                    image: user.selectedPlayer!.race,
-                    isDead: user.selectedPlayer!.life!.isDead()),
+                    image: widget.player!.race,
+                    isDead: widget.player!.life!.isDead()),
               ),
 
               //TEMP EFFECTS
               Align(
                   alignment: Alignment.center,
                   child: PlayerSpriteTempEffects(
-                    tempArmor: user.selectedPlayer!.equipment!.armor!.tempArmor,
+                    tempArmor: widget.player!.equipment!.armor!.tempArmor,
                   )),
               //DAMAGE ANIMATION
               Align(
@@ -204,24 +203,6 @@ class PlayerSpriteController {
     ));
   }
 
-  void updatePlayer(
-    List<Player> players,
-    User user,
-  ) {
-    players.forEach((player) {
-      if (player.id != user.selectedPlayer!.id) {
-        return;
-      }
-
-      if (checkTempArmor(player.equipment!.armor!.tempArmor!,
-              user.selectedPlayer!.equipment!.armor!.tempArmor!) ||
-          checkLife(
-              player.life!.current!, user.selectedPlayer!.life!.current!)) {
-        user.selectedPlayer = player;
-      }
-    });
-  }
-
   bool checkTempArmor(int newArmor, oldArmor) {
     if (oldArmor != newArmor) {
       return true;
@@ -240,7 +221,7 @@ class PlayerSpriteController {
 
   Offset calculateSpritePosition(
       PlayerTempLocation? location, double? visionRange) {
-    return Offset(
-        location!.dx! - visionRange! / 2, location.dy! - visionRange / 2);
+    return Offset(location!.newLocation!.dx - visionRange! / 2,
+        location.newLocation!.dy - visionRange / 2);
   }
 }

@@ -60,7 +60,7 @@ class PlayerSelectionPage extends StatelessWidget {
                             _uiColor.setUIColor(players[index].id, 'primary'),
                         onTapAction: () async {
                           user.selectPlayer(
-                            players[index],
+                            players[index].id,
                           );
                           _selectPlayerPageVM.goToMapPage(context);
                         },

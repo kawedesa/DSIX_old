@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/game/gameMap/gameMap.dart';
 import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
-import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
+import 'package:dsixv02app/models/player/playerTempLocation.dart';
 import 'package:flutter/material.dart';
 
 class PlayerLocation {
@@ -70,20 +70,19 @@ class PlayerLocation {
   void newLocation(
     String gameID,
     String playerIndex,
-    PlayerTempLocation newLocation,
+    PlayerTempLocation tempLocation,
     TotalArea tallGrass,
-    int newHeight,
   ) {
-    this.dx = newLocation.dx;
-    this.dy = newLocation.dy;
+    this.dx = tempLocation.newLocation!.dx;
+    this.dy = tempLocation.newLocation!.dy;
 
-    if (tallGrass.inThisArea(newLocation.getLocation())) {
+    if (tallGrass.inThisArea(tempLocation.newLocation!)) {
       this.isVisible = false;
     } else {
       this.isVisible = true;
     }
 
-    this.height = newHeight;
+    this.height = tempLocation.height;
 
     update(gameID, playerIndex);
   }

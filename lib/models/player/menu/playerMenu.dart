@@ -1,27 +1,23 @@
 import 'package:dsixv02app/models/game/game.dart';
-
-import 'package:dsixv02app/models/player/user.dart';
-
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import '../player.dart';
 import 'actionButton.dart';
 import 'iventoryButton.dart';
 
 class PlayerMenu extends StatelessWidget {
   final Function()? refresh;
-  PlayerMenu({Key? key, this.refresh}) : super(key: key);
+  final Player? player;
+  PlayerMenu({Key? key, this.refresh, @required this.player}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-
     final game = Provider.of<Game>(context);
 
     return Positioned(
-      left: user.selectedPlayer!.location!.dx! -
-          MediaQuery.of(context).size.height * 0.04,
-      top: user.selectedPlayer!.location!.dy! -
-          MediaQuery.of(context).size.height * 0.045,
+      left: player!.location!.dx! - MediaQuery.of(context).size.height * 0.04,
+      top: player!.location!.dy! - MediaQuery.of(context).size.height * 0.045,
       child: SizedBox(
         width: MediaQuery.of(context).size.height * 0.08,
         height: MediaQuery.of(context).size.height * 0.08,
@@ -29,10 +25,10 @@ class PlayerMenu extends StatelessWidget {
           child: AnimatedContainer(
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(milliseconds: 400),
-            height: (user.menuIsOpen)
+            height: (player!.mode == 'menu')
                 ? MediaQuery.of(context).size.height * 0.08
                 : 0.0,
-            width: (user.menuIsOpen)
+            width: (player!.mode == 'menu')
                 ? MediaQuery.of(context).size.height * 0.08
                 : 0.0,
             child: Stack(
@@ -40,9 +36,11 @@ class PlayerMenu extends StatelessWidget {
                 Align(
                   alignment: Alignment.topCenter,
                   child: ActionButton(
+                    player: player,
                     action: 'attack',
                     onTap: () {
-                      user.attackMode();
+                      player!.attackMode();
+                      player!.updateMode();
                       refresh!();
                     },
                   ),
@@ -50,21 +48,18 @@ class PlayerMenu extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerLeft,
                   child: ActionButton(
+                    player: player,
                     action: 'defend',
                     onTap: () {
-                      user.selectedPlayer!.defend(
-                        game.id!,
-                      );
-                      user.openCloseMenu();
+                      player!.defend();
 
-                      user.selectedPlayer!.action!.takeAction(
-                        game.id!,
-                        user.selectedPlayer!.id!,
-                      );
-
-                      if (user.selectedPlayer!.action!.outOfActions()) {
-                        game.round!
-                            .passTurn(game.id!, user.selectedPlayer!.id!);
+                      try {
+                        player!.action!.takeAction(
+                          game.id!,
+                          player!.id!,
+                        );
+                      } on EndPlayerTurnException {
+                        game.round!.passTurn(game.id!, player!);
                       }
                     },
                   ),
@@ -72,28 +67,28 @@ class PlayerMenu extends StatelessWidget {
                 Align(
                   alignment: Alignment.centerRight,
                   child: ActionButton(
+                    player: player,
                     action: 'look',
                     onTap: () {
-                      user.selectedPlayer!.vision!
-                          .look(game.id!, user.selectedPlayer!.id!);
+                      player!.look();
+                      player!.menuMode();
 
-                      user.openCloseMenu();
-
-                      user.selectedPlayer!.action!.takeAction(
-                        game.id!,
-                        user.selectedPlayer!.id!,
-                      );
-
-                      if (user.selectedPlayer!.action!.outOfActions()) {
-                        game.round!
-                            .passTurn(game.id!, user.selectedPlayer!.id!);
+                      try {
+                        player!.action!.takeAction(
+                          game.id!,
+                          player!.id!,
+                        );
+                      } on EndPlayerTurnException {
+                        game.round!.passTurn(game.id!, player!);
                       }
                     },
                   ),
                 ),
                 Align(
                   alignment: Alignment.bottomCenter,
-                  child: IventoryButton(),
+                  child: IventoryButton(
+                    player: player,
+                  ),
                 ),
               ],
             ),

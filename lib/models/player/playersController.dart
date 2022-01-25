@@ -32,6 +32,7 @@ class PlayersController {
     //Add Players
     for (int i = 0; i < numberOfPlayers; i++) {
       Player player = Player.newRandomPlayer(
+        gameID,
         i,
         PlayerLocation.randomLocation(map),
       );

@@ -2,10 +2,11 @@ import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'models/chest/chest.dart';
+import 'models/chest/chestController.dart';
 import 'models/enemy/enemyController.dart';
 import 'models/game/game.dart';
-import 'models/loot/loot.dart';
-import 'models/loot/lootController.dart';
+
 import 'models/player/player.dart';
 import 'models/player/playersController.dart';
 import 'models/player/user.dart';
@@ -22,7 +23,7 @@ class DsixApp extends StatelessWidget {
   Widget build(BuildContext context) {
     GameController gameController = GameController();
     PlayersController playerController = PlayersController();
-    LootController lootController = LootController();
+    ChestController chestController = ChestController();
     EnemyController enemyController = EnemyController();
     User user = User();
 
@@ -31,7 +32,7 @@ class DsixApp extends StatelessWidget {
         // //Controllers
         Provider(create: (context) => gameController),
         Provider(create: (context) => playerController),
-        Provider(create: (context) => lootController),
+        Provider(create: (context) => chestController),
         Provider(create: (context) => enemyController),
         Provider(create: (context) => user),
 
@@ -47,10 +48,10 @@ class DsixApp extends StatelessWidget {
               playerController.pullPlayersFromDataBase(gameController.gameID),
         ),
 
-        StreamProvider<List<Loot>>(
+        StreamProvider<List<Chest>>(
           initialData: [],
           create: (context) =>
-              lootController.pullLootFromDataBase(gameController.gameID),
+              chestController.pullLootFromDataBase(gameController.gameID),
         ),
       ],
       child: MaterialApp(

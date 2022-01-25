@@ -1,5 +1,5 @@
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/models/game/round/round.dart';
+import 'package:dsixv02app/models/game/round.dart';
 import 'gameMap/gameMap.dart';
 
 class Game {

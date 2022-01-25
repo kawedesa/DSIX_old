@@ -8,9 +8,14 @@ class NotPlayerTurnException implements Exception {
   NotPlayerTurnException();
 }
 
-class StartPlayerTurnException implements Exception {
-  String message = 'start player turn';
-  StartPlayerTurnException();
+class PlayerTurnException implements Exception {
+  String message = 'player turn';
+  PlayerTurnException();
+}
+
+class EndPlayerTurnException implements Exception {
+  String message = 'end player turn';
+  EndPlayerTurnException();
 }
 
 class ContinuePlayerTurnException implements Exception {

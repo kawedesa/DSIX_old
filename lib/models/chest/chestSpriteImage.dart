@@ -2,10 +2,10 @@ import 'package:dsixv02app/shared/app_Images.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
-class LootSpriteImage extends StatelessWidget {
+class ChestSpriteImage extends StatelessWidget {
   bool? isClosed;
 
-  LootSpriteImage({
+  ChestSpriteImage({
     @required this.isClosed,
   });
 

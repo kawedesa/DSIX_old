@@ -60,20 +60,12 @@ class Fog {
 
   void checkFog(
     String gameID,
-    String playerID,
-    List<Player> players,
+    Player player,
   ) {
-    players.forEach((player) {
-      if (player.id != playerID) {
-        return;
-      }
-
-      double distance =
-          (player.location!.getLocation() - getLocation()).distance;
-      if (distance >= this.size! / 2) {
-        takeFogDamage(gameID, player);
-      }
-    });
+    double distance = (player.location!.getLocation() - getLocation()).distance;
+    if (distance >= this.size! / 2) {
+      takeFogDamage(gameID, player);
+    }
   }
 
   void takeFogDamage(

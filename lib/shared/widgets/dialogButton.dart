@@ -62,7 +62,7 @@ class _DialogButtonState extends State<DialogButton> {
         decoration: BoxDecoration(
           color: AppColors.black00,
           border: Border.all(
-            color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+            color: _uiColor.setUIColor(user.id, 'primary'),
             width: 1,
           ),
         ),
@@ -78,8 +78,7 @@ class _DialogButtonState extends State<DialogButton> {
                       fontWeight: FontWeight.bold,
                       letterSpacing: 2,
                       fontFamily: 'Calibri',
-                      color: _uiColor.setUIColor(
-                          user.selectedPlayer!.id, 'primary'),
+                      color: _uiColor.setUIColor(user.id, 'primary'),
                     )),
               ),
             ),

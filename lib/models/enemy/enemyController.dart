@@ -17,6 +17,7 @@ class EnemyController {
       if (selectedPlayer.vision!.canSeeEnemyPlayer(
           target.location!, selectedPlayer.location!, tallGrass)) {
         this.enemyPlayers.add(EnemyPlayerSprite(
+              player: selectedPlayer,
               enemyPlayer: target,
             ));
       }

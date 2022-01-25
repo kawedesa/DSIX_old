@@ -1,7 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
-import '../fog/fog.dart';
+
+import 'fog/fog.dart';
 
 class Round {
   int? roundNumber;
@@ -77,9 +78,23 @@ class Round {
     }
   }
 
-  void passTurn(String gameID, String playerID) {
-    this.turnOrder!.remove(playerID);
-    this.turnOrder!.add(playerID);
+  void checkForPlayerTurn(String playerID) {
+    if (this.turnOrder!.first == playerID) {
+      throw PlayerTurnException();
+    }
+  }
+
+  void passTurn(String gameID, Player player) {
+    this.turnOrder!.remove(player.id);
+    this.fog!.checkFog(gameID, player);
+
+    if (player.life!.isNotDead()) {
+      this.turnOrder!.add(player.id!);
+      player.waitMode();
+    } else {
+      player.deadMode();
+    }
+
     this.roundNumber = this.roundNumber! + 1;
     this.fog!.shrink(this.numberOfPlayers!);
 

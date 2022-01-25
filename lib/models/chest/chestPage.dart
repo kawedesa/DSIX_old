@@ -6,23 +6,25 @@ import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import '../../player.dart';
-import '../equipmentSlot.dart';
-import 'equipmentStats.dart';
+import '../player/player.dart';
+import '../player/equipment/equipmentSlot.dart';
+import '../player/equipment/widget/equipmentStats.dart';
+import 'chest.dart';
 
-class EquipmentPage extends StatefulWidget {
+class ChestPage extends StatefulWidget {
   final Player? player;
-
-  const EquipmentPage({
+  final Chest? chest;
+  const ChestPage({
     Key? key,
     @required this.player,
+    this.chest,
   }) : super(key: key);
 
   @override
-  State<EquipmentPage> createState() => _EquipmentPageState();
+  State<ChestPage> createState() => _ChestPageState();
 }
 
-class _EquipmentPageState extends State<EquipmentPage> {
+class _ChestPageState extends State<ChestPage> {
   UIColor _uiColor = UIColor();
   refresh() {
     setState(() {});
@@ -189,9 +191,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                             ));
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'oneHand' &&
                                       data.item!.itemSlot != 'twoHands') {
                                     return false;
@@ -201,9 +200,19 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     return false;
                                   }
 
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    }
+                                  }
+
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                     widget.player!.equipment!.mainHandSlot!,
                                     data,
@@ -289,16 +298,22 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                   );
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'hands') {
                                     return false;
                                   }
 
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    }
+                                  }
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.handSlot!,
                                       data);
@@ -387,16 +402,23 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                             ));
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'head') {
                                     return false;
+                                  }
+
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    }
                                   }
 
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.headSlot!,
                                       data);
@@ -480,16 +502,22 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                   );
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'body') {
                                     return false;
                                   }
 
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    }
+                                  }
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.bodySlot!,
                                       data);
@@ -589,9 +617,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                             ));
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'oneHand' &&
                                       data.item!.itemSlot != 'twoHands') {
                                     return false;
@@ -600,9 +625,19 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     return false;
                                   }
 
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    }
+                                  }
+
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                     widget.player!.equipment!.offHandSlot!,
                                     data,
@@ -688,16 +723,23 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                   );
                                 },
                                 onWillAccept: (data) {
-                                  if (widget.player!.action!.outOfActions()) {
-                                    return false;
-                                  }
                                   if (data!.item!.itemSlot != 'feet') {
                                     return false;
+                                  }
+
+                                  if (data.name == 'chest') {
+                                    if (widget.player!.equipment!.weight!
+                                        .cantCarry(data.item!.weight!)) {
+                                      return false;
+                                    }
                                   }
 
                                   return true;
                                 },
                                 onAccept: (data) {
+                                  if (data.name == 'chest') {
+                                    widget.player!.getItem(data.item!);
+                                  }
                                   widget.player!.equipItem(
                                       widget.player!.equipment!.feetSlot!,
                                       data);
@@ -795,9 +837,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                 ),
                                 child: GestureDetector(
                                   onDoubleTap: () {
-                                    widget.player!.useItem(
-                                        widget.player!.equipment!.bag![index]);
-
                                     try {
                                       widget.player!.action!.takeAction(
                                         game.id!,
@@ -822,9 +861,6 @@ class _EquipmentPageState extends State<EquipmentPage> {
                       ]);
                     },
                     onWillAccept: (data) {
-                      if (widget.player!.action!.outOfActions()) {
-                        return false;
-                      }
                       if (data!.name == 'bag') {
                         return false;
                       }
@@ -833,9 +869,20 @@ class _EquipmentPageState extends State<EquipmentPage> {
                         return false;
                       }
 
+                      if (data.name == 'chest') {
+                        if (widget.player!.equipment!.weight!
+                            .cantCarry(data.item!.weight!)) {
+                          return false;
+                        }
+                      }
+
                       return true;
                     },
                     onAccept: (data) {
+                      if (data.name == 'chest') {
+                        widget.player!.getItem(data.item!);
+                      }
+
                       widget.player!.addItemToBag(data.item!);
                     },
                   ),
@@ -845,6 +892,128 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   thickness: 2,
                   color: _uiColor.setUIColor(widget.player!.id, 'primary'),
                 ),
+                (widget.chest == null)
+                    ? SizedBox()
+                    : Column(
+                        children: [
+                          Container(
+                            height: MediaQuery.of(context).size.height * 0.05,
+                            color: _uiColor.setUIColor(
+                                widget.player!.id, 'primary'),
+                            child: Center(
+                              child: Text('chest'.toUpperCase(),
+                                  style: TextStyle(
+                                    fontFamily: 'Santana',
+                                    height: 1,
+                                    fontSize: 25,
+                                    color: _uiColor.setUIColor(
+                                        widget.player!.id, 'secondary'),
+                                    fontWeight: FontWeight.bold,
+                                    letterSpacing: 3,
+                                  )),
+                            ),
+                          ),
+                          SizedBox(
+                            height: widgetWidth / 6,
+                            child: DragTarget<EquipmentSlot>(
+                              builder: (
+                                BuildContext context,
+                                List<dynamic> accepted,
+                                List<dynamic> rejected,
+                              ) {
+                                return Stack(children: [
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 6,
+                                    children: List.generate(6, (index) {
+                                      return SvgPicture.asset(
+                                        AppIcons.bagSlot,
+                                        height: widgetWidth / 6,
+                                        width: widgetWidth / 6,
+                                        color: _uiColor.setUIColor(
+                                            widget.player!.id, 'primary'),
+                                      );
+                                    }),
+                                  ),
+                                  GridView.count(
+                                    shrinkWrap: true,
+                                    crossAxisCount: 6,
+                                    children: List.generate(
+                                        widget.chest!.loot!.length, (index) {
+                                      return Padding(
+                                        padding: const EdgeInsets.symmetric(
+                                            horizontal: 4),
+                                        child: Draggable<EquipmentSlot>(
+                                          data: EquipmentSlot.fromItem('chest',
+                                              widget.chest!.loot![index]),
+                                          feedback: Container(
+                                            height: widgetWidth / 4,
+                                            width: widgetWidth / 4,
+                                            decoration: BoxDecoration(
+                                              border: Border.all(
+                                                  width: 2,
+                                                  color: _uiColor.setUIColor(
+                                                      widget.player!.id,
+                                                      'primary')),
+                                              shape: BoxShape.circle,
+                                              color: Colors.black,
+                                            ),
+                                            child: Padding(
+                                              padding: const EdgeInsets.all(10),
+                                              child: SvgPicture.asset(
+                                                widget
+                                                    .chest!.loot![index].icon!,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                          onDragCompleted: () {
+                                            setState(() {
+                                              widget.chest!.removeItem(
+                                                  widget.chest!.loot![index]);
+                                            });
+                                          },
+                                          childWhenDragging: Padding(
+                                            padding: const EdgeInsets.all(5),
+                                            child: SvgPicture.asset(
+                                              widget.chest!.loot![index].icon!,
+                                              color: Colors.grey,
+                                            ),
+                                          ),
+                                          child: SvgPicture.asset(
+                                            widget.chest!.loot![index].icon!,
+                                            color: Colors.white,
+                                          ),
+                                        ),
+                                      );
+                                    }),
+                                  ),
+                                ]);
+                              },
+                              onWillAccept: (data) {
+                                if (data!.name == 'chest') {
+                                  return false;
+                                }
+                                if (widget.chest!.loot!.length == 6) {
+                                  return false;
+                                }
+                                return true;
+                              },
+                              onAccept: (data) {
+                                widget.player!.removeItem(data);
+                                widget.chest!.getItem(data.item!);
+                                setState(() {});
+                              },
+                            ),
+                          ),
+                          Divider(
+                            height: 0,
+                            thickness: 2,
+                            color: _uiColor.setUIColor(
+                                widget.player!.id, 'primary'),
+                          ),
+                        ],
+                      ),
               ],
             ),
           ],

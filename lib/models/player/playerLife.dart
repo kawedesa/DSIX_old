@@ -54,6 +54,14 @@ class PlayerLife {
     }
   }
 
+  bool isNotDead() {
+    if (this.current! > 0) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   void update(String gameID, String playerID) async {
     final database = FirebaseFirestore.instance.collection('game');
 

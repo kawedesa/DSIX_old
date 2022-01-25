@@ -4,32 +4,33 @@ import 'package:dsixv02app/models/player/equipment/playerAttackRange.dart';
 import 'package:dsixv02app/models/player/equipment/playerDamage.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 
+import 'equipmentSlot.dart';
 import 'playerWeight.dart';
 
 class PlayerEquipment {
   PlayerArmor? armor;
   PlayerDamage? damage;
   PlayerAttackRange? attackRange;
-  ItemSlot? mainHandSlot;
-  ItemSlot? offHandSlot;
-  ItemSlot? headSlot;
-  ItemSlot? bodySlot;
-  ItemSlot? handSlot;
-  ItemSlot? feetSlot;
-  List<Item>? bag;
+  EquipmentSlot? mainHandSlot;
+  EquipmentSlot? offHandSlot;
+  EquipmentSlot? headSlot;
+  EquipmentSlot? bodySlot;
+  EquipmentSlot? handSlot;
+  EquipmentSlot? feetSlot;
+  List<EquipmentSlot>? bag;
   PlayerWeight? weight;
 
   PlayerEquipment({
     PlayerArmor? armor,
     PlayerDamage? damage,
     PlayerAttackRange? attackRange,
-    ItemSlot? mainHandSlot,
-    ItemSlot? offHandSlot,
-    ItemSlot? headSlot,
-    ItemSlot? bodySlot,
-    ItemSlot? handSlot,
-    ItemSlot? feetSlot,
-    List<Item>? bag,
+    EquipmentSlot? mainHandSlot,
+    EquipmentSlot? offHandSlot,
+    EquipmentSlot? headSlot,
+    EquipmentSlot? bodySlot,
+    EquipmentSlot? handSlot,
+    EquipmentSlot? feetSlot,
+    List<EquipmentSlot>? bag,
     PlayerWeight? weight,
   }) {
     this.armor = armor;
@@ -46,7 +47,7 @@ class PlayerEquipment {
   }
 
   Map<String, dynamic> toMap() {
-    var bag = this.bag?.map((item) => item.toMap()).toList();
+    var bag = this.bag?.map((equipmentSlot) => equipmentSlot.toMap()).toList();
 
     return {
       'armor': this.armor?.toMap(),
@@ -64,22 +65,22 @@ class PlayerEquipment {
   }
 
   factory PlayerEquipment.fromMap(Map<String, dynamic>? data) {
-    List<Item> bag = [];
+    List<EquipmentSlot> bag = [];
     List<dynamic> bagMap = data?['bag'];
-    bagMap.forEach((item) {
-      bag.add(new Item.fromMap(item));
+    bagMap.forEach((slot) {
+      bag.add(new EquipmentSlot.fromMap(slot));
     });
 
     return PlayerEquipment(
       armor: PlayerArmor.fromMap(data?['armor']),
       damage: PlayerDamage.fromMap(data?['damage']),
       attackRange: PlayerAttackRange.fromMap(data?['attackRange']),
-      mainHandSlot: ItemSlot.fromMap(data?['mainHandSlot']),
-      offHandSlot: ItemSlot.fromMap(data?['offHandSlot']),
-      headSlot: ItemSlot.fromMap(data?['headSlot']),
-      bodySlot: ItemSlot.fromMap(data?['bodySlot']),
-      handSlot: ItemSlot.fromMap(data?['handSlot']),
-      feetSlot: ItemSlot.fromMap(data?['feetSlot']),
+      mainHandSlot: EquipmentSlot.fromMap(data?['mainHandSlot']),
+      offHandSlot: EquipmentSlot.fromMap(data?['offHandSlot']),
+      headSlot: EquipmentSlot.fromMap(data?['headSlot']),
+      bodySlot: EquipmentSlot.fromMap(data?['bodySlot']),
+      handSlot: EquipmentSlot.fromMap(data?['handSlot']),
+      feetSlot: EquipmentSlot.fromMap(data?['feetSlot']),
       bag: bag,
       weight: PlayerWeight.fromMap(data?['weight']),
     );
@@ -89,12 +90,12 @@ class PlayerEquipment {
       armor: PlayerArmor.empty(),
       damage: PlayerDamage.empty(),
       attackRange: PlayerAttackRange.empty(),
-      mainHandSlot: ItemSlot.empty(),
-      offHandSlot: ItemSlot.empty(),
-      headSlot: ItemSlot.empty(),
-      bodySlot: ItemSlot.empty(),
-      handSlot: ItemSlot.empty(),
-      feetSlot: ItemSlot.empty(),
+      mainHandSlot: EquipmentSlot.empty('mainHandSlot'),
+      offHandSlot: EquipmentSlot.empty('offHandSlot'),
+      headSlot: EquipmentSlot.empty('headSlot'),
+      bodySlot: EquipmentSlot.empty('bodySlot'),
+      handSlot: EquipmentSlot.empty('handSlot'),
+      feetSlot: EquipmentSlot.empty('feetSlot'),
       bag: [],
       weight: PlayerWeight.set(randomRace),
     );
@@ -102,45 +103,43 @@ class PlayerEquipment {
 
   void getItem(String gameID, String playerID, Item item) {
     this.weight!.current = this.weight!.current! + item.weight!;
-
-    switch (item.itemSlot) {
-      case 'oneHand':
-        break;
-      case 'twoHands':
-        break;
-      case 'head':
-        break;
-      case 'body':
-        break;
-      case 'hands':
-        break;
-      case 'feet':
-        break;
-      case 'consumable':
-        break;
-    }
-
-    this.bag!.add(item);
     update(gameID, playerID);
   }
 
-  void equip(
+  void addItemToBag(String gameID, String playerID, Item item) {
+    this.bag!.add(EquipmentSlot.fromItem('bag', item));
+    update(gameID, playerID);
+  }
+
+  void removeItemFromBag(
+      String gameID, String playerID, EquipmentSlot equipmentSlot) {
+    this.bag!.remove(equipmentSlot);
+    update(gameID, playerID);
+  }
+
+  void removeItem(String gameID, String playerID, EquipmentSlot equipmentSlot) {
+    this.weight!.current = this.weight!.current! - equipmentSlot.item!.weight!;
+    update(gameID, playerID);
+  }
+
+  void equipItem(
     String gameID,
     String playerID,
-    ItemSlot itemSlot,
-    Item item,
+    EquipmentSlot equipmentSlot,
+    EquipmentSlot item,
   ) {
-    if (itemSlot.isEmpty!) {
-      this.bag!.remove(item);
-      increaseDamageAndArmor(item);
-      itemSlot.equip(item);
-      update(gameID, playerID);
-      return;
+    increaseDamageAndArmor(item.item!);
+
+    if (item.item!.itemSlot == 'twoHands') {
+      unequip(gameID, playerID, this.mainHandSlot!);
+      unequip(gameID, playerID, this.offHandSlot!);
+      this.mainHandSlot!.item = item.item;
+      this.offHandSlot!.item = item.item;
+    } else {
+      unequip(gameID, playerID, equipmentSlot);
+      equipmentSlot.item = item.item;
     }
-    unequip(gameID, playerID, itemSlot);
-    this.bag!.remove(item);
-    increaseDamageAndArmor(item);
-    itemSlot.equip(item);
+
     update(gameID, playerID);
   }
 
@@ -155,11 +154,42 @@ class PlayerEquipment {
   void unequip(
     String gameID,
     String playerID,
-    ItemSlot itemSlot,
+    EquipmentSlot equipmentSlot,
   ) {
-    decreaseDamageAndArmor(itemSlot.item!);
-    this.bag!.add(itemSlot.item!);
-    itemSlot.empty();
+    if (equipmentSlot.isEmpty()) {
+      return;
+    }
+
+    decreaseDamageAndArmor(equipmentSlot.item!);
+    this.bag!.add(EquipmentSlot.fromItem('bag', equipmentSlot.item!));
+
+    if (equipmentSlot.item!.itemSlot == 'twoHands') {
+      this.mainHandSlot!.unequip();
+      this.offHandSlot!.unequip();
+    } else {
+      equipmentSlot.unequip();
+    }
+
+    update(gameID, playerID);
+  }
+
+  void emptySlot(
+    String gameID,
+    String playerID,
+    EquipmentSlot equipmentSlot,
+  ) {
+    if (equipmentSlot.isEmpty()) {
+      return;
+    }
+    decreaseDamageAndArmor(equipmentSlot.item!);
+
+    if (equipmentSlot.item!.itemSlot == 'twoHands') {
+      this.mainHandSlot!.unequip();
+      this.offHandSlot!.unequip();
+    } else {
+      equipmentSlot.unequip();
+    }
+    update(gameID, playerID);
   }
 
   void decreaseDamageAndArmor(Item item) {
@@ -168,12 +198,6 @@ class PlayerEquipment {
     this.damage!.decreaseMDamage(item.mDamage!);
     this.armor!.decreasePArmor(item.pArmor!);
     this.armor!.decreaseMArmor(item.mArmor!);
-  }
-
-  void destroyItem(String gameID, String playerIndex, Item item) {
-    this.weight!.current = this.weight!.current! - item.weight!;
-    this.bag!.remove(item);
-    update(gameID, playerIndex);
   }
 
   bool rangedAttack() {
@@ -193,44 +217,5 @@ class PlayerEquipment {
         .collection('players')
         .doc(playerID)
         .update({'equipment': toMap()});
-  }
-}
-
-class ItemSlot {
-  bool? isEmpty;
-  Item? item;
-  ItemSlot({bool? isEmpty, Item? item}) {
-    this.isEmpty = isEmpty;
-    this.item = item;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'isEmpty': this.isEmpty,
-      'item': this.item?.toMap(),
-    };
-  }
-
-  factory ItemSlot.fromMap(Map<String, dynamic>? data) {
-    return ItemSlot(
-      isEmpty: data?['isEmpty'],
-      item: Item.fromMap(data?['item']),
-    );
-  }
-  factory ItemSlot.empty() {
-    return ItemSlot(
-      isEmpty: true,
-      item: Item.empty(),
-    );
-  }
-
-  void equip(Item item) {
-    this.isEmpty = false;
-    this.item = item;
-  }
-
-  void empty() {
-    this.isEmpty = true;
-    this.item = Item.empty();
   }
 }

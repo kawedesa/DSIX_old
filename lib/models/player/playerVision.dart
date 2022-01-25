@@ -52,7 +52,7 @@ class PlayerVision {
     );
   }
 
-  void look(String gameID, String playerIndex) {
+  void seeInvisible(String gameID, String playerIndex) {
     this.canSeeInvisible = true;
     update(gameID, playerIndex);
   }
@@ -98,6 +98,25 @@ class PlayerVision {
 
   double getRange() {
     return (this.vision! + this.tempVision! + this.heightBonus!);
+  }
+
+  double? setVisionRange(String mode) {
+    switch ('mode') {
+      case 'walk':
+        return this.vision;
+
+      case 'wait':
+        return this.vision;
+
+      case 'menu':
+        return 6;
+
+      case 'attack':
+        return 0.0;
+
+      case 'dead':
+        return 0.0;
+    }
   }
 
   void reset() {

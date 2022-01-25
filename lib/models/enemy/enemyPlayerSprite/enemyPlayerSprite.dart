@@ -1,6 +1,6 @@
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/models/player/user.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -14,10 +14,11 @@ import 'enemyPlayerSpriteVisionRange.dart';
 
 class EnemyPlayerSprite extends StatefulWidget {
   final Player? enemyPlayer;
-
+  final Player? player;
   EnemyPlayerSprite({
     Key? key,
-    this.enemyPlayer,
+    @required this.enemyPlayer,
+    @required this.player,
   }) : super(key: key);
 
   @override
@@ -37,7 +38,6 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
 
@@ -76,13 +76,11 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
               child: EnemyPlayerSpriteHitBox(
                 isDead: widget.enemyPlayer!.life!.isDead(),
                 onTap: () async {
-                  if (user.playerMode != 'attack') {
+                  if (widget.player!.mode! != 'attack') {
                     return;
                   }
                   _enemyController.receiveAnAttack(
-                      game, user.selectedPlayer!, widget.enemyPlayer!);
-
-                  user.setPlayerMode();
+                      game, widget.player!, widget.enemyPlayer!);
                 },
               ),
             ),
@@ -155,13 +153,13 @@ class EnemyPlayerSpriteController {
       return;
     }
 
-    player.action!.takeAction(
-      game.id!,
-      player.id!,
-    );
-
-    if (player.action!.outOfActions()) {
-      game.round!.passTurn(game.id!, player.id!);
+    try {
+      player.action!.takeAction(
+        game.id!,
+        player.id!,
+      );
+    } on EndPlayerTurnException {
+      game.round!.passTurn(game.id!, player);
     }
 
     takeDamage(game, player, enemyPlayer);
@@ -173,7 +171,7 @@ class EnemyPlayerSpriteController {
         player.equipment!.damage!.pDamage! + player.equipment!.damage!.mDamage!;
     int totalAttackDamage = attackDamage + itemDamage;
 
-    enemy.takeDamage(game.id!, attackDamage, player.equipment!.damage!.pDamage,
+    enemy.takeDamage(attackDamage, player.equipment!.damage!.pDamage,
         player.equipment!.damage!.mDamage);
 
     if (enemy.life!.isDead()) {

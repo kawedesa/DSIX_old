@@ -4,18 +4,19 @@ import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:rive/rive.dart';
-import '../user.dart';
+import '../player.dart';
 
 // ignore: must_be_immutable
 class ActionButton extends StatefulWidget {
   String? action;
   final Function()? onTap;
+  Player? player;
   ActionButton({
     Key? key,
     @required this.action,
     @required this.onTap,
+    @required this.player,
   }) : super(key: key);
 
   @override
@@ -67,16 +68,16 @@ class _ActionButtonState extends State<ActionButton> {
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
+    // final user = Provider.of<User>(context);
 
-    return (user.selectedPlayer!.action!.outOfActions())
+    return (widget.player!.action!.outOfActions())
         ? AnimatedContainer(
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(milliseconds: 500),
-            width: (user.menuIsOpen)
+            width: (widget.player!.mode == 'menu')
                 ? MediaQuery.of(context).size.height * 0.02
                 : 0,
-            height: (user.menuIsOpen)
+            height: (widget.player!.mode == 'menu')
                 ? MediaQuery.of(context).size.height * 0.02
                 : 0,
             decoration: BoxDecoration(
@@ -105,20 +106,20 @@ class _ActionButtonState extends State<ActionButton> {
         : AnimatedContainer(
             curve: Curves.fastLinearToSlowEaseIn,
             duration: Duration(milliseconds: 500),
-            width: (user.menuIsOpen)
+            width: (widget.player!.mode == 'menu')
                 ? MediaQuery.of(context).size.height * 0.02
                 : 0,
-            height: (user.menuIsOpen)
+            height: (widget.player!.mode == 'menu')
                 ? MediaQuery.of(context).size.height * 0.02
                 : 0,
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: _uiColor
-                  .setUIColor(user.selectedPlayer!.id, 'secondary')
+                  .setUIColor(widget.player!.id, 'secondary')
                   .withAlpha(215),
               border: Border.all(
                 color: _uiColor
-                    .setUIColor(user.selectedPlayer!.id, 'secondary')
+                    .setUIColor(widget.player!.id, 'secondary')
                     .withAlpha(250),
                 width: .5,
               ),
@@ -138,8 +139,8 @@ class _ActionButtonState extends State<ActionButton> {
                       padding: const EdgeInsets.all(3.0),
                       child: SvgPicture.asset(
                         setIcon(widget.action!),
-                        color: _uiColor.setUIColor(
-                            user.selectedPlayer!.id, 'primary'),
+                        color:
+                            _uiColor.setUIColor(widget.player!.id, 'primary'),
                       ),
                     ),
                   ),

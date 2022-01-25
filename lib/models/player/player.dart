@@ -1,6 +1,8 @@
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/game/gameMap/heightMap.dart';
 import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
+import 'package:dsixv02app/models/player/equipment/equipmentSlot.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
@@ -13,10 +15,12 @@ import 'playerLife.dart';
 import 'playerLocation.dart';
 import 'playerVision.dart';
 import 'playerWalkRange.dart';
-import 'sprite/playerTempLocation.dart';
+import 'playerTempLocation.dart';
 
 class Player {
+  String? gameID;
   String? id;
+  String? mode;
   PlayerLocation? location;
   String? race;
   PlayerVision? vision;
@@ -26,7 +30,9 @@ class Player {
   PlayerAction? action;
 
   Player({
+    String? gameID,
     String? id,
+    String? mode,
     PlayerLocation? location,
     String? race,
     PlayerVision? vision,
@@ -36,7 +42,9 @@ class Player {
     PlayerEquipment? equipment,
     PlayerAction? action,
   }) {
+    this.gameID = gameID;
     this.id = id;
+    this.mode = mode;
     this.location = location;
     this.race = race;
     this.vision = vision;
@@ -48,7 +56,9 @@ class Player {
 
   Map<String, dynamic> toMap() {
     return {
+      'gameID': this.gameID,
       'id': this.id,
+      'mode': this.mode,
       'location': this.location?.toMap(),
       'race': this.race,
       'vision': this.vision?.toMap(),
@@ -61,7 +71,9 @@ class Player {
 
   factory Player.fromMap(Map<String, dynamic>? data) {
     return Player(
+      gameID: data?['gameID'],
       id: data?['id'],
+      mode: data?['mode'],
       location: PlayerLocation.fromMap(data?['location']),
       race: data?['race'],
       vision: PlayerVision.fromMap(data?['vision']),
@@ -72,7 +84,8 @@ class Player {
     );
   }
 
-  factory Player.newRandomPlayer(int playerIndex, PlayerLocation location) {
+  factory Player.newRandomPlayer(
+      String gameID, int playerIndex, PlayerLocation location) {
     List<String> id = [
       'blue',
       'pink',
@@ -90,7 +103,9 @@ class Player {
     String randomRace = races[randomNumber];
 
     return Player(
+      gameID: gameID,
       id: id[playerIndex],
+      mode: 'wait',
       location: location,
       race: randomRace,
       vision: PlayerVision.set(randomRace),
@@ -110,23 +125,69 @@ class Player {
     }
   }
 
+  void startTurn() {
+    this.action!.newActions(this.gameID!, this.id!);
+    clearTempEffects();
+    walkMode();
+    updateMode();
+  }
+
+  void menuMode() {
+    if (this.mode == 'menu') {
+      if (this.action!.outOfActions()) {
+        waitMode();
+        return;
+      } else {
+        walkMode();
+        return;
+      }
+    } else {
+      this.mode = 'menu';
+    }
+    updateMode();
+  }
+
+  void waitMode() {
+    this.mode = 'wait';
+    updateMode();
+  }
+
+  void walkMode() {
+    this.mode = 'walk';
+    updateMode();
+  }
+
+  void attackMode() {
+    this.mode = 'attack';
+    updateMode();
+  }
+
+  void deadMode() {
+    this.mode = 'dead';
+    updateMode();
+  }
+
+  updateMode() async {
+    final database = FirebaseFirestore.instance.collection('game');
+    await database.doc(this.gameID!).collection('players').doc(this.id).update({
+      'mode': this.mode,
+    });
+  }
+
   void endWalk(
-    String gameID,
     PlayerTempLocation newLocation,
     TotalArea tallGrass,
     HeightMap height,
   ) {
-    int newHeight = height.inThisLayer(newLocation.getLocation());
+    int newHeight = height.inThisLayer(newLocation.newLocation!);
 
     if (newHeight != newLocation.height) {
       throw CantPassException();
     }
 
-    this
-        .location!
-        .newLocation(gameID, this.id!, newLocation, tallGrass, newHeight);
+    this.location!.newLocation(this.gameID!, this.id!, newLocation, tallGrass);
 
-    this.vision!.setHeight(gameID, this.id!, newHeight);
+    this.vision!.setHeight(this.gameID!, this.id!, newLocation.height!);
   }
 
   int attack() {
@@ -134,30 +195,34 @@ class Player {
     return damage;
   }
 
-  void defend(String gameID) {
+  void defend() {
     int protect = Random().nextInt(6) + 1;
     this.equipment!.armor!.increaseTempArmor(protect);
-    this.equipment!.update(gameID, this.id!);
+    this.equipment!.update(this.gameID!, this.id!);
   }
 
-  void clearTempEffects(String gameID) {
+  void look() {
+    this.vision!.seeInvisible(this.gameID!, this.id!);
+  }
+
+  void clearTempEffects() {
     this.equipment!.armor!.resetTempArmor();
-    this.equipment!.update(gameID, this.id!);
+    this.equipment!.update(this.gameID!, this.id!);
     this.vision!.reset();
-    this.vision!.update(gameID, this.id!);
+    this.vision!.update(this.gameID!, this.id!);
   }
 
-  void takeDamage(String gameID, int damageRoll, pDamage, mDamage) {
+  void takeDamage(int damageRoll, pDamage, mDamage) {
     if (this.equipment!.armor!.tempArmor! > 0) {
       int damage = pDamage + mDamage + damageRoll;
-      this.life!.decrease(
-          gameID, this.id!, this.equipment!.armor!.calculateTempArmor(damage));
-      this.equipment!.update(gameID, this.id!);
+      this.life!.decrease(this.gameID!, this.id!,
+          this.equipment!.armor!.calculateTempArmor(damage));
+      this.equipment!.update(this.gameID!, this.id!);
       return;
     }
 
     this.life!.decrease(
-        gameID,
+        this.gameID!,
         this.id!,
         this
             .equipment!
@@ -165,24 +230,53 @@ class Player {
             .calculateDamageReceived(damageRoll, pDamage, mDamage));
   }
 
-  void useItem(String gameID, Item item) {
-    switch (item.name) {
+  void getItem(Item item) {
+    this.equipment!.getItem(this.gameID!, this.id!, item);
+  }
+
+  void addItemToBag(Item item) {
+    this.equipment!.addItemToBag(this.gameID!, this.id!, item);
+  }
+
+  void removeItem(EquipmentSlot equipmentSlot) {
+    this.equipment!.removeItem(this.gameID!, this.id!, equipmentSlot);
+  }
+
+  void removeItemFromBag(EquipmentSlot equipmentSlot) {
+    this.equipment!.removeItemFromBag(this.gameID!, this.id!, equipmentSlot);
+  }
+
+  void equipItem(EquipmentSlot equipmentSlot, EquipmentSlot item) {
+    this.equipment!.equipItem(this.gameID!, this.id!, equipmentSlot, item);
+  }
+
+  void unequipItem(EquipmentSlot equipmentSlot) {
+    this.equipment!.unequip(this.gameID!, this.id!, equipmentSlot);
+  }
+
+  void emptySlot(EquipmentSlot equipmentSlot) {
+    this.equipment!.emptySlot(this.gameID!, this.id!, equipmentSlot);
+  }
+
+  void useItem(EquipmentSlot item) {
+    switch (item.item!.name) {
       case 'ward':
         this.vision!.tempVision = this.vision!.tempVision! + 50;
         this.vision!.canSeeInvisible = true;
-        this.vision!.update(gameID, this.id!);
+        this.vision!.update(this.gameID!, this.id!);
         break;
 
       case 'food':
         int healingAmount = Random().nextInt(3) + 1;
-        this.life!.increase(gameID, this.id!, healingAmount);
+        this.life!.increase(this.gameID!, this.id!, healingAmount);
         break;
 
       case 'healing potion':
         int healingAmount = Random().nextInt(3) + 4;
-        this.life!.increase(gameID, this.id!, healingAmount);
+        this.life!.increase(this.gameID!, this.id!, healingAmount);
         break;
     }
-    this.equipment!.destroyItem(gameID, this.id!, item);
+    this.equipment!.removeItem(this.gameID!, this.id!, item);
+    this.equipment!.removeItemFromBag(this.gameID!, this.id!, item);
   }
 }

@@ -76,6 +76,46 @@ class PlayerAttackRange {
     }
   }
 
+  double setMaxRange(String mode, double vision) {
+    switch (mode) {
+      case 'walk':
+        return 0;
+
+      case 'wait':
+        return 0;
+
+      case 'menu':
+        return 0;
+
+      case 'attack':
+        if (max! > vision) {
+          return vision;
+        } else {
+          return max!;
+        }
+    }
+
+    return 0.0;
+  }
+
+  double setMinRange(String mode) {
+    switch (mode) {
+      case 'walk':
+        return 0;
+
+      case 'wait':
+        return 0;
+
+      case 'menu':
+        return 0;
+
+      case 'attack':
+        return min!;
+    }
+
+    return 0.0;
+  }
+
   void update(String gameID, String playerIndex) async {
     final database = FirebaseFirestore.instance.collection('game');
 

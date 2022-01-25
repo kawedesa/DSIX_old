@@ -5,50 +5,59 @@ import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/models/shop/shop.dart';
 import 'package:flutter/material.dart';
 
-class Loot {
+class Chest {
+  String? gameID;
   int? index;
-  LootLocation? location;
-  List<Item>? items;
+  ChestLocation? location;
+  List<Item>? loot;
   bool? isClosed;
-  Loot(
-      {int? index, LootLocation? location, List<Item>? items, bool? isClosed}) {
+  Chest(
+      {String? gameID,
+      int? index,
+      ChestLocation? location,
+      List<Item>? loot,
+      bool? isClosed}) {
+    this.gameID = gameID;
     this.index = index;
     this.location = location;
-    this.items = items;
+    this.loot = loot;
     this.isClosed = isClosed;
   }
 
   Map<String, dynamic> toMap() {
-    var items = this.items!.map((item) => item.toMap()).toList();
+    var loot = this.loot!.map((item) => item.toMap()).toList();
 
     return {
+      'gameID': this.gameID,
       'index': this.index,
       'location': this.location!.toMap(),
-      'items': items,
+      'loot': loot,
       'isClosed': this.isClosed,
     };
   }
 
-  factory Loot.fromMap(Map data) {
-    List<Item> items = [];
-    List<dynamic> itemsMap = data['items'];
+  factory Chest.fromMap(Map data) {
+    List<Item> loot = [];
+    List<dynamic> itemsMap = data['loot'];
     itemsMap.forEach((item) {
-      items.add(new Item.fromMap(item));
+      loot.add(new Item.fromMap(item));
     });
 
-    return Loot(
+    return Chest(
+      gameID: data['gameID'],
       index: data['index'],
-      location: LootLocation.fromMap(data['location']),
-      items: items,
+      location: ChestLocation.fromMap(data['location']),
+      loot: loot,
       isClosed: data['isClosed'],
     );
   }
 
-  factory Loot.newLoot(LootLocation location, int index) {
-    return Loot(
+  factory Chest.newLoot(String gameID, ChestLocation location, int index) {
+    return Chest(
+      gameID: gameID,
       index: index,
       location: location,
-      items: [],
+      loot: [],
       isClosed: true,
     );
   }
@@ -60,33 +69,38 @@ class Loot {
     int numberOfLoot = Random().nextInt(3) + 1;
 
     for (int i = 0; i < numberOfLoot; i++) {
-      this.items!.add(_shop.randomItem());
+      this.loot!.add(_shop.randomItem());
     }
-    update(gameID);
+    update();
   }
 
-  void removeItems(String gameID, List<Item> itemsRemovedFromChest) {
-    itemsRemovedFromChest.forEach((item) {
-      this.items!.remove(item);
-    });
-    update(gameID);
+  void getItem(Item addToChest) {
+    this.loot!.add(addToChest);
+
+    update();
   }
 
-  void update(String gameID) async {
+  void removeItem(Item removedFromChest) {
+    this.loot!.remove(removedFromChest);
+
+    update();
+  }
+
+  void update() async {
     final database = FirebaseFirestore.instance;
     await database
         .collection('game')
-        .doc(gameID)
+        .doc(this.gameID!)
         .collection('loot')
         .doc('${this.index}')
         .update(toMap());
   }
 }
 
-class LootLocation {
+class ChestLocation {
   double? dx;
   double? dy;
-  LootLocation({double? dx, double? dy}) {
+  ChestLocation({double? dx, double? dy}) {
     this.dx = dx;
     this.dy = dy;
   }
@@ -97,14 +111,14 @@ class LootLocation {
     };
   }
 
-  factory LootLocation.fromMap(Map<String, dynamic>? data) {
-    return LootLocation(
+  factory ChestLocation.fromMap(Map<String, dynamic>? data) {
+    return ChestLocation(
       dx: data?['dx'] * 1.0,
       dy: data?['dy'] * 1.0,
     );
   }
-  factory LootLocation.newLocation(Offset location) {
-    return LootLocation(
+  factory ChestLocation.newLocation(Offset location) {
+    return ChestLocation(
       dx: location.dx,
       dy: location.dy,
     );

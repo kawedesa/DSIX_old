@@ -1,6 +1,6 @@
 import 'package:dsixv02app/models/game/gameController.dart';
 import 'package:dsixv02app/models/game/gameMap/gameMap.dart';
-import 'package:dsixv02app/models/loot/lootController.dart';
+import 'package:dsixv02app/models/chest/chestController.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/playersController.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
@@ -42,7 +42,7 @@ class BattleRoyaleSettingsPageVM {
   void newBattleRoyaleGame(
     GameController gameController,
     PlayersController playerController,
-    LootController lootController,
+    ChestController lootController,
   ) {
     GameMap map = AppMaps.ruins;
     List<Player> newPlayers = playerController.newRandomPlayers(
@@ -63,7 +63,7 @@ class BattleRoyaleSettingsPageVM {
   void deleteGame(
     GameController gameController,
     PlayersController playerController,
-    LootController lootController,
+    ChestController lootController,
   ) {
     gameController.deleteGame();
     playerController.deleteAllPlayers(gameController.gameID);

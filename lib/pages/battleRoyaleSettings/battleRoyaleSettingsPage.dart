@@ -1,5 +1,6 @@
+import 'package:dsixv02app/models/chest/chestController.dart';
 import 'package:dsixv02app/models/game/gameController.dart';
-import 'package:dsixv02app/models/loot/lootController.dart';
+
 import 'package:dsixv02app/models/player/playersController.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/models/game/game.dart';
@@ -26,7 +27,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
     final game = Provider.of<Game>(context);
     final gameController = Provider.of<GameController>(context);
     final playerController = Provider.of<PlayersController>(context);
-    final lootController = Provider.of<LootController>(context);
+    final chestController = Provider.of<ChestController>(context);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -76,7 +77,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                             _battleRoyaleSettingsPage.deleteGame(
                               gameController,
                               playerController,
-                              lootController,
+                              chestController,
                               // turnController
                             );
                           },
@@ -228,9 +229,7 @@ class _BattleRoyaleSettingsPageState extends State<BattleRoyaleSettingsPage> {
                           _battleRoyaleSettingsPage.newBattleRoyaleGame(
                               gameController,
                               playerController,
-                              // roundController,
-                              // turnController,
-                              lootController);
+                              chestController);
                         },
                       ),
                     ],

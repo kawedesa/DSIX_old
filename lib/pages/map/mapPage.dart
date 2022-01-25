@@ -1,11 +1,11 @@
+import 'package:dsixv02app/models/chest/chest.dart';
+import 'package:dsixv02app/models/chest/chestController.dart';
 import 'package:dsixv02app/models/enemy/enemyController.dart';
 import 'package:dsixv02app/models/game/fog/fogSprite.dart';
 import 'package:dsixv02app/models/game/game.dart';
-import 'package:dsixv02app/models/loot/loot.dart';
-import 'package:dsixv02app/models/loot/lootController.dart';
 import 'package:dsixv02app/models/player/player.dart';
 import 'package:dsixv02app/models/player/menu/playerMenu.dart';
-import 'package:dsixv02app/models/player/sprite/playerTempLocation.dart';
+import 'package:dsixv02app/models/player/playerTempLocation.dart';
 import 'package:dsixv02app/models/player/user.dart';
 import 'package:dsixv02app/pages/map/widgets/mapTile.dart';
 import 'package:dsixv02app/pages/playerSelection/playerSelectionPage.dart';
@@ -51,39 +51,36 @@ class _MapPageState extends State<MapPage> {
   Widget build(BuildContext context) {
     //Controlers
     final enemyController = Provider.of<EnemyController>(context);
-    final lootController = Provider.of<LootController>(context);
+    final chestController = Provider.of<ChestController>(context);
     final user = Provider.of<User>(context);
 
     //Streams
     final game = Provider.of<Game>(context);
     final players = Provider.of<List<Player>>(context);
-    final loot = Provider.of<List<Loot>>(context);
+    final chest = Provider.of<List<Chest>>(context);
 
     try {
       game.round!.checkForEndGame();
     } on EndGameException {
-      _mapPageVM.createEndGameButton(user.selectedPlayer!.life!.isDead());
+      _mapPageVM.createEndGameButton(user.getPlayer(players).life!.isDead());
     }
 
     try {
-      user.checkForPlayerTurn(game.round!.turnOrder!.first);
-    } on StartPlayerTurnException {
-      user.startPlayerTurn(game.id!);
-      game.round!.fog!.checkFog(
-        game.id!,
-        user.selectedPlayer!.id!,
-        players,
-      );
-      _mapPageAnimation.playYourTurnAnimation();
+      game.round!.checkForPlayerTurn(user.id!);
+    } on PlayerTurnException {
+      if (user.getPlayer(players).action!.outOfActions()) {
+        user.getPlayer(players).startTurn();
+        _mapPageAnimation.playYourTurnAnimation();
+      }
     }
 
     enemyController.updateEnemyPlayersInSight(
-        players, user.selectedPlayer!, game.map!.tallGrass!);
+        players, user.getPlayer(players), game.map!.tallGrass!);
 
-    lootController.updateLootInSight(loot, user.selectedPlayer!);
+    chestController.updateLootInSight(chest, user.getPlayer(players));
 
     _mapPageVM.createCanvasController(
-        context, game.map!.size!, user.selectedPlayer!.location);
+        context, game.map!.size!, user.getPlayer(players).location);
 
     return Scaffold(
       backgroundColor: AppColors.black00,
@@ -98,67 +95,64 @@ class _MapPageState extends State<MapPage> {
                     child: SvgPicture.asset(
                       AppIcons.action,
                       height: MediaQuery.of(context).size.height * 0.03,
-                      color: (user.selectedPlayer!.action!.firstAction!)
+                      color: (user.getPlayer(players).action!.firstAction!)
                           ? AppColors.white00
-                          : _uiColor.setUIColor(
-                              user.selectedPlayer!.id, 'secondary'),
+                          : _uiColor.setUIColor(user.id, 'secondary'),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.fromLTRB(2, 0, 10, 0),
+                    padding: const EdgeInsets.fromLTRB(2, 0, 0, 0),
                     child: SvgPicture.asset(
                       AppIcons.action,
                       height: MediaQuery.of(context).size.height * 0.03,
-                      color: (user.selectedPlayer!.action!.secondAction!)
+                      color: (user.getPlayer(players).action!.secondAction!)
                           ? AppColors.white00
-                          : _uiColor.setUIColor(
-                              user.selectedPlayer!.id, 'secondary'),
+                          : _uiColor.setUIColor(user.id, 'secondary'),
                     ),
                   ),
                 ],
+              ),
+              SizedBox(
+                width: MediaQuery.of(context).size.width * 0.03,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
                 child: SvgPicture.asset(
                   AppIcons.life,
                   height: MediaQuery.of(context).size.height * 0.047,
-                  color:
-                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
+                  color: _uiColor.setUIColor(user.id, 'secondary'),
                 ),
               ),
               Text(
-                '${user.selectedPlayer!.life!.current}',
+                '${user.getPlayer(players).life!.current}',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontFamily: 'Santana',
                   height: 1,
                   fontSize: 27,
-                  color:
-                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
+                  color: _uiColor.setUIColor(user.id, 'secondary'),
                   letterSpacing: 1.2,
                 ),
               ),
               SizedBox(
-                width: MediaQuery.of(context).size.width * 0.03,
+                width: MediaQuery.of(context).size.width * 0.02,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(5, 0, 2, 0),
                 child: SvgPicture.asset(
                   AppIcons.weight,
                   height: MediaQuery.of(context).size.height * 0.045,
-                  color:
-                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
+                  color: _uiColor.setUIColor(user.id, 'secondary'),
                 ),
               ),
               Text(
-                '${user.selectedPlayer!.equipment!.weight!.current}/${user.selectedPlayer!.equipment!.weight!.max}',
+                '${user.getPlayer(players).equipment!.weight!.current}/${user.getPlayer(players).equipment!.weight!.max}',
                 textAlign: TextAlign.left,
                 style: TextStyle(
                   fontFamily: 'Santana',
                   height: 1,
                   fontSize: 27,
-                  color:
-                      _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
+                  color: _uiColor.setUIColor(user.id, 'secondary'),
                   letterSpacing: 1.2,
                 ),
               ),
@@ -171,17 +165,15 @@ class _MapPageState extends State<MapPage> {
         toolbarHeight: MediaQuery.of(context).size.height * 0.06,
         leading: GoToPagePageButton(
           goToPage: PlayerSelectionPage(),
-          buttonColor:
-              _uiColor.setUIColor(user.selectedPlayer!.id, 'secondary'),
+          buttonColor: _uiColor.setUIColor(user.id, 'secondary'),
         ),
-        backgroundColor:
-            _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+        backgroundColor: _uiColor.setUIColor(user.id, 'primary'),
       ),
       body: SafeArea(
         child: ChangeNotifierProxyProvider<List<Player>, PlayerTempLocation?>(
           create: (context) => PlayerTempLocation(),
           update: (context, _, playerTempLocation) => playerTempLocation!
-            ..updatePlayerLocation(user.selectedPlayer!.location!),
+            ..updatePlayerLocation(user.getPlayer(players).location!),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -203,7 +195,7 @@ class _MapPageState extends State<MapPage> {
                           children: [
                             MapTile(),
                             Stack(
-                              children: lootController.visibleLoot,
+                              children: chestController.visibleLoot,
                             ),
                             Stack(
                               children: enemyController.enemyPlayers,
@@ -212,12 +204,14 @@ class _MapPageState extends State<MapPage> {
                                 builder: (context, playerTempLocation, ___) {
                               return PlayerSprite(
                                 refresh: () => refresh(),
+                                player: user.getPlayer(players),
                                 tempLocation: playerTempLocation,
                               );
                             }),
                             FogSprite(),
                             PlayerMenu(
                               refresh: () => refresh(),
+                              player: user.getPlayer(players),
                             ),
                           ],
                         ),
@@ -254,7 +248,7 @@ class _MapPageState extends State<MapPage> {
               Divider(
                 thickness: 2,
                 height: 2,
-                color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+                color: _uiColor.setUIColor(user.id, 'primary'),
               ),
               SizedBox(
                 height: MediaQuery.of(context).size.height * 0.04,
@@ -270,10 +264,9 @@ class _MapPageState extends State<MapPage> {
                         padding: const EdgeInsets.only(left: 5),
                         child: TurnButton(
                           onDoubleTap: () {
-                            user.changeSelectPlayer(
-                                players, game.round!.turnOrder![index]);
-                            _mapPageVM.goToPlayer(
-                                context, game.map!.size!, user.selectedPlayer!);
+                            user.selectPlayer(game.round!.turnOrder![index]);
+                            _mapPageVM.goToPlayer(context, game.map!.size!,
+                                user.getPlayer(players));
                             refresh();
                           },
                           color: _uiColor.setUIColor(
@@ -287,7 +280,7 @@ class _MapPageState extends State<MapPage> {
               Divider(
                 thickness: 2,
                 height: 2,
-                color: _uiColor.setUIColor(user.selectedPlayer!.id, 'primary'),
+                color: _uiColor.setUIColor(user.id, 'primary'),
               ),
             ],
           ),

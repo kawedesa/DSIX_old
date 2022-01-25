@@ -5,20 +5,24 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 // ignore: must_be_immutable
-class DamageAndArmorStats extends StatelessWidget {
+class EquipmentStats extends StatelessWidget {
   String? playerID;
   int? pDamage;
   int? mDamage;
   int? pArmor;
   int? mArmor;
-  DamageAndArmorStats(
-      {Key? key,
-      @required this.playerID,
-      @required this.pDamage,
-      @required this.mDamage,
-      @required this.pArmor,
-      @required this.mArmor})
-      : super(key: key);
+  int? currentWeight;
+  int? maxWeight;
+  EquipmentStats({
+    Key? key,
+    @required this.playerID,
+    @required this.pDamage,
+    @required this.mDamage,
+    @required this.pArmor,
+    @required this.mArmor,
+    @required this.currentWeight,
+    @required this.maxWeight,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +41,7 @@ class DamageAndArmorStats extends StatelessWidget {
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 2),
               child: Text(
                 '$pDamage',
                 style: TextStyle(
@@ -62,7 +66,7 @@ class DamageAndArmorStats extends StatelessWidget {
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 2),
               child: Text(
                 '$mDamage',
                 style: TextStyle(
@@ -87,7 +91,7 @@ class DamageAndArmorStats extends StatelessWidget {
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 2),
               child: Text(
                 '$pArmor',
                 style: TextStyle(
@@ -112,7 +116,7 @@ class DamageAndArmorStats extends StatelessWidget {
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(8, 0, 0, 0),
+              padding: const EdgeInsets.only(left: 2),
               child: Text(
                 '$mArmor',
                 style: TextStyle(
@@ -123,6 +127,28 @@ class DamageAndArmorStats extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   letterSpacing: 3,
                 ),
+              ),
+            ),
+          ],
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: <Widget>[
+            SvgPicture.asset(
+              AppIcons.weight,
+              color: _uiColor.setUIColor(playerID, 'primary'),
+              width: MediaQuery.of(context).size.height * 0.037,
+            ),
+            Text(
+              '$currentWeight/$maxWeight',
+              style: TextStyle(
+                fontFamily: 'Santana',
+                height: 1,
+                fontSize: 23,
+                color: AppColors.white00,
+                fontWeight: FontWeight.bold,
+                letterSpacing: 3,
               ),
             ),
           ],

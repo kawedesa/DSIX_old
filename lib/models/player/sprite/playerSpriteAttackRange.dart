@@ -1,66 +1,30 @@
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import '../user.dart';
+import '../player.dart';
 
 // ignore: must_be_immutable
 class AttackRange extends StatelessWidget {
+  Player? player;
   AttackRange({
     Key? key,
+    @required this.player,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final user = Provider.of<User>(context);
-    double setMaxAttackRange(String mode) {
-      switch (mode) {
-        case 'walk':
-          return 0;
-
-        case 'wait':
-          return 0;
-
-        case 'menu':
-          return 0;
-
-        case 'attack':
-          if (user.selectedPlayer!.equipment!.attackRange!.max! >
-              user.selectedPlayer!.vision!.getRange()) {
-            return user.selectedPlayer!.vision!.getRange();
-          } else {
-            return user.selectedPlayer!.equipment!.attackRange!.max!;
-          }
-      }
-
-      return 0.0;
-    }
-
-    double setMinAttackRange(String mode) {
-      switch (mode) {
-        case 'walk':
-          return 0;
-
-        case 'wait':
-          return 0;
-
-        case 'menu':
-          return 0;
-
-        case 'attack':
-          return user.selectedPlayer!.equipment!.attackRange!.min!;
-      }
-
-      return 0.0;
-    }
+    double minRange =
+        player!.equipment!.attackRange!.setMinRange(player!.mode!);
+    double maxRange = player!.equipment!.attackRange!
+        .setMaxRange(player!.mode!, player!.vision!.vision!);
 
     return CustomPaint(
       painter: AttackArea(
-        minRange: setMinAttackRange(user.playerMode!),
-        maxRange: setMaxAttackRange(user.playerMode!),
+        minRange: minRange,
+        maxRange: maxRange,
       ),
       child: SizedBox(
-        width: setMaxAttackRange(user.playerMode!),
-        height: setMaxAttackRange(user.playerMode!),
+        width: maxRange,
+        height: maxRange,
       ),
     );
   }
