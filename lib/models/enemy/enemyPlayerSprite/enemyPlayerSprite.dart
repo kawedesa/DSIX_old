@@ -1,6 +1,5 @@
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -153,14 +152,7 @@ class EnemyPlayerSpriteController {
       return;
     }
 
-    try {
-      player.action!.takeAction(
-        game.id!,
-        player.id!,
-      );
-    } on EndPlayerTurnException {
-      game.round!.passTurn(game.id!, player);
-    }
+    game.round!.takeTurn(game.id!, player);
 
     takeDamage(game, player, enemyPlayer);
   }

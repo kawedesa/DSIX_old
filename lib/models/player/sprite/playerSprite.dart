@@ -83,13 +83,22 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                   player: widget.player,
                 ),
               ),
+
+              //IMAGE
+              Align(
+                alignment: Alignment.center,
+                child: PlayerSpriteImage(
+                    image: widget.player!.race,
+                    isDead: widget.player!.life!.isDead()),
+              ),
+
               //HITBOX CONTROLLER
               Align(
                 alignment: Alignment.center,
                 child: Padding(
                   padding: const EdgeInsets.only(bottom: 9),
                   child: Container(
-                    width: 5,
+                    width: 6,
                     height: 10,
                     child: (widget.player!.mode == 'menu')
                         ? GestureDetector(
@@ -126,26 +135,11 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                                 widget.refresh!();
                                 return;
                               }
-
-                              try {
-                                widget.player!.action!.takeAction(
-                                  game.id!,
-                                  widget.player!.id!,
-                                );
-                              } on EndPlayerTurnException {
-                                game.round!.passTurn(game.id!, widget.player!);
-                              }
+                              game.round!.takeTurn(game.id!, widget.player!);
                             },
                           ),
                   ),
                 ),
-              ),
-              //IMAGE
-              Align(
-                alignment: Alignment.center,
-                child: PlayerSpriteImage(
-                    image: widget.player!.race,
-                    isDead: widget.player!.life!.isDead()),
               ),
 
               //TEMP EFFECTS

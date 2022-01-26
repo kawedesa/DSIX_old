@@ -84,6 +84,16 @@ class Round {
     }
   }
 
+  void takeTurn(String gameID, Player player) {
+    player.action!.takeAction(
+      gameID,
+      player.id!,
+    );
+    if (player.action!.outOfActions()) {
+      passTurn(gameID, player);
+    }
+  }
+
   void passTurn(String gameID, Player player) {
     this.turnOrder!.remove(player.id);
     this.turnOrder!.add(player.id!);

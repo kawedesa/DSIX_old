@@ -1,11 +1,8 @@
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/player/equipment/widget/equipmentPage.dart';
-
 import 'package:dsixv02app/models/player/player.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'chest.dart';
 import 'chestSpriteImage.dart';
 
@@ -35,35 +32,46 @@ class ChestSprite extends StatelessWidget {
               return;
             }
 
-            try {
-              player!.action!.takeAction(
-                game.id!,
-                player!.id!,
-              );
-            } on EndPlayerTurnException {
-              game.round!.passTurn(game.id!, player!);
-            }
+            game.round!.takeTurn(game.id!, player!);
 
             if (chest!.isClosed!) {
               chest!.openLoot(game.id!);
               showDialog(
                 context: context,
-                builder: (BuildContext context) {
-                  return EquipmentPage(
-                    player: player,
-                    chest: chest,
-                  );
-                },
+                builder: (context) => ScaffoldMessenger(
+                  child: Builder(
+                    builder: (context) => Scaffold(
+                      backgroundColor: Colors.transparent,
+                      body: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Navigator.of(context).pop(),
+                        child: EquipmentPage(
+                          player: player,
+                          chest: chest,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               );
             } else {
               showDialog(
                 context: context,
-                builder: (BuildContext context) {
-                  return EquipmentPage(
-                    player: player,
-                    chest: chest,
-                  );
-                },
+                builder: (context) => ScaffoldMessenger(
+                  child: Builder(
+                    builder: (context) => Scaffold(
+                      backgroundColor: Colors.transparent,
+                      body: GestureDetector(
+                        behavior: HitTestBehavior.opaque,
+                        onTap: () => Navigator.of(context).pop(),
+                        child: EquipmentPage(
+                          player: player,
+                          chest: chest,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               );
             }
           },

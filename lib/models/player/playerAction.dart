@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
 
 class PlayerAction {
   bool? firstAction;
@@ -43,9 +42,6 @@ class PlayerAction {
       this.secondAction = false;
     }
     updatePlayerActions(gameID, playerIndex);
-    if (outOfActions()) {
-      throw EndPlayerTurnException();
-    }
   }
 
   bool outOfActions() {

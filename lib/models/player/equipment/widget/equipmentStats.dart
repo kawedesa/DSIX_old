@@ -4,24 +4,14 @@ import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
+import '../../player.dart';
+
 // ignore: must_be_immutable
 class EquipmentStats extends StatelessWidget {
-  String? playerID;
-  int? pDamage;
-  int? mDamage;
-  int? pArmor;
-  int? mArmor;
-  int? currentWeight;
-  int? maxWeight;
+  Player? player;
   EquipmentStats({
     Key? key,
-    @required this.playerID,
-    @required this.pDamage,
-    @required this.mDamage,
-    @required this.pArmor,
-    @required this.mArmor,
-    @required this.currentWeight,
-    @required this.maxWeight,
+    @required this.player,
   }) : super(key: key);
 
   @override
@@ -37,13 +27,13 @@ class EquipmentStats extends StatelessWidget {
           children: <Widget>[
             SvgPicture.asset(
               AppIcons.pDamage,
-              color: _uiColor.setUIColor(playerID, 'primary'),
+              color: _uiColor.setUIColor(player!.id, 'primary'),
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 2),
               child: Text(
-                '$pDamage',
+                '${player!.equipment!.damage!.pDamage}',
                 style: TextStyle(
                   fontFamily: 'Santana',
                   height: 1,
@@ -62,13 +52,13 @@ class EquipmentStats extends StatelessWidget {
           children: <Widget>[
             SvgPicture.asset(
               AppIcons.mDamage,
-              color: _uiColor.setUIColor(playerID, 'primary'),
+              color: _uiColor.setUIColor(player!.id, 'primary'),
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 2),
               child: Text(
-                '$mDamage',
+                '${player!.equipment!.damage!.mDamage}',
                 style: TextStyle(
                   fontFamily: 'Santana',
                   height: 1,
@@ -87,13 +77,13 @@ class EquipmentStats extends StatelessWidget {
           children: <Widget>[
             SvgPicture.asset(
               AppIcons.pArmor,
-              color: _uiColor.setUIColor(playerID, 'primary'),
+              color: _uiColor.setUIColor(player!.id, 'primary'),
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 2),
               child: Text(
-                '$pArmor',
+                '${player!.equipment!.armor!.pArmor}',
                 style: TextStyle(
                   fontFamily: 'Santana',
                   height: 1,
@@ -112,13 +102,13 @@ class EquipmentStats extends StatelessWidget {
           children: <Widget>[
             SvgPicture.asset(
               AppIcons.mArmor,
-              color: _uiColor.setUIColor(playerID, 'primary'),
+              color: _uiColor.setUIColor(player!.id, 'primary'),
               width: MediaQuery.of(context).size.height * 0.035,
             ),
             Padding(
               padding: const EdgeInsets.only(left: 2),
               child: Text(
-                '$mArmor',
+                '${player!.equipment!.armor!.mArmor}',
                 style: TextStyle(
                   fontFamily: 'Santana',
                   height: 1,
@@ -137,11 +127,11 @@ class EquipmentStats extends StatelessWidget {
           children: <Widget>[
             SvgPicture.asset(
               AppIcons.weight,
-              color: _uiColor.setUIColor(playerID, 'primary'),
+              color: _uiColor.setUIColor(player!.id, 'primary'),
               width: MediaQuery.of(context).size.height * 0.037,
             ),
             Text(
-              '$currentWeight/$maxWeight',
+              '${player!.equipment!.weight!.current}/${player!.equipment!.weight!.max}',
               style: TextStyle(
                 fontFamily: 'Santana',
                 height: 1,

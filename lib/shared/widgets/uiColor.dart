@@ -104,6 +104,17 @@ class UIColor {
           }
         }
         break;
+      case 'error':
+        {
+          switch (color) {
+            case 'primary':
+              return AppColors.errorPrimary;
+
+            case 'secondary':
+              return AppColors.errorSecondary;
+          }
+        }
+        break;
     }
     return AppColors.white00;
   }

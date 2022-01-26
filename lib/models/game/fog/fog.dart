@@ -53,8 +53,8 @@ class Fog {
 
   void shrink(int numberOfPlayers) {
     this.size = this.size! - ((6 - numberOfPlayers) * 5);
-    if (this.size! < 50) {
-      this.size = 50;
+    if (this.size! < 0) {
+      this.size = 0;
     }
   }
 

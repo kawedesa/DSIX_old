@@ -48,12 +48,9 @@ class AttackArea extends CustomPainter {
     canvas.drawPath(
       Path.combine(
         PathOperation.difference,
+        Path()..addOval(Rect.fromCircle(center: center, radius: maxRange! / 2)),
         Path()
-          ..addOval(
-              Rect.fromCircle(center: center, radius: maxRange! / 2 + 0.02)),
-        Path()
-          ..addOval(
-              Rect.fromCircle(center: center, radius: minRange! / 2 + 0.01))
+          ..addOval(Rect.fromCircle(center: center, radius: minRange! / 2))
           ..close(),
       ),
       fillColor,
@@ -67,12 +64,9 @@ class AttackArea extends CustomPainter {
     canvas.drawPath(
       Path.combine(
         PathOperation.difference,
+        Path()..addOval(Rect.fromCircle(center: center, radius: maxRange! / 2)),
         Path()
-          ..addOval(
-              Rect.fromCircle(center: center, radius: maxRange! / 2 + 0.02)),
-        Path()
-          ..addOval(
-              Rect.fromCircle(center: center, radius: minRange! / 2 + 0.01))
+          ..addOval(Rect.fromCircle(center: center, radius: minRange! / 2))
           ..close(),
       ),
       strokeColor,

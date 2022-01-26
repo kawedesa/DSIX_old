@@ -1,7 +1,8 @@
 import 'package:dsixv02app/models/chest/chest.dart';
 import 'package:dsixv02app/models/game/game.dart';
+import 'package:dsixv02app/models/player/equipment/widget/itemDetailPage.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
+
 import 'package:dsixv02app/shared/app_Icons.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
@@ -51,25 +52,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.05,
-              color: _uiColor.setUIColor(widget.player!.id, 'primary'),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-                child: Center(
-                  child: Text('equipment'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: 'Santana',
-                        height: 1,
-                        fontSize: 25,
-                        color:
-                            _uiColor.setUIColor(widget.player!.id, 'secondary'),
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 3,
-                      )),
-                ),
-              ),
-            ),
+            DialogTitle(id: widget.player!.id, tittle: 'equipment'),
             Column(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -78,14 +61,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.7,
                       child: EquipmentStats(
-                        playerID: widget.player!.id,
-                        pDamage: widget.player!.equipment!.damage!.pDamage,
-                        mDamage: widget.player!.equipment!.damage!.mDamage,
-                        pArmor: widget.player!.equipment!.armor!.pArmor,
-                        mArmor: widget.player!.equipment!.armor!.mArmor,
-                        maxWeight: widget.player!.equipment!.weight!.max,
-                        currentWeight:
-                            widget.player!.equipment!.weight!.current,
+                        player: widget.player,
                       )),
                 ),
                 Divider(
@@ -108,7 +84,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Expanded(
                               flex: 2,
                               child: EquipmentPageSlot(
-                                playerID: widget.player!.id,
+                                id: widget.player!.id,
                                 widgetWidth: widgetWidth,
                                 slotIcon: AppIcons.mainHandSlot,
                                 slot: widget.player!.equipment!.mainHandSlot,
@@ -130,6 +106,25 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
                                   if (widget.chest == null &&
                                       widget.player!.action!.outOfActions()) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: _uiColor
+                                                .setUIColor('error', 'primary'),
+                                            content: EquipmentAlert(
+                                              title: 'wait for your turn',
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            animation:
+                                                AlwaysStoppedAnimation<double>(
+                                                    20),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((value) =>
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars());
                                     return false;
                                   }
 
@@ -162,7 +157,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Expanded(
                               flex: 1,
                               child: EquipmentPageSlot(
-                                playerID: widget.player!.id,
+                                id: widget.player!.id,
                                 widgetWidth: widgetWidth,
                                 slotIcon: AppIcons.handSlot,
                                 slot: widget.player!.equipment!.handSlot,
@@ -179,6 +174,25 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
                                   if (widget.chest == null &&
                                       widget.player!.action!.outOfActions()) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: _uiColor
+                                                .setUIColor('error', 'primary'),
+                                            content: EquipmentAlert(
+                                              title: 'wait for your turn',
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            animation:
+                                                AlwaysStoppedAnimation<double>(
+                                                    20),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((value) =>
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars());
                                     return false;
                                   }
 
@@ -216,7 +230,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Expanded(
                               flex: 1,
                               child: EquipmentPageSlot(
-                                playerID: widget.player!.id,
+                                id: widget.player!.id,
                                 widgetWidth: widgetWidth,
                                 slotIcon: AppIcons.headSlot,
                                 slot: widget.player!.equipment!.headSlot,
@@ -233,6 +247,25 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
                                   if (widget.chest == null &&
                                       widget.player!.action!.outOfActions()) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: _uiColor
+                                                .setUIColor('error', 'primary'),
+                                            content: EquipmentAlert(
+                                              title: 'wait for your turn',
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            animation:
+                                                AlwaysStoppedAnimation<double>(
+                                                    20),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((value) =>
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars());
                                     return false;
                                   }
 
@@ -263,7 +296,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Expanded(
                               flex: 2,
                               child: EquipmentPageSlot(
-                                playerID: widget.player!.id,
+                                id: widget.player!.id,
                                 widgetWidth: widgetWidth,
                                 slotIcon: AppIcons.bodySlot,
                                 slot: widget.player!.equipment!.bodySlot,
@@ -280,6 +313,25 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
                                   if (widget.chest == null &&
                                       widget.player!.action!.outOfActions()) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: _uiColor
+                                                .setUIColor('error', 'primary'),
+                                            content: EquipmentAlert(
+                                              title: 'wait for your turn',
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            animation:
+                                                AlwaysStoppedAnimation<double>(
+                                                    20),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((value) =>
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars());
                                     return false;
                                   }
 
@@ -317,7 +369,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Expanded(
                               flex: 2,
                               child: EquipmentPageSlot(
-                                playerID: widget.player!.id,
+                                id: widget.player!.id,
                                 widgetWidth: widgetWidth,
                                 slotIcon: AppIcons.offHandSlot,
                                 slot: widget.player!.equipment!.offHandSlot,
@@ -339,6 +391,25 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
                                   if (widget.chest == null &&
                                       widget.player!.action!.outOfActions()) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: _uiColor
+                                                .setUIColor('error', 'primary'),
+                                            content: EquipmentAlert(
+                                              title: 'wait for your turn',
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            animation:
+                                                AlwaysStoppedAnimation<double>(
+                                                    20),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((value) =>
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars());
                                     return false;
                                   }
 
@@ -371,7 +442,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                             Expanded(
                               flex: 1,
                               child: EquipmentPageSlot(
-                                playerID: widget.player!.id,
+                                id: widget.player!.id,
                                 widgetWidth: widgetWidth,
                                 slotIcon: AppIcons.feetSlot,
                                 slot: widget.player!.equipment!.feetSlot,
@@ -388,6 +459,25 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
                                   if (widget.chest == null &&
                                       widget.player!.action!.outOfActions()) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: _uiColor
+                                                .setUIColor('error', 'primary'),
+                                            content: EquipmentAlert(
+                                              title: 'wait for your turn',
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            animation:
+                                                AlwaysStoppedAnimation<double>(
+                                                    20),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((value) =>
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars());
                                     return false;
                                   }
 
@@ -419,22 +509,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     ],
                   ),
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.05,
-                  color: _uiColor.setUIColor(widget.player!.id, 'primary'),
-                  child: Center(
-                    child: Text('bag'.toUpperCase(),
-                        style: TextStyle(
-                          fontFamily: 'Santana',
-                          height: 1,
-                          fontSize: 25,
-                          color: _uiColor.setUIColor(
-                              widget.player!.id, 'secondary'),
-                          fontWeight: FontWeight.bold,
-                          letterSpacing: 3,
-                        )),
-                  ),
-                ),
+                DialogTitle(id: widget.player!.id, tittle: 'bag'),
                 SizedBox(
                   height: widgetWidth / 3,
                   child: DragTarget<EquipmentSlot>(
@@ -448,12 +523,16 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           shrinkWrap: true,
                           crossAxisCount: 6,
                           children: List.generate(12, (index) {
-                            return SvgPicture.asset(
-                              AppIcons.bagSlot,
-                              height: widgetWidth / 6,
-                              width: widgetWidth / 6,
-                              color: _uiColor.setUIColor(
-                                  widget.player!.id, 'primary'),
+                            return EquipmentPageSlot(
+                              id: widget.player!.id,
+                              widgetWidth: widgetWidth,
+                              slotIcon: AppIcons.nullIcon,
+                              slot: EquipmentSlot.empty('bag'),
+                              onDragCompleted: () {},
+                              onWillAccept: (data) {
+                                return false;
+                              },
+                              onAccept: (data) {},
                             );
                           }),
                         ),
@@ -462,78 +541,58 @@ class _EquipmentPageState extends State<EquipmentPage> {
                           crossAxisCount: 6,
                           children: List.generate(
                               widget.player!.equipment!.bag!.length, (index) {
-                            return Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 4),
-                              child: Draggable<EquipmentSlot>(
-                                data: widget.player!.equipment!.bag![index],
-                                feedback: Container(
-                                  height: widgetWidth / 3.5,
-                                  width: widgetWidth / 3.5,
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 2,
-                                        color: _uiColor.setUIColor(
-                                            widget.player!.id, 'primary')),
-                                    shape: BoxShape.circle,
-                                    color: Colors.black,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(15.0),
-                                    child: SvgPicture.asset(
-                                      widget.player!.equipment!.bag![index]
-                                          .item!.icon!,
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
+                            return EquipmentPageSlot(
+                                id: widget.player!.id,
+                                widgetWidth: widgetWidth,
+                                slotIcon: widget
+                                    .player!.equipment!.bag![index].item!.icon,
+                                slot: widget.player!.equipment!.bag![index],
                                 onDragCompleted: () {
                                   setState(() {
                                     widget.player!.removeItemFromBag(
                                         widget.player!.equipment!.bag![index]);
                                   });
                                 },
-                                childWhenDragging: Padding(
-                                  padding: const EdgeInsets.all(5),
-                                  child: SvgPicture.asset(
-                                    widget.player!.equipment!.bag![index].item!
-                                        .icon!,
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                child: GestureDetector(
-                                  onDoubleTap: () {
-                                    if (widget.player!.action!.outOfActions()) {
-                                      return;
-                                    }
-                                    if (widget.player!.equipment!.bag![index]
-                                            .item!.itemSlot !=
-                                        'consumable') {
-                                      return;
-                                    }
+                                onWillAccept: (data) {
+                                  return false;
+                                },
+                                onAccept: (data) {},
+                                onDoubleTap: () {
+                                  if (widget.player!.action!.outOfActions()) {
+                                    ScaffoldMessenger.of(context)
+                                        .showSnackBar(
+                                          SnackBar(
+                                            backgroundColor: _uiColor
+                                                .setUIColor('error', 'primary'),
+                                            content: EquipmentAlert(
+                                              title: 'wait for your turn',
+                                            ),
+                                            duration:
+                                                const Duration(seconds: 3),
+                                            animation:
+                                                AlwaysStoppedAnimation<double>(
+                                                    20),
+                                          ),
+                                        )
+                                        .closed
+                                        .then((value) =>
+                                            ScaffoldMessenger.of(context)
+                                                .clearSnackBars());
+                                    return;
+                                  }
+                                  if (widget.player!.equipment!.bag![index]
+                                          .item!.itemSlot !=
+                                      'consumable') {
+                                    return;
+                                  }
 
-                                    widget.player!.useItem(
-                                        widget.player!.equipment!.bag![index]);
+                                  widget.player!.useItem(
+                                      widget.player!.equipment!.bag![index]);
 
-                                    try {
-                                      widget.player!.action!.takeAction(
-                                        game.id!,
-                                        widget.player!.id!,
-                                      );
-                                    } on EndPlayerTurnException {
-                                      game.round!
-                                          .passTurn(game.id!, widget.player!);
-                                    }
-                                    setState(() {});
-                                  },
-                                  child: SvgPicture.asset(
-                                    widget.player!.equipment!.bag![index].item!
-                                        .icon!,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            );
+                                  game.round!
+                                      .takeTurn(game.id!, widget.player!);
+                                  setState(() {});
+                                });
                           }),
                         ),
                       ]);
@@ -549,23 +608,50 @@ class _EquipmentPageState extends State<EquipmentPage> {
 
                       if (widget.chest == null &&
                           widget.player!.action!.outOfActions()) {
+                        ScaffoldMessenger.of(context)
+                            .showSnackBar(
+                              SnackBar(
+                                backgroundColor:
+                                    _uiColor.setUIColor('error', 'primary'),
+                                content: EquipmentAlert(
+                                  title: 'wait for your turn',
+                                ),
+                                duration: const Duration(seconds: 3),
+                                animation: AlwaysStoppedAnimation<double>(20),
+                              ),
+                            )
+                            .closed
+                            .then((value) =>
+                                ScaffoldMessenger.of(context).clearSnackBars());
                         return false;
                       }
 
                       if (data.name == 'chest') {
                         if (widget.player!.equipment!.weight!
                             .cantCarry(data.item!.weight!)) {
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
+                                SnackBar(
+                                  backgroundColor:
+                                      _uiColor.setUIColor('error', 'primary'),
+                                  content: EquipmentAlert(
+                                    title: 'item is too heavy',
+                                  ),
+                                  duration: const Duration(seconds: 3),
+                                ),
+                              )
+                              .closed
+                              .then((value) => ScaffoldMessenger.of(context)
+                                  .clearSnackBars());
                           return false;
                         }
                       }
-
                       return true;
                     },
                     onAccept: (data) {
                       if (data.name == 'chest') {
                         widget.player!.getItem(data.item!);
                       }
-
                       widget.player!.addItemToBag(data.item!);
                     },
                   ),
@@ -579,23 +665,7 @@ class _EquipmentPageState extends State<EquipmentPage> {
                     ? SizedBox()
                     : Column(
                         children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.05,
-                            color: _uiColor.setUIColor(
-                                widget.player!.id, 'primary'),
-                            child: Center(
-                              child: Text('chest'.toUpperCase(),
-                                  style: TextStyle(
-                                    fontFamily: 'Santana',
-                                    height: 1,
-                                    fontSize: 25,
-                                    color: _uiColor.setUIColor(
-                                        widget.player!.id, 'secondary'),
-                                    fontWeight: FontWeight.bold,
-                                    letterSpacing: 3,
-                                  )),
-                            ),
-                          ),
+                          DialogTitle(id: widget.player!.id, tittle: 'chest'),
                           SizedBox(
                             height: widgetWidth / 6,
                             child: DragTarget<EquipmentSlot>(
@@ -609,12 +679,16 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     shrinkWrap: true,
                                     crossAxisCount: 6,
                                     children: List.generate(6, (index) {
-                                      return SvgPicture.asset(
-                                        AppIcons.bagSlot,
-                                        height: widgetWidth / 6,
-                                        width: widgetWidth / 6,
-                                        color: _uiColor.setUIColor(
-                                            widget.player!.id, 'primary'),
+                                      return EquipmentPageSlot(
+                                        id: widget.player!.id,
+                                        widgetWidth: widgetWidth,
+                                        slotIcon: AppIcons.nullIcon,
+                                        slot: EquipmentSlot.empty('chest'),
+                                        onDragCompleted: () {},
+                                        onWillAccept: (data) {
+                                          return false;
+                                        },
+                                        onAccept: (data) {},
                                       );
                                     }),
                                   ),
@@ -623,52 +697,23 @@ class _EquipmentPageState extends State<EquipmentPage> {
                                     crossAxisCount: 6,
                                     children: List.generate(
                                         widget.chest!.loot!.length, (index) {
-                                      return Padding(
-                                        padding: const EdgeInsets.symmetric(
-                                            horizontal: 4),
-                                        child: Draggable<EquipmentSlot>(
-                                          data: EquipmentSlot.fromItem('chest',
-                                              widget.chest!.loot![index]),
-                                          feedback: Container(
-                                            height: widgetWidth / 3.5,
-                                            width: widgetWidth / 3.5,
-                                            decoration: BoxDecoration(
-                                              border: Border.all(
-                                                  width: 2,
-                                                  color: _uiColor.setUIColor(
-                                                      widget.player!.id,
-                                                      'primary')),
-                                              shape: BoxShape.circle,
-                                              color: Colors.black,
-                                            ),
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.all(15.0),
-                                              child: SvgPicture.asset(
-                                                widget
-                                                    .chest!.loot![index].icon!,
-                                                color: Colors.white,
-                                              ),
-                                            ),
-                                          ),
-                                          onDragCompleted: () {
-                                            setState(() {
-                                              widget.chest!.removeItem(
-                                                  widget.chest!.loot![index]);
-                                            });
-                                          },
-                                          childWhenDragging: Padding(
-                                            padding: const EdgeInsets.all(5),
-                                            child: SvgPicture.asset(
-                                              widget.chest!.loot![index].icon!,
-                                              color: Colors.grey,
-                                            ),
-                                          ),
-                                          child: SvgPicture.asset(
-                                            widget.chest!.loot![index].icon!,
-                                            color: Colors.white,
-                                          ),
-                                        ),
+                                      return EquipmentPageSlot(
+                                        id: widget.player!.id,
+                                        widgetWidth: widgetWidth,
+                                        slotIcon:
+                                            widget.chest!.loot![index].icon,
+                                        slot: EquipmentSlot.fromItem('chest',
+                                            widget.chest!.loot![index]),
+                                        onDragCompleted: () {
+                                          setState(() {
+                                            widget.chest!.removeItem(
+                                                widget.chest!.loot![index]);
+                                          });
+                                        },
+                                        onWillAccept: (data) {
+                                          return false;
+                                        },
+                                        onAccept: (data) {},
                                       );
                                     }),
                                   ),
@@ -707,23 +752,81 @@ class _EquipmentPageState extends State<EquipmentPage> {
   }
 }
 
+// ignore: must_be_immutable
+class DialogTitle extends StatelessWidget {
+  String? id;
+  String? tittle;
+  DialogTitle({
+    Key? key,
+    @required this.id,
+    @required this.tittle,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    UIColor _uiColor = UIColor();
+    return Container(
+      height: MediaQuery.of(context).size.height * 0.05,
+      color: _uiColor.setUIColor(id, 'primary'),
+      child: Center(
+        child: Text(this.tittle!.toUpperCase(),
+            style: TextStyle(
+              fontFamily: 'Santana',
+              height: 1,
+              fontSize: 25,
+              color: _uiColor.setUIColor(id, 'secondary'),
+              fontWeight: FontWeight.bold,
+              letterSpacing: 3,
+            )),
+      ),
+    );
+  }
+}
+
+class EquipmentAlert extends StatelessWidget {
+  final String? title;
+  const EquipmentAlert({Key? key, @required this.title}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    UIColor _uiColor = UIColor();
+    return SizedBox(
+      height: MediaQuery.of(context).size.height * 0.05,
+      child: Center(
+          child: Text(
+        title!.toUpperCase(),
+        style: TextStyle(
+          color: _uiColor.setUIColor('error', 'secondary'),
+          fontFamily: 'Calibri',
+          height: 1,
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          letterSpacing: 2.5,
+        ),
+      )),
+    );
+  }
+}
+
 class EquipmentPageSlot extends StatelessWidget {
-  final String? playerID;
+  final String? id;
   final double? widgetWidth;
   final String? slotIcon;
   final EquipmentSlot? slot;
   final Function()? onDragCompleted;
   final bool Function(EquipmentSlot?)? onWillAccept;
   final Function(EquipmentSlot)? onAccept;
+  final Function()? onDoubleTap;
   const EquipmentPageSlot({
     Key? key,
-    @required this.playerID,
+    @required this.id,
     @required this.widgetWidth,
     @required this.slotIcon,
     @required this.slot,
     @required this.onDragCompleted,
     @required this.onWillAccept,
     @required this.onAccept,
+    this.onDoubleTap,
   }) : super(key: key);
 
   @override
@@ -738,7 +841,7 @@ class EquipmentPageSlot extends StatelessWidget {
         return Container(
             decoration: BoxDecoration(
               border: Border.all(
-                color: _uiColor.setUIColor(playerID, 'primary'),
+                color: _uiColor.setUIColor(id, 'primary'),
                 width: 1,
               ),
             ),
@@ -746,16 +849,30 @@ class EquipmentPageSlot extends StatelessWidget {
                 ? SvgPicture.asset(
                     slotIcon!,
                     width: double.infinity,
-                    color: _uiColor.setUIColor(playerID, 'primary'),
+                    color: _uiColor.setUIColor(id, 'primary'),
                   )
                 : Draggable<EquipmentSlot>(
                     data: slot!,
-                    child: Padding(
-                      padding: const EdgeInsets.all(5.0),
-                      child: SvgPicture.asset(
-                        slot!.item!.icon!,
-                        width: double.infinity,
-                        color: AppColors.white00,
+                    child: GestureDetector(
+                      onDoubleTap: onDoubleTap,
+                      onTap: () {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return ItemDetailPage(
+                              id: id,
+                              item: slot!.item,
+                            );
+                          },
+                        );
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.all(5.0),
+                        child: SvgPicture.asset(
+                          slot!.item!.icon!,
+                          width: double.infinity,
+                          color: AppColors.white00,
+                        ),
                       ),
                     ),
                     onDragCompleted: onDragCompleted,
@@ -775,7 +892,7 @@ class EquipmentPageSlot extends StatelessWidget {
                         decoration: BoxDecoration(
                           border: Border.all(
                               width: 2,
-                              color: _uiColor.setUIColor(playerID, 'primary')),
+                              color: _uiColor.setUIColor(id, 'primary')),
                           shape: BoxShape.circle,
                           color: Colors.black,
                         ),

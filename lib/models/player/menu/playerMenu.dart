@@ -1,5 +1,4 @@
 import 'package:dsixv02app/models/game/game.dart';
-import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../player.dart';
@@ -54,14 +53,7 @@ class PlayerMenu extends StatelessWidget {
                       player!.defend();
                       player!.menuMode();
 
-                      try {
-                        player!.action!.takeAction(
-                          game.id!,
-                          player!.id!,
-                        );
-                      } on EndPlayerTurnException {
-                        game.round!.passTurn(game.id!, player!);
-                      }
+                      game.round!.takeTurn(game.id!, player!);
                     },
                   ),
                 ),
@@ -74,14 +66,7 @@ class PlayerMenu extends StatelessWidget {
                       player!.look();
                       player!.menuMode();
 
-                      try {
-                        player!.action!.takeAction(
-                          game.id!,
-                          player!.id!,
-                        );
-                      } on EndPlayerTurnException {
-                        game.round!.passTurn(game.id!, player!);
-                      }
+                      game.round!.takeTurn(game.id!, player!);
                     },
                   ),
                 ),

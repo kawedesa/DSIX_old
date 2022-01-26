@@ -74,11 +74,20 @@ class _IventoryButtonState extends State<IventoryButton> {
           setState(() {
             showDialog(
               context: context,
-              builder: (BuildContext context) {
-                return EquipmentPage(
-                  player: widget.player,
-                );
-              },
+              builder: (context) => ScaffoldMessenger(
+                child: Builder(
+                  builder: (context) => Scaffold(
+                    backgroundColor: Colors.transparent,
+                    body: GestureDetector(
+                      behavior: HitTestBehavior.opaque,
+                      onTap: () => Navigator.of(context).pop(),
+                      child: EquipmentPage(
+                        player: widget.player,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
             );
             _playOnTapAnimation();
           });

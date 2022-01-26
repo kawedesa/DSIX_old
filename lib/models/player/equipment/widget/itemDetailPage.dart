@@ -1,26 +1,18 @@
-import 'package:dsixv02app/models/shop/damageArmorWeight.dart';
+import 'package:dsixv02app/models/player/equipment/widget/equipmentPage.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Colors.dart';
 import 'package:dsixv02app/shared/widgets/dialogButton.dart';
 import 'package:dsixv02app/shared/widgets/uiColor.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'itemStats.dart';
 
 // ignore: must_be_immutable
 class ItemDetailPage extends StatelessWidget {
-  String? playerID;
-  bool? outOfActions;
+  String? id;
   Item? item;
-  String? buttonText;
-  Function()? useEquipOrUnequip;
-  ItemDetailPage({
-    Key? key,
-    @required this.playerID,
-    @required this.outOfActions,
-    @required this.item,
-    @required this.buttonText,
-    @required this.useEquipOrUnequip,
-  }) : super(key: key);
+  ItemDetailPage({Key? key, @required this.id, @required this.item})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +25,7 @@ class ItemDetailPage extends StatelessWidget {
         decoration: BoxDecoration(
           color: AppColors.black00,
           border: Border.all(
-            color: _uiColor.setUIColor(playerID, 'primary'),
+            color: _uiColor.setUIColor(id, 'primary'),
             width: 2,
           ),
         ),
@@ -41,33 +33,22 @@ class ItemDetailPage extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
-            Container(
-              height: MediaQuery.of(context).size.height * 0.05,
-              color: _uiColor.setUIColor(playerID, 'primary'),
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(30, 5, 30, 7),
-                child: Center(
-                  child: Text('${item!.name}'.toUpperCase(),
-                      style: TextStyle(
-                        fontFamily: 'Santana',
-                        height: 1,
-                        fontSize: 25,
-                        color: _uiColor.setUIColor(playerID, 'secondary'),
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: 3,
-                      )),
-                ),
-              ),
-            ),
+            DialogTitle(id: id, tittle: '${item!.name}'),
             Column(
               children: [
                 Divider(
                   height: 0,
                   thickness: 2,
-                  color: _uiColor.setUIColor(playerID, 'primary'),
+                  color: _uiColor.setUIColor(id, 'primary'),
+                ),
+                ItemStats(id: id, item: item),
+                Divider(
+                  height: 0,
+                  thickness: 2,
+                  color: _uiColor.setUIColor(id, 'primary'),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
+                  height: MediaQuery.of(context).size.height * 0.1,
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.3,
@@ -78,52 +59,13 @@ class ItemDetailPage extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.05,
+                  height: MediaQuery.of(context).size.height * 0.1,
                 ),
                 Divider(
                   height: 0,
                   thickness: 2,
-                  color: _uiColor.setUIColor(playerID, 'primary'),
+                  color: _uiColor.setUIColor(id, 'primary'),
                 ),
-                Container(
-                  height: MediaQuery.of(context).size.height * 0.07,
-                  child: SizedBox(
-                      width: MediaQuery.of(context).size.width * 0.7,
-                      child: (item!.itemSlot != 'consumable')
-                          ? DamageArmorWeight(
-                              playerID: playerID,
-                              pDamage: item!.pDamage,
-                              mDamage: item!.mDamage,
-                              pArmor: item!.pArmor,
-                              mArmor: item!.mArmor,
-                              weight: item!.weight,
-                            )
-                          : Center(
-                              child: Text(
-                                item!.description!,
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  letterSpacing: 1,
-                                  fontFamily: 'Calibri',
-                                  color: AppColors.white00,
-                                ),
-                              ),
-                            )),
-                ),
-                Divider(
-                  height: 0,
-                  thickness: 2,
-                  color: _uiColor.setUIColor(playerID, 'primary'),
-                ),
-                (outOfActions!)
-                    ? SizedBox()
-                    : DialogButton(
-                        buttonText: buttonText!,
-                        onTapAction: () async {
-                          useEquipOrUnequip!();
-                          Navigator.pop(context);
-                        },
-                      ),
                 DialogButton(
                   buttonText: 'close',
                   onTapAction: () async {
