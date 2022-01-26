@@ -3,13 +3,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dsixv02app/models/game/gameMap/heightMap.dart';
 import 'package:dsixv02app/models/game/gameMap/totalArea.dart';
 import 'package:dsixv02app/models/player/equipment/equipmentSlot.dart';
+import 'package:dsixv02app/models/player/equipment/playerDamage.dart';
 import 'package:dsixv02app/models/shop/item.dart';
 import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'playerAction.dart';
-
 import 'equipment/playerAttackRange.dart';
-
 import 'equipment/playerEquipment.dart';
 import 'playerLife.dart';
 import 'playerLocation.dart';
@@ -21,6 +20,7 @@ class Player {
   String? gameID;
   String? id;
   String? mode;
+  PlayerAnimation? animation;
   PlayerLocation? location;
   String? race;
   PlayerVision? vision;
@@ -33,6 +33,7 @@ class Player {
     String? gameID,
     String? id,
     String? mode,
+    PlayerAnimation? animation,
     PlayerLocation? location,
     String? race,
     PlayerVision? vision,
@@ -45,6 +46,7 @@ class Player {
     this.gameID = gameID;
     this.id = id;
     this.mode = mode;
+    this.animation = animation;
     this.location = location;
     this.race = race;
     this.vision = vision;
@@ -59,6 +61,7 @@ class Player {
       'gameID': this.gameID,
       'id': this.id,
       'mode': this.mode,
+      'animation': this.animation?.toMap(),
       'location': this.location?.toMap(),
       'race': this.race,
       'vision': this.vision?.toMap(),
@@ -74,6 +77,7 @@ class Player {
       gameID: data?['gameID'],
       id: data?['id'],
       mode: data?['mode'],
+      animation: PlayerAnimation.fromMap(data?['animation']),
       location: PlayerLocation.fromMap(data?['location']),
       race: data?['race'],
       vision: PlayerVision.fromMap(data?['vision']),
@@ -106,6 +110,7 @@ class Player {
       gameID: gameID,
       id: id[playerIndex],
       mode: 'wait',
+      animation: PlayerAnimation.empty(),
       location: location,
       race: randomRace,
       vision: PlayerVision.set(randomRace),
@@ -190,9 +195,29 @@ class Player {
     this.vision!.setHeight(this.gameID!, this.id!, newLocation.height!);
   }
 
-  int attack() {
-    int damage = Random().nextInt(6) + 1;
-    return damage;
+  bool cantAttack(PlayerLocation targetLocation) {
+    if (this.equipment!.attackRange!.cantAttack(
+        targetLocation, this.location!, this.equipment!.rangedAttack())) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  PlayerAttack attack() {
+    return PlayerAttack.newAttack(this.equipment!.damage!);
+  }
+
+  void receiveAnAttack(PlayerAttack attack) {
+    int totalDamage = this.equipment!.armor!.calculateArmor(attack);
+    this.animation!.newDamageAnimation(this.gameID!, this.id!, totalDamage);
+    this.life!.decrease(this.gameID!, this.id!, totalDamage);
+    this.equipment!.update(this.gameID!, this.id!);
+
+    if (this.life!.isDead()) {
+      deadMode();
+      throw PlayerIsDeadException();
+    }
   }
 
   void defend() {
@@ -210,24 +235,6 @@ class Player {
     this.equipment!.update(this.gameID!, this.id!);
     this.vision!.reset();
     this.vision!.update(this.gameID!, this.id!);
-  }
-
-  void takeDamage(int damageRoll, pDamage, mDamage) {
-    if (this.equipment!.armor!.tempArmor! > 0) {
-      int damage = pDamage + mDamage + damageRoll;
-      this.life!.decrease(this.gameID!, this.id!,
-          this.equipment!.armor!.calculateTempArmor(damage));
-      this.equipment!.update(this.gameID!, this.id!);
-      return;
-    }
-
-    this.life!.decrease(
-        this.gameID!,
-        this.id!,
-        this
-            .equipment!
-            .armor!
-            .calculateDamageReceived(damageRoll, pDamage, mDamage));
   }
 
   void getItem(Item item) {
@@ -278,5 +285,78 @@ class Player {
     }
     this.equipment!.removeItem(this.gameID!, this.id!, item);
     this.equipment!.removeItemFromBag(this.gameID!, this.id!, item);
+  }
+}
+
+class PlayerAnimation {
+  List<String>? damage;
+  PlayerAnimation({
+    List<String>? damage,
+  }) {
+    this.damage = damage;
+  }
+
+  factory PlayerAnimation.fromMap(Map<String, dynamic>? data) {
+    List<String> damage = [];
+    List<dynamic> damageMap = data?['damage'];
+    damageMap.forEach((animation) {
+      damage.add(animation);
+    });
+
+    return PlayerAnimation(
+      damage: damage,
+    );
+  }
+
+  factory PlayerAnimation.empty() {
+    return PlayerAnimation(
+      damage: [],
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    var damage = this.damage?.toList();
+    return {
+      'damage': damage,
+    };
+  }
+
+  void newDamageAnimation(String gameID, String playerID, int damage) {
+    this.damage!.add(damage.toString());
+    update(gameID, playerID);
+  }
+
+  void update(String gameID, String playerID) async {
+    final database = FirebaseFirestore.instance.collection('game');
+
+    await database
+        .doc(gameID)
+        .collection('players')
+        .doc(playerID)
+        .update({'animation': toMap()});
+  }
+}
+
+class PlayerAttack {
+  int? randomDamage;
+  int? pDamage;
+  int? mDamage;
+
+  PlayerAttack({int? randomDamage, int? pDamage, int? mDamage}) {
+    this.randomDamage = randomDamage;
+    this.pDamage = pDamage;
+    this.mDamage = mDamage;
+  }
+
+  factory PlayerAttack.newAttack(PlayerDamage damage) {
+    return PlayerAttack(
+      randomDamage: Random().nextInt(6) + 1,
+      pDamage: damage.pDamage,
+      mDamage: damage.mDamage,
+    );
+  }
+
+  int totalDamage() {
+    return this.randomDamage! + this.pDamage! + this.mDamage!;
   }
 }

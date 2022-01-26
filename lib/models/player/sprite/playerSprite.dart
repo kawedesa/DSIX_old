@@ -30,11 +30,12 @@ class PlayerSprite extends StatefulWidget {
 }
 
 class _PlayerSpriteState extends State<PlayerSprite> {
-  PlayerSpriteController playerSpriteController = PlayerSpriteController();
+  PlayerSpriteController _playerSpriteController = PlayerSpriteController();
 
   @override
   void initState() {
-    playerSpriteController.loadRiverFile();
+    _playerSpriteController.loadRiverFile();
+
     super.initState();
   }
 
@@ -42,12 +43,15 @@ class _PlayerSpriteState extends State<PlayerSprite> {
   Widget build(BuildContext context) {
     final game = Provider.of<Game>(context);
 
+    _playerSpriteController.updateAnimationCounter(widget.player!);
+    _playerSpriteController.playDamageAnimation(widget.player!);
+
     return Positioned(
-      left: playerSpriteController
+      left: _playerSpriteController
           .calculateSpritePosition(
               widget.tempLocation, widget.player!.vision!.getRange())
           .dx,
-      top: playerSpriteController
+      top: _playerSpriteController
           .calculateSpritePosition(
               widget.tempLocation, widget.player!.vision!.getRange())
           .dy,
@@ -100,7 +104,8 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                   child: Container(
                     width: 6,
                     height: 10,
-                    child: (widget.player!.mode == 'menu')
+                    child: (widget.player!.mode == 'menu' ||
+                            widget.player!.mode == 'dead')
                         ? GestureDetector(
                             onTap: () {
                               widget.player!.menuMode();
@@ -155,12 +160,12 @@ class _PlayerSpriteState extends State<PlayerSprite> {
                   transparent: true,
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 25),
-                    child: (playerSpriteController.artboard != null)
+                    child: (_playerSpriteController.artboard != null)
                         ? SizedBox(
                             width: 10,
                             height: 20,
                             child: Rive(
-                              artboard: playerSpriteController.artboard!,
+                              artboard: _playerSpriteController.artboard!,
                               fit: BoxFit.fill,
                             ),
                           )
@@ -191,26 +196,22 @@ class PlayerSpriteController {
     artboard!.addController(SimpleAnimation('off'));
   }
 
-  playDamageAnimation(int damage) {
+  int? damageAnimationCounter;
+  void updateAnimationCounter(Player player) {
+    if (damageAnimationCounter == null) {
+      this.damageAnimationCounter = player.animation!.damage!.length;
+    }
+  }
+
+  playDamageAnimation(Player player) {
+    if (player.animation!.damage!.length == damageAnimationCounter!) {
+      return;
+    }
     artboard!.addController(OneShotAnimation(
-      '$damage',
+      '${player.animation!.damage!.last}',
     ));
-  }
 
-  bool checkTempArmor(int newArmor, oldArmor) {
-    if (oldArmor != newArmor) {
-      return true;
-    }
-    return false;
-  }
-
-  bool checkLife(int newLife, oldLife) {
-    if (oldLife != newLife) {
-      int damage = oldLife - newLife;
-      playDamageAnimation(damage);
-      return true;
-    }
-    return false;
+    damageAnimationCounter = player.animation!.damage!.length;
   }
 
   Offset calculateSpritePosition(

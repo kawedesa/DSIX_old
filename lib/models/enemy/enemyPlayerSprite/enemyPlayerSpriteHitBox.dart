@@ -17,7 +17,7 @@ class EnemyPlayerSpriteHitBox extends StatelessWidget {
       child: (isDead!)
           ? SizedBox()
           : Container(
-              width: 5,
+              width: 6,
               height: 10,
               child: GestureDetector(onTap: () {
                 onTap!();

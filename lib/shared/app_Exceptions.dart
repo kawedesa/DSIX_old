@@ -3,6 +3,11 @@ class PlayerTurnException implements Exception {
   PlayerTurnException();
 }
 
+class PlayerIsDeadException implements Exception {
+  String message = 'player is dead';
+  PlayerIsDeadException();
+}
+
 class EndGameException implements Exception {
   String message = 'end game';
   EndGameException();

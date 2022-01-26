@@ -37,7 +37,7 @@ class PlayerAttackRange {
     this.min = this.min! - item.minWeaponRange!;
   }
 
-  bool canAttack(PlayerLocation targetLocation, PlayerLocation playerLocation,
+  bool cantAttack(PlayerLocation targetLocation, PlayerLocation playerLocation,
       bool rangedAttack) {
     bool withinHeight = checkHeight(
         targetLocation.height!, playerLocation.height!, rangedAttack);
@@ -45,9 +45,9 @@ class PlayerAttackRange {
         targetLocation.getLocation(), playerLocation.getLocation());
 
     if (withinHeight && withinDistance) {
-      return true;
-    } else {
       return false;
+    } else {
+      return true;
     }
   }
 

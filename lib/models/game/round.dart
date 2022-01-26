@@ -24,8 +24,8 @@ class Round {
   factory Round.fromMap(Map<String, dynamic>? data) {
     List<String> turnOrder = [];
     List<dynamic> turnOrderMap = data?['turnOrder'];
-    turnOrderMap.forEach((test) {
-      turnOrder.add(test);
+    turnOrderMap.forEach((turn) {
+      turnOrder.add(turn);
     });
 
     return Round(
@@ -90,33 +90,33 @@ class Round {
       player.id!,
     );
     if (player.action!.outOfActions()) {
-      passTurn(gameID, player);
+      passTurn(player);
     }
   }
 
-  void passTurn(String gameID, Player player) {
+  void passTurn(Player player) {
     this.turnOrder!.remove(player.id);
     this.turnOrder!.add(player.id!);
-    this.fog!.checkFog(gameID, player);
+    this.fog!.checkFog(player.gameID!, player);
 
     if (player.life!.isNotDead()) {
       player.waitMode();
     } else {
-      removeDeadPlayer(gameID, player.id!);
+      removeDeadPlayer(player);
       player.deadMode();
     }
 
     this.roundNumber = this.roundNumber! + 1;
     this.fog!.shrink(this.numberOfPlayers!);
 
-    updateRound(gameID);
+    updateRound(player.gameID!);
   }
 
-  void removeDeadPlayer(String gameID, String playerID) {
+  void removeDeadPlayer(Player player) {
     this.numberOfPlayers = this.numberOfPlayers! - 1;
-    this.turnOrder!.remove(playerID);
+    this.turnOrder!.remove(player.id);
 
-    updateRound(gameID);
+    updateRound(player.gameID!);
   }
 
   void updateRound(String gameID) async {

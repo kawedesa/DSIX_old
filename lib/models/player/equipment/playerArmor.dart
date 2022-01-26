@@ -1,3 +1,5 @@
+import '../player.dart';
+
 class PlayerArmor {
   int? pArmor;
   int? mArmor;
@@ -69,11 +71,18 @@ class PlayerArmor {
     }
   }
 
-  int calculateTempArmor(int damage) {
-    int totalDamageReceived =
-        damage - this.tempArmor! - this.pArmor! - this.mArmor!;
+  int calculateArmor(PlayerAttack attack) {
+    if (this.tempArmor! > 0) {
+      return calculateTempArmor(attack);
+    }
+    return calculateDamageReceived(attack);
+  }
 
-    decreaseTempArmor(damage);
+  int calculateTempArmor(PlayerAttack attack) {
+    int totalDamageReceived =
+        attack.totalDamage() - this.tempArmor! - this.pArmor! - this.mArmor!;
+
+    decreaseTempArmor(attack.totalDamage());
 
     if (totalDamageReceived < 0) {
       totalDamageReceived = 0;
@@ -86,25 +95,25 @@ class PlayerArmor {
     this.tempArmor = 0;
   }
 
-  int calculateDamageReceived(int damageRoll, int pDamage, int mDamage) {
+  int calculateDamageReceived(PlayerAttack attack) {
     int damageLeftOver = 0;
     int protectionLeftOver = 0;
 
-    int pDamageCalculation = pDamage - this.pArmor!;
+    int pDamageCalculation = attack.pDamage! - this.pArmor!;
     if (pDamageCalculation >= 0) {
       damageLeftOver += pDamageCalculation;
     } else {
       protectionLeftOver -= pDamageCalculation;
     }
 
-    int mDamageCalculation = mDamage - this.mArmor!;
+    int mDamageCalculation = attack.mDamage! - this.mArmor!;
     if (mDamageCalculation >= 0) {
       damageLeftOver += mDamageCalculation;
     } else {
       protectionLeftOver -= mDamageCalculation;
     }
 
-    int partialDamage = damageRoll - protectionLeftOver;
+    int partialDamage = attack.randomDamage! - protectionLeftOver;
     if (partialDamage < 1) {
       partialDamage = 0;
     }

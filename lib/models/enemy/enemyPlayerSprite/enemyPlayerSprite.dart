@@ -1,5 +1,6 @@
 import 'package:dsixv02app/models/game/game.dart';
 import 'package:dsixv02app/models/player/player.dart';
+import 'package:dsixv02app/shared/app_Exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -38,9 +39,9 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
   @override
   Widget build(BuildContext context) {
     final game = Provider.of<Game>(context);
-    final players = Provider.of<List<Player>>(context);
 
-    _enemyController.checkEnemyPlayer(players, widget.enemyPlayer!);
+    _enemyController.updateAnimationCounter(widget.enemyPlayer!);
+    _enemyController.playDamageAnimation(widget.enemyPlayer!);
 
     return Positioned(
       left: widget.enemyPlayer!.location!.dx! -
@@ -78,8 +79,19 @@ class _EnemyPlayerSpriteState extends State<EnemyPlayerSprite> {
                   if (widget.player!.mode! != 'attack') {
                     return;
                   }
-                  _enemyController.receiveAnAttack(
-                      game, widget.player!, widget.enemyPlayer!);
+
+                  if (widget.player!
+                      .cantAttack(widget.enemyPlayer!.location!)) {
+                    return;
+                  }
+
+                  try {
+                    widget.enemyPlayer!
+                        .receiveAnAttack(widget.player!.attack());
+                  } on PlayerIsDeadException {
+                    game.round!.removeDeadPlayer(widget.enemyPlayer!);
+                  }
+                  game.round!.takeTurn(game.id!, widget.player!);
                 },
               ),
             ),
@@ -139,54 +151,21 @@ class EnemyPlayerSpriteController {
     artboard!.addController(SimpleAnimation('off'));
   }
 
-  playDamageAnimation(int damage) {
-    artboard!.addController(OneShotAnimation(
-      '$damage',
-    ));
+  int? damageAnimationCounter;
+  void updateAnimationCounter(Player enemyPlayer) {
+    if (damageAnimationCounter == null) {
+      this.damageAnimationCounter = enemyPlayer.animation!.damage!.length;
+    }
   }
 
-  void receiveAnAttack(Game game, Player player, Player enemyPlayer) {
-    if (player.equipment!.attackRange!.canAttack(enemyPlayer.location!,
-            player.location!, player.equipment!.rangedAttack()) ==
-        false) {
+  playDamageAnimation(Player enemyPlayer) {
+    if (enemyPlayer.animation!.damage!.length == damageAnimationCounter!) {
       return;
     }
+    artboard!.addController(OneShotAnimation(
+      '${enemyPlayer.animation!.damage!.last}',
+    ));
 
-    game.round!.takeTurn(game.id!, player);
-
-    takeDamage(game, player, enemyPlayer);
-  }
-
-  void takeDamage(Game game, Player player, Player enemy) {
-    int attackDamage = player.attack();
-    int itemDamage =
-        player.equipment!.damage!.pDamage! + player.equipment!.damage!.mDamage!;
-    int totalAttackDamage = attackDamage + itemDamage;
-
-    enemy.takeDamage(attackDamage, player.equipment!.damage!.pDamage,
-        player.equipment!.damage!.mDamage);
-
-    if (enemy.life!.isDead()) {
-      game.round!.removeDeadPlayer(game.id!, enemy.id!);
-    }
-
-    playDamageAnimation(totalAttackDamage);
-  }
-
-  void checkEnemyPlayer(List<Player> players, Player enemyPlayer) {
-    players.forEach((player) {
-      if (player.id != enemyPlayer.id) {
-        return;
-      }
-      checkLife(player.life!.current!, enemyPlayer.life!.current);
-      enemyPlayer = player;
-    });
-  }
-
-  void checkLife(int newLife, oldLife) {
-    if (oldLife != newLife) {
-      int damage = oldLife - newLife;
-      playDamageAnimation(damage);
-    }
+    damageAnimationCounter = enemyPlayer.animation!.damage!.length;
   }
 }
